@@ -1,0 +1,49 @@
+query PendingReconciliation($bookId: UUID!, $status: ReconciliationStatus) {
+  reconciliationQueues(
+    condition: { bookId: $bookId, status: $status }
+    orderBy: CREATED_AT_DESC
+  ) {
+    nodes {
+      rowId
+      bookId
+      journalEntryId
+      source
+      sourceReferenceId
+      suggestedDebitAccountId
+      suggestedCreditAccountId
+      amount
+      memo
+      status
+      reviewedAt
+      reviewedBy
+      createdAt
+      journalEntry {
+        rowId
+        date
+        memo
+        source
+        isReviewed
+      }
+    }
+    totalCount
+  }
+}
+
+mutation ApproveReconciliation($input: UpdateReconciliationQueueInput!) {
+  updateReconciliationQueue(input: $input) {
+    reconciliationQueue {
+      rowId
+      status
+      reviewedAt
+    }
+  }
+}
+
+mutation RejectReconciliation($input: UpdateReconciliationQueueInput!) {
+  updateReconciliationQueue(input: $input) {
+    reconciliationQueue {
+      rowId
+      status
+    }
+  }
+}
