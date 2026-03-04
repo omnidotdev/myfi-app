@@ -1,0 +1,41 @@
+query AllBudgets($bookId: UUID!) {
+  budgets(condition: { bookId: $bookId }) {
+    nodes {
+      rowId
+      bookId
+      accountId
+      amount
+      period
+      rollover
+      createdAt
+      updatedAt
+      account {
+        rowId
+        name
+        code
+      }
+    }
+  }
+}
+
+mutation CreateBudget($input: CreateBudgetInput!) {
+  createBudget(input: $input) {
+    budget {
+      rowId
+    }
+  }
+}
+
+mutation UpdateBudget($input: UpdateBudgetInput!) {
+  updateBudget(input: $input) {
+    budget {
+      rowId
+    }
+  }
+}
+
+mutation DeleteBudget($input: DeleteBudgetInput!) {
+  deleteBudget(input: $input) {
+    deletedBudgetNodeId
+  }
+}
