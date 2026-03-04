@@ -1,0 +1,33 @@
+query AllSavingsGoals($bookId: UUID!) {
+  savingsGoals(condition: { bookId: $bookId }) {
+    nodes {
+      rowId
+      bookId
+      accountId
+      name
+      targetAmount
+      targetDate
+      createdAt
+      updatedAt
+      account {
+        rowId
+        name
+        code
+      }
+    }
+  }
+}
+
+mutation CreateSavingsGoal($input: CreateSavingsGoalInput!) {
+  createSavingsGoal(input: $input) {
+    savingsGoal {
+      rowId
+    }
+  }
+}
+
+mutation DeleteSavingsGoal($input: DeleteSavingsGoalInput!) {
+  deleteSavingsGoal(input: $input) {
+    deletedSavingsGoalNodeId
+  }
+}
