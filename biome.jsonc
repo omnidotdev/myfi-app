@@ -1,0 +1,92 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignore": ["generated/", "src/routeTree.gen.ts"]
+  },
+  "css": {
+    "parser": {
+      "cssModules": false,
+      "allowTailwindDirectives": true
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 80
+  },
+  "linter": {
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "noSvgWithoutTitle": "off",
+        "useSemanticElements": "off",
+        "noStaticElementInteractions": "off",
+        "useKeyWithClickEvents": "off"
+      },
+      "correctness": {
+        "noUnusedImports": {
+          "level": "error",
+          "fix": "safe"
+        }
+      },
+      "nursery": {
+        "useSortedClasses": {
+          "level": "error",
+          "fix": "safe",
+          "options": {
+            "functions": ["cn", "cva", "tv"]
+          }
+        }
+      },
+      "style": {
+        "noNonNullAssertion": "off",
+        "useSingleVarDeclarator": "off",
+        "useImportType": {
+          "level": "error",
+          "fix": "safe",
+          "options": {
+            "style": "separated"
+          }
+        }
+      },
+      "suspicious": {
+        "noArrayIndexKey": "warn",
+        "noNonNullAssertedOptionalChain": "off",
+        "useIterableCallbackReturn": "off",
+        "noConsole": {
+          "level": "error",
+          "options": {
+            "allow": ["error", "warn"]
+          }
+        }
+      }
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "error",
+          "fix": "safe"
+        }
+      }
+    }
+  },
+  "organizeImports": {
+    "groups": [
+      [":BUN:", ":NODE:"],
+      [":BLANK_LINE:"],
+      [":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:"],
+      [":BLANK_LINE:"],
+      ["**"],
+      [":BLANK_LINE:"],
+      [":TYPE:"]
+    ]
+  }
+}
