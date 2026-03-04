@@ -45,10 +45,7 @@ function computeDepth(
 }
 
 /** Determine if an item is a parent (has children in the same section) */
-function hasChildren(
-  item: ReportLineItem,
-  items: ReportLineItem[],
-): boolean {
+function hasChildren(item: ReportLineItem, items: ReportLineItem[]): boolean {
   return items.some((other) => other.parentId === item.accountId);
 }
 

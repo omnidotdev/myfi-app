@@ -126,9 +126,7 @@ function EntryRow({ entry, isExpanded, onToggle, onDelete }: EntryRowProps) {
         </td>
         <td className="whitespace-nowrap px-3 py-3 font-mono">{entry.date}</td>
         <td className="max-w-xs truncate px-3 py-3">
-          {entry.memo || (
-            <span className="text-muted-foreground">No memo</span>
-          )}
+          {entry.memo || <span className="text-muted-foreground">No memo</span>}
         </td>
         <td className="px-3 py-3">
           <span

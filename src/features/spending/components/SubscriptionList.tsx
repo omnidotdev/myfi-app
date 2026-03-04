@@ -69,7 +69,7 @@ function SubscriptionList({
 }: SubscriptionListProps) {
   if (subscriptions.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border py-16">
+      <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-border border-dashed py-16">
         <p className="text-muted-foreground text-sm">
           No recurring charges detected
         </p>
@@ -89,14 +89,10 @@ function SubscriptionList({
           <p className="text-muted-foreground text-sm">
             Detected Subscriptions
           </p>
-          <p className="mt-1 font-semibold text-2xl">
-            {subscriptions.length}
-          </p>
+          <p className="mt-1 font-semibold text-2xl">{subscriptions.length}</p>
         </div>
         <div className="rounded-lg border border-border bg-card p-4">
-          <p className="text-muted-foreground text-sm">
-            Estimated Annual Cost
-          </p>
+          <p className="text-muted-foreground text-sm">Estimated Annual Cost</p>
           <p className="mt-1 font-semibold text-2xl">
             ${formatAmount(totalAnnualCost)}
           </p>
@@ -162,11 +158,11 @@ function SubscriptionList({
             <tr className="border-border border-t bg-muted/50">
               <td
                 colSpan={4}
-                className="px-4 py-3 font-semibold text-right text-sm"
+                className="px-4 py-3 text-right font-semibold text-sm"
               >
                 Total Annual Cost
               </td>
-              <td className="px-4 py-3 font-bold text-right text-base">
+              <td className="px-4 py-3 text-right font-bold text-base">
                 ${formatAmount(totalAnnualCost)}
               </td>
             </tr>

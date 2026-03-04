@@ -72,7 +72,7 @@ function ConnectedAccountsList({ accounts, onSync, onDisconnect }: Props) {
               )}
 
               <span
-                className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_STYLES[account.status]}`}
+                className={`inline-flex rounded-full px-2 py-0.5 font-medium text-xs ${STATUS_STYLES[account.status]}`}
               >
                 {STATUS_LABELS[account.status]}
               </span>

@@ -1,8 +1,8 @@
+import type { OrganizationClaim } from "@omnidotdev/providers";
 import { getCookie } from "@tanstack/react-start/server";
 import { betterAuth } from "better-auth";
 import { customSession, genericOAuth } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
-
 import { authCache } from "@/lib/auth/authCache";
 import {
   AUTH_BASE_URL,
@@ -10,8 +10,6 @@ import {
   AUTH_CLIENT_SECRET,
   BASE_URL,
 } from "@/lib/config/env.config";
-
-import type { OrganizationClaim } from "@omnidotdev/providers";
 
 const { AUTH_SECRET } = process.env;
 

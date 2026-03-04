@@ -44,7 +44,11 @@ function monthlyContributionNeeded(
 }
 
 /** Determine progress bar color based on whether the goal is on track */
-function getProgressColor(percent: number, hasDate: boolean, isOnTrack: boolean): string {
+function getProgressColor(
+  percent: number,
+  hasDate: boolean,
+  isOnTrack: boolean,
+): string {
   if (percent >= 100) return "bg-green-500";
   if (hasDate && !isOnTrack) return "bg-yellow-500";
   return "bg-green-500";
@@ -60,13 +64,15 @@ function SavingsGoalCard({ goal, onDelete }: SavingsGoalCardProps) {
   const percentClamped = Math.min(percent, 100);
 
   const days = goal.targetDate ? daysRemaining(goal.targetDate) : null;
-  const monthlyNeeded =
-    goal.targetDate
-      ? monthlyContributionNeeded(current, target, goal.targetDate)
-      : null;
+  const monthlyNeeded = goal.targetDate
+    ? monthlyContributionNeeded(current, target, goal.targetDate)
+    : null;
 
   // Consider "on track" if no target date or monthly contribution is reasonable
-  const isOnTrack = monthlyNeeded === null || monthlyNeeded === 0 || monthlyNeeded < (target / 12);
+  const isOnTrack =
+    monthlyNeeded === null ||
+    monthlyNeeded === 0 ||
+    monthlyNeeded < target / 12;
 
   return (
     <div className="flex flex-col gap-4 rounded-lg border border-border bg-card p-5 transition-colors hover:border-primary/30">
@@ -118,17 +124,21 @@ function SavingsGoalCard({ goal, onDelete }: SavingsGoalCardProps) {
       <div className="grid grid-cols-2 gap-3 text-sm">
         <div className="flex flex-col">
           <span className="text-muted-foreground text-xs">Saved</span>
-          <span className="font-medium">${formatAmount(goal.currentAmount || "0")}</span>
+          <span className="font-medium">
+            ${formatAmount(goal.currentAmount || "0")}
+          </span>
         </div>
         <div className="flex flex-col">
           <span className="text-muted-foreground text-xs">Target</span>
-          <span className="font-medium">${formatAmount(goal.targetAmount)}</span>
+          <span className="font-medium">
+            ${formatAmount(goal.targetAmount)}
+          </span>
         </div>
       </div>
 
       {/* Target date info */}
       {goal.targetDate && (
-        <div className="flex flex-col gap-1 border-t border-border pt-3 text-sm">
+        <div className="flex flex-col gap-1 border-border border-t pt-3 text-sm">
           <div className="flex items-center gap-1.5 text-muted-foreground text-xs">
             <CalendarIcon className="size-3" />
             <span>

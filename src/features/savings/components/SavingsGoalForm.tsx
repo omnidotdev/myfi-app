@@ -29,9 +29,7 @@ function SavingsGoalForm({
   const [targetAmount, setTargetAmount] = useState(
     initialValues?.targetAmount ?? "",
   );
-  const [targetDate, setTargetDate] = useState(
-    initialValues?.targetDate ?? "",
-  );
+  const [targetDate, setTargetDate] = useState(initialValues?.targetDate ?? "");
 
   // Filter to asset accounts suitable for savings goals
   const savingsAccounts = accounts.filter(

@@ -40,7 +40,11 @@ type RowState = {
 type AccountMappingFormProps = {
   accounts: Account[];
   mappings: AccountMapping[];
-  onSave: (eventType: string, debitAccountId: string, creditAccountId: string) => void;
+  onSave: (
+    eventType: string,
+    debitAccountId: string,
+    creditAccountId: string,
+  ) => void;
 };
 
 /** Find an existing mapping for the given event type */
@@ -105,7 +109,7 @@ function AccountMappingForm({
   return (
     <div className="rounded-lg border border-border bg-card">
       {/* Header */}
-      <div className="grid grid-cols-[1fr_1fr_1fr_1fr_auto] items-center gap-4 border-border border-b px-4 py-3 text-muted-foreground text-xs font-medium">
+      <div className="grid grid-cols-[1fr_1fr_1fr_1fr_auto] items-center gap-4 border-border border-b px-4 py-3 font-medium text-muted-foreground text-xs">
         <span>Event Type</span>
         <span>Description</span>
         <span>Debit Account</span>
@@ -136,7 +140,9 @@ function AccountMappingForm({
             {/* Debit account picker */}
             <select
               value={row.debitAccountId}
-              onChange={(e) => handleChange(type, "debitAccountId", e.target.value)}
+              onChange={(e) =>
+                handleChange(type, "debitAccountId", e.target.value)
+              }
               aria-label={`Debit account for ${type}`}
               className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             >
@@ -151,7 +157,9 @@ function AccountMappingForm({
             {/* Credit account picker */}
             <select
               value={row.creditAccountId}
-              onChange={(e) => handleChange(type, "creditAccountId", e.target.value)}
+              onChange={(e) =>
+                handleChange(type, "creditAccountId", e.target.value)
+              }
               aria-label={`Credit account for ${type}`}
               className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             >

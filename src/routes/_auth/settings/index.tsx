@@ -1,4 +1,4 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { BookOpenIcon, Link2Icon, MapIcon } from "lucide-react";
 
 export const Route = createFileRoute("/_auth/settings/")({

@@ -1,11 +1,9 @@
+import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import { parse } from "graphql";
+import type { Variables } from "graphql-request";
 import { GraphQLClient, gql } from "graphql-request";
-
 import { API_GRAPHQL_URL } from "@/lib/config/env.config";
 import { fetchSession } from "@/server/functions/auth";
-
-import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
-import type { Variables } from "graphql-request";
 
 type FetchOptions = {
   cache?: RequestCache;

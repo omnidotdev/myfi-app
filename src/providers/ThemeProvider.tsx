@@ -1,9 +1,7 @@
-import { createContext, use, useCallback, useState } from "react";
-
-import { setTheme as setThemeServerFn } from "@/server/functions/theme";
-
 import type { PropsWithChildren } from "react";
+import { createContext, use, useCallback, useState } from "react";
 import type { Theme } from "@/server/functions/theme";
+import { setTheme as setThemeServerFn } from "@/server/functions/theme";
 
 interface ThemeContext {
   theme: Theme;

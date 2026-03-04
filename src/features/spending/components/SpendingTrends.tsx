@@ -59,7 +59,7 @@ function SpendingTrends({
 
   if (months.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border py-16">
+      <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-border border-dashed py-16">
         <p className="text-muted-foreground text-sm">
           No spending data available
         </p>
@@ -90,15 +90,11 @@ function SpendingTrends({
 
         <div className="flex items-center gap-6 text-sm">
           <div className="flex flex-col">
-            <span className="text-muted-foreground text-xs">
-              Avg / Month
-            </span>
+            <span className="text-muted-foreground text-xs">Avg / Month</span>
             <span className="font-medium">${formatAmount(avgSpending)}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-muted-foreground text-xs">
-              Peak Month
-            </span>
+            <span className="text-muted-foreground text-xs">Peak Month</span>
             <span className="font-medium">${formatAmount(maxSpending)}</span>
           </div>
         </div>
@@ -112,7 +108,10 @@ function SpendingTrends({
             <XAxis dataKey="month" tick={{ fontSize: 12 }} />
             <YAxis tick={{ fontSize: 12 }} />
             <Tooltip
-              formatter={(value: number) => [`$${formatAmount(value)}`, "Spending"]}
+              formatter={(value: number) => [
+                `$${formatAmount(value)}`,
+                "Spending",
+              ]}
             />
             <Line
               type="monotone"

@@ -24,7 +24,7 @@ function BudgetList({
 }: BudgetListProps) {
   if (budgets.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-dashed border-border py-16">
+      <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-border border-dashed py-16">
         <div className="flex size-12 items-center justify-center rounded-full bg-muted">
           <WalletIcon className="size-6 text-muted-foreground" />
         </div>
@@ -47,9 +47,7 @@ function BudgetList({
   }
 
   // Build a lookup map for tracking data by budget ID
-  const trackingByBudgetId = new Map(
-    tracking.map((t) => [t.budgetId, t]),
-  );
+  const trackingByBudgetId = new Map(tracking.map((t) => [t.budgetId, t]));
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

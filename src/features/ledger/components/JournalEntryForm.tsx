@@ -16,7 +16,12 @@ type JournalEntryFormProps = {
   onCancel: () => void;
 };
 
-const EMPTY_LINE: LineInput = { accountId: "", debit: "", credit: "", memo: "" };
+const EMPTY_LINE: LineInput = {
+  accountId: "",
+  debit: "",
+  credit: "",
+  memo: "",
+};
 
 /** Create a fresh line with default values */
 function createLine(): LineInput {
@@ -39,10 +44,7 @@ function JournalEntryForm({
 }: JournalEntryFormProps) {
   const [date, setDate] = useState("");
   const [memo, setMemo] = useState("");
-  const [lines, setLines] = useState<LineInput[]>([
-    createLine(),
-    createLine(),
-  ]);
+  const [lines, setLines] = useState<LineInput[]>([createLine(), createLine()]);
 
   const { totalDebits, totalCredits, difference } = useMemo(() => {
     let debits = 0;
@@ -66,7 +68,9 @@ function JournalEntryForm({
   const updateLine = useCallback(
     (index: number, field: keyof LineInput, value: string) => {
       setLines((prev) =>
-        prev.map((line, i) => (i === index ? { ...line, [field]: value } : line)),
+        prev.map((line, i) =>
+          i === index ? { ...line, [field]: value } : line,
+        ),
       );
     },
     [],
@@ -232,7 +236,9 @@ function JournalEntryForm({
 
         <span
           className={`font-mono font-semibold text-sm ${
-            isBalanced ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
+            isBalanced
+              ? "text-green-600 dark:text-green-400"
+              : "text-red-600 dark:text-red-400"
           }`}
         >
           Difference: {difference.toFixed(2)}

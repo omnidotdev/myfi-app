@@ -1,6 +1,6 @@
 import {
-  Outlet,
   createFileRoute,
+  Outlet,
   useRouteContext,
 } from "@tanstack/react-router";
 import {

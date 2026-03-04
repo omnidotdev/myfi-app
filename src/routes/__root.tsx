@@ -1,22 +1,20 @@
+import type { OrganizationClaim } from "@omnidotdev/providers";
+import type { QueryClient } from "@tanstack/react-query";
 import {
+  createRootRouteWithContext,
   HeadContent,
   Outlet,
   Scripts,
-  createRootRouteWithContext,
   useRouteContext,
 } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-
+import type { Session } from "better-auth/types";
+import type { ReactNode } from "react";
 import app from "@/lib/config/app.config";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { fetchSession } from "@/server/functions/auth";
 import { getTheme } from "@/server/functions/theme";
 import appStyles from "@/styles.css?url";
-
-import type { OrganizationClaim } from "@omnidotdev/providers";
-import type { QueryClient } from "@tanstack/react-query";
-import type { Session } from "better-auth/types";
-import type { ReactNode } from "react";
 
 interface ExtendedUser {
   id: string;

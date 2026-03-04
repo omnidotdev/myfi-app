@@ -51,12 +51,7 @@ export const SUB_TYPES_BY_TYPE: Record<AccountType, AccountSubType[]> = {
     "crypto_wallet",
     "investment",
   ],
-  liability: [
-    "credit_card",
-    "accounts_payable",
-    "loan",
-    "other_liability",
-  ],
+  liability: ["credit_card", "accounts_payable", "loan", "other_liability"],
   equity: [
     "owners_equity",
     "retained_earnings",

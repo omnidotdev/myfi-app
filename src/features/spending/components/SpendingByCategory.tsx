@@ -58,7 +58,7 @@ function SpendingByCategory({ categories, total }: SpendingByCategoryProps) {
 
   if (categories.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border py-16">
+      <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-border border-dashed py-16">
         <p className="text-muted-foreground text-sm">
           No expense data for this period
         </p>
@@ -143,9 +143,7 @@ function SpendingByCategory({ categories, total }: SpendingByCategoryProps) {
                   style={{ backgroundColor: COLORS[i % COLORS.length] }}
                 />
                 <div className="flex flex-col">
-                  <span className="font-medium text-sm">
-                    {cat.accountName}
-                  </span>
+                  <span className="font-medium text-sm">{cat.accountName}</span>
                   {cat.accountCode && (
                     <span className="font-mono text-muted-foreground text-xs">
                       {cat.accountCode}

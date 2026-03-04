@@ -1,8 +1,6 @@
 import { useState } from "react";
-
-import { BOOK_TYPES } from "@/features/books/types/book";
-
 import type { BookType } from "@/features/books/types/book";
+import { BOOK_TYPES } from "@/features/books/types/book";
 
 const TEMPLATES = ["none", "personal", "sole_proprietor", "llc"] as const;
 type Template = (typeof TEMPLATES)[number];
@@ -141,10 +139,7 @@ function CreateBookDialog({ open, onClose, onSubmit }: CreateBookDialogProps) {
 
           {/* Fiscal year start month */}
           <div className="flex flex-col gap-1.5">
-            <label
-              htmlFor="book-fiscal-month"
-              className="font-medium text-sm"
-            >
+            <label htmlFor="book-fiscal-month" className="font-medium text-sm">
               Fiscal year start
             </label>
             <select
