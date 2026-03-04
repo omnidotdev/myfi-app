@@ -1,0 +1,145 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+
+import HierarchicalReportTable from "@/features/reports/components/HierarchicalReportTable";
+import ReportFilters from "@/features/reports/components/ReportFilters";
+
+import { API_URL } from "@/lib/config/env.config";
+
+type ReportLineItem = {
+  accountId: string;
+  accountCode: string | null;
+  accountName: string;
+  accountType: string;
+  subType: string | null;
+  parentId: string | null;
+  netAmount?: string;
+};
+
+type ProfitAndLossData = {
+  revenue: ReportLineItem[];
+  expenses: ReportLineItem[];
+  totalRevenue: string;
+  totalExpenses: string;
+  netIncome: string;
+};
+
+export const Route = createFileRoute("/_auth/reports/profit-and-loss")({
+  component: ProfitAndLossPage,
+});
+
+function ProfitAndLossPage() {
+  const [data, setData] = useState<ProfitAndLossData | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleGenerate = async (params: {
+    startDate?: string;
+    endDate?: string;
+  }) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const searchParams = new URLSearchParams();
+      if (params.startDate) searchParams.set("startDate", params.startDate);
+      if (params.endDate) searchParams.set("endDate", params.endDate);
+
+      const res = await fetch(
+        `${API_URL}/api/reports/profit-and-loss?${searchParams.toString()}`,
+      );
+
+      if (!res.ok) {
+        throw new Error(`Failed to fetch report: ${res.statusText}`);
+      }
+
+      const json = await res.json();
+      setData(json);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load report");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sections = data
+    ? [
+        {
+          title: "Revenue",
+          items: data.revenue,
+          total: data.totalRevenue,
+          totalLabel: "Total Revenue",
+        },
+        {
+          title: "Expenses",
+          items: data.expenses,
+          total: data.totalExpenses,
+          totalLabel: "Total Expenses",
+        },
+      ]
+    : [];
+
+  return (
+    <div className="flex flex-col gap-6 p-6">
+      <div>
+        <h1 className="font-bold text-2xl">Profit & Loss</h1>
+        <p className="text-muted-foreground text-sm">
+          Revenue and expenses over a date range
+        </p>
+      </div>
+
+      <ReportFilters mode="range" onGenerate={handleGenerate} />
+
+      {loading && (
+        <div className="rounded-lg border border-border bg-card p-8 text-center">
+          <p className="text-muted-foreground">Generating report...</p>
+        </div>
+      )}
+
+      {error && (
+        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-destructive text-sm">
+          {error}
+        </div>
+      )}
+
+      {!loading && !error && data && (
+        <>
+          <HierarchicalReportTable
+            sections={sections}
+            grandTotal={{ label: "Net Income", value: data.netIncome }}
+          />
+
+          {/* Net income summary */}
+          <div className="flex items-center justify-between rounded-lg border border-border bg-card p-4">
+            <span className="font-semibold">Net Income</span>
+            <span
+              className={`font-mono font-semibold text-lg ${
+                Number.parseFloat(data.netIncome) >= 0
+                  ? "text-green-600 dark:text-green-400"
+                  : "text-red-600 dark:text-red-400"
+              }`}
+            >
+              $
+              {Math.abs(Number.parseFloat(data.netIncome)).toLocaleString(
+                "en-US",
+                {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                },
+              )}
+            </span>
+          </div>
+        </>
+      )}
+
+      {!loading && !error && !data && (
+        <div className="rounded-lg border border-border bg-card p-8 text-center">
+          <p className="text-muted-foreground">
+            Select a date range and click Generate to view the Profit & Loss
+            report
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
