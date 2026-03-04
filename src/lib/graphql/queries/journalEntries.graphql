@@ -1,0 +1,68 @@
+query AllJournalEntries($bookId: UUID!, $first: Int, $after: Cursor) {
+  journalEntries(
+    condition: { bookId: $bookId }
+    orderBy: DATE_DESC
+    first: $first
+    after: $after
+  ) {
+    nodes {
+      rowId
+      bookId
+      date
+      memo
+      source
+      sourceReferenceId
+      isReviewed
+      isReconciled
+      createdAt
+      updatedAt
+      journalLines {
+        nodes {
+          rowId
+          accountId
+          debit
+          credit
+          memo
+          account {
+            rowId
+            name
+            code
+            type
+          }
+        }
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
+  }
+}
+
+mutation CreateJournalEntry($input: CreateJournalEntryInput!) {
+  createJournalEntry(input: $input) {
+    journalEntry {
+      rowId
+      date
+      memo
+    }
+  }
+}
+
+mutation CreateJournalLine($input: CreateJournalLineInput!) {
+  createJournalLine(input: $input) {
+    journalLine {
+      rowId
+      accountId
+      debit
+      credit
+    }
+  }
+}
+
+mutation DeleteJournalEntry($input: DeleteJournalEntryInput!) {
+  deleteJournalEntry(input: $input) {
+    deletedJournalEntryNodeId
+  }
+}

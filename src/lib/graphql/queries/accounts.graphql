@@ -1,0 +1,58 @@
+query AllAccounts($bookId: UUID!) {
+  accounts(condition: { bookId: $bookId }, orderBy: CODE_ASC) {
+    nodes {
+      rowId
+      bookId
+      parentId
+      name
+      code
+      type
+      subType
+      isPlaceholder
+      isActive
+      createdAt
+      updatedAt
+      parent {
+        rowId
+        name
+        code
+      }
+      children: accountsByParentId {
+        nodes {
+          rowId
+          name
+          code
+          type
+        }
+      }
+    }
+  }
+}
+
+mutation CreateAccount($input: CreateAccountInput!) {
+  createAccount(input: $input) {
+    account {
+      rowId
+      name
+      code
+      type
+    }
+  }
+}
+
+mutation UpdateAccount($input: UpdateAccountInput!) {
+  updateAccount(input: $input) {
+    account {
+      rowId
+      name
+      code
+      type
+    }
+  }
+}
+
+mutation DeleteAccount($input: DeleteAccountInput!) {
+  deleteAccount(input: $input) {
+    deletedAccountNodeId
+  }
+}

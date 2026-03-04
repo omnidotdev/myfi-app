@@ -1,0 +1,40 @@
+query AllBooks($organizationId: String!) {
+  books(condition: { organizationId: $organizationId }) {
+    nodes {
+      rowId
+      organizationId
+      name
+      type
+      currency
+      fiscalYearStartMonth
+      createdAt
+      updatedAt
+    }
+  }
+}
+
+mutation CreateBook($input: CreateBookInput!) {
+  createBook(input: $input) {
+    book {
+      rowId
+      name
+      type
+    }
+  }
+}
+
+mutation UpdateBook($input: UpdateBookInput!) {
+  updateBook(input: $input) {
+    book {
+      rowId
+      name
+      type
+    }
+  }
+}
+
+mutation DeleteBook($input: DeleteBookInput!) {
+  deleteBook(input: $input) {
+    deletedBookNodeId
+  }
+}
