@@ -1,8 +1,8 @@
 export const RECONCILIATION_STATUSES = [
-  "pending",
+  "pending_review",
   "approved",
+  "adjusted",
   "rejected",
-  "modified",
 ] as const;
 export type ReconciliationStatus = (typeof RECONCILIATION_STATUSES)[number];
 

@@ -100,7 +100,7 @@ function ReconciliationRow({
   onReject,
 }: ReconciliationRowProps) {
   const badgeClass = SOURCE_BADGE_CLASSES[item.source] ?? DEFAULT_BADGE_CLASS;
-  const isPending = item.status === "pending";
+  const isPending = item.status === "pending_review";
 
   return (
     <tr
@@ -134,7 +134,7 @@ function ReconciliationRow({
 
       {/* Suggested accounts */}
       <td className="px-3 py-3">
-        <div className="flex flex-col gap-0.5 text-xs text-muted-foreground">
+        <div className="flex flex-col gap-0.5 text-muted-foreground text-xs">
           {item.suggestedDebitAccount && (
             <span>
               <span className="font-medium text-foreground">DR</span>{" "}
