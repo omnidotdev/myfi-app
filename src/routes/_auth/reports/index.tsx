@@ -1,5 +1,11 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { BarChart3Icon, FileSpreadsheetIcon, ScaleIcon } from "lucide-react";
+import {
+  ArrowRightLeftIcon,
+  BarChart3Icon,
+  BookOpenIcon,
+  FileSpreadsheetIcon,
+  ScaleIcon,
+} from "lucide-react";
 
 export const Route = createFileRoute("/_auth/reports/")({
   component: ReportsPage,
@@ -26,6 +32,20 @@ const reportCards = [
       "Debit and credit totals for all accounts. Verify that your books are balanced",
     icon: FileSpreadsheetIcon,
     href: "/reports/trial-balance",
+  },
+  {
+    title: "Cash Flow Statement",
+    description:
+      "Track cash movements across operating, investing, and financing activities",
+    icon: ArrowRightLeftIcon,
+    href: "/reports/cash-flow",
+  },
+  {
+    title: "General Ledger",
+    description:
+      "Full transaction history for a specific account with running balance",
+    icon: BookOpenIcon,
+    href: "/reports/general-ledger",
   },
 ];
 
