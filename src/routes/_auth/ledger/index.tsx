@@ -1,21 +1,32 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { PlusIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Loader2Icon, PlusIcon } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
+import BookPicker from "@/features/books/components/BookPicker";
 import JournalEntryTable from "@/features/ledger/components/JournalEntryTable";
 import type {
   JournalEntry,
   JournalEntrySource,
 } from "@/features/ledger/types/journalEntry";
 import { JOURNAL_ENTRY_SOURCES } from "@/features/ledger/types/journalEntry";
+import { API_URL } from "@/lib/config/env.config";
 import formatLabel from "@/lib/format/label";
+import useActiveBook from "@/lib/hooks/useActiveBook";
 
 export const Route = createFileRoute("/_auth/ledger/")({
   component: LedgerPage,
 });
 
 function LedgerPage() {
-  const [entries] = useState<JournalEntry[]>([]);
+  const {
+    activeBookId,
+    books,
+    isLoading: booksLoading,
+    setActiveBookId,
+  } = useActiveBook();
+
+  const [entries, setEntries] = useState<JournalEntry[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [sourceFilter, setSourceFilter] = useState<JournalEntrySource | "all">(
     "all",
   );
@@ -24,6 +35,40 @@ function LedgerPage() {
   const [showReviewed, setShowReviewed] = useState<
     "all" | "reviewed" | "unreviewed"
   >("all");
+
+  const fetchEntries = useCallback(async () => {
+    if (!activeBookId) return;
+
+    setIsLoading(true);
+
+    try {
+      const res = await fetch(
+        `${API_URL}/api/journal-entries?bookId=${activeBookId}&limit=50&offset=0`,
+      );
+      const data = await res.json();
+      const mapped = (data.entries ?? []).map((e: Record<string, unknown>) => ({
+        ...e,
+        rowId: e.id as string,
+        lines: ((e.lines as Record<string, unknown>[]) ?? []).map(
+          (l: Record<string, unknown>) => ({
+            ...l,
+            rowId: l.id as string,
+            journalEntryId: e.id as string,
+          }),
+        ),
+      }));
+
+      setEntries(mapped);
+    } catch {
+      // Silently handle fetch errors
+    } finally {
+      setIsLoading(false);
+    }
+  }, [activeBookId]);
+
+  useEffect(() => {
+    fetchEntries();
+  }, [fetchEntries]);
 
   const filteredEntries = useMemo(() => {
     let result = entries;
@@ -49,9 +94,22 @@ function LedgerPage() {
     return result;
   }, [entries, sourceFilter, dateFrom, dateTo, showReviewed]);
 
-  const handleDelete = (_entryId: string) => {
-    // Will be wired to GraphQL mutation
-  };
+  const handleDelete = useCallback(
+    async (entryId: string) => {
+      try {
+        await fetch(`${API_URL}/api/journal-entries/${entryId}`, {
+          method: "DELETE",
+        });
+
+        await fetchEntries();
+      } catch {
+        // Silently handle delete errors
+      }
+    },
+    [fetchEntries],
+  );
+
+  const loading = booksLoading || isLoading;
 
   return (
     <div className="flex flex-col gap-6 p-6">
@@ -64,13 +122,21 @@ function LedgerPage() {
           </p>
         </div>
 
-        <Link
-          to="/ledger/new"
-          className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
-        >
-          <PlusIcon className="size-4" />
-          New Entry
-        </Link>
+        <div className="flex items-center gap-3">
+          <BookPicker
+            books={books}
+            selectedBookId={activeBookId}
+            onSelect={setActiveBookId}
+          />
+
+          <Link
+            to="/ledger/new"
+            className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
+          >
+            <PlusIcon className="size-4" />
+            New Entry
+          </Link>
+        </div>
       </div>
 
       {/* Filter bar */}
@@ -159,8 +225,26 @@ function LedgerPage() {
         </div>
       </div>
 
+      {/* Loading state */}
+      {loading && (
+        <div className="flex items-center justify-center rounded-lg border border-border bg-card p-8">
+          <Loader2Icon className="size-5 animate-spin text-muted-foreground" />
+        </div>
+      )}
+
+      {/* Empty state */}
+      {!loading && entries.length === 0 && (
+        <div className="rounded-lg border border-border bg-card p-8 text-center">
+          <p className="text-muted-foreground">
+            No journal entries yet. Create your first entry to get started.
+          </p>
+        </div>
+      )}
+
       {/* Journal entry table */}
-      <JournalEntryTable entries={filteredEntries} onDelete={handleDelete} />
+      {!loading && entries.length > 0 && (
+        <JournalEntryTable entries={filteredEntries} onDelete={handleDelete} />
+      )}
     </div>
   );
 }
