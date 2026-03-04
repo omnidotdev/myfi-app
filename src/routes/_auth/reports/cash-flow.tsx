@@ -4,6 +4,7 @@ import { useState } from "react";
 import ReportFilters from "@/features/reports/components/ReportFilters";
 
 import { API_URL } from "@/lib/config/env.config";
+import formatCurrency from "@/lib/format/currency";
 
 type CashFlowLineItem = {
   accountId: string;
@@ -118,7 +119,7 @@ function CashFlowPage() {
                   : "text-red-600 dark:text-red-400"
               }`}
             >
-              {formatSignedCurrency(data.netCashChange)}
+              {formatCurrency(data.netCashChange)}
             </span>
           </div>
         </>
@@ -179,7 +180,7 @@ function CashFlowSectionTable({
                 </td>
                 <td className="px-4 py-2">{item.accountName}</td>
                 <td className="whitespace-nowrap px-4 py-2 text-right font-mono">
-                  {formatSignedCurrency(item.netAmount)}
+                  {formatCurrency(item.netAmount)}
                 </td>
               </tr>
             ))}
@@ -190,7 +191,7 @@ function CashFlowSectionTable({
               <td className="px-4 py-2" />
               <td className="px-4 py-2">Total {title}</td>
               <td className="whitespace-nowrap px-4 py-2 text-right font-mono">
-                {formatSignedCurrency(section.total)}
+                {formatCurrency(section.total)}
               </td>
             </tr>
           </tfoot>
@@ -198,16 +199,4 @@ function CashFlowSectionTable({
       )}
     </div>
   );
-}
-
-/** Format a numeric string as signed currency */
-function formatSignedCurrency(value: string): string {
-  const num = Number.parseFloat(value);
-  if (Number.isNaN(num)) return "$0.00";
-
-  const prefix = num < 0 ? "-" : "";
-  return `${prefix}$${Math.abs(num).toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
 }

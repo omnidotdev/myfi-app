@@ -1,9 +1,8 @@
 import { useState } from "react";
-
-import { BUDGET_PERIODS } from "@/features/budgets/types/budget";
-
 import type { Account } from "@/features/accounts/types/account";
 import type { Budget, BudgetPeriod } from "@/features/budgets/types/budget";
+import { BUDGET_PERIODS } from "@/features/budgets/types/budget";
+import formatLabel from "@/lib/format/label";
 
 type BudgetFormProps = {
   accounts: Account[];
@@ -16,14 +15,6 @@ type BudgetFormProps = {
   }) => void;
   onCancel: () => void;
 };
-
-/** Format a snake_case value for display */
-function formatLabel(value: string): string {
-  return value
-    .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
 
 /**
  * Form for creating or editing a budget

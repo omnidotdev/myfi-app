@@ -1,15 +1,14 @@
 import { useState } from "react";
-
-import {
-  ACCOUNT_TYPES,
-  SUB_TYPES_BY_TYPE,
-} from "@/features/accounts/types/account";
-
 import type {
   Account,
   AccountSubType,
   AccountType,
 } from "@/features/accounts/types/account";
+import {
+  ACCOUNT_TYPES,
+  SUB_TYPES_BY_TYPE,
+} from "@/features/accounts/types/account";
+import formatLabel from "@/lib/format/label";
 
 type AccountFormProps = {
   accounts: Account[];
@@ -17,14 +16,6 @@ type AccountFormProps = {
   onSubmit: (values: Partial<Account>) => void;
   onCancel: () => void;
 };
-
-/** Format a snake_case value for display */
-function formatLabel(value: string): string {
-  return value
-    .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
 
 /**
  * Form for creating or editing an account
@@ -37,9 +28,7 @@ function AccountForm({
 }: AccountFormProps) {
   const [name, setName] = useState(initialValues?.name ?? "");
   const [code, setCode] = useState(initialValues?.code ?? "");
-  const [type, setType] = useState<AccountType>(
-    initialValues?.type ?? "asset",
-  );
+  const [type, setType] = useState<AccountType>(initialValues?.type ?? "asset");
   const [subType, setSubType] = useState<AccountSubType | "">(
     initialValues?.subType ?? "",
   );

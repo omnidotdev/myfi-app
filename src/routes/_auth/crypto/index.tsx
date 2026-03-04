@@ -5,8 +5,8 @@ import { useCallback, useState } from "react";
 import AddWalletForm from "@/features/crypto/components/AddWalletForm";
 import CryptoAssetCard from "@/features/crypto/components/CryptoAssetCard";
 import LotTable from "@/features/crypto/components/LotTable";
-
 import type { CryptoAsset, CryptoLot } from "@/features/crypto/types/crypto";
+import formatCurrency from "@/lib/format/currency";
 
 export const Route = createFileRoute("/_auth/crypto/")({
   component: CryptoPage,
@@ -190,15 +190,4 @@ function CryptoPage() {
       )}
     </div>
   );
-}
-
-/** Format a number as currency */
-function formatCurrency(value: number): string {
-  if (Number.isNaN(value)) return "$0.00";
-
-  const prefix = value < 0 ? "-" : "";
-  return `${prefix}$${Math.abs(value).toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
 }

@@ -1,14 +1,13 @@
 import { useState } from "react";
-
-import {
-  COST_BASIS_METHODS,
-  CRYPTO_NETWORKS,
-} from "@/features/crypto/types/crypto";
-
 import type {
   CostBasisMethod,
   CryptoNetwork,
 } from "@/features/crypto/types/crypto";
+import {
+  COST_BASIS_METHODS,
+  CRYPTO_NETWORKS,
+} from "@/features/crypto/types/crypto";
+import formatLabel from "@/lib/format/label";
 
 type AddWalletFormValues = {
   symbol: string;
@@ -23,14 +22,6 @@ type AddWalletFormProps = {
   onSubmit: (values: AddWalletFormValues) => void;
   onCancel: () => void;
 };
-
-/** Format a snake_case value for display */
-function formatLabel(value: string): string {
-  return value
-    .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
 
 /**
  * Form for adding a new crypto asset or wallet
@@ -98,9 +89,7 @@ function AddWalletForm({ onSubmit, onCancel }: AddWalletFormProps) {
         <select
           id="crypto-network"
           value={network}
-          onChange={(e) =>
-            setNetwork(e.target.value as CryptoNetwork | "")
-          }
+          onChange={(e) => setNetwork(e.target.value as CryptoNetwork | "")}
           className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
         >
           <option value="">Select network</option>

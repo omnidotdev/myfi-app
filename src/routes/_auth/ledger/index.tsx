@@ -1,23 +1,18 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import JournalEntryTable from "@/features/ledger/components/JournalEntryTable";
+import type {
+  JournalEntry,
+  JournalEntrySource,
+} from "@/features/ledger/types/journalEntry";
 import { JOURNAL_ENTRY_SOURCES } from "@/features/ledger/types/journalEntry";
-
-import type { JournalEntry, JournalEntrySource } from "@/features/ledger/types/journalEntry";
+import formatLabel from "@/lib/format/label";
 
 export const Route = createFileRoute("/_auth/ledger/")({
   component: LedgerPage,
 });
-
-/** Format a snake_case value for display */
-function formatLabel(value: string): string {
-  return value
-    .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
 
 function LedgerPage() {
   const [entries] = useState<JournalEntry[]>([]);
@@ -82,7 +77,10 @@ function LedgerPage() {
       <div className="flex flex-wrap items-end gap-4 rounded-lg border border-border bg-card p-4">
         {/* Source filter */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="filter-source" className="text-muted-foreground text-xs">
+          <label
+            htmlFor="filter-source"
+            className="text-muted-foreground text-xs"
+          >
             Source
           </label>
           <select
@@ -104,7 +102,10 @@ function LedgerPage() {
 
         {/* Date from */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="filter-date-from" className="text-muted-foreground text-xs">
+          <label
+            htmlFor="filter-date-from"
+            className="text-muted-foreground text-xs"
+          >
             From
           </label>
           <input
@@ -118,7 +119,10 @@ function LedgerPage() {
 
         {/* Date to */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="filter-date-to" className="text-muted-foreground text-xs">
+          <label
+            htmlFor="filter-date-to"
+            className="text-muted-foreground text-xs"
+          >
             To
           </label>
           <input
@@ -132,7 +136,10 @@ function LedgerPage() {
 
         {/* Review status toggle */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="filter-reviewed" className="text-muted-foreground text-xs">
+          <label
+            htmlFor="filter-reviewed"
+            className="text-muted-foreground text-xs"
+          >
             Status
           </label>
           <select

@@ -1,7 +1,9 @@
 import { PencilIcon, Trash2Icon } from "lucide-react";
-
-import type { BudgetTracking } from "@/features/budgets/types/budget";
-import type { BudgetPeriod } from "@/features/budgets/types/budget";
+import type {
+  BudgetPeriod,
+  BudgetTracking,
+} from "@/features/budgets/types/budget";
+import formatLabel from "@/lib/format/label";
 
 type BudgetCardProps = {
   tracking: BudgetTracking;
@@ -9,14 +11,6 @@ type BudgetCardProps = {
   onEdit: () => void;
   onDelete: () => void;
 };
-
-/** Format a snake_case value for display */
-function formatLabel(value: string): string {
-  return value
-    .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
 
 /** Determine progress bar color based on percent used */
 function getProgressColor(percent: number): string {
@@ -46,9 +40,7 @@ function BudgetCard({ tracking, period, onEdit, onDelete }: BudgetCardProps) {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="flex flex-col gap-1">
-          <h3 className="font-semibold text-base">
-            {tracking.accountName}
-          </h3>
+          <h3 className="font-semibold text-base">{tracking.accountName}</h3>
           {tracking.accountCode && (
             <span className="font-mono text-muted-foreground text-xs">
               {tracking.accountCode}
@@ -102,11 +94,15 @@ function BudgetCard({ tracking, period, onEdit, onDelete }: BudgetCardProps) {
       <div className="grid grid-cols-3 gap-3 text-sm">
         <div className="flex flex-col">
           <span className="text-muted-foreground text-xs">Spent</span>
-          <span className="font-medium">${formatAmount(tracking.actualAmount)}</span>
+          <span className="font-medium">
+            ${formatAmount(tracking.actualAmount)}
+          </span>
         </div>
         <div className="flex flex-col">
           <span className="text-muted-foreground text-xs">Budget</span>
-          <span className="font-medium">${formatAmount(tracking.targetAmount)}</span>
+          <span className="font-medium">
+            ${formatAmount(tracking.targetAmount)}
+          </span>
         </div>
         <div className="flex flex-col">
           <span className="text-muted-foreground text-xs">Remaining</span>

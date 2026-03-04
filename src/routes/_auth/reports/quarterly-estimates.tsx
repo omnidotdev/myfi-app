@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { API_URL } from "@/lib/config/env.config";
+import formatCurrency from "@/lib/format/currency";
 
 type QuarterEstimate = {
   quarter: number;
@@ -148,7 +149,7 @@ function QuarterlyEstimatesPage() {
                   <div className="flex items-center justify-between">
                     <h3 className="font-semibold text-sm">{q.label}</h3>
                     <span
-                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${statusStyles[status]}`}
+                      className={`rounded-full px-2 py-0.5 font-medium text-xs ${statusStyles[status]}`}
                     >
                       {status}
                     </span>
@@ -259,14 +260,4 @@ function SummaryRow({ label, value, bold }: SummaryRowProps) {
       </span>
     </div>
   );
-}
-
-function formatCurrency(value: string): string {
-  const num = Number.parseFloat(value);
-  if (Number.isNaN(num)) return "$0.00";
-
-  return `$${num.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
 }

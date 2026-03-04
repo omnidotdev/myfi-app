@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import ReportFilters from "@/features/reports/components/ReportFilters";
 
 import { API_URL } from "@/lib/config/env.config";
+import formatCurrency from "@/lib/format/currency";
 
 type AccountOption = {
   id: string;
@@ -183,9 +184,7 @@ function GeneralLedgerPage() {
                     <th className="px-4 py-3 font-medium">Memo</th>
                     <th className="px-4 py-3 font-medium">Source</th>
                     <th className="px-4 py-3 text-right font-medium">Debit</th>
-                    <th className="px-4 py-3 text-right font-medium">
-                      Credit
-                    </th>
+                    <th className="px-4 py-3 text-right font-medium">Credit</th>
                     <th className="px-4 py-3 text-right font-medium">
                       Balance
                     </th>
@@ -256,18 +255,6 @@ function GeneralLedgerPage() {
       )}
     </div>
   );
-}
-
-/** Format a numeric string as currency */
-function formatCurrency(value: string): string {
-  const num = Number.parseFloat(value);
-  if (Number.isNaN(num)) return "$0.00";
-
-  const prefix = num < 0 ? "-" : "";
-  return `${prefix}$${Math.abs(num).toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
 }
 
 /** Format an ISO date string to a short display format */

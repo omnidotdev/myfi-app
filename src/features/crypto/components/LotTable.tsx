@@ -1,4 +1,5 @@
 import type { CryptoLot } from "@/features/crypto/types/crypto";
+import formatCurrency from "@/lib/format/currency";
 
 type LotTableProps = {
   lots: CryptoLot[];
@@ -31,18 +32,6 @@ function formatAmount(value: string, decimals = 2): string {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });
-}
-
-/** Format currency value */
-function formatCurrency(value: string): string {
-  const num = Number.parseFloat(value);
-  if (Number.isNaN(num)) return "$0.00";
-
-  const prefix = num < 0 ? "-" : "";
-  return `${prefix}$${Math.abs(num).toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
 }
 
 /** Format a date string for display */
@@ -79,9 +68,7 @@ function LotTable({ lots, symbol }: LotTableProps) {
             <th className="px-4 py-2.5 text-right font-medium">Cost Basis</th>
             <th className="px-4 py-2.5 text-right font-medium">Remaining</th>
             <th className="px-4 py-2.5 text-center font-medium">Status</th>
-            <th className="px-4 py-2.5 text-right font-medium">
-              Realized G/L
-            </th>
+            <th className="px-4 py-2.5 text-right font-medium">Realized G/L</th>
           </tr>
         </thead>
         <tbody>
@@ -94,7 +81,7 @@ function LotTable({ lots, symbol }: LotTableProps) {
             return (
               <tr
                 key={lot.rowId}
-                className="border-border border-b last:border-b-0 transition-colors hover:bg-accent/50"
+                className="border-border border-b transition-colors last:border-b-0 hover:bg-accent/50"
               >
                 <td className="px-4 py-2.5">{formatDate(lot.acquiredAt)}</td>
                 <td className="px-4 py-2.5 text-right font-mono">

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { API_URL } from "@/lib/config/env.config";
+import { formatCurrency, formatSignedCurrency } from "@/lib/format/currency";
 
 type HarvestableAsset = {
   cryptoAssetId: string;
@@ -94,9 +95,7 @@ function TaxLossHarvestingPage() {
           ) : (
             <div className="overflow-x-auto rounded-lg border border-border bg-card">
               <div className="border-border border-b bg-muted/50 px-4 py-3">
-                <h2 className="font-semibold text-sm">
-                  Harvestable Positions
-                </h2>
+                <h2 className="font-semibold text-sm">Harvestable Positions</h2>
                 <p className="text-muted-foreground text-xs">
                   Tax savings estimated at{" "}
                   {(data.estimatedTaxRate * 100).toFixed(0)}% marginal rate
@@ -186,25 +185,4 @@ function TaxLossHarvestingPage() {
       )}
     </div>
   );
-}
-
-function formatCurrency(value: string): string {
-  const num = Number.parseFloat(value);
-  if (Number.isNaN(num)) return "$0.00";
-
-  return `$${num.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
-}
-
-function formatSignedCurrency(value: string): string {
-  const num = Number.parseFloat(value);
-  if (Number.isNaN(num)) return "$0.00";
-
-  const prefix = num < 0 ? "-" : "";
-  return `${prefix}$${Math.abs(num).toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
 }

@@ -5,6 +5,7 @@ import HierarchicalReportTable from "@/features/reports/components/HierarchicalR
 import ReportFilters from "@/features/reports/components/ReportFilters";
 
 import { API_URL } from "@/lib/config/env.config";
+import formatCurrency from "@/lib/format/currency";
 
 type ReportLineItem = {
   accountId: string;
@@ -139,15 +140,4 @@ function BalanceSheetPage() {
       )}
     </div>
   );
-}
-
-/** Format a numeric string as currency */
-function formatCurrency(value: string): string {
-  const num = Number.parseFloat(value);
-  if (Number.isNaN(num)) return "$0.00";
-
-  return `$${Math.abs(num).toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
 }

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { API_URL } from "@/lib/config/env.config";
+import { formatCurrency, formatSignedCurrency } from "@/lib/format/currency";
 
 type DisposalItem = {
   description: string;
@@ -240,25 +241,4 @@ function DisposalSection({ title, items, total }: DisposalSectionProps) {
       )}
     </div>
   );
-}
-
-function formatCurrency(value: string): string {
-  const num = Number.parseFloat(value);
-  if (Number.isNaN(num)) return "$0.00";
-
-  return `$${num.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
-}
-
-function formatSignedCurrency(value: string): string {
-  const num = Number.parseFloat(value);
-  if (Number.isNaN(num)) return "$0.00";
-
-  const prefix = num < 0 ? "-" : "";
-  return `${prefix}$${Math.abs(num).toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
 }

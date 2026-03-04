@@ -5,6 +5,7 @@ import HierarchicalReportTable from "@/features/reports/components/HierarchicalR
 import ReportFilters from "@/features/reports/components/ReportFilters";
 
 import { API_URL } from "@/lib/config/env.config";
+import formatCurrency from "@/lib/format/currency";
 
 type ReportLineItem = {
   accountId: string;
@@ -63,9 +64,7 @@ function TrialBalancePage() {
   };
 
   // Group accounts by type into sections
-  const sections = data
-    ? buildSections(data.accounts)
-    : [];
+  const sections = data ? buildSections(data.accounts) : [];
 
   return (
     <div className="flex flex-col gap-6 p-6">
@@ -185,15 +184,4 @@ function buildSections(accounts: ReportLineItem[]) {
         totalLabel: `Total ${typeLabels[type] ?? type}`,
       };
     });
-}
-
-/** Format a numeric string as currency */
-function formatCurrency(value: string): string {
-  const num = Number.parseFloat(value);
-  if (Number.isNaN(num)) return "$0.00";
-
-  return `$${Math.abs(num).toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
 }
