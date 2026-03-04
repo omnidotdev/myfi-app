@@ -1,9 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useState } from "react";
-
-import AccountMappingForm from "@/features/settings/components/AccountMappingForm";
-
 import type { Account } from "@/features/accounts/types/account";
+import AccountMappingForm from "@/features/settings/components/AccountMappingForm";
 
 export const Route = createFileRoute("/_auth/settings/mappings")({
   component: MappingsSettingsPage,
@@ -11,7 +9,12 @@ export const Route = createFileRoute("/_auth/settings/mappings")({
 
 // Placeholder data until GraphQL is wired up
 const EMPTY_ACCOUNTS: Account[] = [];
-const EMPTY_MAPPINGS: { rowId: string; eventType: string; debitAccountId: string | null; creditAccountId: string | null }[] = [];
+const EMPTY_MAPPINGS: {
+  rowId: string;
+  eventType: string;
+  debitAccountId: string | null;
+  creditAccountId: string | null;
+}[] = [];
 
 function MappingsSettingsPage() {
   const [accounts] = useState<Account[]>(EMPTY_ACCOUNTS);
@@ -21,9 +24,8 @@ function MappingsSettingsPage() {
   const [_bookId, _setBookId] = useState("default");
 
   const handleSave = useCallback(
-    (eventType: string, debitAccountId: string, creditAccountId: string) => {
+    (_eventType: string, _debitAccountId: string, _creditAccountId: string) => {
       // TODO: wire to UpsertAccountMapping mutation
-      console.info("Save mapping:", { eventType, debitAccountId, creditAccountId });
     },
     [],
   );

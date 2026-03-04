@@ -1,9 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-
-import JournalEntryForm from "@/features/ledger/components/JournalEntryForm";
-
 import type { Account } from "@/features/accounts/types/account";
+import JournalEntryForm from "@/features/ledger/components/JournalEntryForm";
 
 export const Route = createFileRoute("/_auth/ledger/new")({
   component: NewJournalEntryPage,
@@ -15,13 +13,11 @@ function NewJournalEntryPage() {
   // Will be replaced with real account data from GraphQL
   const [accounts] = useState<Account[]>([]);
 
-  const handleSubmit = (entry: {
+  const handleSubmit = (_entry: {
     date: string;
     memo: string;
     lines: { accountId: string; debit: string; credit: string; memo: string }[];
   }) => {
-    // Will be wired to GraphQL mutation
-    console.log("Journal entry submitted:", entry);
     navigate({ to: "/ledger" });
   };
 

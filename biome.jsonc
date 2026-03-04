@@ -1,17 +1,17 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.11/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
     "useIgnoreFile": true
   },
   "files": {
-    "ignore": ["generated/", "src/routeTree.gen.ts"]
+    "includes": ["**", "!**/generated/", "!**/src/routeTree.gen.ts"]
   },
   "css": {
     "parser": {
       "cssModules": false,
-      "allowTailwindDirectives": true
+      "tailwindDirectives": true
     }
   },
   "formatter": {
@@ -51,7 +51,7 @@
           "level": "error",
           "fix": "safe",
           "options": {
-            "style": "separated"
+            "style": "separatedType"
           }
         }
       },
@@ -71,22 +71,8 @@
   "assist": {
     "actions": {
       "source": {
-        "organizeImports": {
-          "level": "error",
-          "fix": "safe"
-        }
+        "organizeImports": "on"
       }
     }
-  },
-  "organizeImports": {
-    "groups": [
-      [":BUN:", ":NODE:"],
-      [":BLANK_LINE:"],
-      [":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:"],
-      [":BLANK_LINE:"],
-      ["**"],
-      [":BLANK_LINE:"],
-      [":TYPE:"]
-    ]
   }
 }
