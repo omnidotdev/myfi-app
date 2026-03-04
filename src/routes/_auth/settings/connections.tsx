@@ -16,11 +16,10 @@ const EMPTY_ACCOUNTS: ConnectedAccount[] = [];
 function ConnectionsSettingsPage() {
   const { session } = Route.useRouteContext();
 
-  const [accounts, _setAccounts] =
-    useState<ConnectedAccount[]>(EMPTY_ACCOUNTS);
+  const [accounts, _setAccounts] = useState<ConnectedAccount[]>(EMPTY_ACCOUNTS);
 
-  // Placeholder bookId -- will be replaced with real selection
-  const bookId = "default";
+  // TODO: populate from active book store (Task 13)
+  const [bookId, _setBookId] = useState<string>("");
   const userId = session?.user?.id ?? "";
 
   const handleLinkSuccess = () => {

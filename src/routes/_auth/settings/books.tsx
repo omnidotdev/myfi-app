@@ -2,12 +2,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 
+import CreateBookDialog from "@/features/books/components/CreateBookDialog";
+
 export const Route = createFileRoute("/_auth/settings/books")({
   component: BooksSettingsPage,
 });
 
 function BooksSettingsPage() {
-  const [_showCreateDialog, setShowCreateDialog] = useState(false);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+
+  const handleCreate = () => {
+    setShowCreateDialog(false);
+  };
 
   return (
     <div className="flex flex-col gap-6 p-6">
@@ -35,7 +41,11 @@ function BooksSettingsPage() {
         </p>
       </div>
 
-      {/* CreateBookDialog will be wired up with real data */}
+      <CreateBookDialog
+        open={showCreateDialog}
+        onClose={() => setShowCreateDialog(false)}
+        onSubmit={handleCreate}
+      />
     </div>
   );
 }
