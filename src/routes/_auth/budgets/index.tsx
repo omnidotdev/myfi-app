@@ -1,27 +1,83 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PlusIcon } from "lucide-react";
-import { useCallback, useState } from "react";
-
-import BudgetForm from "@/features/budgets/components/BudgetForm";
-import BudgetList from "@/features/budgets/components/BudgetList";
+import { Loader2Icon, PlusIcon } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 
 import type { Account } from "@/features/accounts/types/account";
+import BookPicker from "@/features/books/components/BookPicker";
+import BudgetForm from "@/features/budgets/components/BudgetForm";
+import BudgetList from "@/features/budgets/components/BudgetList";
 import type {
   Budget,
   BudgetPeriod,
   BudgetTracking,
 } from "@/features/budgets/types/budget";
+import { API_URL } from "@/lib/config/env.config";
+import useActiveBook from "@/lib/hooks/useActiveBook";
 
 export const Route = createFileRoute("/_auth/budgets/")({
   component: BudgetsPage,
 });
 
 function BudgetsPage() {
-  const [budgets] = useState<Budget[]>([]);
-  const [tracking] = useState<BudgetTracking[]>([]);
-  const [accounts] = useState<Account[]>([]);
+  const {
+    activeBookId,
+    books,
+    isLoading: booksLoading,
+    setActiveBookId,
+  } = useActiveBook();
+
+  const [budgets, setBudgets] = useState<Budget[]>([]);
+  const [tracking, setTracking] = useState<BudgetTracking[]>([]);
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
   const [editingBudget, setEditingBudget] = useState<Budget | null>(null);
+
+  const fetchBudgets = useCallback(async () => {
+    if (!activeBookId) return;
+
+    setIsLoading(true);
+
+    try {
+      const [budgetsRes, trackingRes, accountsRes] = await Promise.all([
+        fetch(`${API_URL}/api/budgets?bookId=${activeBookId}`),
+        fetch(`${API_URL}/api/budgets/tracking?bookId=${activeBookId}`),
+        fetch(`${API_URL}/api/accounts?bookId=${activeBookId}`),
+      ]);
+
+      const [budgetsData, trackingData, accountsData] = await Promise.all([
+        budgetsRes.json(),
+        trackingRes.json(),
+        accountsRes.json(),
+      ]);
+
+      const mappedBudgets = (budgetsData.budgets ?? []).map(
+        (b: Record<string, unknown>) => ({
+          ...b,
+          rowId: b.id as string,
+        }),
+      );
+
+      const mappedAccounts = (accountsData.accounts ?? []).map(
+        (a: Record<string, unknown>) => ({
+          ...a,
+          rowId: a.id as string,
+        }),
+      );
+
+      setBudgets(mappedBudgets);
+      setTracking(trackingData.tracking ?? trackingData ?? []);
+      setAccounts(mappedAccounts);
+    } catch {
+      // Silently handle fetch errors
+    } finally {
+      setIsLoading(false);
+    }
+  }, [activeBookId]);
+
+  useEffect(() => {
+    fetchBudgets();
+  }, [fetchBudgets]);
 
   const handleNew = useCallback(() => {
     setEditingBudget(null);
@@ -33,28 +89,62 @@ function BudgetsPage() {
     setFormOpen(true);
   }, []);
 
-  const handleDelete = useCallback((_budget: Budget) => {
-    // Will be wired to GraphQL mutation
-  }, []);
+  const handleDelete = useCallback(
+    async (budget: Budget) => {
+      try {
+        await fetch(`${API_URL}/api/budgets/${budget.rowId}`, {
+          method: "DELETE",
+        });
+
+        await fetchBudgets();
+      } catch {
+        // Silently handle delete errors
+      }
+    },
+    [fetchBudgets],
+  );
 
   const handleSubmit = useCallback(
-    (_values: {
+    async (values: {
       accountId: string;
       amount: string;
       period: BudgetPeriod;
       rollover: boolean;
     }) => {
-      // Will be wired to GraphQL mutation
-      setFormOpen(false);
-      setEditingBudget(null);
+      try {
+        if (editingBudget) {
+          await fetch(`${API_URL}/api/budgets/${editingBudget.rowId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(values),
+          });
+        } else {
+          await fetch(`${API_URL}/api/budgets`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              bookId: activeBookId,
+              ...values,
+            }),
+          });
+        }
+
+        await fetchBudgets();
+        setFormOpen(false);
+        setEditingBudget(null);
+      } catch {
+        // Silently handle submit errors
+      }
     },
-    [],
+    [editingBudget, activeBookId, fetchBudgets],
   );
 
   const handleCancel = useCallback(() => {
     setFormOpen(false);
     setEditingBudget(null);
   }, []);
+
+  const loading = booksLoading || isLoading;
 
   return (
     <div className="flex flex-col gap-6 p-6">
@@ -67,24 +157,41 @@ function BudgetsPage() {
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={handleNew}
-          className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
-        >
-          <PlusIcon className="size-4" />
-          New Budget
-        </button>
+        <div className="flex items-center gap-3">
+          <BookPicker
+            books={books}
+            selectedBookId={activeBookId}
+            onSelect={setActiveBookId}
+          />
+
+          <button
+            type="button"
+            onClick={handleNew}
+            className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
+          >
+            <PlusIcon className="size-4" />
+            New Budget
+          </button>
+        </div>
       </div>
 
+      {/* Loading state */}
+      {loading && (
+        <div className="flex items-center justify-center rounded-lg border border-border bg-card p-8">
+          <Loader2Icon className="size-5 animate-spin text-muted-foreground" />
+        </div>
+      )}
+
       {/* Budget list */}
-      <BudgetList
-        budgets={budgets}
-        tracking={tracking}
-        onNew={handleNew}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      {!loading && (
+        <BudgetList
+          budgets={budgets}
+          tracking={tracking}
+          onNew={handleNew}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      )}
 
       {/* Budget form dialog */}
       {formOpen && (
