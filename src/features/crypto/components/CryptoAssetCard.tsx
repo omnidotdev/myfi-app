@@ -1,8 +1,4 @@
-import {
-  ClipboardCopyIcon,
-  EyeIcon,
-  RefreshCwIcon,
-} from "lucide-react";
+import { ClipboardCopyIcon, EyeIcon, RefreshCwIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 
 import type {
@@ -18,19 +14,16 @@ type CryptoAssetCardProps = {
 };
 
 const NETWORK_BADGE_CLASSES: Record<CryptoNetwork, string> = {
-  ethereum:
-    "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300",
+  ethereum: "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300",
   bitcoin:
     "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-300",
   solana:
     "bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300",
   polygon:
     "bg-violet-100 text-violet-800 dark:bg-violet-900/20 dark:text-violet-300",
-  arbitrum:
-    "bg-sky-100 text-sky-800 dark:bg-sky-900/20 dark:text-sky-300",
+  arbitrum: "bg-sky-100 text-sky-800 dark:bg-sky-900/20 dark:text-sky-300",
   base: "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300",
-  avalanche:
-    "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300",
+  avalanche: "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300",
 };
 
 const METHOD_LABELS: Record<CostBasisMethod, string> = {
@@ -69,9 +62,14 @@ function CryptoAssetCard({
 
   const handleCopyAddress = useCallback(async () => {
     if (!asset.walletAddress) return;
-    await navigator.clipboard.writeText(asset.walletAddress);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(asset.walletAddress);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard API may not be available in all contexts
+      setCopied(false);
+    }
   }, [asset.walletAddress]);
 
   return (

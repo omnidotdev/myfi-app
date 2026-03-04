@@ -18,6 +18,7 @@ import {
 import { useMemo, useState } from "react";
 import { Toaster } from "sonner";
 
+import ErrorBoundary from "@/components/core/ErrorBoundary";
 import signOut from "@/lib/auth/signOut";
 import appConfig from "@/lib/config/app.config";
 import OrganizationProvider from "@/providers/OrganizationProvider";
@@ -188,7 +189,9 @@ function AuthLayout() {
 
         {/* Main content */}
         <main className="flex-1 overflow-y-auto pt-14 md:pt-0">
-          <Outlet />
+          <ErrorBoundary>
+            <Outlet />
+          </ErrorBoundary>
         </main>
       </div>
       <Toaster position="bottom-right" richColors />

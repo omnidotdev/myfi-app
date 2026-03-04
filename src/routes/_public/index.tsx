@@ -41,13 +41,13 @@ const modules = [
   },
   {
     title: "Crypto",
-    description: "Portfolio tracking with DeFi integrations and cost-basis reporting",
+    description:
+      "Portfolio tracking with DeFi integrations and cost-basis reporting",
     icon: <BitcoinIcon size={28} />,
   },
   {
     title: "Reports",
-    description:
-      "Balance sheets, income statements, and cash flow at a glance",
+    description: "Balance sheets, income statements, and cash flow at a glance",
     icon: <BarChart3Icon size={28} />,
   },
 ];
@@ -96,12 +96,16 @@ function HomePage() {
             <button
               type="button"
               className="group inline-flex h-12 items-center gap-2 rounded-md bg-primary px-8 font-semibold text-primary-foreground shadow-lg transition-colors hover:bg-primary/90"
-              onClick={() =>
-                signIn({
-                  redirectUrl: `${BASE_URL}/dashboard`,
-                  providerId: "omni",
-                })
-              }
+              onClick={async () => {
+                try {
+                  await signIn({
+                    redirectUrl: `${BASE_URL}/dashboard`,
+                    providerId: "omni",
+                  });
+                } catch {
+                  // Auth redirect will handle flow
+                }
+              }}
             >
               Get Started Free
               <ArrowRightIcon
@@ -194,12 +198,16 @@ function HomePage() {
           <button
             type="button"
             className="group inline-flex h-14 items-center gap-2 rounded-md bg-primary px-10 font-semibold text-lg text-primary-foreground shadow-lg transition-colors hover:bg-primary/90"
-            onClick={() =>
-              signIn({
-                redirectUrl: `${BASE_URL}/dashboard`,
-                providerId: "omni",
-              })
-            }
+            onClick={async () => {
+              try {
+                await signIn({
+                  redirectUrl: `${BASE_URL}/dashboard`,
+                  providerId: "omni",
+                });
+              } catch {
+                // Auth redirect will handle flow
+              }
+            }}
           >
             Get Started for Free
             <ArrowRightIcon

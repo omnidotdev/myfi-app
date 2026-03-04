@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { usePlaidLink } from "react-plaid-link";
-
-import { API_URL } from "@/lib/config/env.config";
-
 import type { PlaidLinkOnSuccessMetadata } from "react-plaid-link";
+import { usePlaidLink } from "react-plaid-link";
+import { API_URL } from "@/lib/config/env.config";
 
 type Props = {
   bookId: string;
@@ -17,20 +15,27 @@ type Props = {
 function PlaidLinkButton({ bookId, userId, onSuccess }: Props) {
   const [linkToken, setLinkToken] = useState<string | null>(null);
   const [isExchanging, setIsExchanging] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Fetch a link token when bookId changes
   useEffect(() => {
     let cancelled = false;
 
     async function fetchLinkToken() {
-      const res = await fetch(`${API_URL}/api/plaid/create-link-token`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bookId, userId }),
-      });
+      if (!cancelled) setError(null);
 
-      const data = await res.json();
-      if (!cancelled) setLinkToken(data.linkToken);
+      try {
+        const res = await fetch(`${API_URL}/api/plaid/create-link-token`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ bookId, userId }),
+        });
+
+        const data = await res.json();
+        if (!cancelled) setLinkToken(data.linkToken);
+      } catch {
+        if (!cancelled) setError("Failed to initialize bank connection");
+      }
     }
 
     setLinkToken(null);
@@ -76,14 +81,17 @@ function PlaidLinkButton({ bookId, userId, onSuccess }: Props) {
   const isLoading = !linkToken || isExchanging;
 
   return (
-    <button
-      type="button"
-      onClick={() => open()}
-      disabled={!ready || isLoading}
-      className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
-    >
-      {isLoading ? "Loading..." : "Connect Bank Account"}
-    </button>
+    <div>
+      <button
+        type="button"
+        onClick={() => open()}
+        disabled={!ready || isLoading}
+        className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {isLoading ? "Loading..." : "Connect Bank Account"}
+      </button>
+      {error && <p className="mt-2 text-destructive text-sm">{error}</p>}
+    </div>
   );
 }
 
