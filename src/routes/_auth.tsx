@@ -1,4 +1,9 @@
-import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  Outlet,
+  redirect,
+} from "@tanstack/react-router";
 import {
   BarChart3Icon,
   BitcoinIcon,
@@ -6,9 +11,11 @@ import {
   LandmarkIcon,
   LayoutDashboardIcon,
   LogOutIcon,
+  MenuIcon,
   WalletIcon,
+  XIcon,
 } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Toaster } from "sonner";
 
 import signOut from "@/lib/auth/signOut";
@@ -74,6 +81,7 @@ const navItems = [
 
 function AuthLayout() {
   const { session } = Route.useRouteContext();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const organizations = useMemo(
     () => session?.organizations ?? [],
@@ -83,11 +91,65 @@ function AuthLayout() {
   return (
     <OrganizationProvider organizations={organizations}>
       <div className="flex h-dvh w-full">
+        {/* Mobile top bar */}
+        <div className="fixed inset-x-0 top-0 z-40 flex h-14 items-center gap-3 border-sidebar-border border-b bg-sidebar px-4 md:hidden print:hidden">
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+            className="text-sidebar-foreground"
+          >
+            {mobileMenuOpen ? (
+              <XIcon className="size-5" />
+            ) : (
+              <MenuIcon className="size-5" />
+            )}
+          </button>
+          <span className="font-bold text-lg text-primary tracking-tight">
+            {appConfig.name}
+          </span>
+        </div>
+
+        {/* Mobile menu overlay */}
+        {mobileMenuOpen && (
+          <div className="fixed inset-0 z-30 flex flex-col bg-sidebar pt-14 md:hidden print:hidden">
+            <nav className="flex-1 space-y-1 p-3">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 rounded-md px-3 py-2 font-medium text-sidebar-foreground text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                >
+                  <item.icon className="size-4" />
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+
+            <div className="border-sidebar-border border-t p-3">
+              <div className="flex items-center justify-between rounded-md px-3 py-2">
+                <span className="truncate text-sidebar-foreground text-sm">
+                  {session?.user?.name || session?.user?.email}
+                </span>
+                <button
+                  type="button"
+                  onClick={signOut}
+                  aria-label="Sign out"
+                  className="text-sidebar-foreground/60 transition-colors hover:text-sidebar-foreground"
+                >
+                  <LogOutIcon className="size-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Sidebar */}
         <aside className="hidden w-64 shrink-0 flex-col border-sidebar-border border-r bg-sidebar md:flex print:hidden">
           {/* Brand */}
           <div className="flex h-16 items-center gap-2 border-sidebar-border border-b px-4">
-            <span className="font-bold text-primary text-lg tracking-tight">
+            <span className="font-bold text-lg text-primary tracking-tight">
               {appConfig.name}
             </span>
           </div>
@@ -95,14 +157,14 @@ function AuthLayout() {
           {/* Nav */}
           <nav className="flex-1 space-y-1 p-3">
             {navItems.map((item) => (
-              <a
+              <Link
                 key={item.href}
-                href={item.href}
+                to={item.href}
                 className="flex items-center gap-3 rounded-md px-3 py-2 font-medium text-sidebar-foreground text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               >
                 <item.icon className="size-4" />
                 {item.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -125,7 +187,7 @@ function AuthLayout() {
         </aside>
 
         {/* Main content */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto pt-14 md:pt-0">
           <Outlet />
         </main>
       </div>
