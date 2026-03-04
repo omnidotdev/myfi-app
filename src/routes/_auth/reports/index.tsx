@@ -3,7 +3,11 @@ import {
   ArrowRightLeftIcon,
   BarChart3Icon,
   BookOpenIcon,
+  CalendarIcon,
+  CoinsIcon,
   FileSpreadsheetIcon,
+  LeafIcon,
+  ReceiptTextIcon,
   ScaleIcon,
 } from "lucide-react";
 
@@ -46,6 +50,34 @@ const reportCards = [
       "Full transaction history for a specific account with running balance",
     icon: BookOpenIcon,
     href: "/reports/general-ledger",
+  },
+  {
+    title: "Schedule C",
+    description:
+      "Self-employment income and expenses grouped by IRS categories",
+    icon: ReceiptTextIcon,
+    href: "/reports/schedule-c",
+  },
+  {
+    title: "Form 8949",
+    description:
+      "Crypto capital gains and losses classified as short-term or long-term",
+    icon: CoinsIcon,
+    href: "/reports/form-8949",
+  },
+  {
+    title: "Quarterly Estimates",
+    description:
+      "Estimated tax payments with due dates and safe harbor calculations",
+    icon: CalendarIcon,
+    href: "/reports/quarterly-estimates",
+  },
+  {
+    title: "Tax-Loss Harvesting",
+    description:
+      "Identify crypto positions with unrealized losses to offset capital gains",
+    icon: LeafIcon,
+    href: "/reports/tax-loss-harvesting",
   },
 ];
 
