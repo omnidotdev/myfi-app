@@ -1,0 +1,30 @@
+query AccountMappings($bookId: UUID!) {
+  accountMappings(condition: { bookId: $bookId }) {
+    nodes {
+      rowId
+      bookId
+      eventType
+      debitAccountId
+      creditAccountId
+      debitAccount {
+        rowId
+        name
+        code
+      }
+      creditAccount {
+        rowId
+        name
+        code
+      }
+    }
+  }
+}
+
+mutation UpsertAccountMapping($input: CreateAccountMappingInput!) {
+  createAccountMapping(input: $input) {
+    accountMapping {
+      rowId
+      eventType
+    }
+  }
+}
