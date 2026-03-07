@@ -8,11 +8,19 @@ import type { ReconciliationItem } from "@/features/reconciliation/types/reconci
 import { API_URL } from "@/lib/config/env.config";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
-type SourceFilter = "all" | "plaid_import" | "mantle_sync" | "crypto_sync";
+type SourceFilter =
+  | "all"
+  | "plaid_import"
+  | "mantle_sync"
+  | "crypto_sync"
+  | "csv_import"
+  | "ofx_import";
 
 const SOURCE_FILTERS: { value: SourceFilter; label: string }[] = [
   { value: "all", label: "All" },
   { value: "plaid_import", label: "Plaid" },
+  { value: "csv_import", label: "CSV" },
+  { value: "ofx_import", label: "OFX" },
   { value: "mantle_sync", label: "Mantle" },
   { value: "crypto_sync", label: "Crypto" },
 ];
