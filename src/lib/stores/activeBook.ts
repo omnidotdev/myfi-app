@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 
 type ActiveBookStore = {
   activeBookId: string | null;
-  setActiveBookId: (id: string) => void;
+  setActiveBookId: (id: string | null) => void;
 };
 
 const useActiveBookStore = create<ActiveBookStore>()(

@@ -1,11 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
+import BookPicker from "@/features/books/components/BookPicker";
 import HierarchicalReportTable from "@/features/reports/components/HierarchicalReportTable";
 import ReportFilters from "@/features/reports/components/ReportFilters";
 
 import { API_URL } from "@/lib/config/env.config";
 import formatCurrency from "@/lib/format/currency";
+
+import useActiveBook from "@/lib/hooks/useActiveBook";
 
 type ReportLineItem = {
   accountId: string;
@@ -30,6 +33,7 @@ export const Route = createFileRoute("/_app/reports/trial-balance")({
 });
 
 function TrialBalancePage() {
+  const { activeBookId, books, isLoading: booksLoading, setActiveBookId } = useActiveBook();
   const [data, setData] = useState<TrialBalanceData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -43,6 +47,7 @@ function TrialBalancePage() {
 
     try {
       const searchParams = new URLSearchParams();
+      if (activeBookId) searchParams.set("bookId", activeBookId);
       if (params.startDate) searchParams.set("startDate", params.startDate);
       if (params.endDate) searchParams.set("endDate", params.endDate);
 
@@ -68,11 +73,14 @@ function TrialBalancePage() {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <div>
-        <h1 className="font-bold text-2xl">Trial Balance</h1>
-        <p className="text-muted-foreground text-sm">
-          Debit and credit totals for all accounts over a date range
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="font-bold text-2xl">Trial Balance</h1>
+          <p className="text-muted-foreground text-sm">
+            Debit and credit totals for all accounts over a date range
+          </p>
+        </div>
+        <BookPicker books={books} selectedBookId={activeBookId} onSelect={setActiveBookId} />
       </div>
 
       <ReportFilters mode="range" onGenerate={handleGenerate} />

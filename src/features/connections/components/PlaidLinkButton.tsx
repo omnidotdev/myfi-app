@@ -51,18 +51,24 @@ function PlaidLinkButton({ bookId, userId, onSuccess }: Props) {
       setIsExchanging(true);
 
       try {
-        // Exchange the public token for an access token
-        await fetch(`${API_URL}/api/plaid/exchange-token`, {
+        const exchangeRes = await fetch(`${API_URL}/api/plaid/exchange-token`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ publicToken, metadata, bookId }),
+          body: JSON.stringify({
+            publicToken,
+            bookId,
+            institutionName: metadata.institution?.name,
+            accountMask: metadata.accounts?.[0]?.mask,
+          }),
         });
 
-        // Trigger initial sync
+        const { connectedAccountId } = await exchangeRes.json();
+
+        // Trigger initial sync with the correct ID
         await fetch(`${API_URL}/api/plaid/sync`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ bookId }),
+          body: JSON.stringify({ connectedAccountId }),
         });
 
         onSuccess();

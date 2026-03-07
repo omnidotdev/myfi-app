@@ -3,8 +3,18 @@ import { useCallback, useState } from "react";
 
 import type { Account } from "@/features/accounts/types/account";
 
-/** Mantle event types supported for account mapping */
+/** Event types supported for account mapping */
 const EVENT_TYPES = [
+  // Plaid auto-categorization
+  {
+    type: "plaid_income",
+    description: "Default income categorization",
+  },
+  {
+    type: "plaid_expense",
+    description: "Default expense categorization",
+  },
+  // Mantle events
   {
     type: "invoice.sent",
     description: "Record receivable",

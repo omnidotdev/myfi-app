@@ -5,7 +5,8 @@ import useActiveBookStore from "@/lib/stores/activeBook";
 import { useOrganization } from "@/providers/OrganizationProvider";
 
 const useActiveBook = () => {
-  const { organizationId } = useOrganization();
+  const ctx = useOrganization();
+  const organizationId = ctx?.currentOrganization?.id ?? null;
   const { activeBookId, setActiveBookId } = useActiveBookStore();
   const [books, setBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,21 +27,15 @@ const useActiveBook = () => {
       .finally(() => setIsLoading(false));
   }, [organizationId]);
 
-  // Auto-select first book
-  useEffect(() => {
-    if (books.length > 0 && !activeBookId) {
-      setActiveBookId(books[0].rowId);
-    }
-  }, [books, activeBookId, setActiveBookId]);
-
   const activeBook =
-    books.find((b) => b.rowId === activeBookId) ?? books[0] ?? null;
+    books.find((b) => b.rowId === activeBookId) ?? null;
 
   return {
     activeBook,
     activeBookId: activeBook?.rowId ?? null,
     books,
     isLoading,
+    organizationId,
     setActiveBookId,
   };
 };

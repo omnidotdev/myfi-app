@@ -1,10 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
+import BookPicker from "@/features/books/components/BookPicker";
 import ReportFilters from "@/features/reports/components/ReportFilters";
 
 import { API_URL } from "@/lib/config/env.config";
 import formatCurrency from "@/lib/format/currency";
+
+import useActiveBook from "@/lib/hooks/useActiveBook";
 
 type CashFlowLineItem = {
   accountId: string;
@@ -32,6 +35,7 @@ export const Route = createFileRoute("/_app/reports/cash-flow")({
 });
 
 function CashFlowPage() {
+  const { activeBookId, books, isLoading: booksLoading, setActiveBookId } = useActiveBook();
   const [data, setData] = useState<CashFlowData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -45,6 +49,7 @@ function CashFlowPage() {
 
     try {
       const searchParams = new URLSearchParams();
+      if (activeBookId) searchParams.set("bookId", activeBookId);
       if (params.startDate) searchParams.set("startDate", params.startDate);
       if (params.endDate) searchParams.set("endDate", params.endDate);
 
@@ -67,12 +72,15 @@ function CashFlowPage() {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <div>
-        <h1 className="font-bold text-2xl">Cash Flow Statement</h1>
-        <p className="text-muted-foreground text-sm">
-          Cash movements classified by operating, investing, and financing
-          activities
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="font-bold text-2xl">Cash Flow Statement</h1>
+          <p className="text-muted-foreground text-sm">
+            Cash movements classified by operating, investing, and financing
+            activities
+          </p>
+        </div>
+        <BookPicker books={books} selectedBookId={activeBookId} onSelect={setActiveBookId} />
       </div>
 
       <ReportFilters mode="range" onGenerate={handleGenerate} />

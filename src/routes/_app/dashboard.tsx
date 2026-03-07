@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
+  AlertCircleIcon,
+  BookOpenIcon,
   DollarSignIcon,
   Loader2Icon,
   TrendingDownIcon,
@@ -38,18 +40,51 @@ type RecentEntry = {
   lines: { debit: string | null }[];
 };
 
+type BookSummary = {
+  id: string;
+  name: string;
+  type: string;
+  totalAssets: string;
+  totalLiabilities: string;
+  netWorth: string;
+};
+
+type DashboardSummary = {
+  books: BookSummary[];
+  pendingReviewCount: number;
+  totalNetWorth: string;
+};
+
 function DashboardPage() {
   const {
     activeBookId,
     books,
     isLoading: booksLoading,
+    organizationId,
     setActiveBookId,
   } = useActiveBook();
 
   const [netWorth, setNetWorth] = useState<NetWorthSummary | null>(null);
   const [spendingMonths, setSpendingMonths] = useState<SpendingMonth[]>([]);
   const [recentEntries, setRecentEntries] = useState<RecentEntry[]>([]);
+  const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch multi-book summary when no book is selected
+  const fetchSummary = useCallback(async () => {
+    if (!organizationId) return;
+
+    try {
+      const res = await fetch(
+        `${API_URL}/api/dashboard/summary?organizationId=${organizationId}`,
+      );
+      const data = await res.json();
+
+      setSummary(data);
+    } catch {
+      // Silently handle fetch errors
+    }
+  }, [organizationId]);
 
   const fetchNetWorth = useCallback(async () => {
     if (!activeBookId) return;
@@ -100,6 +135,7 @@ function DashboardPage() {
     }
   }, [activeBookId]);
 
+  // Single-book data fetch
   useEffect(() => {
     if (!activeBookId) return;
 
@@ -114,6 +150,21 @@ function DashboardPage() {
       });
   }, [activeBookId, fetchNetWorth, fetchSpendingTrends, fetchRecentEntries]);
 
+  // Multi-book summary fetch
+  useEffect(() => {
+    if (activeBookId || booksLoading) return;
+
+    setIsLoading(true);
+
+    fetchSummary()
+      .catch(() => {
+        // Silently handle fetch errors
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [activeBookId, booksLoading, fetchSummary]);
+
   const chartData = useMemo(
     () =>
       spendingMonths.map((m) => ({
@@ -124,6 +175,7 @@ function DashboardPage() {
   );
 
   const loading = booksLoading || isLoading;
+  const showAllBooks = !activeBookId && !booksLoading;
 
   return (
     <div className="flex flex-col gap-6 p-6">
@@ -145,8 +197,108 @@ function DashboardPage() {
         </div>
       )}
 
-      {/* Summary cards */}
-      {!loading && netWorth && (
+      {/* Multi-book summary view */}
+      {!loading && showAllBooks && summary && (
+        <>
+          {/* Total net worth across all books */}
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-card p-5">
+            <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <DollarSignIcon className="size-5" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-muted-foreground text-xs">
+                Combined Net Worth
+              </span>
+              <span
+                className={`font-semibold text-xl ${Number.parseFloat(summary.totalNetWorth) >= 0 ? "text-green-600" : "text-red-500"}`}
+              >
+                {formatCurrency(summary.totalNetWorth)}
+              </span>
+            </div>
+          </div>
+
+          {/* Pending reconciliation */}
+          {summary.pendingReviewCount > 0 && (
+            <Link
+              to="/reconciliation"
+              className="flex items-center gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 transition-colors hover:bg-amber-100 dark:border-amber-900 dark:bg-amber-950 dark:hover:bg-amber-900"
+            >
+              <AlertCircleIcon className="size-5 text-amber-600 dark:text-amber-400" />
+              <span className="text-sm">
+                <span className="font-semibold">
+                  {summary.pendingReviewCount}
+                </span>{" "}
+                {summary.pendingReviewCount === 1
+                  ? "transaction"
+                  : "transactions"}{" "}
+                pending review
+              </span>
+            </Link>
+          )}
+
+          {/* Per-book cards */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {summary.books.map((book) => (
+              <button
+                key={book.id}
+                type="button"
+                onClick={() => setActiveBookId(book.id)}
+                className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4 text-left transition-colors hover:border-primary/50 hover:bg-accent"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <BookOpenIcon className="size-4 text-muted-foreground" />
+                    <span className="font-semibold text-sm">{book.name}</span>
+                  </div>
+                  <span className="rounded-full bg-muted px-2 py-0.5 text-muted-foreground text-xs capitalize">
+                    {book.type}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="flex flex-col">
+                    <span className="text-muted-foreground text-xs">
+                      Assets
+                    </span>
+                    <span className="font-medium text-green-600 text-sm">
+                      {formatCurrency(book.totalAssets)}
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-muted-foreground text-xs">
+                      Liabilities
+                    </span>
+                    <span className="font-medium text-red-500 text-sm">
+                      {formatCurrency(book.totalLiabilities)}
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-muted-foreground text-xs">
+                      Net Worth
+                    </span>
+                    <span
+                      className={`font-medium text-sm ${Number.parseFloat(book.netWorth) >= 0 ? "text-green-600" : "text-red-500"}`}
+                    >
+                      {formatCurrency(book.netWorth)}
+                    </span>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+
+      {!loading && showAllBooks && !summary && (
+        <div className="rounded-lg border border-border bg-card p-8 text-center">
+          <p className="text-muted-foreground text-sm">
+            No books available yet
+          </p>
+        </div>
+      )}
+
+      {/* Single-book: Summary cards */}
+      {!loading && !showAllBooks && netWorth && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="flex items-center gap-3 rounded-lg border border-border bg-card p-4">
             <div className="flex size-10 items-center justify-center rounded-full bg-green-100 text-green-600">
@@ -192,7 +344,7 @@ function DashboardPage() {
         </div>
       )}
 
-      {!loading && !netWorth && (
+      {!loading && !showAllBooks && !netWorth && (
         <div className="rounded-lg border border-border bg-card p-8 text-center">
           <p className="text-muted-foreground text-sm">
             No financial summary available yet
@@ -200,8 +352,8 @@ function DashboardPage() {
         </div>
       )}
 
-      {/* Spending trends chart */}
-      {!loading && (
+      {/* Single-book: Spending trends chart */}
+      {!loading && !showAllBooks && (
         <div className="rounded-lg border border-border bg-card p-4">
           <h2 className="mb-4 font-semibold text-lg">Spending Trends</h2>
 
@@ -229,8 +381,8 @@ function DashboardPage() {
         </div>
       )}
 
-      {/* Recent entries */}
-      {!loading && (
+      {/* Single-book: Recent entries */}
+      {!loading && !showAllBooks && (
         <div className="rounded-lg border border-border bg-card p-4">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-semibold text-lg">Recent Entries</h2>

@@ -61,9 +61,18 @@ function ConnectionsSettingsPage() {
   }, [fetchConnections]);
 
   const handleSync = useCallback(
-    async (_accountId: string) => {
-      // Sync endpoint is on plaid routes; for now just refetch
-      await fetchConnections();
+    async (accountId: string) => {
+      try {
+        await fetch(`${API_URL}/api/plaid/sync`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ connectedAccountId: accountId }),
+        });
+
+        await fetchConnections();
+      } catch {
+        // Silently handle sync errors
+      }
     },
     [fetchConnections],
   );

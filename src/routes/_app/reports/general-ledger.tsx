@@ -1,10 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
+import BookPicker from "@/features/books/components/BookPicker";
 import ReportFilters from "@/features/reports/components/ReportFilters";
 
 import { API_URL } from "@/lib/config/env.config";
 import formatCurrency from "@/lib/format/currency";
+
+import useActiveBook from "@/lib/hooks/useActiveBook";
 
 type AccountOption = {
   id: string;
@@ -38,6 +41,7 @@ export const Route = createFileRoute("/_app/reports/general-ledger")({
 });
 
 function GeneralLedgerPage() {
+  const { activeBookId, books, isLoading: booksLoading, setActiveBookId } = useActiveBook();
   const [accounts, setAccounts] = useState<AccountOption[]>([]);
   const [selectedAccountId, setSelectedAccountId] = useState("");
   const [data, setData] = useState<GeneralLedgerData | null>(null);
@@ -46,18 +50,19 @@ function GeneralLedgerPage() {
 
   // Fetch accounts for the picker
   useEffect(() => {
+    if (!activeBookId) return;
     const fetchAccounts = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/accounts`);
+        const res = await fetch(`${API_URL}/api/accounts?bookId=${activeBookId}`);
         if (!res.ok) return;
         const json = await res.json();
         setAccounts(json.accounts ?? []);
       } catch {
-        // Silently fail; accounts will show empty
+        // Silently fail
       }
     };
     fetchAccounts();
-  }, []);
+  }, [activeBookId]);
 
   const handleGenerate = async (params: {
     startDate?: string;
@@ -73,6 +78,7 @@ function GeneralLedgerPage() {
 
     try {
       const searchParams = new URLSearchParams();
+      if (activeBookId) searchParams.set("bookId", activeBookId);
       searchParams.set("accountId", selectedAccountId);
       if (params.startDate) searchParams.set("startDate", params.startDate);
       if (params.endDate) searchParams.set("endDate", params.endDate);
@@ -96,11 +102,14 @@ function GeneralLedgerPage() {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <div>
-        <h1 className="font-bold text-2xl">General Ledger</h1>
-        <p className="text-muted-foreground text-sm">
-          Full transaction history for a specific account with running balance
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="font-bold text-2xl">General Ledger</h1>
+          <p className="text-muted-foreground text-sm">
+            Full transaction history for a specific account with running balance
+          </p>
+        </div>
+        <BookPicker books={books} selectedBookId={activeBookId} onSelect={setActiveBookId} />
       </div>
 
       {/* Account picker */}
