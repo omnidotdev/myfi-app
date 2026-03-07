@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import BookPicker from "@/features/books/components/BookPicker";
 import ConnectedAccountsList from "@/features/connections/components/ConnectedAccountsList";
+import FileImportButton from "@/features/connections/components/FileImportButton";
 import PlaidLinkButton from "@/features/connections/components/PlaidLinkButton";
 import type { ConnectedAccount } from "@/features/connections/types/connectedAccount";
 import { API_URL } from "@/lib/config/env.config";
@@ -24,6 +25,10 @@ function ConnectionsSettingsPage() {
 
   const [accounts, setAccounts] = useState<ConnectedAccount[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [importResult, setImportResult] = useState<{
+    addedCount: number;
+    format: string;
+  } | null>(null);
 
   const userId = session?.user?.id ?? "";
 
@@ -59,6 +64,20 @@ function ConnectionsSettingsPage() {
   const handleLinkSuccess = useCallback(() => {
     fetchConnections();
   }, [fetchConnections]);
+
+  const handleImportSuccess = useCallback(
+    (result: {
+      addedCount: number;
+      skippedCount: number;
+      totalParsed: number;
+      format: string;
+    }) => {
+      setImportResult(result);
+      fetchConnections();
+      setTimeout(() => setImportResult(null), 5000);
+    },
+    [fetchConnections],
+  );
 
   const handleSync = useCallback(
     async (accountId: string) => {
@@ -112,6 +131,11 @@ function ConnectionsSettingsPage() {
             onSelect={setActiveBookId}
           />
 
+          <FileImportButton
+            bookId={activeBookId ?? ""}
+            onSuccess={handleImportSuccess}
+          />
+
           <PlaidLinkButton
             bookId={activeBookId ?? ""}
             userId={userId}
@@ -119,6 +143,13 @@ function ConnectionsSettingsPage() {
           />
         </div>
       </div>
+
+      {importResult && (
+        <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-green-800 text-sm dark:border-green-800 dark:bg-green-900/20 dark:text-green-300">
+          Imported {importResult.addedCount} transactions from{" "}
+          {importResult.format.toUpperCase()} file
+        </div>
+      )}
 
       {/* Loading state */}
       {loading && (
