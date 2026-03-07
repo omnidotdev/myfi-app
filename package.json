@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "concurrently --names \"GQL,VITE\" -c \"magenta,cyan\" \"bun run graphql:generate:watch\" \"bun dev:vite\"",
     "dev:vite": "bun --env-file .env.local --env-file .env.development vite dev",
-    "build": "tsc --noEmit && vite build",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
     "start": "node .output/server/index.mjs",
     "check": "biome check .",
     "format": "biome format --write .",

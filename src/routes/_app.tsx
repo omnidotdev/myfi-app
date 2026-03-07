@@ -21,7 +21,7 @@ import { Toaster } from "sonner";
 import ErrorBoundary from "@/components/core/ErrorBoundary";
 import signOut from "@/lib/auth/signOut";
 import appConfig from "@/lib/config/app.config";
-import OrganizationProvider from "@/providers/OrganizationProvider";
+import { OrganizationProvider } from "@/providers/OrganizationProvider";
 import {
   getLastOrgCookie,
   setLastOrgCookie,

@@ -11,9 +11,6 @@ const config: KnipConfig = {
   ],
   project: ["src/**/*.{ts,tsx,css}"],
   ignore: ["src/generated/**", "src/routeTree.gen.ts"],
-  graphqlCodegen: {
-    config: ["package.json", "src/lib/graphql/codegen.config.ts"],
-  },
   ignoreExportsUsedInFile: true,
   ignoreDependencies: [
     // UI - not yet used, planned
