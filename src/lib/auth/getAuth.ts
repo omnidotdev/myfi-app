@@ -1,5 +1,8 @@
 import type { OrganizationClaim } from "@omnidotdev/providers";
-import { ensureFreshAccessToken, extractOrgClaims } from "@omnidotdev/providers";
+import {
+  ensureFreshAccessToken,
+  extractOrgClaims,
+} from "@omnidotdev/providers";
 import { setCookie } from "@tanstack/react-start/server";
 import auth from "@/lib/auth/auth";
 import { authCache, oidc } from "@/lib/auth/authCache";
