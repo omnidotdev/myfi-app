@@ -1,5 +1,5 @@
 import type { OrganizationClaim } from "@omnidotdev/providers";
-import { extractOrgClaims } from "@omnidotdev/providers";
+import { ensureFreshAccessToken, extractOrgClaims } from "@omnidotdev/providers";
 import { setCookie } from "@tanstack/react-start/server";
 import auth from "@/lib/auth/auth";
 import { authCache, oidc } from "@/lib/auth/authCache";
@@ -34,9 +34,17 @@ export async function getAuth(request: Request) {
 
     // Get tokens from Gatekeeper via Better Auth
     try {
-      const tokenResult = await auth.api.getAccessToken({
-        body: { providerId: "omni" },
-        headers: request.headers,
+      const tokenResult = await ensureFreshAccessToken({
+        getAccessToken: () =>
+          auth.api.getAccessToken({
+            body: { providerId: "omni" },
+            headers: request.headers,
+          }),
+        refreshToken: () =>
+          auth.api.refreshToken({
+            body: { providerId: "omni" },
+            headers: request.headers,
+          }),
       });
       accessToken = tokenResult?.accessToken;
 
