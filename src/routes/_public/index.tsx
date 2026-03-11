@@ -12,7 +12,6 @@ import {
 
 import signIn from "@/lib/auth/signIn";
 import appConfig from "@/lib/config/app.config";
-import { BASE_URL } from "@/lib/config/env.config";
 
 export const Route = createFileRoute("/_public/")({
   beforeLoad: ({ context: { session } }) => {
@@ -99,7 +98,7 @@ function HomePage() {
               onClick={async () => {
                 try {
                   await signIn({
-                    redirectUrl: `${BASE_URL}/dashboard`,
+                    redirectUrl: `${window.location.origin}/dashboard`,
                     providerId: "omni",
                   });
                 } catch {
@@ -201,7 +200,7 @@ function HomePage() {
             onClick={async () => {
               try {
                 await signIn({
-                  redirectUrl: `${BASE_URL}/dashboard`,
+                  redirectUrl: `${window.location.origin}/dashboard`,
                   providerId: "omni",
                 });
               } catch {

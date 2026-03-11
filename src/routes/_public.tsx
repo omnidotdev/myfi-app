@@ -15,7 +15,6 @@ import { useState } from "react";
 import signIn from "@/lib/auth/signIn";
 import signOut from "@/lib/auth/signOut";
 import appConfig from "@/lib/config/app.config";
-import { BASE_URL } from "@/lib/config/env.config";
 
 export const Route = createFileRoute("/_public")({
   component: PublicLayout,
@@ -27,7 +26,7 @@ function PublicLayout() {
 
   const handleSignIn = async () => {
     try {
-      await signIn({ redirectUrl: BASE_URL, providerId: "omni" });
+      await signIn({ redirectUrl: window.location.origin, providerId: "omni" });
     } catch (error) {
       console.error("[handleSignIn] OAuth sign-in failed:", error);
     }

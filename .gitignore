@@ -1,4 +1,5 @@
 node_modules/
+.nitro/
 .output/
 dist/
 .env.local

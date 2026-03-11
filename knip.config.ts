@@ -10,7 +10,7 @@ const config: KnipConfig = {
     "src/features/**/*.{ts,tsx}",
   ],
   project: ["src/**/*.{ts,tsx,css}"],
-  ignore: ["src/generated/**", "src/routeTree.gen.ts"],
+  ignore: ["src/generated/**"],
   ignoreExportsUsedInFile: true,
   ignoreDependencies: [
     // UI - not yet used, planned
@@ -18,15 +18,11 @@ const config: KnipConfig = {
     "@tanstack/react-form",
     "@tanstack/zod-adapter",
     "dayjs",
-    "sonner",
     // Utils - not yet used, planned
     "jose",
     "ms",
     "ts-pattern",
     "usehooks-ts",
-    "zod",
-    // Codegen input
-    "dotenv",
     // Dev tools
     "@graphql-codegen/import-types-preset",
     "@tanstack/react-devtools",

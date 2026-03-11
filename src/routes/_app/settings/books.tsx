@@ -14,7 +14,8 @@ export const Route = createFileRoute("/_app/settings/books")({
 });
 
 function BooksSettingsPage() {
-  const { organizationId } = useOrganization();
+  const org = useOrganization();
+  const organizationId = org?.currentOrganization?.id;
   const { activeBookId, setActiveBookId } = useActiveBookStore();
 
   const [books, setBooks] = useState<Book[]>([]);
