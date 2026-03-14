@@ -9,9 +9,9 @@ const app = {
   name: "MyFi",
   /** App description (used in SEO meta tags) */
   description:
-    "Unified asset management, portfolio tracking, and accounting. Designed and maintained by Omni.",
+    "A comprehensive platform for unified asset management, portfolio tracking, and accounting that provides complete financial visibility and management for both individuals and businesses.",
   /** App tagline */
-  tagline: "Your finances, unified",
+  tagline: "Capital clarity",
   /** Production URL */
   url: "https://myfi.omni.dev",
   /** Organization info */
