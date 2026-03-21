@@ -77,7 +77,7 @@ function PublicLayout() {
                 GitHub
               </a>
 
-              {session ? (
+              {session?.user?.identityProviderId ? (
                 <button
                   type="button"
                   onClick={signOut}
@@ -134,7 +134,7 @@ function PublicLayout() {
                   GitHub
                 </a>
                 <div className="pt-2">
-                  {session ? (
+                  {session?.user?.identityProviderId ? (
                     <button
                       type="button"
                       onClick={signOut}

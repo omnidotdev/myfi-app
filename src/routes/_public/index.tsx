@@ -12,10 +12,17 @@ import {
 
 import signIn from "@/lib/auth/signIn";
 import appConfig from "@/lib/config/app.config";
+import { signOutLocal } from "@/server/functions/auth";
 
 export const Route = createFileRoute("/_public/")({
-  beforeLoad: ({ context: { session } }) => {
-    if (session?.user) throw redirect({ to: "/dashboard" });
+  beforeLoad: async ({ context: { session } }) => {
+    // Clear zombie session (OAuth session exists but user not provisioned in DB)
+    if (session?.user && !session.user.identityProviderId) {
+      await signOutLocal();
+      return;
+    }
+
+    if (session?.user?.identityProviderId) throw redirect({ to: "/dashboard" });
   },
   component: HomePage,
 });
