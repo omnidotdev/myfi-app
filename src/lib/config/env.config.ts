@@ -4,7 +4,11 @@
  * Server-only vars (auth secrets) use process.env (runtime)
  */
 
-const env = { ...import.meta.env, ...process.env };
+// Build-time vars take precedence to prevent SSR hydration mismatch
+const env =
+  typeof window === "undefined"
+    ? { ...process.env, ...import.meta.env }
+    : import.meta.env;
 
 export const API_URL = env.VITE_API_URL ?? "https://localhost:4000";
 export const API_GRAPHQL_URL = `${API_URL}/graphql`;
