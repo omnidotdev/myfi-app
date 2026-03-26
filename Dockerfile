@@ -5,7 +5,7 @@ FROM base AS builder
 ARG VITE_BASE_URL
 ENV VITE_BASE_URL=$VITE_BASE_URL
 COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile
+RUN bun install
 COPY . .
 RUN bun run build
 
