@@ -1,4 +1,5 @@
 import type { OrganizationClaim } from "@omnidotdev/providers";
+import { useSessionRefresh } from "@omnidotdev/providers/react";
 import type { QueryClient } from "@tanstack/react-query";
 import {
   createRootRouteWithContext,
@@ -70,6 +71,9 @@ export const Route = createRootRouteWithContext<{
 });
 
 function RootComponent() {
+  // Keep the OAuth access token fresh while the user is idle
+  useSessionRefresh(fetchSession);
+
   const { theme } = useRouteContext({ from: "__root__" });
 
   return (
