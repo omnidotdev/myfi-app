@@ -1,6 +1,6 @@
 import type { OrganizationClaim } from "@omnidotdev/providers";
-import { useSessionRefresh } from "@omnidotdev/providers/react";
 import type { QueryClient } from "@tanstack/react-query";
+import type { ErrorComponentProps } from "@tanstack/react-router";
 import {
   createRootRouteWithContext,
   HeadContent,
@@ -11,7 +11,9 @@ import {
 import { createServerFn } from "@tanstack/react-start";
 import type { Session } from "better-auth/types";
 import type { ReactNode } from "react";
+import DefaultCatchBoundary from "@/components/DefaultCatchBoundary";
 import app from "@/lib/config/app.config";
+import useSessionRefresh from "@/lib/hooks/useSessionRefresh";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { fetchSession } from "@/server/functions/auth";
 import { getTheme } from "@/server/functions/theme";
@@ -68,7 +70,16 @@ export const Route = createRootRouteWithContext<{
     ],
   }),
   component: RootComponent,
+  errorComponent: ErrorComponent,
 });
+
+function ErrorComponent(props: ErrorComponentProps) {
+  return (
+    <RootDocument theme="dark">
+      <DefaultCatchBoundary {...props} />
+    </RootDocument>
+  );
+}
 
 function RootComponent() {
   // Keep the OAuth access token fresh while the user is idle
