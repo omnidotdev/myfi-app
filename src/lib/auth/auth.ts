@@ -8,10 +8,8 @@ import {
   AUTH_BASE_URL,
   AUTH_CLIENT_ID,
   AUTH_CLIENT_SECRET,
-  AUTH_INTERNAL_URL,
   BASE_URL,
 } from "@/lib/config/env.config";
-import { createOmniOAuthConfig } from "@omnidotdev/providers/auth";
 
 const { AUTH_SECRET } = process.env;
 
