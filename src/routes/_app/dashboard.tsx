@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   AlertCircleIcon,
   BookOpenIcon,
+  CheckCircle2Icon,
+  ClockIcon,
   DollarSignIcon,
   Loader2Icon,
   TrendingDownIcon,
@@ -55,6 +57,31 @@ type DashboardSummary = {
   totalNetWorth: string;
 };
 
+type CloseStatus = {
+  bookId: string;
+  bookName: string;
+  year: number;
+  month: number;
+  periodStatus: "open" | "closed";
+  closedAt: string | null;
+  pendingReviewCount: number;
+  blockers: string[];
+};
+
+type CloseStatusResponse = {
+  statuses: CloseStatus[];
+  year: number;
+  month: number;
+};
+
+/** Format a numeric month (1-12) and year as a human-readable label */
+function formatPeriodLabel(year: number, month: number) {
+  return new Date(year, month - 1).toLocaleString("default", {
+    month: "long",
+    year: "numeric",
+  });
+}
+
 function DashboardPage() {
   const {
     activeBookId,
@@ -68,6 +95,10 @@ function DashboardPage() {
   const [spendingMonths, setSpendingMonths] = useState<SpendingMonth[]>([]);
   const [recentEntries, setRecentEntries] = useState<RecentEntry[]>([]);
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
+  const [closeStatus, setCloseStatus] = useState<CloseStatusResponse | null>(
+    null,
+  );
+  const [closingBookId, setClosingBookId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch multi-book summary when no book is selected
@@ -85,6 +116,45 @@ function DashboardPage() {
       // Silently handle fetch errors
     }
   }, [organizationId]);
+
+  const fetchCloseStatus = useCallback(async () => {
+    if (!organizationId) return;
+
+    try {
+      const res = await fetch(
+        `${API_URL}/api/dashboard/close-status?organizationId=${organizationId}`,
+      );
+      const data = await res.json();
+
+      setCloseStatus(data);
+    } catch {
+      // Silently handle fetch errors
+    }
+  }, [organizationId]);
+
+  const handleClosePeriod = useCallback(
+    async (bookId: string, year: number, month: number) => {
+      setClosingBookId(bookId);
+
+      try {
+        const res = await fetch(`${API_URL}/api/periods/close`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ bookId, year, month }),
+        });
+
+        if (res.ok) {
+          // Refresh close status after successful close
+          await fetchCloseStatus();
+        }
+      } catch {
+        // Silently handle fetch errors
+      } finally {
+        setClosingBookId(null);
+      }
+    },
+    [fetchCloseStatus],
+  );
 
   const fetchNetWorth = useCallback(async () => {
     if (!activeBookId) return;
@@ -141,14 +211,25 @@ function DashboardPage() {
 
     setIsLoading(true);
 
-    Promise.all([fetchNetWorth(), fetchSpendingTrends(), fetchRecentEntries()])
+    Promise.all([
+      fetchNetWorth(),
+      fetchSpendingTrends(),
+      fetchRecentEntries(),
+      fetchCloseStatus(),
+    ])
       .catch(() => {
         // Silently handle fetch errors
       })
       .finally(() => {
         setIsLoading(false);
       });
-  }, [activeBookId, fetchNetWorth, fetchSpendingTrends, fetchRecentEntries]);
+  }, [
+    activeBookId,
+    fetchNetWorth,
+    fetchSpendingTrends,
+    fetchRecentEntries,
+    fetchCloseStatus,
+  ]);
 
   // Multi-book summary fetch
   useEffect(() => {
@@ -156,14 +237,14 @@ function DashboardPage() {
 
     setIsLoading(true);
 
-    fetchSummary()
+    Promise.all([fetchSummary(), fetchCloseStatus()])
       .catch(() => {
         // Silently handle fetch errors
       })
       .finally(() => {
         setIsLoading(false);
       });
-  }, [activeBookId, booksLoading, fetchSummary]);
+  }, [activeBookId, booksLoading, fetchSummary, fetchCloseStatus]);
 
   const chartData = useMemo(
     () =>
@@ -194,6 +275,101 @@ function DashboardPage() {
       {loading && (
         <div className="flex items-center justify-center rounded-lg border border-border bg-card p-8">
           <Loader2Icon className="size-5 animate-spin text-muted-foreground" />
+        </div>
+      )}
+
+      {/* Monthly Close status */}
+      {!loading && closeStatus && closeStatus.statuses.length > 0 && (
+        <div className="rounded-lg border border-border bg-card p-4">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="font-semibold text-lg">Monthly Close</h2>
+            <span className="text-muted-foreground text-sm">
+              {formatPeriodLabel(closeStatus.year, closeStatus.month)}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {closeStatus.statuses.map((status) => {
+              const isClosed = status.periodStatus === "closed";
+              const hasPending = !isClosed && status.pendingReviewCount > 0;
+
+              return (
+                <div
+                  key={status.bookId}
+                  className="flex flex-col gap-2 rounded-md border border-border p-3"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-sm">
+                      {status.bookName}
+                    </span>
+
+                    {isClosed && (
+                      <span className="flex items-center gap-1 text-green-600 text-xs">
+                        <CheckCircle2Icon className="size-4" />
+                        Closed
+                      </span>
+                    )}
+
+                    {!isClosed && !hasPending && (
+                      <span className="flex items-center gap-1 text-xs text-yellow-600">
+                        <ClockIcon className="size-4" />
+                        Open
+                      </span>
+                    )}
+
+                    {hasPending && (
+                      <span className="flex items-center gap-1 text-red-500 text-xs">
+                        <AlertCircleIcon className="size-4" />
+                        Open
+                      </span>
+                    )}
+                  </div>
+
+                  <span className="text-muted-foreground text-xs">
+                    {formatPeriodLabel(status.year, status.month)}
+                  </span>
+
+                  {status.pendingReviewCount > 0 && (
+                    <span className="text-muted-foreground text-xs">
+                      {status.pendingReviewCount} item
+                      {status.pendingReviewCount === 1 ? "" : "s"} pending
+                      review
+                    </span>
+                  )}
+
+                  <div className="flex items-center gap-2 pt-1">
+                    {status.pendingReviewCount > 0 && (
+                      <Link
+                        to="/reconciliation"
+                        className="text-primary text-xs hover:underline"
+                      >
+                        Review Items
+                      </Link>
+                    )}
+
+                    {!isClosed && status.pendingReviewCount === 0 && (
+                      <button
+                        type="button"
+                        disabled={closingBookId === status.bookId}
+                        onClick={() =>
+                          handleClosePeriod(
+                            status.bookId,
+                            status.year,
+                            status.month,
+                          )
+                        }
+                        className="rounded bg-primary px-3 py-1 font-medium text-primary-foreground text-xs transition-colors hover:bg-primary/90 disabled:opacity-50"
+                      >
+                        {closingBookId === status.bookId
+                          ? "Closing..."
+                          : "Close Now"}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 

@@ -23,6 +23,7 @@ import { Route as AppCryptoIndexRouteImport } from './routes/_app/crypto/index'
 import { Route as AppBudgetsIndexRouteImport } from './routes/_app/budgets/index'
 import { Route as AppAccountsIndexRouteImport } from './routes/_app/accounts/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AppSettingsRulesRouteImport } from './routes/_app/settings/rules'
 import { Route as AppSettingsMappingsRouteImport } from './routes/_app/settings/mappings'
 import { Route as AppSettingsConnectionsRouteImport } from './routes/_app/settings/connections'
 import { Route as AppSettingsBooksRouteImport } from './routes/_app/settings/books'
@@ -104,6 +105,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppSettingsRulesRoute = AppSettingsRulesRouteImport.update({
+  id: '/settings/rules',
+  path: '/settings/rules',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsMappingsRoute = AppSettingsMappingsRouteImport.update({
   id: '/settings/mappings',
@@ -189,6 +195,7 @@ export interface FileRoutesByFullPath {
   '/settings/books': typeof AppSettingsBooksRoute
   '/settings/connections': typeof AppSettingsConnectionsRoute
   '/settings/mappings': typeof AppSettingsMappingsRoute
+  '/settings/rules': typeof AppSettingsRulesRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/accounts/': typeof AppAccountsIndexRoute
   '/budgets/': typeof AppBudgetsIndexRoute
@@ -216,6 +223,7 @@ export interface FileRoutesByTo {
   '/settings/books': typeof AppSettingsBooksRoute
   '/settings/connections': typeof AppSettingsConnectionsRoute
   '/settings/mappings': typeof AppSettingsMappingsRoute
+  '/settings/rules': typeof AppSettingsRulesRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/accounts': typeof AppAccountsIndexRoute
   '/budgets': typeof AppBudgetsIndexRoute
@@ -246,6 +254,7 @@ export interface FileRoutesById {
   '/_app/settings/books': typeof AppSettingsBooksRoute
   '/_app/settings/connections': typeof AppSettingsConnectionsRoute
   '/_app/settings/mappings': typeof AppSettingsMappingsRoute
+  '/_app/settings/rules': typeof AppSettingsRulesRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_app/accounts/': typeof AppAccountsIndexRoute
   '/_app/budgets/': typeof AppBudgetsIndexRoute
@@ -275,6 +284,7 @@ export interface FileRouteTypes {
     | '/settings/books'
     | '/settings/connections'
     | '/settings/mappings'
+    | '/settings/rules'
     | '/api/auth/$'
     | '/accounts/'
     | '/budgets/'
@@ -302,6 +312,7 @@ export interface FileRouteTypes {
     | '/settings/books'
     | '/settings/connections'
     | '/settings/mappings'
+    | '/settings/rules'
     | '/api/auth/$'
     | '/accounts'
     | '/budgets'
@@ -331,6 +342,7 @@ export interface FileRouteTypes {
     | '/_app/settings/books'
     | '/_app/settings/connections'
     | '/_app/settings/mappings'
+    | '/_app/settings/rules'
     | '/api/auth/$'
     | '/_app/accounts/'
     | '/_app/budgets/'
@@ -449,6 +461,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/settings/rules': {
+      id: '/_app/settings/rules'
+      path: '/settings/rules'
+      fullPath: '/settings/rules'
+      preLoaderRoute: typeof AppSettingsRulesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/settings/mappings': {
       id: '/_app/settings/mappings'
       path: '/settings/mappings'
@@ -558,6 +577,7 @@ interface AppRouteChildren {
   AppSettingsBooksRoute: typeof AppSettingsBooksRoute
   AppSettingsConnectionsRoute: typeof AppSettingsConnectionsRoute
   AppSettingsMappingsRoute: typeof AppSettingsMappingsRoute
+  AppSettingsRulesRoute: typeof AppSettingsRulesRoute
   AppAccountsIndexRoute: typeof AppAccountsIndexRoute
   AppBudgetsIndexRoute: typeof AppBudgetsIndexRoute
   AppCryptoIndexRoute: typeof AppCryptoIndexRoute
@@ -584,6 +604,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsBooksRoute: AppSettingsBooksRoute,
   AppSettingsConnectionsRoute: AppSettingsConnectionsRoute,
   AppSettingsMappingsRoute: AppSettingsMappingsRoute,
+  AppSettingsRulesRoute: AppSettingsRulesRoute,
   AppAccountsIndexRoute: AppAccountsIndexRoute,
   AppBudgetsIndexRoute: AppBudgetsIndexRoute,
   AppCryptoIndexRoute: AppCryptoIndexRoute,
@@ -616,12 +637,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}

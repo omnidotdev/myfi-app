@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BookOpenIcon, Link2Icon, MapIcon } from "lucide-react";
+import { BookOpenIcon, Link2Icon, MapIcon, SparklesIcon } from "lucide-react";
 
 export const Route = createFileRoute("/_app/settings/")({
   component: SettingsPage,
@@ -23,6 +23,12 @@ const settingsItems = [
     description: "Map Mantle event types to accounts",
     href: "/settings/mappings",
     icon: MapIcon,
+  },
+  {
+    label: "Categorization Rules",
+    description: "Manage automatic transaction categorization rules",
+    href: "/settings/rules",
+    icon: SparklesIcon,
   },
 ];
 
