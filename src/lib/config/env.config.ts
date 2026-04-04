@@ -28,4 +28,3 @@ export const AUTH_INTERNAL_URL =
   typeof window === "undefined"
     ? process.env.AUTH_INTERNAL_URL || AUTH_BASE_URL
     : AUTH_BASE_URL;
-
