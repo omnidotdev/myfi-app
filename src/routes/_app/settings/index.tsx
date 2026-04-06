@@ -1,5 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BookOpenIcon, Link2Icon, MapIcon, SparklesIcon } from "lucide-react";
+import {
+  BookOpenIcon,
+  Link2Icon,
+  MapIcon,
+  ScrollTextIcon,
+  SparklesIcon,
+} from "lucide-react";
 
 export const Route = createFileRoute("/_app/settings/")({
   component: SettingsPage,
@@ -29,6 +35,12 @@ const settingsItems = [
     description: "Manage automatic transaction categorization rules",
     href: "/settings/rules",
     icon: SparklesIcon,
+  },
+  {
+    label: "Audit Log",
+    description: "Track changes across your organization",
+    href: "/settings/audit",
+    icon: ScrollTextIcon,
   },
 ];
 
