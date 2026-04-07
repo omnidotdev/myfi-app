@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 
 import BookPicker from "@/features/books/components/BookPicker";
 import ReportFilters from "@/features/reports/components/ReportFilters";
+import TagFilter from "@/features/tags/components/TagFilter";
 
 import { API_URL } from "@/lib/config/env.config";
 import formatCurrency from "@/lib/format/currency";
 
 import useActiveBook from "@/lib/hooks/useActiveBook";
+import useTagGroups from "@/lib/hooks/useTagGroups";
 
 type AccountOption = {
   id: string;
@@ -41,7 +43,14 @@ export const Route = createFileRoute("/_app/reports/general-ledger")({
 });
 
 function GeneralLedgerPage() {
-  const { activeBookId, books, isLoading: booksLoading, setActiveBookId } = useActiveBook();
+  const {
+    activeBookId,
+    books,
+    isLoading: booksLoading,
+    setActiveBookId,
+  } = useActiveBook();
+  const { tagGroups } = useTagGroups(activeBookId);
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
   const [accounts, setAccounts] = useState<AccountOption[]>([]);
   const [selectedAccountId, setSelectedAccountId] = useState("");
   const [data, setData] = useState<GeneralLedgerData | null>(null);
@@ -53,7 +62,9 @@ function GeneralLedgerPage() {
     if (!activeBookId) return;
     const fetchAccounts = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/accounts?bookId=${activeBookId}`);
+        const res = await fetch(
+          `${API_URL}/api/accounts?bookId=${activeBookId}`,
+        );
         if (!res.ok) return;
         const json = await res.json();
         setAccounts(json.accounts ?? []);
@@ -82,6 +93,8 @@ function GeneralLedgerPage() {
       searchParams.set("accountId", selectedAccountId);
       if (params.startDate) searchParams.set("startDate", params.startDate);
       if (params.endDate) searchParams.set("endDate", params.endDate);
+      if (selectedTagIds.length > 0)
+        searchParams.set("tagIds", selectedTagIds.join(","));
 
       const res = await fetch(
         `${API_URL}/api/reports/general-ledger?${searchParams.toString()}`,
@@ -109,7 +122,11 @@ function GeneralLedgerPage() {
             Full transaction history for a specific account with running balance
           </p>
         </div>
-        <BookPicker books={books} selectedBookId={activeBookId} onSelect={setActiveBookId} />
+        <BookPicker
+          books={books}
+          selectedBookId={activeBookId}
+          onSelect={setActiveBookId}
+        />
       </div>
 
       {/* Account picker */}
@@ -136,7 +153,17 @@ function GeneralLedgerPage() {
         </select>
       </div>
 
-      <ReportFilters mode="range" onGenerate={handleGenerate} />
+      <ReportFilters
+        mode="range"
+        onGenerate={handleGenerate}
+        extraFilters={
+          <TagFilter
+            tagGroups={tagGroups}
+            selectedTagIds={selectedTagIds}
+            onChange={setSelectedTagIds}
+          />
+        }
+      />
 
       {loading && (
         <div className="rounded-lg border border-border bg-card p-8 text-center">

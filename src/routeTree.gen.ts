@@ -24,6 +24,7 @@ import { Route as AppBudgetsIndexRouteImport } from './routes/_app/budgets/index
 import { Route as AppAssetsIndexRouteImport } from './routes/_app/assets/index'
 import { Route as AppAccountsIndexRouteImport } from './routes/_app/accounts/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AppSettingsTagsRouteImport } from './routes/_app/settings/tags'
 import { Route as AppSettingsRulesRouteImport } from './routes/_app/settings/rules'
 import { Route as AppSettingsMappingsRouteImport } from './routes/_app/settings/mappings'
 import { Route as AppSettingsConnectionsRouteImport } from './routes/_app/settings/connections'
@@ -113,6 +114,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppSettingsTagsRoute = AppSettingsTagsRouteImport.update({
+  id: '/settings/tags',
+  path: '/settings/tags',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsRulesRoute = AppSettingsRulesRouteImport.update({
   id: '/settings/rules',
@@ -216,6 +222,7 @@ export interface FileRoutesByFullPath {
   '/settings/connections': typeof AppSettingsConnectionsRoute
   '/settings/mappings': typeof AppSettingsMappingsRoute
   '/settings/rules': typeof AppSettingsRulesRoute
+  '/settings/tags': typeof AppSettingsTagsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/accounts/': typeof AppAccountsIndexRoute
   '/assets/': typeof AppAssetsIndexRoute
@@ -247,6 +254,7 @@ export interface FileRoutesByTo {
   '/settings/connections': typeof AppSettingsConnectionsRoute
   '/settings/mappings': typeof AppSettingsMappingsRoute
   '/settings/rules': typeof AppSettingsRulesRoute
+  '/settings/tags': typeof AppSettingsTagsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/accounts': typeof AppAccountsIndexRoute
   '/assets': typeof AppAssetsIndexRoute
@@ -281,6 +289,7 @@ export interface FileRoutesById {
   '/_app/settings/connections': typeof AppSettingsConnectionsRoute
   '/_app/settings/mappings': typeof AppSettingsMappingsRoute
   '/_app/settings/rules': typeof AppSettingsRulesRoute
+  '/_app/settings/tags': typeof AppSettingsTagsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_app/accounts/': typeof AppAccountsIndexRoute
   '/_app/assets/': typeof AppAssetsIndexRoute
@@ -314,6 +323,7 @@ export interface FileRouteTypes {
     | '/settings/connections'
     | '/settings/mappings'
     | '/settings/rules'
+    | '/settings/tags'
     | '/api/auth/$'
     | '/accounts/'
     | '/assets/'
@@ -345,6 +355,7 @@ export interface FileRouteTypes {
     | '/settings/connections'
     | '/settings/mappings'
     | '/settings/rules'
+    | '/settings/tags'
     | '/api/auth/$'
     | '/accounts'
     | '/assets'
@@ -378,6 +389,7 @@ export interface FileRouteTypes {
     | '/_app/settings/connections'
     | '/_app/settings/mappings'
     | '/_app/settings/rules'
+    | '/_app/settings/tags'
     | '/api/auth/$'
     | '/_app/accounts/'
     | '/_app/assets/'
@@ -503,6 +515,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_app/settings/tags': {
+      id: '/_app/settings/tags'
+      path: '/settings/tags'
+      fullPath: '/settings/tags'
+      preLoaderRoute: typeof AppSettingsTagsRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/settings/rules': {
       id: '/_app/settings/rules'
@@ -637,6 +656,7 @@ interface AppRouteChildren {
   AppSettingsConnectionsRoute: typeof AppSettingsConnectionsRoute
   AppSettingsMappingsRoute: typeof AppSettingsMappingsRoute
   AppSettingsRulesRoute: typeof AppSettingsRulesRoute
+  AppSettingsTagsRoute: typeof AppSettingsTagsRoute
   AppAccountsIndexRoute: typeof AppAccountsIndexRoute
   AppAssetsIndexRoute: typeof AppAssetsIndexRoute
   AppBudgetsIndexRoute: typeof AppBudgetsIndexRoute
@@ -667,6 +687,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsConnectionsRoute: AppSettingsConnectionsRoute,
   AppSettingsMappingsRoute: AppSettingsMappingsRoute,
   AppSettingsRulesRoute: AppSettingsRulesRoute,
+  AppSettingsTagsRoute: AppSettingsTagsRoute,
   AppAccountsIndexRoute: AppAccountsIndexRoute,
   AppAssetsIndexRoute: AppAssetsIndexRoute,
   AppBudgetsIndexRoute: AppBudgetsIndexRoute,

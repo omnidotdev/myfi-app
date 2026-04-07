@@ -7,6 +7,7 @@ import BookPicker from "@/features/books/components/BookPicker";
 import JournalEntryForm from "@/features/ledger/components/JournalEntryForm";
 import { API_URL } from "@/lib/config/env.config";
 import useActiveBook from "@/lib/hooks/useActiveBook";
+import useTagGroups from "@/lib/hooks/useTagGroups";
 
 export const Route = createFileRoute("/_app/ledger/new")({
   component: NewJournalEntryPage,
@@ -21,6 +22,7 @@ function NewJournalEntryPage() {
     setActiveBookId,
   } = useActiveBook();
 
+  const { tagGroups } = useTagGroups(activeBookId);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -60,10 +62,11 @@ function NewJournalEntryPage() {
         debit: string;
         credit: string;
         memo: string;
+        tagIds: string[];
       }[];
     }) => {
       try {
-        await fetch(`${API_URL}/api/journal-entries`, {
+        const res = await fetch(`${API_URL}/api/journal-entries`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -79,6 +82,33 @@ function NewJournalEntryPage() {
             })),
           }),
         });
+
+        // Assign tags to lines if any were selected
+        const created = await res.json();
+        const createdLines: { id: string }[] = created?.lines ?? [];
+
+        if (createdLines.length > 0) {
+          const assignments: { lineId: string; tagId: string }[] = [];
+
+          for (let i = 0; i < entry.lines.length; i++) {
+            const line = entry.lines[i];
+            const createdLine = createdLines[i];
+
+            if (line.tagIds.length > 0 && createdLine?.id) {
+              for (const tagId of line.tagIds) {
+                assignments.push({ lineId: createdLine.id, tagId });
+              }
+            }
+          }
+
+          if (assignments.length > 0) {
+            await fetch(`${API_URL}/api/tags/line-tags`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ assignments }),
+            });
+          }
+        }
 
         navigate({ to: "/ledger" });
       } catch {
@@ -123,6 +153,7 @@ function NewJournalEntryPage() {
         <div className="rounded-lg border border-border bg-card p-6">
           <JournalEntryForm
             accounts={accounts}
+            tagGroups={tagGroups}
             onSubmit={handleSubmit}
             onCancel={handleCancel}
           />

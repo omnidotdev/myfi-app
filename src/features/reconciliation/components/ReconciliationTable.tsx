@@ -5,6 +5,7 @@ import type {
   CategorizationSource,
   ReconciliationItem,
 } from "@/features/reconciliation/types/reconciliation";
+import type { TagGroup } from "@/features/tags/types/tag";
 
 type Account = {
   rowId: string;
@@ -15,6 +16,7 @@ type Account = {
 type ReconciliationTableProps = {
   items: ReconciliationItem[];
   accounts: Account[];
+  tagGroups?: TagGroup[];
   onApprove: (itemId: string) => void;
   onEdit: (itemId: string) => void;
   onReject: (itemId: string) => void;
@@ -23,6 +25,7 @@ type ReconciliationTableProps = {
     status: string,
     debitAccountId: string,
     creditAccountId: string,
+    tagIds?: string[],
   ) => void;
 };
 
@@ -101,6 +104,7 @@ function formatCategorizationSource(
 function ReconciliationTable({
   items,
   accounts,
+  tagGroups = [],
   onApprove,
   onEdit,
   onReject,
@@ -136,6 +140,7 @@ function ReconciliationTable({
               key={item.rowId}
               item={item}
               accounts={accounts}
+              tagGroups={tagGroups}
               onApprove={onApprove}
               onEdit={onEdit}
               onReject={onReject}
@@ -151,6 +156,7 @@ function ReconciliationTable({
 type ReconciliationRowProps = {
   item: ReconciliationItem;
   accounts: Account[];
+  tagGroups: TagGroup[];
   onApprove: (itemId: string) => void;
   onEdit: (itemId: string) => void;
   onReject: (itemId: string) => void;
@@ -159,12 +165,14 @@ type ReconciliationRowProps = {
     status: string,
     debitAccountId: string,
     creditAccountId: string,
+    tagIds?: string[],
   ) => void;
 };
 
 function ReconciliationRow({
   item,
   accounts,
+  tagGroups,
   onApprove,
   onEdit,
   onReject,
@@ -179,6 +187,7 @@ function ReconciliationRow({
   const [creditAccountId, setCreditAccountId] = useState(
     item.suggestedCreditAccountId ?? "",
   );
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
 
   const categorizationBadgeClass = item.categorizationSource
     ? (CATEGORIZATION_BADGE_CLASSES[item.categorizationSource] ??
@@ -189,9 +198,17 @@ function ReconciliationRow({
     debitAccountId !== (item.suggestedDebitAccountId ?? "") ||
     creditAccountId !== (item.suggestedCreditAccountId ?? "");
 
+  const hasTagSelections = selectedTagIds.length > 0;
+
   const handleApproveOrCorrect = () => {
-    if (hasAccountCorrections && onCorrect) {
-      onCorrect(item.rowId, "adjusted", debitAccountId, creditAccountId);
+    if ((hasAccountCorrections || hasTagSelections) && onCorrect) {
+      onCorrect(
+        item.rowId,
+        hasAccountCorrections ? "adjusted" : "approved",
+        debitAccountId,
+        creditAccountId,
+        hasTagSelections ? selectedTagIds : undefined,
+      );
     } else {
       onApprove(item.rowId);
     }
@@ -277,6 +294,38 @@ function ReconciliationRow({
                 ))}
               </select>
             </label>
+            {tagGroups.length > 0 && (
+              <label className="flex items-center gap-1.5 text-xs">
+                <span className="font-medium text-foreground">Tags</span>
+                <select
+                  multiple
+                  value={selectedTagIds}
+                  onChange={(e) =>
+                    setSelectedTagIds(
+                      Array.from(e.target.selectedOptions, (o) => o.value),
+                    )
+                  }
+                  className="min-h-[2rem] rounded border border-border bg-background px-1.5 py-0.5 text-xs"
+                >
+                  {tagGroups.map((group) => {
+                    const active = group.tags.filter((t) => t.isActive);
+
+                    if (active.length === 0) return null;
+
+                    return (
+                      <optgroup key={group.id} label={group.name}>
+                        {active.map((tag) => (
+                          <option key={tag.id} value={tag.id}>
+                            {tag.code ? `${tag.code} - ` : ""}
+                            {tag.name}
+                          </option>
+                        ))}
+                      </optgroup>
+                    );
+                  })}
+                </select>
+              </label>
+            )}
           </div>
         ) : (
           <div className="flex flex-col gap-0.5 text-muted-foreground text-xs">

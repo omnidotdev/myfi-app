@@ -2,16 +2,20 @@ import { PlusIcon, TrashIcon } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 
 import type { Account } from "@/features/accounts/types/account";
+import LineTagPicker from "@/features/tags/components/LineTagPicker";
+import type { TagGroup } from "@/features/tags/types/tag";
 
 type LineInput = {
   accountId: string;
   debit: string;
   credit: string;
   memo: string;
+  tagIds: string[];
 };
 
 type JournalEntryFormProps = {
   accounts: Account[];
+  tagGroups?: TagGroup[];
   onSubmit: (entry: { date: string; memo: string; lines: LineInput[] }) => void;
   onCancel: () => void;
 };
@@ -21,11 +25,12 @@ const EMPTY_LINE: LineInput = {
   debit: "",
   credit: "",
   memo: "",
+  tagIds: [],
 };
 
 /** Create a fresh line with default values */
 function createLine(): LineInput {
-  return { ...EMPTY_LINE };
+  return { ...EMPTY_LINE, tagIds: [] };
 }
 
 /** Parse a numeric string to a float, returning 0 for invalid values */
@@ -39,6 +44,7 @@ function parseAmount(value: string): number {
  */
 function JournalEntryForm({
   accounts,
+  tagGroups = [],
   onSubmit,
   onCancel,
 }: JournalEntryFormProps) {
@@ -66,7 +72,7 @@ function JournalEntryForm({
   const canSubmit = date && lines.length >= 2 && isBalanced;
 
   const updateLine = useCallback(
-    (index: number, field: keyof LineInput, value: string) => {
+    (index: number, field: keyof LineInput, value: string | string[]) => {
       setLines((prev) =>
         prev.map((line, i) =>
           i === index ? { ...line, [field]: value } : line,
@@ -140,11 +146,14 @@ function JournalEntryForm({
         </div>
 
         {/* Column headers */}
-        <div className="hidden grid-cols-[1fr_6rem_6rem_1fr_2.5rem] gap-2 text-muted-foreground text-xs sm:grid">
+        <div
+          className={`hidden gap-2 text-muted-foreground text-xs sm:grid ${tagGroups.length > 0 ? "grid-cols-[1fr_6rem_6rem_1fr_8rem_2.5rem]" : "grid-cols-[1fr_6rem_6rem_1fr_2.5rem]"}`}
+        >
           <span>Account</span>
           <span>Debit</span>
           <span>Credit</span>
           <span>Memo</span>
+          {tagGroups.length > 0 && <span>Tags</span>}
           <span />
         </div>
 
@@ -154,7 +163,7 @@ function JournalEntryForm({
             // Using index as key because lines have no stable identity
             // biome-ignore lint/suspicious/noArrayIndexKey: lines lack stable IDs
             key={index}
-            className="grid grid-cols-1 gap-2 rounded-md border border-border p-3 sm:grid-cols-[1fr_6rem_6rem_1fr_2.5rem] sm:border-0 sm:p-0"
+            className={`grid grid-cols-1 gap-2 rounded-md border border-border p-3 sm:border-0 sm:p-0 ${tagGroups.length > 0 ? "sm:grid-cols-[1fr_6rem_6rem_1fr_8rem_2.5rem]" : "sm:grid-cols-[1fr_6rem_6rem_1fr_2.5rem]"}`}
           >
             {/* Account picker */}
             <select
@@ -206,6 +215,16 @@ function JournalEntryForm({
               aria-label={`Line ${index + 1} memo`}
               className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
+
+            {/* Tags */}
+            {tagGroups.length > 0 && (
+              <LineTagPicker
+                tagGroups={tagGroups}
+                selectedTagIds={line.tagIds}
+                onChange={(ids) => updateLine(index, "tagIds", ids)}
+                lineIndex={index}
+              />
+            )}
 
             {/* Remove */}
             <button

@@ -5,6 +5,7 @@ import {
   MapIcon,
   ScrollTextIcon,
   SparklesIcon,
+  TagsIcon,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/settings/")({
@@ -35,6 +36,12 @@ const settingsItems = [
     description: "Manage automatic transaction categorization rules",
     href: "/settings/rules",
     icon: SparklesIcon,
+  },
+  {
+    label: "Tags",
+    description: "Organize transactions by department, location, or project",
+    href: "/settings/tags",
+    icon: TagsIcon,
   },
   {
     label: "Audit Log",

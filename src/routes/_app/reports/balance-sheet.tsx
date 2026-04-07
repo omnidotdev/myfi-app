@@ -4,11 +4,13 @@ import { useState } from "react";
 import BookPicker from "@/features/books/components/BookPicker";
 import HierarchicalReportTable from "@/features/reports/components/HierarchicalReportTable";
 import ReportFilters from "@/features/reports/components/ReportFilters";
+import TagFilter from "@/features/tags/components/TagFilter";
 
 import { API_URL } from "@/lib/config/env.config";
 import formatCurrency from "@/lib/format/currency";
 
 import useActiveBook from "@/lib/hooks/useActiveBook";
+import useTagGroups from "@/lib/hooks/useTagGroups";
 
 type ReportLineItem = {
   accountId: string;
@@ -35,7 +37,14 @@ export const Route = createFileRoute("/_app/reports/balance-sheet")({
 });
 
 function BalanceSheetPage() {
-  const { activeBookId, books, isLoading: booksLoading, setActiveBookId } = useActiveBook();
+  const {
+    activeBookId,
+    books,
+    isLoading: booksLoading,
+    setActiveBookId,
+  } = useActiveBook();
+  const { tagGroups } = useTagGroups(activeBookId);
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
   const [data, setData] = useState<BalanceSheetData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,6 +57,8 @@ function BalanceSheetPage() {
       const searchParams = new URLSearchParams();
       if (activeBookId) searchParams.set("bookId", activeBookId);
       if (params.asOfDate) searchParams.set("asOfDate", params.asOfDate);
+      if (selectedTagIds.length > 0)
+        searchParams.set("tagIds", selectedTagIds.join(","));
 
       const res = await fetch(
         `${API_URL}/api/reports/balance-sheet?${searchParams.toString()}`,
@@ -98,10 +109,24 @@ function BalanceSheetPage() {
             Assets, liabilities, and equity as of a specific date
           </p>
         </div>
-        <BookPicker books={books} selectedBookId={activeBookId} onSelect={setActiveBookId} />
+        <BookPicker
+          books={books}
+          selectedBookId={activeBookId}
+          onSelect={setActiveBookId}
+        />
       </div>
 
-      <ReportFilters mode="point-in-time" onGenerate={handleGenerate} />
+      <ReportFilters
+        mode="point-in-time"
+        onGenerate={handleGenerate}
+        extraFilters={
+          <TagFilter
+            tagGroups={tagGroups}
+            selectedTagIds={selectedTagIds}
+            onChange={setSelectedTagIds}
+          />
+        }
+      />
 
       {loading && (
         <div className="rounded-lg border border-border bg-card p-8 text-center">

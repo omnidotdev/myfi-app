@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useState } from "react";
 
 type Props = {
@@ -7,12 +8,14 @@ type Props = {
     endDate?: string;
     asOfDate?: string;
   }) => void;
+  /** Optional slot rendered alongside the date filters (e.g. tag filter) */
+  extraFilters?: ReactNode;
 };
 
 /**
  * Shared filter bar for report pages
  */
-function ReportFilters({ mode, onGenerate }: Props) {
+function ReportFilters({ mode, onGenerate, extraFilters }: Props) {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [asOfDate, setAsOfDate] = useState("");
@@ -86,6 +89,8 @@ function ReportFilters({ mode, onGenerate }: Props) {
           />
         </div>
       )}
+
+      {extraFilters}
 
       <button
         type="submit"

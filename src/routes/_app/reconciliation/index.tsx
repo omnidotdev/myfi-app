@@ -7,6 +7,7 @@ import ReconciliationTable from "@/features/reconciliation/components/Reconcilia
 import type { ReconciliationItem } from "@/features/reconciliation/types/reconciliation";
 import { API_URL } from "@/lib/config/env.config";
 import useActiveBook from "@/lib/hooks/useActiveBook";
+import useTagGroups from "@/lib/hooks/useTagGroups";
 
 type SourceFilter =
   | "all"
@@ -59,6 +60,7 @@ function ReconciliationPage() {
     setActiveBookId,
   } = useActiveBook();
 
+  const { tagGroups } = useTagGroups(activeBookId);
   const [items, setItems] = useState<ReconciliationItem[]>([]);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -200,9 +202,10 @@ function ReconciliationPage() {
       status: string,
       debitAccountId: string,
       creditAccountId: string,
+      tagIds?: string[],
     ) => {
       try {
-        await fetch(`${API_URL}/api/reconciliation/${itemId}`, {
+        const res = await fetch(`${API_URL}/api/reconciliation/${itemId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -211,6 +214,40 @@ function ReconciliationPage() {
             creditAccountId: creditAccountId || undefined,
           }),
         });
+
+        // Assign tags to journal lines when tags are selected
+        if (tagIds && tagIds.length > 0) {
+          const patched = await res.json();
+          const journalEntryId =
+            patched?.journalEntryId ?? patched?.item?.journalEntryId;
+
+          if (journalEntryId) {
+            try {
+              const entryRes = await fetch(
+                `${API_URL}/api/journal-entries/${journalEntryId}`,
+              );
+              const entryData = await entryRes.json();
+              const lines: { id: string }[] = entryData?.lines ?? [];
+              const assignments: { lineId: string; tagId: string }[] = [];
+
+              for (const line of lines) {
+                for (const tagId of tagIds) {
+                  assignments.push({ lineId: line.id, tagId });
+                }
+              }
+
+              if (assignments.length > 0) {
+                await fetch(`${API_URL}/api/tags/line-tags`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ assignments }),
+                });
+              }
+            } catch {
+              // Tag assignment is best-effort during reconciliation
+            }
+          }
+        }
 
         await fetchItems();
       } catch {
@@ -318,6 +355,7 @@ function ReconciliationPage() {
         <ReconciliationTable
           items={filteredItems}
           accounts={accounts}
+          tagGroups={tagGroups}
           onApprove={handleApprove}
           onEdit={handleEdit}
           onReject={handleReject}
