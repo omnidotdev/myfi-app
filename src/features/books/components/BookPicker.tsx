@@ -26,9 +26,7 @@ function BookPicker({ books, selectedBookId, onSelect }: BookPickerProps) {
         </option>
       )}
 
-      {books.length > 1 && (
-        <option value={ALL_BOOKS_VALUE}>All Books</option>
-      )}
+      {books.length > 1 && <option value={ALL_BOOKS_VALUE}>All Books</option>}
 
       {books.map((book) => (
         <option key={book.rowId} value={book.rowId}>

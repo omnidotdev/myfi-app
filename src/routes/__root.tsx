@@ -66,7 +66,7 @@ export const Route = createRootRouteWithContext<{
     ],
     links: [
       { rel: "stylesheet", href: appStyles },
-      { rel: "icon", type: "image/svg+xml", href: "/omni-logo.svg" },
+      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
     ],
   }),
   component: RootComponent,

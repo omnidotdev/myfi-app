@@ -27,8 +27,7 @@ const useActiveBook = () => {
       .finally(() => setIsLoading(false));
   }, [organizationId]);
 
-  const activeBook =
-    books.find((b) => b.rowId === activeBookId) ?? null;
+  const activeBook = books.find((b) => b.rowId === activeBookId) ?? null;
 
   return {
     activeBook,

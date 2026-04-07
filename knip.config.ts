@@ -22,7 +22,6 @@ const config: KnipConfig = {
     "jose",
     "ms",
     "ts-pattern",
-    "usehooks-ts",
     // Dev tools
     "@graphql-codegen/import-types-preset",
     "@tanstack/react-devtools",

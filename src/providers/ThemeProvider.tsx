@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "react";
-import { createContext, useCallback, useState } from "react";
+import { createContext, use, useCallback, useState } from "react";
 import type { Theme } from "@/server/functions/theme";
 import { setTheme as setThemeServerFn } from "@/server/functions/theme";
 
@@ -10,9 +10,6 @@ interface ThemeContext {
 
 const ThemeContext = createContext<ThemeContext | null>(null);
 
-/**
- * Global theme provider
- */
 const ThemeProvider = ({
   children,
   theme: initialTheme,
@@ -30,6 +27,13 @@ const ThemeProvider = ({
   }, []);
 
   return <ThemeContext value={{ theme, setTheme }}>{children}</ThemeContext>;
+};
+
+export const useTheme = () => {
+  const val = use(ThemeContext);
+  if (!val) throw new Error("`useTheme` called outside of `<ThemeProvider />`");
+
+  return val;
 };
 
 export default ThemeProvider;

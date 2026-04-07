@@ -13,16 +13,20 @@ import {
   LayoutDashboardIcon,
   LogOutIcon,
   MenuIcon,
+  MoonIcon,
+  SunIcon,
   WalletIcon,
   XIcon,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Toaster } from "sonner";
+import { useEventListener } from "usehooks-ts";
 
 import ErrorBoundary from "@/components/core/ErrorBoundary";
 import signOut from "@/lib/auth/signOut";
 import appConfig from "@/lib/config/app.config";
 import { OrganizationProvider } from "@/providers/OrganizationProvider";
+import { useTheme } from "@/providers/ThemeProvider";
 import {
   getLastOrgCookie,
   setLastOrgCookie,
@@ -89,6 +93,26 @@ const navItems = [
 function AuthLayout() {
   const { session } = Route.useRouteContext();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  const toggleTheme = useCallback(
+    () => setTheme(theme === "dark" ? "light" : "dark"),
+    [theme, setTheme],
+  );
+
+  useEventListener("keydown", (e) => {
+    if (
+      e.key === "t" &&
+      !e.metaKey &&
+      !e.ctrlKey &&
+      !e.altKey &&
+      !(e.target instanceof HTMLInputElement) &&
+      !(e.target instanceof HTMLTextAreaElement) &&
+      !(e.target instanceof HTMLSelectElement)
+    ) {
+      toggleTheme();
+    }
+  });
 
   const organizations = useMemo(
     () => session?.organizations ?? [],
@@ -135,6 +159,22 @@ function AuthLayout() {
             </nav>
 
             <div className="border-sidebar-border border-t p-3">
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="flex w-full items-center gap-3 rounded-md px-3 py-2 font-medium text-sidebar-foreground text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              >
+                {theme === "dark" ? (
+                  <MoonIcon className="size-4" />
+                ) : (
+                  <SunIcon className="size-4" />
+                )}
+                Toggle Theme
+                <kbd className="ml-auto rounded border border-sidebar-border px-1.5 py-0.5 font-mono text-[10px] text-sidebar-foreground/50">
+                  T
+                </kbd>
+              </button>
+
               <div className="flex items-center justify-between rounded-md px-3 py-2">
                 <span className="truncate text-sidebar-foreground text-sm">
                   {session?.user?.name || session?.user?.email}
@@ -175,8 +215,24 @@ function AuthLayout() {
             ))}
           </nav>
 
-          {/* User section */}
+          {/* Footer */}
           <div className="border-sidebar-border border-t p-3">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="flex w-full items-center gap-3 rounded-md px-3 py-2 font-medium text-sidebar-foreground text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            >
+              {theme === "dark" ? (
+                <MoonIcon className="size-4" />
+              ) : (
+                <SunIcon className="size-4" />
+              )}
+              Toggle Theme
+              <kbd className="ml-auto rounded border border-sidebar-border px-1.5 py-0.5 font-mono text-[10px] text-sidebar-foreground/50">
+                T
+              </kbd>
+            </button>
+
             <div className="flex items-center justify-between rounded-md px-3 py-2">
               <span className="truncate text-sidebar-foreground text-sm">
                 {session?.user?.name || session?.user?.email}
