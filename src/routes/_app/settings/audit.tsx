@@ -3,6 +3,7 @@ import { GraphQLClient, gql } from "graphql-request";
 import {
   ChevronDownIcon,
   ChevronRightIcon,
+  DownloadIcon,
   Loader2Icon,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -98,6 +99,51 @@ function formatTimestamp(iso: string): string {
     hour: "2-digit",
     minute: "2-digit",
   });
+}
+
+/**
+ * Export audit events as a CSV file download
+ */
+function downloadAuditCsv(events: AuditEvent[]) {
+  const escapeCsv = (value: string): string => {
+    if (value.includes(",") || value.includes('"') || value.includes("\n")) {
+      return `"${value.replace(/"/g, '""')}"`;
+    }
+
+    return value;
+  };
+
+  const headers = [
+    "Timestamp",
+    "Actor",
+    "Action",
+    "Resource Type",
+    "Resource Name",
+    "Resource ID",
+  ];
+
+  const rows = events.map((e) => [
+    e.createdAt,
+    e.actor?.name || e.actor?.email || "System",
+    e.action,
+    e.resource?.type ?? "",
+    e.resource?.name ?? "",
+    e.resource?.id ?? "",
+  ]);
+
+  const csv = [
+    headers.map(escapeCsv).join(","),
+    ...rows.map((row) => row.map(escapeCsv).join(",")),
+  ].join("\n");
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = `audit-log-${new Date().toISOString().slice(0, 10)}.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
 }
 
 function AuditLogPage() {
@@ -255,6 +301,17 @@ function AuditLogPage() {
             className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
         </div>
+
+        {events.length > 0 && (
+          <button
+            type="button"
+            onClick={() => downloadAuditCsv(events)}
+            className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm transition-colors hover:bg-muted"
+          >
+            <DownloadIcon className="size-4" />
+            Export CSV
+          </button>
+        )}
       </div>
 
       {/* Loading state */}
@@ -267,9 +324,7 @@ function AuditLogPage() {
       {/* Empty state */}
       {!isLoading && events.length === 0 && (
         <div className="flex items-center justify-center rounded-lg border border-border bg-card p-8">
-          <p className="text-muted-foreground text-sm">
-            No audit events found
-          </p>
+          <p className="text-muted-foreground text-sm">No audit events found</p>
         </div>
       )}
 
@@ -304,7 +359,10 @@ function AuditLogPage() {
                   : null;
 
                 return (
-                  <tr key={event.id} className="border-border border-b last:border-b-0">
+                  <tr
+                    key={event.id}
+                    className="border-border border-b last:border-b-0"
+                  >
                     <td className="px-3 py-2">
                       {event.metadata && (
                         <button

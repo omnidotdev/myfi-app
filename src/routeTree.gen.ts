@@ -33,6 +33,7 @@ import { Route as AppSettingsMappingsRouteImport } from './routes/_app/settings/
 import { Route as AppSettingsConnectionsRouteImport } from './routes/_app/settings/connections'
 import { Route as AppSettingsBooksRouteImport } from './routes/_app/settings/books'
 import { Route as AppSettingsAuditRouteImport } from './routes/_app/settings/audit'
+import { Route as AppSettingsAccessRouteImport } from './routes/_app/settings/access'
 import { Route as AppReportsTrialBalanceRouteImport } from './routes/_app/reports/trial-balance'
 import { Route as AppReportsTaxLossHarvestingRouteImport } from './routes/_app/reports/tax-loss-harvesting'
 import { Route as AppReportsScheduleCRouteImport } from './routes/_app/reports/schedule-c'
@@ -167,6 +168,11 @@ const AppSettingsAuditRoute = AppSettingsAuditRouteImport.update({
   path: '/settings/audit',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsAccessRoute = AppSettingsAccessRouteImport.update({
+  id: '/settings/access',
+  path: '/settings/access',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppReportsTrialBalanceRoute = AppReportsTrialBalanceRouteImport.update({
   id: '/reports/trial-balance',
   path: '/reports/trial-balance',
@@ -257,6 +263,7 @@ export interface FileRoutesByFullPath {
   '/reports/schedule-c': typeof AppReportsScheduleCRoute
   '/reports/tax-loss-harvesting': typeof AppReportsTaxLossHarvestingRoute
   '/reports/trial-balance': typeof AppReportsTrialBalanceRoute
+  '/settings/access': typeof AppSettingsAccessRoute
   '/settings/audit': typeof AppSettingsAuditRoute
   '/settings/books': typeof AppSettingsBooksRoute
   '/settings/connections': typeof AppSettingsConnectionsRoute
@@ -295,6 +302,7 @@ export interface FileRoutesByTo {
   '/reports/schedule-c': typeof AppReportsScheduleCRoute
   '/reports/tax-loss-harvesting': typeof AppReportsTaxLossHarvestingRoute
   '/reports/trial-balance': typeof AppReportsTrialBalanceRoute
+  '/settings/access': typeof AppSettingsAccessRoute
   '/settings/audit': typeof AppSettingsAuditRoute
   '/settings/books': typeof AppSettingsBooksRoute
   '/settings/connections': typeof AppSettingsConnectionsRoute
@@ -336,6 +344,7 @@ export interface FileRoutesById {
   '/_app/reports/schedule-c': typeof AppReportsScheduleCRoute
   '/_app/reports/tax-loss-harvesting': typeof AppReportsTaxLossHarvestingRoute
   '/_app/reports/trial-balance': typeof AppReportsTrialBalanceRoute
+  '/_app/settings/access': typeof AppSettingsAccessRoute
   '/_app/settings/audit': typeof AppSettingsAuditRoute
   '/_app/settings/books': typeof AppSettingsBooksRoute
   '/_app/settings/connections': typeof AppSettingsConnectionsRoute
@@ -376,6 +385,7 @@ export interface FileRouteTypes {
     | '/reports/schedule-c'
     | '/reports/tax-loss-harvesting'
     | '/reports/trial-balance'
+    | '/settings/access'
     | '/settings/audit'
     | '/settings/books'
     | '/settings/connections'
@@ -414,6 +424,7 @@ export interface FileRouteTypes {
     | '/reports/schedule-c'
     | '/reports/tax-loss-harvesting'
     | '/reports/trial-balance'
+    | '/settings/access'
     | '/settings/audit'
     | '/settings/books'
     | '/settings/connections'
@@ -454,6 +465,7 @@ export interface FileRouteTypes {
     | '/_app/reports/schedule-c'
     | '/_app/reports/tax-loss-harvesting'
     | '/_app/reports/trial-balance'
+    | '/_app/settings/access'
     | '/_app/settings/audit'
     | '/_app/settings/books'
     | '/_app/settings/connections'
@@ -652,6 +664,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsAuditRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings/access': {
+      id: '/_app/settings/access'
+      path: '/settings/access'
+      fullPath: '/settings/access'
+      preLoaderRoute: typeof AppSettingsAccessRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/reports/trial-balance': {
       id: '/_app/reports/trial-balance'
       path: '/reports/trial-balance'
@@ -769,6 +788,7 @@ interface AppRouteChildren {
   AppReportsScheduleCRoute: typeof AppReportsScheduleCRoute
   AppReportsTaxLossHarvestingRoute: typeof AppReportsTaxLossHarvestingRoute
   AppReportsTrialBalanceRoute: typeof AppReportsTrialBalanceRoute
+  AppSettingsAccessRoute: typeof AppSettingsAccessRoute
   AppSettingsAuditRoute: typeof AppSettingsAuditRoute
   AppSettingsBooksRoute: typeof AppSettingsBooksRoute
   AppSettingsConnectionsRoute: typeof AppSettingsConnectionsRoute
@@ -806,6 +826,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppReportsScheduleCRoute: AppReportsScheduleCRoute,
   AppReportsTaxLossHarvestingRoute: AppReportsTaxLossHarvestingRoute,
   AppReportsTrialBalanceRoute: AppReportsTrialBalanceRoute,
+  AppSettingsAccessRoute: AppSettingsAccessRoute,
   AppSettingsAuditRoute: AppSettingsAuditRoute,
   AppSettingsBooksRoute: AppSettingsBooksRoute,
   AppSettingsConnectionsRoute: AppSettingsConnectionsRoute,

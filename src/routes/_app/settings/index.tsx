@@ -5,6 +5,7 @@ import {
   Link2Icon,
   MapIcon,
   ScrollTextIcon,
+  ShieldIcon,
   SparklesIcon,
   TagsIcon,
   UsersIcon,
@@ -56,6 +57,12 @@ const settingsItems = [
     description: "Manage sales tax jurisdictions and filing frequencies",
     href: "/settings/tax-jurisdictions",
     icon: LandmarkIcon,
+  },
+  {
+    label: "Access Control",
+    description: "Manage who has access to each book and their role",
+    href: "/settings/access",
+    icon: ShieldIcon,
   },
   {
     label: "Audit Log",
