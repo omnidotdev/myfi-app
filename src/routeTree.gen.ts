@@ -24,6 +24,7 @@ import { Route as AppBudgetsIndexRouteImport } from './routes/_app/budgets/index
 import { Route as AppAssetsIndexRouteImport } from './routes/_app/assets/index'
 import { Route as AppAccountsIndexRouteImport } from './routes/_app/accounts/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AppSettingsVendorsRouteImport } from './routes/_app/settings/vendors'
 import { Route as AppSettingsTagsRouteImport } from './routes/_app/settings/tags'
 import { Route as AppSettingsRulesRouteImport } from './routes/_app/settings/rules'
 import { Route as AppSettingsMappingsRouteImport } from './routes/_app/settings/mappings'
@@ -39,6 +40,7 @@ import { Route as AppReportsGeneralLedgerRouteImport } from './routes/_app/repor
 import { Route as AppReportsForm8949RouteImport } from './routes/_app/reports/form-8949'
 import { Route as AppReportsCashFlowRouteImport } from './routes/_app/reports/cash-flow'
 import { Route as AppReportsBalanceSheetRouteImport } from './routes/_app/reports/balance-sheet'
+import { Route as AppReports1099RouteImport } from './routes/_app/reports/1099'
 import { Route as AppLedgerNewRouteImport } from './routes/_app/ledger/new'
 import { Route as AppAssetsAssetIdRouteImport } from './routes/_app/assets/$assetId'
 
@@ -114,6 +116,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppSettingsVendorsRoute = AppSettingsVendorsRouteImport.update({
+  id: '/settings/vendors',
+  path: '/settings/vendors',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsTagsRoute = AppSettingsTagsRouteImport.update({
   id: '/settings/tags',
@@ -192,6 +199,11 @@ const AppReportsBalanceSheetRoute = AppReportsBalanceSheetRouteImport.update({
   path: '/reports/balance-sheet',
   getParentRoute: () => AppRoute,
 } as any)
+const AppReports1099Route = AppReports1099RouteImport.update({
+  id: '/reports/1099',
+  path: '/reports/1099',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppLedgerNewRoute = AppLedgerNewRouteImport.update({
   id: '/ledger/new',
   path: '/ledger/new',
@@ -208,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AppDashboardRoute
   '/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/ledger/new': typeof AppLedgerNewRoute
+  '/reports/1099': typeof AppReports1099Route
   '/reports/balance-sheet': typeof AppReportsBalanceSheetRoute
   '/reports/cash-flow': typeof AppReportsCashFlowRoute
   '/reports/form-8949': typeof AppReportsForm8949Route
@@ -223,6 +236,7 @@ export interface FileRoutesByFullPath {
   '/settings/mappings': typeof AppSettingsMappingsRoute
   '/settings/rules': typeof AppSettingsRulesRoute
   '/settings/tags': typeof AppSettingsTagsRoute
+  '/settings/vendors': typeof AppSettingsVendorsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/accounts/': typeof AppAccountsIndexRoute
   '/assets/': typeof AppAssetsIndexRoute
@@ -240,6 +254,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AppDashboardRoute
   '/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/ledger/new': typeof AppLedgerNewRoute
+  '/reports/1099': typeof AppReports1099Route
   '/reports/balance-sheet': typeof AppReportsBalanceSheetRoute
   '/reports/cash-flow': typeof AppReportsCashFlowRoute
   '/reports/form-8949': typeof AppReportsForm8949Route
@@ -255,6 +270,7 @@ export interface FileRoutesByTo {
   '/settings/mappings': typeof AppSettingsMappingsRoute
   '/settings/rules': typeof AppSettingsRulesRoute
   '/settings/tags': typeof AppSettingsTagsRoute
+  '/settings/vendors': typeof AppSettingsVendorsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/accounts': typeof AppAccountsIndexRoute
   '/assets': typeof AppAssetsIndexRoute
@@ -275,6 +291,7 @@ export interface FileRoutesById {
   '/_public/': typeof PublicIndexRoute
   '/_app/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/_app/ledger/new': typeof AppLedgerNewRoute
+  '/_app/reports/1099': typeof AppReports1099Route
   '/_app/reports/balance-sheet': typeof AppReportsBalanceSheetRoute
   '/_app/reports/cash-flow': typeof AppReportsCashFlowRoute
   '/_app/reports/form-8949': typeof AppReportsForm8949Route
@@ -290,6 +307,7 @@ export interface FileRoutesById {
   '/_app/settings/mappings': typeof AppSettingsMappingsRoute
   '/_app/settings/rules': typeof AppSettingsRulesRoute
   '/_app/settings/tags': typeof AppSettingsTagsRoute
+  '/_app/settings/vendors': typeof AppSettingsVendorsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_app/accounts/': typeof AppAccountsIndexRoute
   '/_app/assets/': typeof AppAssetsIndexRoute
@@ -309,6 +327,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/assets/$assetId'
     | '/ledger/new'
+    | '/reports/1099'
     | '/reports/balance-sheet'
     | '/reports/cash-flow'
     | '/reports/form-8949'
@@ -324,6 +343,7 @@ export interface FileRouteTypes {
     | '/settings/mappings'
     | '/settings/rules'
     | '/settings/tags'
+    | '/settings/vendors'
     | '/api/auth/$'
     | '/accounts/'
     | '/assets/'
@@ -341,6 +361,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/assets/$assetId'
     | '/ledger/new'
+    | '/reports/1099'
     | '/reports/balance-sheet'
     | '/reports/cash-flow'
     | '/reports/form-8949'
@@ -356,6 +377,7 @@ export interface FileRouteTypes {
     | '/settings/mappings'
     | '/settings/rules'
     | '/settings/tags'
+    | '/settings/vendors'
     | '/api/auth/$'
     | '/accounts'
     | '/assets'
@@ -375,6 +397,7 @@ export interface FileRouteTypes {
     | '/_public/'
     | '/_app/assets/$assetId'
     | '/_app/ledger/new'
+    | '/_app/reports/1099'
     | '/_app/reports/balance-sheet'
     | '/_app/reports/cash-flow'
     | '/_app/reports/form-8949'
@@ -390,6 +413,7 @@ export interface FileRouteTypes {
     | '/_app/settings/mappings'
     | '/_app/settings/rules'
     | '/_app/settings/tags'
+    | '/_app/settings/vendors'
     | '/api/auth/$'
     | '/_app/accounts/'
     | '/_app/assets/'
@@ -516,6 +540,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/settings/vendors': {
+      id: '/_app/settings/vendors'
+      path: '/settings/vendors'
+      fullPath: '/settings/vendors'
+      preLoaderRoute: typeof AppSettingsVendorsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/settings/tags': {
       id: '/_app/settings/tags'
       path: '/settings/tags'
@@ -621,6 +652,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppReportsBalanceSheetRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/reports/1099': {
+      id: '/_app/reports/1099'
+      path: '/reports/1099'
+      fullPath: '/reports/1099'
+      preLoaderRoute: typeof AppReports1099RouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/ledger/new': {
       id: '/_app/ledger/new'
       path: '/ledger/new'
@@ -642,6 +680,7 @@ interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppAssetsAssetIdRoute: typeof AppAssetsAssetIdRoute
   AppLedgerNewRoute: typeof AppLedgerNewRoute
+  AppReports1099Route: typeof AppReports1099Route
   AppReportsBalanceSheetRoute: typeof AppReportsBalanceSheetRoute
   AppReportsCashFlowRoute: typeof AppReportsCashFlowRoute
   AppReportsForm8949Route: typeof AppReportsForm8949Route
@@ -657,6 +696,7 @@ interface AppRouteChildren {
   AppSettingsMappingsRoute: typeof AppSettingsMappingsRoute
   AppSettingsRulesRoute: typeof AppSettingsRulesRoute
   AppSettingsTagsRoute: typeof AppSettingsTagsRoute
+  AppSettingsVendorsRoute: typeof AppSettingsVendorsRoute
   AppAccountsIndexRoute: typeof AppAccountsIndexRoute
   AppAssetsIndexRoute: typeof AppAssetsIndexRoute
   AppBudgetsIndexRoute: typeof AppBudgetsIndexRoute
@@ -673,6 +713,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppAssetsAssetIdRoute: AppAssetsAssetIdRoute,
   AppLedgerNewRoute: AppLedgerNewRoute,
+  AppReports1099Route: AppReports1099Route,
   AppReportsBalanceSheetRoute: AppReportsBalanceSheetRoute,
   AppReportsCashFlowRoute: AppReportsCashFlowRoute,
   AppReportsForm8949Route: AppReportsForm8949Route,
@@ -688,6 +729,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsMappingsRoute: AppSettingsMappingsRoute,
   AppSettingsRulesRoute: AppSettingsRulesRoute,
   AppSettingsTagsRoute: AppSettingsTagsRoute,
+  AppSettingsVendorsRoute: AppSettingsVendorsRoute,
   AppAccountsIndexRoute: AppAccountsIndexRoute,
   AppAssetsIndexRoute: AppAssetsIndexRoute,
   AppBudgetsIndexRoute: AppBudgetsIndexRoute,

@@ -9,6 +9,7 @@ import {
   LeafIcon,
   ReceiptTextIcon,
   ScaleIcon,
+  UsersIcon,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/reports/")({
@@ -78,6 +79,13 @@ const reportCards = [
       "Identify crypto positions with unrealized losses to offset capital gains",
     icon: LeafIcon,
     href: "/reports/tax-loss-harvesting",
+  },
+  {
+    title: "1099-NEC",
+    description:
+      "Non-employee compensation reporting for vendors meeting the filing threshold",
+    icon: UsersIcon,
+    href: "/reports/1099",
   },
 ];
 

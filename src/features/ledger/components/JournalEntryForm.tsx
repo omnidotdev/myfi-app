@@ -13,10 +13,21 @@ type LineInput = {
   tagIds: string[];
 };
 
+type VendorOption = {
+  rowId: string;
+  name: string;
+};
+
 type JournalEntryFormProps = {
   accounts: Account[];
   tagGroups?: TagGroup[];
-  onSubmit: (entry: { date: string; memo: string; lines: LineInput[] }) => void;
+  vendors?: VendorOption[];
+  onSubmit: (entry: {
+    date: string;
+    memo: string;
+    vendorId?: string;
+    lines: LineInput[];
+  }) => void;
   onCancel: () => void;
 };
 
@@ -45,11 +56,13 @@ function parseAmount(value: string): number {
 function JournalEntryForm({
   accounts,
   tagGroups = [],
+  vendors = [],
   onSubmit,
   onCancel,
 }: JournalEntryFormProps) {
   const [date, setDate] = useState("");
   const [memo, setMemo] = useState("");
+  const [vendorId, setVendorId] = useState("");
   const [lines, setLines] = useState<LineInput[]>([createLine(), createLine()]);
 
   const { totalDebits, totalCredits, difference } = useMemo(() => {
@@ -93,7 +106,7 @@ function JournalEntryForm({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSubmit) return;
-    onSubmit({ date, memo, lines });
+    onSubmit({ date, memo, vendorId: vendorId || undefined, lines });
   };
 
   return (
@@ -130,6 +143,28 @@ function JournalEntryForm({
           />
         </div>
       </div>
+
+      {/* Vendor (optional) */}
+      {vendors.length > 0 && (
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="entry-vendor" className="font-medium text-sm">
+            Vendor
+          </label>
+          <select
+            id="entry-vendor"
+            value={vendorId}
+            onChange={(e) => setVendorId(e.target.value)}
+            className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+          >
+            <option value="">None</option>
+            {vendors.map((v) => (
+              <option key={v.rowId} value={v.rowId}>
+                {v.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {/* Line items */}
       <div className="flex flex-col gap-3">

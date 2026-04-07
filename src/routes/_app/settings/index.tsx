@@ -6,6 +6,7 @@ import {
   ScrollTextIcon,
   SparklesIcon,
   TagsIcon,
+  UsersIcon,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/settings/")({
@@ -42,6 +43,12 @@ const settingsItems = [
     description: "Organize transactions by department, location, or project",
     href: "/settings/tags",
     icon: TagsIcon,
+  },
+  {
+    label: "Vendors & 1099",
+    description: "Manage vendors and 1099 eligibility for tax reporting",
+    href: "/settings/vendors",
+    icon: UsersIcon,
   },
   {
     label: "Audit Log",

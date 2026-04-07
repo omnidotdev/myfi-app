@@ -24,6 +24,7 @@ function NewJournalEntryPage() {
 
   const { tagGroups } = useTagGroups(activeBookId);
   const [accounts, setAccounts] = useState<Account[]>([]);
+  const [vendors, setVendors] = useState<{ rowId: string; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchAccounts = useCallback(async () => {
@@ -42,6 +43,20 @@ function NewJournalEntryPage() {
       );
 
       setAccounts(mapped);
+
+      // Fetch vendors for the active book
+      const vendorRes = await fetch(
+        `${API_URL}/api/vendors?bookId=${activeBookId}`,
+      );
+      const vendorData = await vendorRes.json();
+      const mappedVendors = (vendorData.vendors ?? []).map(
+        (v: Record<string, unknown>) => ({
+          rowId: v.id as string,
+          name: v.name as string,
+        }),
+      );
+
+      setVendors(mappedVendors);
     } catch {
       // Silently handle fetch errors
     } finally {
@@ -57,6 +72,7 @@ function NewJournalEntryPage() {
     async (entry: {
       date: string;
       memo: string;
+      vendorId?: string;
       lines: {
         accountId: string;
         debit: string;
@@ -73,6 +89,7 @@ function NewJournalEntryPage() {
             bookId: activeBookId,
             date: entry.date,
             memo: entry.memo,
+            vendorId: entry.vendorId ?? null,
             source: "manual",
             lines: entry.lines.map((l) => ({
               accountId: l.accountId,
@@ -154,6 +171,7 @@ function NewJournalEntryPage() {
           <JournalEntryForm
             accounts={accounts}
             tagGroups={tagGroups}
+            vendors={vendors}
             onSubmit={handleSubmit}
             onCancel={handleCancel}
           />
