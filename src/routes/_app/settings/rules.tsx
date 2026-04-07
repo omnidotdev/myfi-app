@@ -157,6 +157,26 @@ function RulesPage() {
     [fetchData],
   );
 
+  const handleEdit = useCallback(
+    async (
+      ruleId: string,
+      updates: { debitAccountId: string; creditAccountId: string },
+    ) => {
+      try {
+        await fetch(`${API_URL}/api/categorization-rules/${ruleId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updates),
+        });
+
+        await fetchData();
+      } catch {
+        // Silently handle edit errors
+      }
+    },
+    [fetchData],
+  );
+
   const updateField = useCallback(
     <K extends keyof CreateFormState>(field: K, value: CreateFormState[K]) => {
       setForm((prev) => ({ ...prev, [field]: value }));
@@ -400,6 +420,7 @@ function RulesPage() {
             code: a.code,
           }))}
           onDelete={handleDelete}
+          onEdit={handleEdit}
         />
       )}
     </div>

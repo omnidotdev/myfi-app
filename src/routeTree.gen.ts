@@ -24,6 +24,7 @@ import { Route as AppBudgetsIndexRouteImport } from './routes/_app/budgets/index
 import { Route as AppAssetsIndexRouteImport } from './routes/_app/assets/index'
 import { Route as AppAccountsIndexRouteImport } from './routes/_app/accounts/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AppSpendingRecurringRouteImport } from './routes/_app/spending/recurring'
 import { Route as AppSettingsVendorsRouteImport } from './routes/_app/settings/vendors'
 import { Route as AppSettingsTaxJurisdictionsRouteImport } from './routes/_app/settings/tax-jurisdictions'
 import { Route as AppSettingsTagsRouteImport } from './routes/_app/settings/tags'
@@ -119,6 +120,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppSpendingRecurringRoute = AppSpendingRecurringRouteImport.update({
+  id: '/spending/recurring',
+  path: '/spending/recurring',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsVendorsRoute = AppSettingsVendorsRouteImport.update({
   id: '/settings/vendors',
@@ -259,6 +265,7 @@ export interface FileRoutesByFullPath {
   '/settings/tags': typeof AppSettingsTagsRoute
   '/settings/tax-jurisdictions': typeof AppSettingsTaxJurisdictionsRoute
   '/settings/vendors': typeof AppSettingsVendorsRoute
+  '/spending/recurring': typeof AppSpendingRecurringRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/accounts/': typeof AppAccountsIndexRoute
   '/assets/': typeof AppAssetsIndexRoute
@@ -296,6 +303,7 @@ export interface FileRoutesByTo {
   '/settings/tags': typeof AppSettingsTagsRoute
   '/settings/tax-jurisdictions': typeof AppSettingsTaxJurisdictionsRoute
   '/settings/vendors': typeof AppSettingsVendorsRoute
+  '/spending/recurring': typeof AppSpendingRecurringRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/accounts': typeof AppAccountsIndexRoute
   '/assets': typeof AppAssetsIndexRoute
@@ -336,6 +344,7 @@ export interface FileRoutesById {
   '/_app/settings/tags': typeof AppSettingsTagsRoute
   '/_app/settings/tax-jurisdictions': typeof AppSettingsTaxJurisdictionsRoute
   '/_app/settings/vendors': typeof AppSettingsVendorsRoute
+  '/_app/spending/recurring': typeof AppSpendingRecurringRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_app/accounts/': typeof AppAccountsIndexRoute
   '/_app/assets/': typeof AppAssetsIndexRoute
@@ -375,6 +384,7 @@ export interface FileRouteTypes {
     | '/settings/tags'
     | '/settings/tax-jurisdictions'
     | '/settings/vendors'
+    | '/spending/recurring'
     | '/api/auth/$'
     | '/accounts/'
     | '/assets/'
@@ -412,6 +422,7 @@ export interface FileRouteTypes {
     | '/settings/tags'
     | '/settings/tax-jurisdictions'
     | '/settings/vendors'
+    | '/spending/recurring'
     | '/api/auth/$'
     | '/accounts'
     | '/assets'
@@ -451,6 +462,7 @@ export interface FileRouteTypes {
     | '/_app/settings/tags'
     | '/_app/settings/tax-jurisdictions'
     | '/_app/settings/vendors'
+    | '/_app/spending/recurring'
     | '/api/auth/$'
     | '/_app/accounts/'
     | '/_app/assets/'
@@ -576,6 +588,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_app/spending/recurring': {
+      id: '/_app/spending/recurring'
+      path: '/spending/recurring'
+      fullPath: '/spending/recurring'
+      preLoaderRoute: typeof AppSpendingRecurringRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/settings/vendors': {
       id: '/_app/settings/vendors'
@@ -758,6 +777,7 @@ interface AppRouteChildren {
   AppSettingsTagsRoute: typeof AppSettingsTagsRoute
   AppSettingsTaxJurisdictionsRoute: typeof AppSettingsTaxJurisdictionsRoute
   AppSettingsVendorsRoute: typeof AppSettingsVendorsRoute
+  AppSpendingRecurringRoute: typeof AppSpendingRecurringRoute
   AppAccountsIndexRoute: typeof AppAccountsIndexRoute
   AppAssetsIndexRoute: typeof AppAssetsIndexRoute
   AppBudgetsIndexRoute: typeof AppBudgetsIndexRoute
@@ -794,6 +814,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsTagsRoute: AppSettingsTagsRoute,
   AppSettingsTaxJurisdictionsRoute: AppSettingsTaxJurisdictionsRoute,
   AppSettingsVendorsRoute: AppSettingsVendorsRoute,
+  AppSpendingRecurringRoute: AppSpendingRecurringRoute,
   AppAccountsIndexRoute: AppAccountsIndexRoute,
   AppAssetsIndexRoute: AppAssetsIndexRoute,
   AppBudgetsIndexRoute: AppBudgetsIndexRoute,

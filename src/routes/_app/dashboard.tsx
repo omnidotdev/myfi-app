@@ -473,48 +473,51 @@ function DashboardPage() {
         </div>
       )}
 
-      {/* Single-book: Summary cards */}
+      {/* Single-book: Net worth hero card */}
       {!loading && !showAllBooks && netWorth && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div className="flex items-center gap-3 rounded-lg border border-border bg-card p-4">
-            <div className="flex size-10 items-center justify-center rounded-full bg-green-100 text-green-600">
-              <TrendingUpIcon className="size-5" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground text-xs">
-                Total Assets
-              </span>
-              <span className="font-semibold text-lg">
-                {formatCurrency(netWorth.totalAssets)}
-              </span>
-            </div>
+        <div className="rounded-lg border border-border bg-gradient-to-br from-card to-muted/30 p-6">
+          <div className="flex flex-col items-center gap-1 text-center">
+            <span className="text-muted-foreground text-sm">Net Worth</span>
+            <span
+              className={`font-bold text-4xl tracking-tight ${Number.parseFloat(netWorth.netWorth) >= 0 ? "text-green-600" : "text-red-500"}`}
+            >
+              {formatCurrency(netWorth.netWorth)}
+            </span>
+            <span className="text-muted-foreground text-xs">
+              as of{" "}
+              {new Date(netWorth.generatedAt).toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </span>
           </div>
 
-          <div className="flex items-center gap-3 rounded-lg border border-border bg-card p-4">
-            <div className="flex size-10 items-center justify-center rounded-full bg-red-100 text-red-600">
-              <TrendingDownIcon className="size-5" />
+          <div className="mt-5 grid grid-cols-2 gap-4">
+            <div className="flex items-center gap-3 rounded-md border border-border bg-card/60 p-3">
+              <div className="flex size-9 items-center justify-center rounded-full bg-green-100 text-green-600">
+                <TrendingUpIcon className="size-4" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-muted-foreground text-xs">Assets</span>
+                <span className="font-semibold text-base">
+                  {formatCurrency(netWorth.totalAssets)}
+                </span>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground text-xs">
-                Total Liabilities
-              </span>
-              <span className="font-semibold text-lg">
-                {formatCurrency(netWorth.totalLiabilities)}
-              </span>
-            </div>
-          </div>
 
-          <div className="flex items-center gap-3 rounded-lg border border-border bg-card p-4">
-            <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-              <DollarSignIcon className="size-5" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground text-xs">Net Worth</span>
-              <span
-                className={`font-semibold text-lg ${Number.parseFloat(netWorth.netWorth) >= 0 ? "text-green-600" : "text-red-500"}`}
-              >
-                {formatCurrency(netWorth.netWorth)}
-              </span>
+            <div className="flex items-center gap-3 rounded-md border border-border bg-card/60 p-3">
+              <div className="flex size-9 items-center justify-center rounded-full bg-red-100 text-red-600">
+                <TrendingDownIcon className="size-4" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-muted-foreground text-xs">
+                  Liabilities
+                </span>
+                <span className="font-semibold text-base">
+                  {formatCurrency(netWorth.totalLiabilities)}
+                </span>
+              </div>
             </div>
           </div>
         </div>

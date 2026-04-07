@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   BarChart3Icon,
   Loader2Icon,
@@ -164,11 +164,21 @@ function SpendingPage() {
           </p>
         </div>
 
-        <BookPicker
-          books={books}
-          selectedBookId={activeBookId}
-          onSelect={setActiveBookId}
-        />
+        <div className="flex items-center gap-3">
+          <Link
+            to="/spending/recurring"
+            className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-sm transition-colors hover:bg-accent"
+          >
+            <RepeatIcon className="size-4" />
+            Recurring
+          </Link>
+
+          <BookPicker
+            books={books}
+            selectedBookId={activeBookId}
+            onSelect={setActiveBookId}
+          />
+        </div>
       </div>
 
       {/* Tab navigation */}
