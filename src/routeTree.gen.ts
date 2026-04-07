@@ -21,6 +21,7 @@ import { Route as AppReconciliationIndexRouteImport } from './routes/_app/reconc
 import { Route as AppLedgerIndexRouteImport } from './routes/_app/ledger/index'
 import { Route as AppCryptoIndexRouteImport } from './routes/_app/crypto/index'
 import { Route as AppBudgetsIndexRouteImport } from './routes/_app/budgets/index'
+import { Route as AppAssetsIndexRouteImport } from './routes/_app/assets/index'
 import { Route as AppAccountsIndexRouteImport } from './routes/_app/accounts/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AppSettingsRulesRouteImport } from './routes/_app/settings/rules'
@@ -38,6 +39,7 @@ import { Route as AppReportsForm8949RouteImport } from './routes/_app/reports/fo
 import { Route as AppReportsCashFlowRouteImport } from './routes/_app/reports/cash-flow'
 import { Route as AppReportsBalanceSheetRouteImport } from './routes/_app/reports/balance-sheet'
 import { Route as AppLedgerNewRouteImport } from './routes/_app/ledger/new'
+import { Route as AppAssetsAssetIdRouteImport } from './routes/_app/assets/$assetId'
 
 const PublicRoute = PublicRouteImport.update({
   id: '/_public',
@@ -95,6 +97,11 @@ const AppCryptoIndexRoute = AppCryptoIndexRouteImport.update({
 const AppBudgetsIndexRoute = AppBudgetsIndexRouteImport.update({
   id: '/budgets/',
   path: '/budgets/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAssetsIndexRoute = AppAssetsIndexRouteImport.update({
+  id: '/assets/',
+  path: '/assets/',
   getParentRoute: () => AppRoute,
 } as any)
 const AppAccountsIndexRoute = AppAccountsIndexRouteImport.update({
@@ -184,10 +191,16 @@ const AppLedgerNewRoute = AppLedgerNewRouteImport.update({
   path: '/ledger/new',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAssetsAssetIdRoute = AppAssetsAssetIdRouteImport.update({
+  id: '/assets/$assetId',
+  path: '/assets/$assetId',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/dashboard': typeof AppDashboardRoute
+  '/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/ledger/new': typeof AppLedgerNewRoute
   '/reports/balance-sheet': typeof AppReportsBalanceSheetRoute
   '/reports/cash-flow': typeof AppReportsCashFlowRoute
@@ -205,6 +218,7 @@ export interface FileRoutesByFullPath {
   '/settings/rules': typeof AppSettingsRulesRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/accounts/': typeof AppAccountsIndexRoute
+  '/assets/': typeof AppAssetsIndexRoute
   '/budgets/': typeof AppBudgetsIndexRoute
   '/crypto/': typeof AppCryptoIndexRoute
   '/ledger/': typeof AppLedgerIndexRoute
@@ -217,6 +231,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/dashboard': typeof AppDashboardRoute
+  '/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/ledger/new': typeof AppLedgerNewRoute
   '/reports/balance-sheet': typeof AppReportsBalanceSheetRoute
   '/reports/cash-flow': typeof AppReportsCashFlowRoute
@@ -234,6 +249,7 @@ export interface FileRoutesByTo {
   '/settings/rules': typeof AppSettingsRulesRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/accounts': typeof AppAccountsIndexRoute
+  '/assets': typeof AppAssetsIndexRoute
   '/budgets': typeof AppBudgetsIndexRoute
   '/crypto': typeof AppCryptoIndexRoute
   '/ledger': typeof AppLedgerIndexRoute
@@ -249,6 +265,7 @@ export interface FileRoutesById {
   '/_public': typeof PublicRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
   '/_public/': typeof PublicIndexRoute
+  '/_app/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/_app/ledger/new': typeof AppLedgerNewRoute
   '/_app/reports/balance-sheet': typeof AppReportsBalanceSheetRoute
   '/_app/reports/cash-flow': typeof AppReportsCashFlowRoute
@@ -266,6 +283,7 @@ export interface FileRoutesById {
   '/_app/settings/rules': typeof AppSettingsRulesRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_app/accounts/': typeof AppAccountsIndexRoute
+  '/_app/assets/': typeof AppAssetsIndexRoute
   '/_app/budgets/': typeof AppBudgetsIndexRoute
   '/_app/crypto/': typeof AppCryptoIndexRoute
   '/_app/ledger/': typeof AppLedgerIndexRoute
@@ -280,6 +298,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
+    | '/assets/$assetId'
     | '/ledger/new'
     | '/reports/balance-sheet'
     | '/reports/cash-flow'
@@ -297,6 +316,7 @@ export interface FileRouteTypes {
     | '/settings/rules'
     | '/api/auth/$'
     | '/accounts/'
+    | '/assets/'
     | '/budgets/'
     | '/crypto/'
     | '/ledger/'
@@ -309,6 +329,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/dashboard'
+    | '/assets/$assetId'
     | '/ledger/new'
     | '/reports/balance-sheet'
     | '/reports/cash-flow'
@@ -326,6 +347,7 @@ export interface FileRouteTypes {
     | '/settings/rules'
     | '/api/auth/$'
     | '/accounts'
+    | '/assets'
     | '/budgets'
     | '/crypto'
     | '/ledger'
@@ -340,6 +362,7 @@ export interface FileRouteTypes {
     | '/_public'
     | '/_app/dashboard'
     | '/_public/'
+    | '/_app/assets/$assetId'
     | '/_app/ledger/new'
     | '/_app/reports/balance-sheet'
     | '/_app/reports/cash-flow'
@@ -357,6 +380,7 @@ export interface FileRouteTypes {
     | '/_app/settings/rules'
     | '/api/auth/$'
     | '/_app/accounts/'
+    | '/_app/assets/'
     | '/_app/budgets/'
     | '/_app/crypto/'
     | '/_app/ledger/'
@@ -457,6 +481,13 @@ declare module '@tanstack/react-router' {
       path: '/budgets'
       fullPath: '/budgets/'
       preLoaderRoute: typeof AppBudgetsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/assets/': {
+      id: '/_app/assets/'
+      path: '/assets'
+      fullPath: '/assets/'
+      preLoaderRoute: typeof AppAssetsIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/accounts/': {
@@ -578,11 +609,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLedgerNewRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/assets/$assetId': {
+      id: '/_app/assets/$assetId'
+      path: '/assets/$assetId'
+      fullPath: '/assets/$assetId'
+      preLoaderRoute: typeof AppAssetsAssetIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
+  AppAssetsAssetIdRoute: typeof AppAssetsAssetIdRoute
   AppLedgerNewRoute: typeof AppLedgerNewRoute
   AppReportsBalanceSheetRoute: typeof AppReportsBalanceSheetRoute
   AppReportsCashFlowRoute: typeof AppReportsCashFlowRoute
@@ -599,6 +638,7 @@ interface AppRouteChildren {
   AppSettingsMappingsRoute: typeof AppSettingsMappingsRoute
   AppSettingsRulesRoute: typeof AppSettingsRulesRoute
   AppAccountsIndexRoute: typeof AppAccountsIndexRoute
+  AppAssetsIndexRoute: typeof AppAssetsIndexRoute
   AppBudgetsIndexRoute: typeof AppBudgetsIndexRoute
   AppCryptoIndexRoute: typeof AppCryptoIndexRoute
   AppLedgerIndexRoute: typeof AppLedgerIndexRoute
@@ -611,6 +651,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
+  AppAssetsAssetIdRoute: AppAssetsAssetIdRoute,
   AppLedgerNewRoute: AppLedgerNewRoute,
   AppReportsBalanceSheetRoute: AppReportsBalanceSheetRoute,
   AppReportsCashFlowRoute: AppReportsCashFlowRoute,
@@ -627,6 +668,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsMappingsRoute: AppSettingsMappingsRoute,
   AppSettingsRulesRoute: AppSettingsRulesRoute,
   AppAccountsIndexRoute: AppAccountsIndexRoute,
+  AppAssetsIndexRoute: AppAssetsIndexRoute,
   AppBudgetsIndexRoute: AppBudgetsIndexRoute,
   AppCryptoIndexRoute: AppCryptoIndexRoute,
   AppLedgerIndexRoute: AppLedgerIndexRoute,

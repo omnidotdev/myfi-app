@@ -8,6 +8,7 @@ import {
   BarChart3Icon,
   BitcoinIcon,
   BookOpenIcon,
+  HardDriveIcon,
   LandmarkIcon,
   LayoutDashboardIcon,
   LogOutIcon,
@@ -72,6 +73,11 @@ const navItems = [
     label: appConfig.modules.crypto.label,
     href: "/crypto",
     icon: BitcoinIcon,
+  },
+  {
+    label: appConfig.modules.assets.label,
+    href: "/assets",
+    icon: HardDriveIcon,
   },
   {
     label: appConfig.modules.reports.label,
