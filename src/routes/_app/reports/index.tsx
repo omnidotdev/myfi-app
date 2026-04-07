@@ -5,6 +5,7 @@ import {
   BookOpenIcon,
   CalendarIcon,
   CoinsIcon,
+  DollarSignIcon,
   FileSpreadsheetIcon,
   LandmarkIcon,
   LeafIcon,
@@ -94,6 +95,12 @@ const reportCards = [
       "Non-employee compensation reporting for vendors meeting the filing threshold",
     icon: UsersIcon,
     href: "/reports/1099",
+  },
+  {
+    title: "Payroll",
+    description: "Payroll runs, wages, taxes, and benefits summarized by year",
+    icon: DollarSignIcon,
+    href: "/reports/payroll",
   },
 ];
 

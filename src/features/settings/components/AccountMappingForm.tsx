@@ -31,6 +31,27 @@ const EVENT_TYPES = [
     type: "inventory.adjustment",
     description: "Record cost",
   },
+  // Payroll
+  {
+    type: "payroll_gross_wages",
+    description: "Gross wages expense",
+  },
+  {
+    type: "payroll_employer_tax",
+    description: "Employer tax expense",
+  },
+  {
+    type: "payroll_net_pay",
+    description: "Net pay disbursement",
+  },
+  {
+    type: "payroll_employee_tax",
+    description: "Employee tax withheld",
+  },
+  {
+    type: "payroll_benefits",
+    description: "Benefits deductions",
+  },
 ] as const;
 
 type EventType = (typeof EVENT_TYPES)[number]["type"];

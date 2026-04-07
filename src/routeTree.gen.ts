@@ -38,6 +38,7 @@ import { Route as AppReportsScheduleCRouteImport } from './routes/_app/reports/s
 import { Route as AppReportsSalesTaxRouteImport } from './routes/_app/reports/sales-tax'
 import { Route as AppReportsQuarterlyEstimatesRouteImport } from './routes/_app/reports/quarterly-estimates'
 import { Route as AppReportsProfitAndLossRouteImport } from './routes/_app/reports/profit-and-loss'
+import { Route as AppReportsPayrollRouteImport } from './routes/_app/reports/payroll'
 import { Route as AppReportsGeneralLedgerRouteImport } from './routes/_app/reports/general-ledger'
 import { Route as AppReportsForm8949RouteImport } from './routes/_app/reports/form-8949'
 import { Route as AppReportsCashFlowRouteImport } from './routes/_app/reports/cash-flow'
@@ -192,6 +193,11 @@ const AppReportsProfitAndLossRoute = AppReportsProfitAndLossRouteImport.update({
   path: '/reports/profit-and-loss',
   getParentRoute: () => AppRoute,
 } as any)
+const AppReportsPayrollRoute = AppReportsPayrollRouteImport.update({
+  id: '/reports/payroll',
+  path: '/reports/payroll',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppReportsGeneralLedgerRoute = AppReportsGeneralLedgerRouteImport.update({
   id: '/reports/general-ledger',
   path: '/reports/general-ledger',
@@ -238,6 +244,7 @@ export interface FileRoutesByFullPath {
   '/reports/cash-flow': typeof AppReportsCashFlowRoute
   '/reports/form-8949': typeof AppReportsForm8949Route
   '/reports/general-ledger': typeof AppReportsGeneralLedgerRoute
+  '/reports/payroll': typeof AppReportsPayrollRoute
   '/reports/profit-and-loss': typeof AppReportsProfitAndLossRoute
   '/reports/quarterly-estimates': typeof AppReportsQuarterlyEstimatesRoute
   '/reports/sales-tax': typeof AppReportsSalesTaxRoute
@@ -274,6 +281,7 @@ export interface FileRoutesByTo {
   '/reports/cash-flow': typeof AppReportsCashFlowRoute
   '/reports/form-8949': typeof AppReportsForm8949Route
   '/reports/general-ledger': typeof AppReportsGeneralLedgerRoute
+  '/reports/payroll': typeof AppReportsPayrollRoute
   '/reports/profit-and-loss': typeof AppReportsProfitAndLossRoute
   '/reports/quarterly-estimates': typeof AppReportsQuarterlyEstimatesRoute
   '/reports/sales-tax': typeof AppReportsSalesTaxRoute
@@ -313,6 +321,7 @@ export interface FileRoutesById {
   '/_app/reports/cash-flow': typeof AppReportsCashFlowRoute
   '/_app/reports/form-8949': typeof AppReportsForm8949Route
   '/_app/reports/general-ledger': typeof AppReportsGeneralLedgerRoute
+  '/_app/reports/payroll': typeof AppReportsPayrollRoute
   '/_app/reports/profit-and-loss': typeof AppReportsProfitAndLossRoute
   '/_app/reports/quarterly-estimates': typeof AppReportsQuarterlyEstimatesRoute
   '/_app/reports/sales-tax': typeof AppReportsSalesTaxRoute
@@ -351,6 +360,7 @@ export interface FileRouteTypes {
     | '/reports/cash-flow'
     | '/reports/form-8949'
     | '/reports/general-ledger'
+    | '/reports/payroll'
     | '/reports/profit-and-loss'
     | '/reports/quarterly-estimates'
     | '/reports/sales-tax'
@@ -387,6 +397,7 @@ export interface FileRouteTypes {
     | '/reports/cash-flow'
     | '/reports/form-8949'
     | '/reports/general-ledger'
+    | '/reports/payroll'
     | '/reports/profit-and-loss'
     | '/reports/quarterly-estimates'
     | '/reports/sales-tax'
@@ -425,6 +436,7 @@ export interface FileRouteTypes {
     | '/_app/reports/cash-flow'
     | '/_app/reports/form-8949'
     | '/_app/reports/general-ledger'
+    | '/_app/reports/payroll'
     | '/_app/reports/profit-and-loss'
     | '/_app/reports/quarterly-estimates'
     | '/_app/reports/sales-tax'
@@ -663,6 +675,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppReportsProfitAndLossRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/reports/payroll': {
+      id: '/_app/reports/payroll'
+      path: '/reports/payroll'
+      fullPath: '/reports/payroll'
+      preLoaderRoute: typeof AppReportsPayrollRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/reports/general-ledger': {
       id: '/_app/reports/general-ledger'
       path: '/reports/general-ledger'
@@ -724,6 +743,7 @@ interface AppRouteChildren {
   AppReportsCashFlowRoute: typeof AppReportsCashFlowRoute
   AppReportsForm8949Route: typeof AppReportsForm8949Route
   AppReportsGeneralLedgerRoute: typeof AppReportsGeneralLedgerRoute
+  AppReportsPayrollRoute: typeof AppReportsPayrollRoute
   AppReportsProfitAndLossRoute: typeof AppReportsProfitAndLossRoute
   AppReportsQuarterlyEstimatesRoute: typeof AppReportsQuarterlyEstimatesRoute
   AppReportsSalesTaxRoute: typeof AppReportsSalesTaxRoute
@@ -759,6 +779,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppReportsCashFlowRoute: AppReportsCashFlowRoute,
   AppReportsForm8949Route: AppReportsForm8949Route,
   AppReportsGeneralLedgerRoute: AppReportsGeneralLedgerRoute,
+  AppReportsPayrollRoute: AppReportsPayrollRoute,
   AppReportsProfitAndLossRoute: AppReportsProfitAndLossRoute,
   AppReportsQuarterlyEstimatesRoute: AppReportsQuarterlyEstimatesRoute,
   AppReportsSalesTaxRoute: AppReportsSalesTaxRoute,
