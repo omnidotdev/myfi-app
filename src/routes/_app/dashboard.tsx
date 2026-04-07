@@ -30,6 +30,13 @@ export const Route = createFileRoute("/_app/dashboard")({
   component: DashboardPage,
 });
 
+type NetWorthSnapshot = {
+  date: string;
+  netWorth: string;
+  totalAssets: string;
+  totalLiabilities: string;
+};
+
 type SpendingMonth = {
   month: string;
   total: string;
@@ -99,6 +106,9 @@ function DashboardPage() {
     null,
   );
   const [closingBookId, setClosingBookId] = useState<string | null>(null);
+  const [netWorthSnapshots, setNetWorthSnapshots] = useState<
+    NetWorthSnapshot[]
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch multi-book summary when no book is selected
@@ -171,6 +181,21 @@ function DashboardPage() {
     }
   }, [activeBookId]);
 
+  const fetchNetWorthHistory = useCallback(async () => {
+    if (!activeBookId) return;
+
+    try {
+      const res = await fetch(
+        `${API_URL}/api/net-worth/history?bookId=${activeBookId}&limit=24`,
+      );
+      const data = await res.json();
+
+      setNetWorthSnapshots(data.snapshots ?? []);
+    } catch {
+      // Silently handle fetch errors
+    }
+  }, [activeBookId]);
+
   const fetchSpendingTrends = useCallback(async () => {
     if (!activeBookId) return;
 
@@ -213,6 +238,7 @@ function DashboardPage() {
 
     Promise.all([
       fetchNetWorth(),
+      fetchNetWorthHistory(),
       fetchSpendingTrends(),
       fetchRecentEntries(),
       fetchCloseStatus(),
@@ -226,6 +252,7 @@ function DashboardPage() {
   }, [
     activeBookId,
     fetchNetWorth,
+    fetchNetWorthHistory,
     fetchSpendingTrends,
     fetchRecentEntries,
     fetchCloseStatus,
@@ -253,6 +280,16 @@ function DashboardPage() {
         spending: Number.parseFloat(m.total) || 0,
       })),
     [spendingMonths],
+  );
+
+  const netWorthChartData = useMemo(
+    () =>
+      netWorthSnapshots.map((s) => ({
+        date: s.date,
+        label: new Date(s.date).toLocaleString("default", { month: "short" }),
+        netWorth: Number.parseFloat(s.netWorth) || 0,
+      })),
+    [netWorthSnapshots],
   );
 
   const loading = booksLoading || isLoading;
@@ -528,6 +565,52 @@ function DashboardPage() {
           <p className="text-muted-foreground text-sm">
             No financial summary available yet
           </p>
+        </div>
+      )}
+
+      {/* Single-book: Net worth trend chart */}
+      {!loading && !showAllBooks && (
+        <div className="rounded-lg border border-border bg-card p-4">
+          <h2 className="mb-4 font-semibold text-lg">Net Worth Trend</h2>
+
+          {netWorthChartData.length >= 2 ? (
+            <ResponsiveContainer width="100%" height={300}>
+              <AreaChart data={netWorthChartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="label" />
+                <YAxis
+                  tickFormatter={(value: number) => formatCurrency(value)}
+                />
+                <Tooltip
+                  formatter={(value: number) => formatCurrency(value)}
+                  labelFormatter={(_label: string, payload: unknown[]) => {
+                    const item = (
+                      payload as { payload?: { date?: string } }[]
+                    )?.[0]?.payload;
+
+                    if (!item?.date) return _label;
+
+                    return new Date(item.date).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    });
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="netWorth"
+                  stroke="var(--color-primary-500)"
+                  fill="var(--color-primary-500)"
+                  fillOpacity={0.3}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          ) : (
+            <p className="py-8 text-center text-muted-foreground text-sm">
+              Not enough history for chart
+            </p>
+          )}
         </div>
       )}
 
