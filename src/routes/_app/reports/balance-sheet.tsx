@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { DownloadIcon, PrinterIcon } from "lucide-react";
+import { useRef, useState } from "react";
 
 import BookPicker from "@/features/books/components/BookPicker";
 import HierarchicalReportTable from "@/features/reports/components/HierarchicalReportTable";
@@ -48,8 +49,10 @@ function BalanceSheetPage() {
   const [data, setData] = useState<BalanceSheetData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const lastParams = useRef<{ asOfDate?: string }>({});
 
   const handleGenerate = async (params: { asOfDate?: string }) => {
+    lastParams.current = params;
     setLoading(true);
     setError(null);
 
@@ -142,6 +145,49 @@ function BalanceSheetPage() {
 
       {!loading && !error && data && (
         <>
+          {/* Export actions */}
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm transition-colors hover:bg-muted"
+            >
+              <PrinterIcon className="size-4" />
+              Print
+            </button>
+            <button
+              type="button"
+              onClick={async () => {
+                const sp = new URLSearchParams();
+                sp.set("type", "balance-sheet");
+                sp.set("format", "csv");
+                if (activeBookId) sp.set("bookId", activeBookId);
+                if (lastParams.current.asOfDate)
+                  sp.set("asOfDate", lastParams.current.asOfDate);
+                if (selectedTagIds.length > 0)
+                  sp.set("tagIds", selectedTagIds.join(","));
+
+                const res = await fetch(
+                  `${API_URL}/api/reports/export?${sp.toString()}`,
+                );
+
+                if (!res.ok) return;
+
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = "balance-sheet.csv";
+                link.click();
+                URL.revokeObjectURL(url);
+              }}
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm transition-colors hover:bg-muted"
+            >
+              <DownloadIcon className="size-4" />
+              Download CSV
+            </button>
+          </div>
+
           <HierarchicalReportTable sections={sections} />
 
           {/* Balance indicator */}

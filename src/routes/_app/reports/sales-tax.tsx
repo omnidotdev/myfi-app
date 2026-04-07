@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Loader2Icon } from "lucide-react";
+import { DownloadIcon, Loader2Icon, PrinterIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 import BookPicker from "@/features/books/components/BookPicker";
@@ -215,6 +215,47 @@ function SalesTaxReportPage() {
       {/* Report data */}
       {!loading && !error && data && (
         <>
+          {/* Export actions */}
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm transition-colors hover:bg-muted"
+            >
+              <PrinterIcon className="size-4" />
+              Print
+            </button>
+            <button
+              type="button"
+              onClick={async () => {
+                const sp = new URLSearchParams();
+                sp.set("type", "sales-tax");
+                sp.set("format", "csv");
+                if (activeBookId) sp.set("bookId", activeBookId);
+                sp.set("year", String(year));
+                if (jurisdictionId) sp.set("jurisdictionId", jurisdictionId);
+
+                const res = await fetch(
+                  `${API_URL}/api/reports/export?${sp.toString()}`,
+                );
+
+                if (!res.ok) return;
+
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = `sales-tax-${year}.csv`;
+                link.click();
+                URL.revokeObjectURL(url);
+              }}
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm transition-colors hover:bg-muted"
+            >
+              <DownloadIcon className="size-4" />
+              Download CSV
+            </button>
+          </div>
+
           {/* Summary */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <SummaryCard

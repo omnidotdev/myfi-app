@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { DownloadIcon, PrinterIcon } from "lucide-react";
+import { useRef, useState } from "react";
 
 import BookPicker from "@/features/books/components/BookPicker";
 import HierarchicalReportTable from "@/features/reports/components/HierarchicalReportTable";
@@ -46,11 +47,13 @@ function TrialBalancePage() {
   const [data, setData] = useState<TrialBalanceData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const lastParams = useRef<{ startDate?: string; endDate?: string }>({});
 
   const handleGenerate = async (params: {
     startDate?: string;
     endDate?: string;
   }) => {
+    lastParams.current = params;
     setLoading(true);
     setError(null);
 
@@ -124,6 +127,51 @@ function TrialBalancePage() {
 
       {!loading && !error && data && (
         <>
+          {/* Export actions */}
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm transition-colors hover:bg-muted"
+            >
+              <PrinterIcon className="size-4" />
+              Print
+            </button>
+            <button
+              type="button"
+              onClick={async () => {
+                const sp = new URLSearchParams();
+                sp.set("type", "trial-balance");
+                sp.set("format", "csv");
+                if (activeBookId) sp.set("bookId", activeBookId);
+                if (lastParams.current.startDate)
+                  sp.set("startDate", lastParams.current.startDate);
+                if (lastParams.current.endDate)
+                  sp.set("endDate", lastParams.current.endDate);
+                if (selectedTagIds.length > 0)
+                  sp.set("tagIds", selectedTagIds.join(","));
+
+                const res = await fetch(
+                  `${API_URL}/api/reports/export?${sp.toString()}`,
+                );
+
+                if (!res.ok) return;
+
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = "trial-balance.csv";
+                link.click();
+                URL.revokeObjectURL(url);
+              }}
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm transition-colors hover:bg-muted"
+            >
+              <DownloadIcon className="size-4" />
+              Download CSV
+            </button>
+          </div>
+
           <HierarchicalReportTable
             sections={sections}
             showDebitCredit
