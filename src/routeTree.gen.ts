@@ -25,6 +25,7 @@ import { Route as AppAssetsIndexRouteImport } from './routes/_app/assets/index'
 import { Route as AppAccountsIndexRouteImport } from './routes/_app/accounts/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AppSettingsVendorsRouteImport } from './routes/_app/settings/vendors'
+import { Route as AppSettingsTaxJurisdictionsRouteImport } from './routes/_app/settings/tax-jurisdictions'
 import { Route as AppSettingsTagsRouteImport } from './routes/_app/settings/tags'
 import { Route as AppSettingsRulesRouteImport } from './routes/_app/settings/rules'
 import { Route as AppSettingsMappingsRouteImport } from './routes/_app/settings/mappings'
@@ -34,6 +35,7 @@ import { Route as AppSettingsAuditRouteImport } from './routes/_app/settings/aud
 import { Route as AppReportsTrialBalanceRouteImport } from './routes/_app/reports/trial-balance'
 import { Route as AppReportsTaxLossHarvestingRouteImport } from './routes/_app/reports/tax-loss-harvesting'
 import { Route as AppReportsScheduleCRouteImport } from './routes/_app/reports/schedule-c'
+import { Route as AppReportsSalesTaxRouteImport } from './routes/_app/reports/sales-tax'
 import { Route as AppReportsQuarterlyEstimatesRouteImport } from './routes/_app/reports/quarterly-estimates'
 import { Route as AppReportsProfitAndLossRouteImport } from './routes/_app/reports/profit-and-loss'
 import { Route as AppReportsGeneralLedgerRouteImport } from './routes/_app/reports/general-ledger'
@@ -122,6 +124,12 @@ const AppSettingsVendorsRoute = AppSettingsVendorsRouteImport.update({
   path: '/settings/vendors',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsTaxJurisdictionsRoute =
+  AppSettingsTaxJurisdictionsRouteImport.update({
+    id: '/settings/tax-jurisdictions',
+    path: '/settings/tax-jurisdictions',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppSettingsTagsRoute = AppSettingsTagsRouteImport.update({
   id: '/settings/tags',
   path: '/settings/tags',
@@ -166,6 +174,11 @@ const AppReportsTaxLossHarvestingRoute =
 const AppReportsScheduleCRoute = AppReportsScheduleCRouteImport.update({
   id: '/reports/schedule-c',
   path: '/reports/schedule-c',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReportsSalesTaxRoute = AppReportsSalesTaxRouteImport.update({
+  id: '/reports/sales-tax',
+  path: '/reports/sales-tax',
   getParentRoute: () => AppRoute,
 } as any)
 const AppReportsQuarterlyEstimatesRoute =
@@ -227,6 +240,7 @@ export interface FileRoutesByFullPath {
   '/reports/general-ledger': typeof AppReportsGeneralLedgerRoute
   '/reports/profit-and-loss': typeof AppReportsProfitAndLossRoute
   '/reports/quarterly-estimates': typeof AppReportsQuarterlyEstimatesRoute
+  '/reports/sales-tax': typeof AppReportsSalesTaxRoute
   '/reports/schedule-c': typeof AppReportsScheduleCRoute
   '/reports/tax-loss-harvesting': typeof AppReportsTaxLossHarvestingRoute
   '/reports/trial-balance': typeof AppReportsTrialBalanceRoute
@@ -236,6 +250,7 @@ export interface FileRoutesByFullPath {
   '/settings/mappings': typeof AppSettingsMappingsRoute
   '/settings/rules': typeof AppSettingsRulesRoute
   '/settings/tags': typeof AppSettingsTagsRoute
+  '/settings/tax-jurisdictions': typeof AppSettingsTaxJurisdictionsRoute
   '/settings/vendors': typeof AppSettingsVendorsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/accounts/': typeof AppAccountsIndexRoute
@@ -261,6 +276,7 @@ export interface FileRoutesByTo {
   '/reports/general-ledger': typeof AppReportsGeneralLedgerRoute
   '/reports/profit-and-loss': typeof AppReportsProfitAndLossRoute
   '/reports/quarterly-estimates': typeof AppReportsQuarterlyEstimatesRoute
+  '/reports/sales-tax': typeof AppReportsSalesTaxRoute
   '/reports/schedule-c': typeof AppReportsScheduleCRoute
   '/reports/tax-loss-harvesting': typeof AppReportsTaxLossHarvestingRoute
   '/reports/trial-balance': typeof AppReportsTrialBalanceRoute
@@ -270,6 +286,7 @@ export interface FileRoutesByTo {
   '/settings/mappings': typeof AppSettingsMappingsRoute
   '/settings/rules': typeof AppSettingsRulesRoute
   '/settings/tags': typeof AppSettingsTagsRoute
+  '/settings/tax-jurisdictions': typeof AppSettingsTaxJurisdictionsRoute
   '/settings/vendors': typeof AppSettingsVendorsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/accounts': typeof AppAccountsIndexRoute
@@ -298,6 +315,7 @@ export interface FileRoutesById {
   '/_app/reports/general-ledger': typeof AppReportsGeneralLedgerRoute
   '/_app/reports/profit-and-loss': typeof AppReportsProfitAndLossRoute
   '/_app/reports/quarterly-estimates': typeof AppReportsQuarterlyEstimatesRoute
+  '/_app/reports/sales-tax': typeof AppReportsSalesTaxRoute
   '/_app/reports/schedule-c': typeof AppReportsScheduleCRoute
   '/_app/reports/tax-loss-harvesting': typeof AppReportsTaxLossHarvestingRoute
   '/_app/reports/trial-balance': typeof AppReportsTrialBalanceRoute
@@ -307,6 +325,7 @@ export interface FileRoutesById {
   '/_app/settings/mappings': typeof AppSettingsMappingsRoute
   '/_app/settings/rules': typeof AppSettingsRulesRoute
   '/_app/settings/tags': typeof AppSettingsTagsRoute
+  '/_app/settings/tax-jurisdictions': typeof AppSettingsTaxJurisdictionsRoute
   '/_app/settings/vendors': typeof AppSettingsVendorsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_app/accounts/': typeof AppAccountsIndexRoute
@@ -334,6 +353,7 @@ export interface FileRouteTypes {
     | '/reports/general-ledger'
     | '/reports/profit-and-loss'
     | '/reports/quarterly-estimates'
+    | '/reports/sales-tax'
     | '/reports/schedule-c'
     | '/reports/tax-loss-harvesting'
     | '/reports/trial-balance'
@@ -343,6 +363,7 @@ export interface FileRouteTypes {
     | '/settings/mappings'
     | '/settings/rules'
     | '/settings/tags'
+    | '/settings/tax-jurisdictions'
     | '/settings/vendors'
     | '/api/auth/$'
     | '/accounts/'
@@ -368,6 +389,7 @@ export interface FileRouteTypes {
     | '/reports/general-ledger'
     | '/reports/profit-and-loss'
     | '/reports/quarterly-estimates'
+    | '/reports/sales-tax'
     | '/reports/schedule-c'
     | '/reports/tax-loss-harvesting'
     | '/reports/trial-balance'
@@ -377,6 +399,7 @@ export interface FileRouteTypes {
     | '/settings/mappings'
     | '/settings/rules'
     | '/settings/tags'
+    | '/settings/tax-jurisdictions'
     | '/settings/vendors'
     | '/api/auth/$'
     | '/accounts'
@@ -404,6 +427,7 @@ export interface FileRouteTypes {
     | '/_app/reports/general-ledger'
     | '/_app/reports/profit-and-loss'
     | '/_app/reports/quarterly-estimates'
+    | '/_app/reports/sales-tax'
     | '/_app/reports/schedule-c'
     | '/_app/reports/tax-loss-harvesting'
     | '/_app/reports/trial-balance'
@@ -413,6 +437,7 @@ export interface FileRouteTypes {
     | '/_app/settings/mappings'
     | '/_app/settings/rules'
     | '/_app/settings/tags'
+    | '/_app/settings/tax-jurisdictions'
     | '/_app/settings/vendors'
     | '/api/auth/$'
     | '/_app/accounts/'
@@ -547,6 +572,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsVendorsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings/tax-jurisdictions': {
+      id: '/_app/settings/tax-jurisdictions'
+      path: '/settings/tax-jurisdictions'
+      fullPath: '/settings/tax-jurisdictions'
+      preLoaderRoute: typeof AppSettingsTaxJurisdictionsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/settings/tags': {
       id: '/_app/settings/tags'
       path: '/settings/tags'
@@ -608,6 +640,13 @@ declare module '@tanstack/react-router' {
       path: '/reports/schedule-c'
       fullPath: '/reports/schedule-c'
       preLoaderRoute: typeof AppReportsScheduleCRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/reports/sales-tax': {
+      id: '/_app/reports/sales-tax'
+      path: '/reports/sales-tax'
+      fullPath: '/reports/sales-tax'
+      preLoaderRoute: typeof AppReportsSalesTaxRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/reports/quarterly-estimates': {
@@ -687,6 +726,7 @@ interface AppRouteChildren {
   AppReportsGeneralLedgerRoute: typeof AppReportsGeneralLedgerRoute
   AppReportsProfitAndLossRoute: typeof AppReportsProfitAndLossRoute
   AppReportsQuarterlyEstimatesRoute: typeof AppReportsQuarterlyEstimatesRoute
+  AppReportsSalesTaxRoute: typeof AppReportsSalesTaxRoute
   AppReportsScheduleCRoute: typeof AppReportsScheduleCRoute
   AppReportsTaxLossHarvestingRoute: typeof AppReportsTaxLossHarvestingRoute
   AppReportsTrialBalanceRoute: typeof AppReportsTrialBalanceRoute
@@ -696,6 +736,7 @@ interface AppRouteChildren {
   AppSettingsMappingsRoute: typeof AppSettingsMappingsRoute
   AppSettingsRulesRoute: typeof AppSettingsRulesRoute
   AppSettingsTagsRoute: typeof AppSettingsTagsRoute
+  AppSettingsTaxJurisdictionsRoute: typeof AppSettingsTaxJurisdictionsRoute
   AppSettingsVendorsRoute: typeof AppSettingsVendorsRoute
   AppAccountsIndexRoute: typeof AppAccountsIndexRoute
   AppAssetsIndexRoute: typeof AppAssetsIndexRoute
@@ -720,6 +761,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppReportsGeneralLedgerRoute: AppReportsGeneralLedgerRoute,
   AppReportsProfitAndLossRoute: AppReportsProfitAndLossRoute,
   AppReportsQuarterlyEstimatesRoute: AppReportsQuarterlyEstimatesRoute,
+  AppReportsSalesTaxRoute: AppReportsSalesTaxRoute,
   AppReportsScheduleCRoute: AppReportsScheduleCRoute,
   AppReportsTaxLossHarvestingRoute: AppReportsTaxLossHarvestingRoute,
   AppReportsTrialBalanceRoute: AppReportsTrialBalanceRoute,
@@ -729,6 +771,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsMappingsRoute: AppSettingsMappingsRoute,
   AppSettingsRulesRoute: AppSettingsRulesRoute,
   AppSettingsTagsRoute: AppSettingsTagsRoute,
+  AppSettingsTaxJurisdictionsRoute: AppSettingsTaxJurisdictionsRoute,
   AppSettingsVendorsRoute: AppSettingsVendorsRoute,
   AppAccountsIndexRoute: AppAccountsIndexRoute,
   AppAssetsIndexRoute: AppAssetsIndexRoute,

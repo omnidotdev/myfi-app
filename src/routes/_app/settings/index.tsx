@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   BookOpenIcon,
+  LandmarkIcon,
   Link2Icon,
   MapIcon,
   ScrollTextIcon,
@@ -49,6 +50,12 @@ const settingsItems = [
     description: "Manage vendors and 1099 eligibility for tax reporting",
     href: "/settings/vendors",
     icon: UsersIcon,
+  },
+  {
+    label: "Tax Jurisdictions",
+    description: "Manage sales tax jurisdictions and filing frequencies",
+    href: "/settings/tax-jurisdictions",
+    icon: LandmarkIcon,
   },
   {
     label: "Audit Log",

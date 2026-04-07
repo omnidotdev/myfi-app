@@ -6,6 +6,7 @@ import {
   CalendarIcon,
   CoinsIcon,
   FileSpreadsheetIcon,
+  LandmarkIcon,
   LeafIcon,
   ReceiptTextIcon,
   ScaleIcon,
@@ -79,6 +80,13 @@ const reportCards = [
       "Identify crypto positions with unrealized losses to offset capital gains",
     icon: LeafIcon,
     href: "/reports/tax-loss-harvesting",
+  },
+  {
+    title: "Sales Tax",
+    description:
+      "Tax collected, remitted, and owed by jurisdiction and filing period",
+    icon: LandmarkIcon,
+    href: "/reports/sales-tax",
   },
   {
     title: "1099-NEC",
