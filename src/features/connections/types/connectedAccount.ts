@@ -21,6 +21,7 @@ export type ConnectedAccount = {
   bookId: string;
   provider: ConnectedAccountProvider;
   providerAccountId: string | null;
+  accountId: string | null;
   institutionName: string | null;
   mask: string | null;
   accessToken: string;

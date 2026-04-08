@@ -1,14 +1,22 @@
-import { Link2OffIcon, RefreshCwIcon } from "lucide-react";
+import { Link2Icon, Link2OffIcon, RefreshCwIcon } from "lucide-react";
 
 import type {
   ConnectedAccount,
   ConnectedAccountStatus,
 } from "@/features/connections/types/connectedAccount";
 
+type ChartAccount = {
+  id: string;
+  name: string;
+  code: string | null;
+};
+
 type Props = {
   accounts: ConnectedAccount[];
+  chartOfAccounts?: ChartAccount[];
   onSync: (accountId: string) => void;
   onDisconnect: (accountId: string) => void;
+  onLinkAccount?: (connectionId: string, accountId: string | null) => void;
 };
 
 const STATUS_STYLES: Record<ConnectedAccountStatus, string> = {
@@ -42,7 +50,13 @@ function formatSyncTime(iso: string | null): string {
 /**
  * Display a list of connected bank/exchange accounts with sync and disconnect actions
  */
-function ConnectedAccountsList({ accounts, onSync, onDisconnect }: Props) {
+function ConnectedAccountsList({
+  accounts,
+  chartOfAccounts,
+  onSync,
+  onDisconnect,
+  onLinkAccount,
+}: Props) {
   if (accounts.length === 0) {
     return (
       <div className="rounded-lg border border-border bg-card p-8 text-center">
@@ -82,6 +96,29 @@ function ConnectedAccountsList({ accounts, onSync, onDisconnect }: Props) {
               Last synced: {formatSyncTime(account.lastSyncedAt)}
             </span>
           </div>
+
+          {/* Account link picker */}
+          {chartOfAccounts && onLinkAccount && (
+            <div className="flex items-center gap-2">
+              <Link2Icon className="size-4 text-muted-foreground" />
+              <select
+                value={account.accountId ?? ""}
+                onChange={(e) =>
+                  onLinkAccount(account.rowId, e.target.value || null)
+                }
+                aria-label={`Link ${account.institutionName ?? "account"} to COA account`}
+                className="rounded-md border border-border bg-background px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              >
+                <option value="">Unlinked</option>
+                {chartOfAccounts.map((a) => (
+                  <option key={a.id} value={a.id}>
+                    {a.code ? `${a.code} - ` : ""}
+                    {a.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {/* Actions */}
           <div className="flex items-center gap-2">

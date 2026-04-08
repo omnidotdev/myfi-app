@@ -6,7 +6,7 @@ import {
   UploadIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-
+import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
 import ConnectedAccountsList from "@/features/connections/components/ConnectedAccountsList";
 import FileImportButton from "@/features/connections/components/FileImportButton";
@@ -14,6 +14,14 @@ import PlaidLinkButton from "@/features/connections/components/PlaidLinkButton";
 import type { ConnectedAccount } from "@/features/connections/types/connectedAccount";
 import { API_URL } from "@/lib/config/env.config";
 import useActiveBook from "@/lib/hooks/useActiveBook";
+
+const LINKABLE_SUB_TYPES = new Set([
+  "cash",
+  "checking",
+  "savings",
+  "credit_card",
+  "investment",
+]);
 
 type PayrollStatus = {
   connected: boolean;
@@ -42,6 +50,10 @@ function ConnectionsSettingsPage() {
     addedCount: number;
     format: string;
   } | null>(null);
+
+  const [chartOfAccounts, setChartOfAccounts] = useState<
+    { id: string; name: string; code: string | null }[]
+  >([]);
 
   const [payrollStatus, setPayrollStatus] = useState<PayrollStatus | null>(
     null,
@@ -77,9 +89,53 @@ function ConnectionsSettingsPage() {
     }
   }, [activeBookId]);
 
+  const fetchChartOfAccounts = useCallback(async () => {
+    if (!activeBookId) return;
+
+    try {
+      const res = await fetch(`${API_URL}/api/accounts?bookId=${activeBookId}`);
+      const data = await res.json();
+      const filtered = (data.accounts ?? [])
+        .filter(
+          (a: Account) =>
+            a.isActive &&
+            !a.isPlaceholder &&
+            a.subType &&
+            LINKABLE_SUB_TYPES.has(a.subType),
+        )
+        .map((a: Account) => ({
+          id: a.rowId,
+          name: a.name,
+          code: a.code,
+        }));
+
+      setChartOfAccounts(filtered);
+    } catch {
+      // Silently handle fetch errors
+    }
+  }, [activeBookId]);
+
   useEffect(() => {
     fetchConnections();
-  }, [fetchConnections]);
+    fetchChartOfAccounts();
+  }, [fetchConnections, fetchChartOfAccounts]);
+
+  const handleLinkAccount = useCallback(
+    async (connectionId: string, accountId: string | null) => {
+      try {
+        await fetch(`${API_URL}/api/connections/${connectionId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ accountId }),
+        });
+
+        await fetchConnections();
+      } catch {
+        // Silently handle link errors
+      }
+    },
+    [fetchConnections],
+  );
 
   const handleLinkSuccess = useCallback(() => {
     fetchConnections();
@@ -301,8 +357,10 @@ function ConnectionsSettingsPage() {
       {!loading && (
         <ConnectedAccountsList
           accounts={accounts}
+          chartOfAccounts={chartOfAccounts}
           onSync={handleSync}
           onDisconnect={handleDisconnect}
+          onLinkAccount={handleLinkAccount}
         />
       )}
 

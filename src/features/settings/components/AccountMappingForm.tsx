@@ -3,54 +3,82 @@ import { useCallback, useState } from "react";
 
 import type { Account } from "@/features/accounts/types/account";
 
+type EventGroup = "Plaid" | "Mantle" | "Payroll";
+
 /** Event types supported for account mapping */
 const EVENT_TYPES = [
   // Plaid auto-categorization
   {
     type: "plaid_income",
     description: "Default income categorization",
+    group: "Plaid" as EventGroup,
   },
   {
     type: "plaid_expense",
     description: "Default expense categorization",
+    group: "Plaid" as EventGroup,
   },
   // Mantle events
   {
     type: "invoice.sent",
-    description: "Record receivable",
+    description: "Record receivable when invoice sent",
+    group: "Mantle" as EventGroup,
   },
   {
     type: "invoice.paid",
-    description: "Record payment",
+    description: "Record payment when invoice paid",
+    group: "Mantle" as EventGroup,
   },
   {
     type: "invoice.void",
-    description: "Reverse receivable",
+    description: "Reverse receivable when invoice voided",
+    group: "Mantle" as EventGroup,
+  },
+  {
+    type: "bill.created",
+    description: "Record payable when bill received",
+    group: "Mantle" as EventGroup,
+  },
+  {
+    type: "bill.paid",
+    description: "Record payment when bill paid",
+    group: "Mantle" as EventGroup,
+  },
+  {
+    type: "bill.void",
+    description: "Reverse payable when bill voided",
+    group: "Mantle" as EventGroup,
   },
   {
     type: "inventory.adjustment",
     description: "Record cost",
+    group: "Mantle" as EventGroup,
   },
   // Payroll
   {
     type: "payroll_gross_wages",
     description: "Gross wages expense",
+    group: "Payroll" as EventGroup,
   },
   {
     type: "payroll_employer_tax",
     description: "Employer tax expense",
+    group: "Payroll" as EventGroup,
   },
   {
     type: "payroll_net_pay",
     description: "Net pay disbursement",
+    group: "Payroll" as EventGroup,
   },
   {
     type: "payroll_employee_tax",
     description: "Employee tax withheld",
+    group: "Payroll" as EventGroup,
   },
   {
     type: "payroll_benefits",
     description: "Benefits deductions",
+    group: "Payroll" as EventGroup,
   },
 ] as const;
 
@@ -149,69 +177,79 @@ function AccountMappingForm({
       </div>
 
       {/* Rows */}
-      {EVENT_TYPES.map(({ type, description }) => {
+      {EVENT_TYPES.map(({ type, description, group }, idx) => {
         const row = rows[type];
         const canSave = row.debitAccountId && row.creditAccountId;
         const existing = findMapping(mappings, type);
         const isDirty =
           row.debitAccountId !== (existing?.debitAccountId ?? "") ||
           row.creditAccountId !== (existing?.creditAccountId ?? "");
+        const prevGroup = idx > 0 ? EVENT_TYPES[idx - 1].group : null;
+        const showGroupHeader = group !== prevGroup;
 
         return (
-          <div
-            key={type}
-            className="grid grid-cols-[1fr_1fr_1fr_1fr_auto] items-center gap-4 border-border border-b px-4 py-3 last:border-b-0"
-          >
-            {/* Event type */}
-            <span className="font-mono text-sm">{type}</span>
+          <div key={type}>
+            {showGroupHeader && (
+              <div className="border-border border-b bg-muted/50 px-4 py-2">
+                <span className="font-semibold text-muted-foreground text-xs uppercase tracking-wide">
+                  {group}
+                </span>
+              </div>
+            )}
+            <div className="grid grid-cols-[1fr_1fr_1fr_1fr_auto] items-center gap-4 border-border border-b px-4 py-3 last:border-b-0">
+              {/* Event type */}
+              <span className="font-mono text-sm">{type}</span>
 
-            {/* Description */}
-            <span className="text-muted-foreground text-sm">{description}</span>
+              {/* Description */}
+              <span className="text-muted-foreground text-sm">
+                {description}
+              </span>
 
-            {/* Debit account picker */}
-            <select
-              value={row.debitAccountId}
-              onChange={(e) =>
-                handleChange(type, "debitAccountId", e.target.value)
-              }
-              aria-label={`Debit account for ${type}`}
-              className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-            >
-              <option value="">Select account</option>
-              {activeAccounts.map((a) => (
-                <option key={a.rowId} value={a.rowId}>
-                  {a.code} - {a.name}
-                </option>
-              ))}
-            </select>
+              {/* Debit account picker */}
+              <select
+                value={row.debitAccountId}
+                onChange={(e) =>
+                  handleChange(type, "debitAccountId", e.target.value)
+                }
+                aria-label={`Debit account for ${type}`}
+                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              >
+                <option value="">Select account</option>
+                {activeAccounts.map((a) => (
+                  <option key={a.rowId} value={a.rowId}>
+                    {a.code} - {a.name}
+                  </option>
+                ))}
+              </select>
 
-            {/* Credit account picker */}
-            <select
-              value={row.creditAccountId}
-              onChange={(e) =>
-                handleChange(type, "creditAccountId", e.target.value)
-              }
-              aria-label={`Credit account for ${type}`}
-              className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-            >
-              <option value="">Select account</option>
-              {activeAccounts.map((a) => (
-                <option key={a.rowId} value={a.rowId}>
-                  {a.code} - {a.name}
-                </option>
-              ))}
-            </select>
+              {/* Credit account picker */}
+              <select
+                value={row.creditAccountId}
+                onChange={(e) =>
+                  handleChange(type, "creditAccountId", e.target.value)
+                }
+                aria-label={`Credit account for ${type}`}
+                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              >
+                <option value="">Select account</option>
+                {activeAccounts.map((a) => (
+                  <option key={a.rowId} value={a.rowId}>
+                    {a.code} - {a.name}
+                  </option>
+                ))}
+              </select>
 
-            {/* Save button */}
-            <button
-              type="button"
-              onClick={() => handleSave(type)}
-              disabled={!canSave || !isDirty}
-              aria-label={`Save mapping for ${type}`}
-              className="inline-flex size-9 items-center justify-center rounded-md text-sm transition-colors hover:bg-accent disabled:pointer-events-none disabled:opacity-50"
-            >
-              <SaveIcon className="size-4" />
-            </button>
+              {/* Save button */}
+              <button
+                type="button"
+                onClick={() => handleSave(type)}
+                disabled={!canSave || !isDirty}
+                aria-label={`Save mapping for ${type}`}
+                className="inline-flex size-9 items-center justify-center rounded-md text-sm transition-colors hover:bg-accent disabled:pointer-events-none disabled:opacity-50"
+              >
+                <SaveIcon className="size-4" />
+              </button>
+            </div>
           </div>
         );
       })}
