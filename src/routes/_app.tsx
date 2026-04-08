@@ -8,6 +8,7 @@ import {
   BarChart3Icon,
   BitcoinIcon,
   BookOpenIcon,
+  CarIcon,
   HardDriveIcon,
   LandmarkIcon,
   LayoutDashboardIcon,
@@ -82,6 +83,11 @@ const navItems = [
     label: appConfig.modules.assets.label,
     href: "/assets",
     icon: HardDriveIcon,
+  },
+  {
+    label: appConfig.modules.mileage.label,
+    href: "/mileage",
+    icon: CarIcon,
   },
   {
     label: appConfig.modules.reports.label,

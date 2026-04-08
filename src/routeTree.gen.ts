@@ -18,6 +18,7 @@ import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/ind
 import { Route as AppSavingsIndexRouteImport } from './routes/_app/savings/index'
 import { Route as AppReportsIndexRouteImport } from './routes/_app/reports/index'
 import { Route as AppReconciliationIndexRouteImport } from './routes/_app/reconciliation/index'
+import { Route as AppMileageIndexRouteImport } from './routes/_app/mileage/index'
 import { Route as AppLedgerIndexRouteImport } from './routes/_app/ledger/index'
 import { Route as AppCryptoIndexRouteImport } from './routes/_app/crypto/index'
 import { Route as AppBudgetsIndexRouteImport } from './routes/_app/budgets/index'
@@ -93,6 +94,11 @@ const AppReportsIndexRoute = AppReportsIndexRouteImport.update({
 const AppReconciliationIndexRoute = AppReconciliationIndexRouteImport.update({
   id: '/reconciliation/',
   path: '/reconciliation/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMileageIndexRoute = AppMileageIndexRouteImport.update({
+  id: '/mileage/',
+  path: '/mileage/',
   getParentRoute: () => AppRoute,
 } as any)
 const AppLedgerIndexRoute = AppLedgerIndexRouteImport.update({
@@ -301,6 +307,7 @@ export interface FileRoutesByFullPath {
   '/budgets/': typeof AppBudgetsIndexRoute
   '/crypto/': typeof AppCryptoIndexRoute
   '/ledger/': typeof AppLedgerIndexRoute
+  '/mileage/': typeof AppMileageIndexRoute
   '/reconciliation/': typeof AppReconciliationIndexRoute
   '/reports/': typeof AppReportsIndexRoute
   '/savings/': typeof AppSavingsIndexRoute
@@ -343,6 +350,7 @@ export interface FileRoutesByTo {
   '/budgets': typeof AppBudgetsIndexRoute
   '/crypto': typeof AppCryptoIndexRoute
   '/ledger': typeof AppLedgerIndexRoute
+  '/mileage': typeof AppMileageIndexRoute
   '/reconciliation': typeof AppReconciliationIndexRoute
   '/reports': typeof AppReportsIndexRoute
   '/savings': typeof AppSavingsIndexRoute
@@ -388,6 +396,7 @@ export interface FileRoutesById {
   '/_app/budgets/': typeof AppBudgetsIndexRoute
   '/_app/crypto/': typeof AppCryptoIndexRoute
   '/_app/ledger/': typeof AppLedgerIndexRoute
+  '/_app/mileage/': typeof AppMileageIndexRoute
   '/_app/reconciliation/': typeof AppReconciliationIndexRoute
   '/_app/reports/': typeof AppReportsIndexRoute
   '/_app/savings/': typeof AppSavingsIndexRoute
@@ -432,6 +441,7 @@ export interface FileRouteTypes {
     | '/budgets/'
     | '/crypto/'
     | '/ledger/'
+    | '/mileage/'
     | '/reconciliation/'
     | '/reports/'
     | '/savings/'
@@ -474,6 +484,7 @@ export interface FileRouteTypes {
     | '/budgets'
     | '/crypto'
     | '/ledger'
+    | '/mileage'
     | '/reconciliation'
     | '/reports'
     | '/savings'
@@ -518,6 +529,7 @@ export interface FileRouteTypes {
     | '/_app/budgets/'
     | '/_app/crypto/'
     | '/_app/ledger/'
+    | '/_app/mileage/'
     | '/_app/reconciliation/'
     | '/_app/reports/'
     | '/_app/savings/'
@@ -594,6 +606,13 @@ declare module '@tanstack/react-router' {
       path: '/reconciliation'
       fullPath: '/reconciliation/'
       preLoaderRoute: typeof AppReconciliationIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/mileage/': {
+      id: '/_app/mileage/'
+      path: '/mileage'
+      fullPath: '/mileage/'
+      preLoaderRoute: typeof AppMileageIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/ledger/': {
@@ -864,6 +883,7 @@ interface AppRouteChildren {
   AppBudgetsIndexRoute: typeof AppBudgetsIndexRoute
   AppCryptoIndexRoute: typeof AppCryptoIndexRoute
   AppLedgerIndexRoute: typeof AppLedgerIndexRoute
+  AppMileageIndexRoute: typeof AppMileageIndexRoute
   AppReconciliationIndexRoute: typeof AppReconciliationIndexRoute
   AppReportsIndexRoute: typeof AppReportsIndexRoute
   AppSavingsIndexRoute: typeof AppSavingsIndexRoute
@@ -905,6 +925,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppBudgetsIndexRoute: AppBudgetsIndexRoute,
   AppCryptoIndexRoute: AppCryptoIndexRoute,
   AppLedgerIndexRoute: AppLedgerIndexRoute,
+  AppMileageIndexRoute: AppMileageIndexRoute,
   AppReconciliationIndexRoute: AppReconciliationIndexRoute,
   AppReportsIndexRoute: AppReportsIndexRoute,
   AppSavingsIndexRoute: AppSavingsIndexRoute,
