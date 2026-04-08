@@ -1,7 +1,7 @@
 import { UploadIcon } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 
-import { API_URL } from "@/lib/config/env.config";
+import ImportPreviewDialog from "./ImportPreviewDialog";
 
 type Props = {
   bookId: string;
@@ -15,47 +15,40 @@ type Props = {
 
 function FileImportButton({ bookId, onSuccess }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleFileChange = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
 
-      setIsUploading(true);
-      setError(null);
+      setSelectedFile(file);
 
-      try {
-        const formData = new FormData();
-        formData.append("bookId", bookId);
-        formData.append("file", file);
-
-        const res = await fetch(`${API_URL}/api/import/file`, {
-          method: "POST",
-          body: formData,
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.error ?? "Import failed");
-        }
-
-        onSuccess(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Import failed");
-      } finally {
-        setIsUploading(false);
-        // Reset file input so the same file can be re-selected
-        if (fileInputRef.current) fileInputRef.current.value = "";
-      }
+      // Reset so same file can be re-selected
+      if (fileInputRef.current) fileInputRef.current.value = "";
     },
-    [bookId, onSuccess],
+    [],
   );
 
+  const handleConfirm = useCallback(
+    (result: {
+      addedCount: number;
+      skippedCount: number;
+      totalParsed: number;
+      format: string;
+    }) => {
+      setSelectedFile(null);
+      onSuccess(result);
+    },
+    [onSuccess],
+  );
+
+  const handleCancel = useCallback(() => {
+    setSelectedFile(null);
+  }, []);
+
   return (
-    <div>
+    <>
       <input
         ref={fileInputRef}
         type="file"
@@ -68,15 +61,22 @@ function FileImportButton({ bookId, onSuccess }: Props) {
       <button
         type="button"
         onClick={() => fileInputRef.current?.click()}
-        disabled={isUploading || !bookId}
+        disabled={!bookId}
         className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-4 py-2 font-medium text-sm transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
       >
         <UploadIcon className="size-4" />
-        {isUploading ? "Importing..." : "Import File"}
+        Import File
       </button>
 
-      {error && <p className="mt-2 text-destructive text-sm">{error}</p>}
-    </div>
+      {selectedFile && (
+        <ImportPreviewDialog
+          file={selectedFile}
+          bookId={bookId}
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+        />
+      )}
+    </>
   );
 }
 
