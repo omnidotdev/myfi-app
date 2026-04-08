@@ -18,6 +18,7 @@ import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/ind
 import { Route as AppSavingsIndexRouteImport } from './routes/_app/savings/index'
 import { Route as AppReportsIndexRouteImport } from './routes/_app/reports/index'
 import { Route as AppReconciliationIndexRouteImport } from './routes/_app/reconciliation/index'
+import { Route as AppReconciliationStatementsRouteImport } from './routes/_app/reconciliation/statements'
 import { Route as AppLedgerIndexRouteImport } from './routes/_app/ledger/index'
 import { Route as AppCryptoIndexRouteImport } from './routes/_app/crypto/index'
 import { Route as AppBudgetsIndexRouteImport } from './routes/_app/budgets/index'
@@ -90,6 +91,11 @@ const AppReportsIndexRoute = AppReportsIndexRouteImport.update({
 const AppReconciliationIndexRoute = AppReconciliationIndexRouteImport.update({
   id: '/reconciliation/',
   path: '/reconciliation/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReconciliationStatementsRoute = AppReconciliationStatementsRouteImport.update({
+  id: '/reconciliation/statements',
+  path: '/reconciliation/statements',
   getParentRoute: () => AppRoute,
 } as any)
 const AppLedgerIndexRoute = AppLedgerIndexRouteImport.update({
@@ -272,6 +278,7 @@ export interface FileRoutesByFullPath {
   '/settings/tags': typeof AppSettingsTagsRoute
   '/settings/tax-jurisdictions': typeof AppSettingsTaxJurisdictionsRoute
   '/settings/vendors': typeof AppSettingsVendorsRoute
+  '/reconciliation/statements': typeof AppReconciliationStatementsRoute
   '/spending/recurring': typeof AppSpendingRecurringRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/accounts/': typeof AppAccountsIndexRoute
@@ -290,6 +297,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AppDashboardRoute
   '/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/ledger/new': typeof AppLedgerNewRoute
+  '/reconciliation/statements': typeof AppReconciliationStatementsRoute
   '/reports/1099': typeof AppReports1099Route
   '/reports/balance-sheet': typeof AppReportsBalanceSheetRoute
   '/reports/cash-flow': typeof AppReportsCashFlowRoute
@@ -353,6 +361,7 @@ export interface FileRoutesById {
   '/_app/settings/tags': typeof AppSettingsTagsRoute
   '/_app/settings/tax-jurisdictions': typeof AppSettingsTaxJurisdictionsRoute
   '/_app/settings/vendors': typeof AppSettingsVendorsRoute
+  '/_app/reconciliation/statements': typeof AppReconciliationStatementsRoute
   '/_app/spending/recurring': typeof AppSpendingRecurringRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_app/accounts/': typeof AppAccountsIndexRoute
@@ -394,6 +403,7 @@ export interface FileRouteTypes {
     | '/settings/tags'
     | '/settings/tax-jurisdictions'
     | '/settings/vendors'
+    | '/reconciliation/statements'
     | '/spending/recurring'
     | '/api/auth/$'
     | '/accounts/'
@@ -412,6 +422,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/assets/$assetId'
     | '/ledger/new'
+    | '/reconciliation/statements'
     | '/reports/1099'
     | '/reports/balance-sheet'
     | '/reports/cash-flow'
@@ -474,6 +485,7 @@ export interface FileRouteTypes {
     | '/_app/settings/tags'
     | '/_app/settings/tax-jurisdictions'
     | '/_app/settings/vendors'
+    | '/_app/reconciliation/statements'
     | '/_app/spending/recurring'
     | '/api/auth/$'
     | '/_app/accounts/'
@@ -557,6 +569,13 @@ declare module '@tanstack/react-router' {
       path: '/reconciliation'
       fullPath: '/reconciliation/'
       preLoaderRoute: typeof AppReconciliationIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/reconciliation/statements': {
+      id: '/_app/reconciliation/statements'
+      path: '/reconciliation/statements'
+      fullPath: '/reconciliation/statements'
+      preLoaderRoute: typeof AppReconciliationStatementsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/ledger/': {
@@ -797,6 +816,7 @@ interface AppRouteChildren {
   AppSettingsTagsRoute: typeof AppSettingsTagsRoute
   AppSettingsTaxJurisdictionsRoute: typeof AppSettingsTaxJurisdictionsRoute
   AppSettingsVendorsRoute: typeof AppSettingsVendorsRoute
+  AppReconciliationStatementsRoute: typeof AppReconciliationStatementsRoute
   AppSpendingRecurringRoute: typeof AppSpendingRecurringRoute
   AppAccountsIndexRoute: typeof AppAccountsIndexRoute
   AppAssetsIndexRoute: typeof AppAssetsIndexRoute
@@ -835,6 +855,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsTagsRoute: AppSettingsTagsRoute,
   AppSettingsTaxJurisdictionsRoute: AppSettingsTaxJurisdictionsRoute,
   AppSettingsVendorsRoute: AppSettingsVendorsRoute,
+  AppReconciliationStatementsRoute: AppReconciliationStatementsRoute,
   AppSpendingRecurringRoute: AppSpendingRecurringRoute,
   AppAccountsIndexRoute: AppAccountsIndexRoute,
   AppAssetsIndexRoute: AppAssetsIndexRoute,
