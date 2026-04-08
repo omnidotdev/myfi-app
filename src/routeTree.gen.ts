@@ -18,7 +18,6 @@ import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/ind
 import { Route as AppSavingsIndexRouteImport } from './routes/_app/savings/index'
 import { Route as AppReportsIndexRouteImport } from './routes/_app/reports/index'
 import { Route as AppReconciliationIndexRouteImport } from './routes/_app/reconciliation/index'
-import { Route as AppReconciliationStatementsRouteImport } from './routes/_app/reconciliation/statements'
 import { Route as AppLedgerIndexRouteImport } from './routes/_app/ledger/index'
 import { Route as AppCryptoIndexRouteImport } from './routes/_app/crypto/index'
 import { Route as AppBudgetsIndexRouteImport } from './routes/_app/budgets/index'
@@ -46,7 +45,10 @@ import { Route as AppReportsGeneralLedgerRouteImport } from './routes/_app/repor
 import { Route as AppReportsForm8949RouteImport } from './routes/_app/reports/form-8949'
 import { Route as AppReportsCashFlowRouteImport } from './routes/_app/reports/cash-flow'
 import { Route as AppReportsBalanceSheetRouteImport } from './routes/_app/reports/balance-sheet'
+import { Route as AppReportsArAgingRouteImport } from './routes/_app/reports/ar-aging'
+import { Route as AppReportsApAgingRouteImport } from './routes/_app/reports/ap-aging'
 import { Route as AppReports1099RouteImport } from './routes/_app/reports/1099'
+import { Route as AppReconciliationStatementsRouteImport } from './routes/_app/reconciliation/statements'
 import { Route as AppLedgerNewRouteImport } from './routes/_app/ledger/new'
 import { Route as AppAssetsAssetIdRouteImport } from './routes/_app/assets/$assetId'
 
@@ -91,11 +93,6 @@ const AppReportsIndexRoute = AppReportsIndexRouteImport.update({
 const AppReconciliationIndexRoute = AppReconciliationIndexRouteImport.update({
   id: '/reconciliation/',
   path: '/reconciliation/',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppReconciliationStatementsRoute = AppReconciliationStatementsRouteImport.update({
-  id: '/reconciliation/statements',
-  path: '/reconciliation/statements',
   getParentRoute: () => AppRoute,
 } as any)
 const AppLedgerIndexRoute = AppLedgerIndexRouteImport.update({
@@ -236,11 +233,27 @@ const AppReportsBalanceSheetRoute = AppReportsBalanceSheetRouteImport.update({
   path: '/reports/balance-sheet',
   getParentRoute: () => AppRoute,
 } as any)
+const AppReportsArAgingRoute = AppReportsArAgingRouteImport.update({
+  id: '/reports/ar-aging',
+  path: '/reports/ar-aging',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReportsApAgingRoute = AppReportsApAgingRouteImport.update({
+  id: '/reports/ap-aging',
+  path: '/reports/ap-aging',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppReports1099Route = AppReports1099RouteImport.update({
   id: '/reports/1099',
   path: '/reports/1099',
   getParentRoute: () => AppRoute,
 } as any)
+const AppReconciliationStatementsRoute =
+  AppReconciliationStatementsRouteImport.update({
+    id: '/reconciliation/statements',
+    path: '/reconciliation/statements',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppLedgerNewRoute = AppLedgerNewRouteImport.update({
   id: '/ledger/new',
   path: '/ledger/new',
@@ -257,7 +270,10 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AppDashboardRoute
   '/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/ledger/new': typeof AppLedgerNewRoute
+  '/reconciliation/statements': typeof AppReconciliationStatementsRoute
   '/reports/1099': typeof AppReports1099Route
+  '/reports/ap-aging': typeof AppReportsApAgingRoute
+  '/reports/ar-aging': typeof AppReportsArAgingRoute
   '/reports/balance-sheet': typeof AppReportsBalanceSheetRoute
   '/reports/cash-flow': typeof AppReportsCashFlowRoute
   '/reports/form-8949': typeof AppReportsForm8949Route
@@ -278,7 +294,6 @@ export interface FileRoutesByFullPath {
   '/settings/tags': typeof AppSettingsTagsRoute
   '/settings/tax-jurisdictions': typeof AppSettingsTaxJurisdictionsRoute
   '/settings/vendors': typeof AppSettingsVendorsRoute
-  '/reconciliation/statements': typeof AppReconciliationStatementsRoute
   '/spending/recurring': typeof AppSpendingRecurringRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/accounts/': typeof AppAccountsIndexRoute
@@ -299,6 +314,8 @@ export interface FileRoutesByTo {
   '/ledger/new': typeof AppLedgerNewRoute
   '/reconciliation/statements': typeof AppReconciliationStatementsRoute
   '/reports/1099': typeof AppReports1099Route
+  '/reports/ap-aging': typeof AppReportsApAgingRoute
+  '/reports/ar-aging': typeof AppReportsArAgingRoute
   '/reports/balance-sheet': typeof AppReportsBalanceSheetRoute
   '/reports/cash-flow': typeof AppReportsCashFlowRoute
   '/reports/form-8949': typeof AppReportsForm8949Route
@@ -340,7 +357,10 @@ export interface FileRoutesById {
   '/_public/': typeof PublicIndexRoute
   '/_app/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/_app/ledger/new': typeof AppLedgerNewRoute
+  '/_app/reconciliation/statements': typeof AppReconciliationStatementsRoute
   '/_app/reports/1099': typeof AppReports1099Route
+  '/_app/reports/ap-aging': typeof AppReportsApAgingRoute
+  '/_app/reports/ar-aging': typeof AppReportsArAgingRoute
   '/_app/reports/balance-sheet': typeof AppReportsBalanceSheetRoute
   '/_app/reports/cash-flow': typeof AppReportsCashFlowRoute
   '/_app/reports/form-8949': typeof AppReportsForm8949Route
@@ -361,7 +381,6 @@ export interface FileRoutesById {
   '/_app/settings/tags': typeof AppSettingsTagsRoute
   '/_app/settings/tax-jurisdictions': typeof AppSettingsTaxJurisdictionsRoute
   '/_app/settings/vendors': typeof AppSettingsVendorsRoute
-  '/_app/reconciliation/statements': typeof AppReconciliationStatementsRoute
   '/_app/spending/recurring': typeof AppSpendingRecurringRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_app/accounts/': typeof AppAccountsIndexRoute
@@ -382,7 +401,10 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/assets/$assetId'
     | '/ledger/new'
+    | '/reconciliation/statements'
     | '/reports/1099'
+    | '/reports/ap-aging'
+    | '/reports/ar-aging'
     | '/reports/balance-sheet'
     | '/reports/cash-flow'
     | '/reports/form-8949'
@@ -403,7 +425,6 @@ export interface FileRouteTypes {
     | '/settings/tags'
     | '/settings/tax-jurisdictions'
     | '/settings/vendors'
-    | '/reconciliation/statements'
     | '/spending/recurring'
     | '/api/auth/$'
     | '/accounts/'
@@ -424,6 +445,8 @@ export interface FileRouteTypes {
     | '/ledger/new'
     | '/reconciliation/statements'
     | '/reports/1099'
+    | '/reports/ap-aging'
+    | '/reports/ar-aging'
     | '/reports/balance-sheet'
     | '/reports/cash-flow'
     | '/reports/form-8949'
@@ -464,7 +487,10 @@ export interface FileRouteTypes {
     | '/_public/'
     | '/_app/assets/$assetId'
     | '/_app/ledger/new'
+    | '/_app/reconciliation/statements'
     | '/_app/reports/1099'
+    | '/_app/reports/ap-aging'
+    | '/_app/reports/ar-aging'
     | '/_app/reports/balance-sheet'
     | '/_app/reports/cash-flow'
     | '/_app/reports/form-8949'
@@ -485,7 +511,6 @@ export interface FileRouteTypes {
     | '/_app/settings/tags'
     | '/_app/settings/tax-jurisdictions'
     | '/_app/settings/vendors'
-    | '/_app/reconciliation/statements'
     | '/_app/spending/recurring'
     | '/api/auth/$'
     | '/_app/accounts/'
@@ -569,13 +594,6 @@ declare module '@tanstack/react-router' {
       path: '/reconciliation'
       fullPath: '/reconciliation/'
       preLoaderRoute: typeof AppReconciliationIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/reconciliation/statements': {
-      id: '/_app/reconciliation/statements'
-      path: '/reconciliation/statements'
-      fullPath: '/reconciliation/statements'
-      preLoaderRoute: typeof AppReconciliationStatementsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/ledger/': {
@@ -767,11 +785,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppReportsBalanceSheetRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/reports/ar-aging': {
+      id: '/_app/reports/ar-aging'
+      path: '/reports/ar-aging'
+      fullPath: '/reports/ar-aging'
+      preLoaderRoute: typeof AppReportsArAgingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/reports/ap-aging': {
+      id: '/_app/reports/ap-aging'
+      path: '/reports/ap-aging'
+      fullPath: '/reports/ap-aging'
+      preLoaderRoute: typeof AppReportsApAgingRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/reports/1099': {
       id: '/_app/reports/1099'
       path: '/reports/1099'
       fullPath: '/reports/1099'
       preLoaderRoute: typeof AppReports1099RouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/reconciliation/statements': {
+      id: '/_app/reconciliation/statements'
+      path: '/reconciliation/statements'
+      fullPath: '/reconciliation/statements'
+      preLoaderRoute: typeof AppReconciliationStatementsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/ledger/new': {
@@ -795,7 +834,10 @@ interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppAssetsAssetIdRoute: typeof AppAssetsAssetIdRoute
   AppLedgerNewRoute: typeof AppLedgerNewRoute
+  AppReconciliationStatementsRoute: typeof AppReconciliationStatementsRoute
   AppReports1099Route: typeof AppReports1099Route
+  AppReportsApAgingRoute: typeof AppReportsApAgingRoute
+  AppReportsArAgingRoute: typeof AppReportsArAgingRoute
   AppReportsBalanceSheetRoute: typeof AppReportsBalanceSheetRoute
   AppReportsCashFlowRoute: typeof AppReportsCashFlowRoute
   AppReportsForm8949Route: typeof AppReportsForm8949Route
@@ -816,7 +858,6 @@ interface AppRouteChildren {
   AppSettingsTagsRoute: typeof AppSettingsTagsRoute
   AppSettingsTaxJurisdictionsRoute: typeof AppSettingsTaxJurisdictionsRoute
   AppSettingsVendorsRoute: typeof AppSettingsVendorsRoute
-  AppReconciliationStatementsRoute: typeof AppReconciliationStatementsRoute
   AppSpendingRecurringRoute: typeof AppSpendingRecurringRoute
   AppAccountsIndexRoute: typeof AppAccountsIndexRoute
   AppAssetsIndexRoute: typeof AppAssetsIndexRoute
@@ -834,7 +875,10 @@ const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppAssetsAssetIdRoute: AppAssetsAssetIdRoute,
   AppLedgerNewRoute: AppLedgerNewRoute,
+  AppReconciliationStatementsRoute: AppReconciliationStatementsRoute,
   AppReports1099Route: AppReports1099Route,
+  AppReportsApAgingRoute: AppReportsApAgingRoute,
+  AppReportsArAgingRoute: AppReportsArAgingRoute,
   AppReportsBalanceSheetRoute: AppReportsBalanceSheetRoute,
   AppReportsCashFlowRoute: AppReportsCashFlowRoute,
   AppReportsForm8949Route: AppReportsForm8949Route,
@@ -855,7 +899,6 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsTagsRoute: AppSettingsTagsRoute,
   AppSettingsTaxJurisdictionsRoute: AppSettingsTaxJurisdictionsRoute,
   AppSettingsVendorsRoute: AppSettingsVendorsRoute,
-  AppReconciliationStatementsRoute: AppReconciliationStatementsRoute,
   AppSpendingRecurringRoute: AppSpendingRecurringRoute,
   AppAccountsIndexRoute: AppAccountsIndexRoute,
   AppAssetsIndexRoute: AppAssetsIndexRoute,
@@ -890,3 +933,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

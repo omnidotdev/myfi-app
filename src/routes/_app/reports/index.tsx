@@ -4,6 +4,7 @@ import {
   BarChart3Icon,
   BookOpenIcon,
   CalendarIcon,
+  ClockIcon,
   CoinsIcon,
   DollarSignIcon,
   FileSpreadsheetIcon,
@@ -101,6 +102,18 @@ const reportCards = [
     description: "Payroll runs, wages, taxes, and benefits summarized by year",
     icon: DollarSignIcon,
     href: "/reports/payroll",
+  },
+  {
+    title: "AP Aging",
+    description: "Outstanding payables grouped by vendor and aging bucket",
+    icon: ClockIcon,
+    href: "/reports/ap-aging",
+  },
+  {
+    title: "AR Aging",
+    description: "Outstanding receivables grouped by customer and aging bucket",
+    icon: ClockIcon,
+    href: "/reports/ar-aging",
   },
 ];
 
