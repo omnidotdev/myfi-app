@@ -20,6 +20,7 @@ import { Route as AppReportsIndexRouteImport } from './routes/_app/reports/index
 import { Route as AppReconciliationIndexRouteImport } from './routes/_app/reconciliation/index'
 import { Route as AppProjectsIndexRouteImport } from './routes/_app/projects/index'
 import { Route as AppMileageIndexRouteImport } from './routes/_app/mileage/index'
+import { Route as AppLoansIndexRouteImport } from './routes/_app/loans/index'
 import { Route as AppLedgerIndexRouteImport } from './routes/_app/ledger/index'
 import { Route as AppCryptoIndexRouteImport } from './routes/_app/crypto/index'
 import { Route as AppBudgetsIndexRouteImport } from './routes/_app/budgets/index'
@@ -52,6 +53,7 @@ import { Route as AppReportsApAgingRouteImport } from './routes/_app/reports/ap-
 import { Route as AppReports1099RouteImport } from './routes/_app/reports/1099'
 import { Route as AppReconciliationStatementsRouteImport } from './routes/_app/reconciliation/statements'
 import { Route as AppProjectsProjectIdRouteImport } from './routes/_app/projects/$projectId'
+import { Route as AppLoansLoanIdRouteImport } from './routes/_app/loans/$loanId'
 import { Route as AppLedgerNewRouteImport } from './routes/_app/ledger/new'
 import { Route as AppLedgerJournalEntryIdRouteImport } from './routes/_app/ledger/$journalEntryId'
 import { Route as AppAssetsAssetIdRouteImport } from './routes/_app/assets/$assetId'
@@ -107,6 +109,11 @@ const AppProjectsIndexRoute = AppProjectsIndexRouteImport.update({
 const AppMileageIndexRoute = AppMileageIndexRouteImport.update({
   id: '/mileage/',
   path: '/mileage/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLoansIndexRoute = AppLoansIndexRouteImport.update({
+  id: '/loans/',
+  path: '/loans/',
   getParentRoute: () => AppRoute,
 } as any)
 const AppLedgerIndexRoute = AppLedgerIndexRouteImport.update({
@@ -273,6 +280,11 @@ const AppProjectsProjectIdRoute = AppProjectsProjectIdRouteImport.update({
   path: '/projects/$projectId',
   getParentRoute: () => AppRoute,
 } as any)
+const AppLoansLoanIdRoute = AppLoansLoanIdRouteImport.update({
+  id: '/loans/$loanId',
+  path: '/loans/$loanId',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppLedgerNewRoute = AppLedgerNewRouteImport.update({
   id: '/ledger/new',
   path: '/ledger/new',
@@ -295,6 +307,7 @@ export interface FileRoutesByFullPath {
   '/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/ledger/$journalEntryId': typeof AppLedgerJournalEntryIdRoute
   '/ledger/new': typeof AppLedgerNewRoute
+  '/loans/$loanId': typeof AppLoansLoanIdRoute
   '/projects/$projectId': typeof AppProjectsProjectIdRoute
   '/reconciliation/statements': typeof AppReconciliationStatementsRoute
   '/reports/1099': typeof AppReports1099Route
@@ -327,6 +340,7 @@ export interface FileRoutesByFullPath {
   '/budgets/': typeof AppBudgetsIndexRoute
   '/crypto/': typeof AppCryptoIndexRoute
   '/ledger/': typeof AppLedgerIndexRoute
+  '/loans/': typeof AppLoansIndexRoute
   '/mileage/': typeof AppMileageIndexRoute
   '/projects/': typeof AppProjectsIndexRoute
   '/reconciliation/': typeof AppReconciliationIndexRoute
@@ -341,6 +355,7 @@ export interface FileRoutesByTo {
   '/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/ledger/$journalEntryId': typeof AppLedgerJournalEntryIdRoute
   '/ledger/new': typeof AppLedgerNewRoute
+  '/loans/$loanId': typeof AppLoansLoanIdRoute
   '/projects/$projectId': typeof AppProjectsProjectIdRoute
   '/reconciliation/statements': typeof AppReconciliationStatementsRoute
   '/reports/1099': typeof AppReports1099Route
@@ -373,6 +388,7 @@ export interface FileRoutesByTo {
   '/budgets': typeof AppBudgetsIndexRoute
   '/crypto': typeof AppCryptoIndexRoute
   '/ledger': typeof AppLedgerIndexRoute
+  '/loans': typeof AppLoansIndexRoute
   '/mileage': typeof AppMileageIndexRoute
   '/projects': typeof AppProjectsIndexRoute
   '/reconciliation': typeof AppReconciliationIndexRoute
@@ -390,6 +406,7 @@ export interface FileRoutesById {
   '/_app/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/_app/ledger/$journalEntryId': typeof AppLedgerJournalEntryIdRoute
   '/_app/ledger/new': typeof AppLedgerNewRoute
+  '/_app/loans/$loanId': typeof AppLoansLoanIdRoute
   '/_app/projects/$projectId': typeof AppProjectsProjectIdRoute
   '/_app/reconciliation/statements': typeof AppReconciliationStatementsRoute
   '/_app/reports/1099': typeof AppReports1099Route
@@ -422,6 +439,7 @@ export interface FileRoutesById {
   '/_app/budgets/': typeof AppBudgetsIndexRoute
   '/_app/crypto/': typeof AppCryptoIndexRoute
   '/_app/ledger/': typeof AppLedgerIndexRoute
+  '/_app/loans/': typeof AppLoansIndexRoute
   '/_app/mileage/': typeof AppMileageIndexRoute
   '/_app/projects/': typeof AppProjectsIndexRoute
   '/_app/reconciliation/': typeof AppReconciliationIndexRoute
@@ -438,6 +456,7 @@ export interface FileRouteTypes {
     | '/assets/$assetId'
     | '/ledger/$journalEntryId'
     | '/ledger/new'
+    | '/loans/$loanId'
     | '/projects/$projectId'
     | '/reconciliation/statements'
     | '/reports/1099'
@@ -470,6 +489,7 @@ export interface FileRouteTypes {
     | '/budgets/'
     | '/crypto/'
     | '/ledger/'
+    | '/loans/'
     | '/mileage/'
     | '/projects/'
     | '/reconciliation/'
@@ -484,6 +504,7 @@ export interface FileRouteTypes {
     | '/assets/$assetId'
     | '/ledger/$journalEntryId'
     | '/ledger/new'
+    | '/loans/$loanId'
     | '/projects/$projectId'
     | '/reconciliation/statements'
     | '/reports/1099'
@@ -516,6 +537,7 @@ export interface FileRouteTypes {
     | '/budgets'
     | '/crypto'
     | '/ledger'
+    | '/loans'
     | '/mileage'
     | '/projects'
     | '/reconciliation'
@@ -532,6 +554,7 @@ export interface FileRouteTypes {
     | '/_app/assets/$assetId'
     | '/_app/ledger/$journalEntryId'
     | '/_app/ledger/new'
+    | '/_app/loans/$loanId'
     | '/_app/projects/$projectId'
     | '/_app/reconciliation/statements'
     | '/_app/reports/1099'
@@ -564,6 +587,7 @@ export interface FileRouteTypes {
     | '/_app/budgets/'
     | '/_app/crypto/'
     | '/_app/ledger/'
+    | '/_app/loans/'
     | '/_app/mileage/'
     | '/_app/projects/'
     | '/_app/reconciliation/'
@@ -656,6 +680,13 @@ declare module '@tanstack/react-router' {
       path: '/mileage'
       fullPath: '/mileage/'
       preLoaderRoute: typeof AppMileageIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/loans/': {
+      id: '/_app/loans/'
+      path: '/loans'
+      fullPath: '/loans/'
+      preLoaderRoute: typeof AppLoansIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/ledger/': {
@@ -882,6 +913,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppProjectsProjectIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/loans/$loanId': {
+      id: '/_app/loans/$loanId'
+      path: '/loans/$loanId'
+      fullPath: '/loans/$loanId'
+      preLoaderRoute: typeof AppLoansLoanIdRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/ledger/new': {
       id: '/_app/ledger/new'
       path: '/ledger/new'
@@ -911,6 +949,7 @@ interface AppRouteChildren {
   AppAssetsAssetIdRoute: typeof AppAssetsAssetIdRoute
   AppLedgerJournalEntryIdRoute: typeof AppLedgerJournalEntryIdRoute
   AppLedgerNewRoute: typeof AppLedgerNewRoute
+  AppLoansLoanIdRoute: typeof AppLoansLoanIdRoute
   AppProjectsProjectIdRoute: typeof AppProjectsProjectIdRoute
   AppReconciliationStatementsRoute: typeof AppReconciliationStatementsRoute
   AppReports1099Route: typeof AppReports1099Route
@@ -942,6 +981,7 @@ interface AppRouteChildren {
   AppBudgetsIndexRoute: typeof AppBudgetsIndexRoute
   AppCryptoIndexRoute: typeof AppCryptoIndexRoute
   AppLedgerIndexRoute: typeof AppLedgerIndexRoute
+  AppLoansIndexRoute: typeof AppLoansIndexRoute
   AppMileageIndexRoute: typeof AppMileageIndexRoute
   AppProjectsIndexRoute: typeof AppProjectsIndexRoute
   AppReconciliationIndexRoute: typeof AppReconciliationIndexRoute
@@ -956,6 +996,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAssetsAssetIdRoute: AppAssetsAssetIdRoute,
   AppLedgerJournalEntryIdRoute: AppLedgerJournalEntryIdRoute,
   AppLedgerNewRoute: AppLedgerNewRoute,
+  AppLoansLoanIdRoute: AppLoansLoanIdRoute,
   AppProjectsProjectIdRoute: AppProjectsProjectIdRoute,
   AppReconciliationStatementsRoute: AppReconciliationStatementsRoute,
   AppReports1099Route: AppReports1099Route,
@@ -987,6 +1028,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppBudgetsIndexRoute: AppBudgetsIndexRoute,
   AppCryptoIndexRoute: AppCryptoIndexRoute,
   AppLedgerIndexRoute: AppLedgerIndexRoute,
+  AppLoansIndexRoute: AppLoansIndexRoute,
   AppMileageIndexRoute: AppMileageIndexRoute,
   AppProjectsIndexRoute: AppProjectsIndexRoute,
   AppReconciliationIndexRoute: AppReconciliationIndexRoute,

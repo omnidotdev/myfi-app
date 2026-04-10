@@ -38,6 +38,7 @@ const app = {
     assets: { enabled: true, label: "Assets", icon: "hard-drive" },
     mileage: { enabled: true, label: "Mileage", icon: "car" },
     projects: { enabled: true, label: "Projects", icon: "folder" },
+    loans: { enabled: true, label: "Loans", icon: "banknote" },
     reports: { enabled: true, label: "Reports", icon: "chart-bar" },
   },
 };

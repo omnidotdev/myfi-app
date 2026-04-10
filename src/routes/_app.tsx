@@ -5,6 +5,7 @@ import {
   redirect,
 } from "@tanstack/react-router";
 import {
+  BanknoteIcon,
   BarChart3Icon,
   BitcoinIcon,
   BookOpenIcon,
@@ -94,6 +95,11 @@ const navItems = [
     label: appConfig.modules.projects.label,
     href: "/projects",
     icon: FolderIcon,
+  },
+  {
+    label: appConfig.modules.loans.label,
+    href: "/loans",
+    icon: BanknoteIcon,
   },
   {
     label: appConfig.modules.reports.label,
