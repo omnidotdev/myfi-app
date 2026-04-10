@@ -87,9 +87,7 @@ function ProjectDetailPage() {
     setError(null);
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/projects?bookId=${activeBookId}`,
-      );
+      const res = await fetch(`${API_URL}/api/projects?bookId=${activeBookId}`);
       const data = await res.json();
       const found = (data.projects ?? []).find(
         (p: Project) => p.id === projectId,
@@ -167,8 +165,8 @@ function ProjectDetailPage() {
     ? Number.parseFloat(project.budgetAmount)
     : null;
   const totalExpenses = Number.parseFloat(project.totalExpenses ?? "0");
-  const totalRevenue = Number.parseFloat(project.totalRevenue ?? "0");
-  const budgetUsedPct = budget && budget > 0 ? (totalExpenses / budget) * 100 : null;
+  const budgetUsedPct =
+    budget && budget > 0 ? (totalExpenses / budget) * 100 : null;
   const cfg = statusConfig[project.status];
 
   // Budget bar color
@@ -249,7 +247,7 @@ function ProjectDetailPage() {
                 Spent: {formatCurrency(totalExpenses.toString())} of{" "}
                 {formatCurrency(budget.toString())}
               </span>
-              <span className="font-mono font-medium">
+              <span className="font-medium font-mono">
                 {budgetUsedPct != null ? `${budgetUsedPct.toFixed(1)}%` : "0%"}
               </span>
             </div>
@@ -267,7 +265,7 @@ function ProjectDetailPage() {
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Remaining</span>
               <span
-                className={`font-mono font-medium ${
+                className={`font-medium font-mono ${
                   budget - totalExpenses < 0
                     ? "text-red-600 dark:text-red-400"
                     : "text-green-600 dark:text-green-400"

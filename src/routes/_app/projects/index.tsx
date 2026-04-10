@@ -95,9 +95,7 @@ function ProjectsPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/projects?bookId=${activeBookId}`,
-      );
+      const res = await fetch(`${API_URL}/api/projects?bookId=${activeBookId}`);
       const data = await res.json();
 
       setProjects(data.projects ?? []);
@@ -255,8 +253,8 @@ function ProjectsPage() {
       {!loading && projects.length === 0 && (
         <div className="rounded-lg border border-border bg-card p-8 text-center">
           <p className="text-muted-foreground">
-            No projects yet. Create your first project to start tracking
-            budgets and P&L by project.
+            No projects yet. Create your first project to start tracking budgets
+            and P&L by project.
           </p>
         </div>
       )}
@@ -295,16 +293,14 @@ function ProjectsPage() {
                 const budget = project.budgetAmount
                   ? Number.parseFloat(project.budgetAmount)
                   : null;
-                const spend = Number.parseFloat(
-                  project.totalExpenses ?? "0",
-                );
+                const spend = Number.parseFloat(project.totalExpenses ?? "0");
                 const remaining = budget != null ? budget - spend : null;
                 const cfg = statusConfig[project.status];
 
                 return (
                   <tr
                     key={project.id}
-                    className="border-border border-b last:border-b-0 transition-colors hover:bg-muted/30"
+                    className="border-border border-b transition-colors last:border-b-0 hover:bg-muted/30"
                   >
                     <td className="px-4 py-3">
                       <Link
@@ -326,7 +322,9 @@ function ProjectsPage() {
                       </span>
                     </td>
                     <td className="px-4 py-3 text-right font-mono">
-                      {budget != null ? formatCurrency(project.budgetAmount) : "-"}
+                      {budget != null
+                        ? formatCurrency(project.budgetAmount)
+                        : "-"}
                     </td>
                     <td className="px-4 py-3 text-right font-mono">
                       {formatCurrency(project.totalExpenses)}

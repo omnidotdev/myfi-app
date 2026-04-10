@@ -157,7 +157,11 @@ function BatchJournalEntryPage() {
   // region line mutations
 
   const updateLine = useCallback(
-    (entryId: string, lineId: string, patch: Partial<Omit<BatchLine, "id">>) => {
+    (
+      entryId: string,
+      lineId: string,
+      patch: Partial<Omit<BatchLine, "id">>,
+    ) => {
       setEntries((prev) =>
         prev.map((e) =>
           e.id === entryId
@@ -353,7 +357,7 @@ function BatchJournalEntryPage() {
         <button
           type="button"
           onClick={addEntry}
-          className="inline-flex items-center justify-center gap-2 rounded-lg border border-dashed border-border p-4 text-muted-foreground text-sm transition-colors hover:border-primary hover:text-foreground"
+          className="inline-flex items-center justify-center gap-2 rounded-lg border border-border border-dashed p-4 text-muted-foreground text-sm transition-colors hover:border-primary hover:text-foreground"
         >
           <PlusIcon className="size-4" />
           Add Entry
@@ -423,7 +427,7 @@ function EntryCard({
 
         {/* Balance indicator */}
         <span
-          className={`whitespace-nowrap text-xs font-medium ${balanced ? "text-green-600" : "text-red-600"}`}
+          className={`whitespace-nowrap font-medium text-xs ${balanced ? "text-green-600" : "text-red-600"}`}
         >
           Dr {debits.toFixed(2)} / Cr {credits.toFixed(2)}
           {!balanced && ` (off by ${diff.toFixed(2)})`}
@@ -455,7 +459,10 @@ function EntryCard({
           </thead>
           <tbody>
             {entry.lines.map((line) => (
-              <tr key={line.id} className="border-border border-b last:border-0">
+              <tr
+                key={line.id}
+                className="border-border border-b last:border-0"
+              >
                 <td className="px-4 py-2">
                   <select
                     value={line.accountId}

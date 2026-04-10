@@ -335,16 +335,12 @@ function LoanDetailPage() {
               </span>
             </div>
             <div className="flex items-center gap-4 text-muted-foreground text-sm">
-              <span>
-                {Number.parseFloat(loan.annualRate).toFixed(2)}% APR
-              </span>
+              <span>{Number.parseFloat(loan.annualRate).toFixed(2)}% APR</span>
               <span>{loan.termMonths} month term</span>
               <span>Started {loan.startDate}</span>
             </div>
             {loan.notes && (
-              <p className="mt-1 text-muted-foreground text-sm">
-                {loan.notes}
-              </p>
+              <p className="mt-1 text-muted-foreground text-sm">{loan.notes}</p>
             )}
           </div>
 
@@ -356,9 +352,7 @@ function LoanDetailPage() {
                 disabled={posting}
                 className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
               >
-                {posting && (
-                  <Loader2Icon className="size-4 animate-spin" />
-                )}
+                {posting && <Loader2Icon className="size-4 animate-spin" />}
                 Post Next Payment
               </button>
               <button
@@ -415,12 +409,8 @@ function LoanDetailPage() {
             <AreaChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="dueDate" />
-              <YAxis
-                tickFormatter={(value: number) => formatCurrency(value)}
-              />
-              <Tooltip
-                formatter={(value: number) => formatCurrency(value)}
-              />
+              <YAxis tickFormatter={(value: number) => formatCurrency(value)} />
+              <Tooltip formatter={(value: number) => formatCurrency(value)} />
               <Area
                 type="monotone"
                 dataKey="balance"
@@ -482,8 +472,7 @@ function LoanDetailPage() {
                   let rowClass =
                     "border-border border-b transition-colors last:border-b-0";
                   if (entry.status === "posted") {
-                    rowClass +=
-                      " bg-green-50 dark:bg-green-900/10";
+                    rowClass += " bg-green-50 dark:bg-green-900/10";
                   } else if (entry.status === "skipped") {
                     rowClass +=
                       " bg-gray-50 text-muted-foreground line-through dark:bg-gray-900/10";
