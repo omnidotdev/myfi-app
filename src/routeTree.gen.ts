@@ -18,6 +18,7 @@ import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/ind
 import { Route as AppSavingsIndexRouteImport } from './routes/_app/savings/index'
 import { Route as AppReportsIndexRouteImport } from './routes/_app/reports/index'
 import { Route as AppReconciliationIndexRouteImport } from './routes/_app/reconciliation/index'
+import { Route as AppProjectsIndexRouteImport } from './routes/_app/projects/index'
 import { Route as AppMileageIndexRouteImport } from './routes/_app/mileage/index'
 import { Route as AppLedgerIndexRouteImport } from './routes/_app/ledger/index'
 import { Route as AppCryptoIndexRouteImport } from './routes/_app/crypto/index'
@@ -50,6 +51,7 @@ import { Route as AppReportsArAgingRouteImport } from './routes/_app/reports/ar-
 import { Route as AppReportsApAgingRouteImport } from './routes/_app/reports/ap-aging'
 import { Route as AppReports1099RouteImport } from './routes/_app/reports/1099'
 import { Route as AppReconciliationStatementsRouteImport } from './routes/_app/reconciliation/statements'
+import { Route as AppProjectsProjectIdRouteImport } from './routes/_app/projects/$projectId'
 import { Route as AppLedgerNewRouteImport } from './routes/_app/ledger/new'
 import { Route as AppLedgerJournalEntryIdRouteImport } from './routes/_app/ledger/$journalEntryId'
 import { Route as AppAssetsAssetIdRouteImport } from './routes/_app/assets/$assetId'
@@ -95,6 +97,11 @@ const AppReportsIndexRoute = AppReportsIndexRouteImport.update({
 const AppReconciliationIndexRoute = AppReconciliationIndexRouteImport.update({
   id: '/reconciliation/',
   path: '/reconciliation/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProjectsIndexRoute = AppProjectsIndexRouteImport.update({
+  id: '/projects/',
+  path: '/projects/',
   getParentRoute: () => AppRoute,
 } as any)
 const AppMileageIndexRoute = AppMileageIndexRouteImport.update({
@@ -261,6 +268,11 @@ const AppReconciliationStatementsRoute =
     path: '/reconciliation/statements',
     getParentRoute: () => AppRoute,
   } as any)
+const AppProjectsProjectIdRoute = AppProjectsProjectIdRouteImport.update({
+  id: '/projects/$projectId',
+  path: '/projects/$projectId',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppLedgerNewRoute = AppLedgerNewRouteImport.update({
   id: '/ledger/new',
   path: '/ledger/new',
@@ -283,6 +295,7 @@ export interface FileRoutesByFullPath {
   '/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/ledger/$journalEntryId': typeof AppLedgerJournalEntryIdRoute
   '/ledger/new': typeof AppLedgerNewRoute
+  '/projects/$projectId': typeof AppProjectsProjectIdRoute
   '/reconciliation/statements': typeof AppReconciliationStatementsRoute
   '/reports/1099': typeof AppReports1099Route
   '/reports/ap-aging': typeof AppReportsApAgingRoute
@@ -315,6 +328,7 @@ export interface FileRoutesByFullPath {
   '/crypto/': typeof AppCryptoIndexRoute
   '/ledger/': typeof AppLedgerIndexRoute
   '/mileage/': typeof AppMileageIndexRoute
+  '/projects/': typeof AppProjectsIndexRoute
   '/reconciliation/': typeof AppReconciliationIndexRoute
   '/reports/': typeof AppReportsIndexRoute
   '/savings/': typeof AppSavingsIndexRoute
@@ -327,6 +341,7 @@ export interface FileRoutesByTo {
   '/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/ledger/$journalEntryId': typeof AppLedgerJournalEntryIdRoute
   '/ledger/new': typeof AppLedgerNewRoute
+  '/projects/$projectId': typeof AppProjectsProjectIdRoute
   '/reconciliation/statements': typeof AppReconciliationStatementsRoute
   '/reports/1099': typeof AppReports1099Route
   '/reports/ap-aging': typeof AppReportsApAgingRoute
@@ -359,6 +374,7 @@ export interface FileRoutesByTo {
   '/crypto': typeof AppCryptoIndexRoute
   '/ledger': typeof AppLedgerIndexRoute
   '/mileage': typeof AppMileageIndexRoute
+  '/projects': typeof AppProjectsIndexRoute
   '/reconciliation': typeof AppReconciliationIndexRoute
   '/reports': typeof AppReportsIndexRoute
   '/savings': typeof AppSavingsIndexRoute
@@ -374,6 +390,7 @@ export interface FileRoutesById {
   '/_app/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/_app/ledger/$journalEntryId': typeof AppLedgerJournalEntryIdRoute
   '/_app/ledger/new': typeof AppLedgerNewRoute
+  '/_app/projects/$projectId': typeof AppProjectsProjectIdRoute
   '/_app/reconciliation/statements': typeof AppReconciliationStatementsRoute
   '/_app/reports/1099': typeof AppReports1099Route
   '/_app/reports/ap-aging': typeof AppReportsApAgingRoute
@@ -406,6 +423,7 @@ export interface FileRoutesById {
   '/_app/crypto/': typeof AppCryptoIndexRoute
   '/_app/ledger/': typeof AppLedgerIndexRoute
   '/_app/mileage/': typeof AppMileageIndexRoute
+  '/_app/projects/': typeof AppProjectsIndexRoute
   '/_app/reconciliation/': typeof AppReconciliationIndexRoute
   '/_app/reports/': typeof AppReportsIndexRoute
   '/_app/savings/': typeof AppSavingsIndexRoute
@@ -420,6 +438,7 @@ export interface FileRouteTypes {
     | '/assets/$assetId'
     | '/ledger/$journalEntryId'
     | '/ledger/new'
+    | '/projects/$projectId'
     | '/reconciliation/statements'
     | '/reports/1099'
     | '/reports/ap-aging'
@@ -452,6 +471,7 @@ export interface FileRouteTypes {
     | '/crypto/'
     | '/ledger/'
     | '/mileage/'
+    | '/projects/'
     | '/reconciliation/'
     | '/reports/'
     | '/savings/'
@@ -464,6 +484,7 @@ export interface FileRouteTypes {
     | '/assets/$assetId'
     | '/ledger/$journalEntryId'
     | '/ledger/new'
+    | '/projects/$projectId'
     | '/reconciliation/statements'
     | '/reports/1099'
     | '/reports/ap-aging'
@@ -496,6 +517,7 @@ export interface FileRouteTypes {
     | '/crypto'
     | '/ledger'
     | '/mileage'
+    | '/projects'
     | '/reconciliation'
     | '/reports'
     | '/savings'
@@ -510,6 +532,7 @@ export interface FileRouteTypes {
     | '/_app/assets/$assetId'
     | '/_app/ledger/$journalEntryId'
     | '/_app/ledger/new'
+    | '/_app/projects/$projectId'
     | '/_app/reconciliation/statements'
     | '/_app/reports/1099'
     | '/_app/reports/ap-aging'
@@ -542,6 +565,7 @@ export interface FileRouteTypes {
     | '/_app/crypto/'
     | '/_app/ledger/'
     | '/_app/mileage/'
+    | '/_app/projects/'
     | '/_app/reconciliation/'
     | '/_app/reports/'
     | '/_app/savings/'
@@ -618,6 +642,13 @@ declare module '@tanstack/react-router' {
       path: '/reconciliation'
       fullPath: '/reconciliation/'
       preLoaderRoute: typeof AppReconciliationIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/projects/': {
+      id: '/_app/projects/'
+      path: '/projects'
+      fullPath: '/projects/'
+      preLoaderRoute: typeof AppProjectsIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/mileage/': {
@@ -844,6 +875,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppReconciliationStatementsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/projects/$projectId': {
+      id: '/_app/projects/$projectId'
+      path: '/projects/$projectId'
+      fullPath: '/projects/$projectId'
+      preLoaderRoute: typeof AppProjectsProjectIdRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/ledger/new': {
       id: '/_app/ledger/new'
       path: '/ledger/new'
@@ -873,6 +911,7 @@ interface AppRouteChildren {
   AppAssetsAssetIdRoute: typeof AppAssetsAssetIdRoute
   AppLedgerJournalEntryIdRoute: typeof AppLedgerJournalEntryIdRoute
   AppLedgerNewRoute: typeof AppLedgerNewRoute
+  AppProjectsProjectIdRoute: typeof AppProjectsProjectIdRoute
   AppReconciliationStatementsRoute: typeof AppReconciliationStatementsRoute
   AppReports1099Route: typeof AppReports1099Route
   AppReportsApAgingRoute: typeof AppReportsApAgingRoute
@@ -904,6 +943,7 @@ interface AppRouteChildren {
   AppCryptoIndexRoute: typeof AppCryptoIndexRoute
   AppLedgerIndexRoute: typeof AppLedgerIndexRoute
   AppMileageIndexRoute: typeof AppMileageIndexRoute
+  AppProjectsIndexRoute: typeof AppProjectsIndexRoute
   AppReconciliationIndexRoute: typeof AppReconciliationIndexRoute
   AppReportsIndexRoute: typeof AppReportsIndexRoute
   AppSavingsIndexRoute: typeof AppSavingsIndexRoute
@@ -916,6 +956,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAssetsAssetIdRoute: AppAssetsAssetIdRoute,
   AppLedgerJournalEntryIdRoute: AppLedgerJournalEntryIdRoute,
   AppLedgerNewRoute: AppLedgerNewRoute,
+  AppProjectsProjectIdRoute: AppProjectsProjectIdRoute,
   AppReconciliationStatementsRoute: AppReconciliationStatementsRoute,
   AppReports1099Route: AppReports1099Route,
   AppReportsApAgingRoute: AppReportsApAgingRoute,
@@ -947,6 +988,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppCryptoIndexRoute: AppCryptoIndexRoute,
   AppLedgerIndexRoute: AppLedgerIndexRoute,
   AppMileageIndexRoute: AppMileageIndexRoute,
+  AppProjectsIndexRoute: AppProjectsIndexRoute,
   AppReconciliationIndexRoute: AppReconciliationIndexRoute,
   AppReportsIndexRoute: AppReportsIndexRoute,
   AppSavingsIndexRoute: AppSavingsIndexRoute,

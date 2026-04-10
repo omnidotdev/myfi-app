@@ -37,6 +37,7 @@ const app = {
     crypto: { enabled: true, label: "Crypto", icon: "bitcoin" },
     assets: { enabled: true, label: "Assets", icon: "hard-drive" },
     mileage: { enabled: true, label: "Mileage", icon: "car" },
+    projects: { enabled: true, label: "Projects", icon: "folder" },
     reports: { enabled: true, label: "Reports", icon: "chart-bar" },
   },
 };
