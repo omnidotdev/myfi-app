@@ -323,6 +323,13 @@ function RulesPage() {
 
   const handleEditSplit = useCallback((rule: CategorizationRule) => {
     setEditingRuleId(rule.rowId);
+    // Guard against inconsistent DB state where a rule is flagged as split
+    // but has fewer than 2 lines, which would render a broken editor
+    const hydrated = hydrateSplitLines(rule.splits ?? []);
+    const splits =
+      hydrated.length >= 2
+        ? hydrated
+        : [makeEmptySplitLine("debit"), makeEmptySplitLine("credit")];
     setForm({
       name: rule.name,
       matchField: rule.matchField,
@@ -332,7 +339,7 @@ function RulesPage() {
       creditAccountId: rule.creditAccountId,
       priority: rule.priority,
       isSplit: true,
-      splits: hydrateSplitLines(rule.splits ?? []),
+      splits,
     });
     setSplitError(null);
     setShowForm(true);
@@ -351,6 +358,7 @@ function RulesPage() {
       field: K,
       value: SplitLineFormState[K],
     ) => {
+      setSplitError(null);
       setForm((prev) => {
         const next = [...prev.splits];
         next[index] = { ...next[index], [field]: value };
@@ -361,6 +369,7 @@ function RulesPage() {
   );
 
   const addSplitLine = useCallback(() => {
+    setSplitError(null);
     setForm((prev) => {
       // Default new line to the side that has fewer lines
       const debits = prev.splits.filter((l) => l.side === "debit").length;
@@ -374,6 +383,7 @@ function RulesPage() {
   }, []);
 
   const removeSplitLine = useCallback((index: number) => {
+    setSplitError(null);
     setForm((prev) => {
       if (prev.splits.length <= 2) return prev;
       return {
@@ -389,7 +399,7 @@ function RulesPage() {
     !!form.name &&
     !!form.matchValue &&
     (form.isSplit
-      ? form.splits.length >= 2
+      ? validateSplitLines(form.splits) === null
       : !!form.debitAccountId && !!form.creditAccountId) &&
     !isSaving;
 
