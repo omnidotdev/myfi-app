@@ -51,6 +51,7 @@ import { Route as AppReportsApAgingRouteImport } from './routes/_app/reports/ap-
 import { Route as AppReports1099RouteImport } from './routes/_app/reports/1099'
 import { Route as AppReconciliationStatementsRouteImport } from './routes/_app/reconciliation/statements'
 import { Route as AppLedgerNewRouteImport } from './routes/_app/ledger/new'
+import { Route as AppLedgerJournalEntryIdRouteImport } from './routes/_app/ledger/$journalEntryId'
 import { Route as AppAssetsAssetIdRouteImport } from './routes/_app/assets/$assetId'
 
 const PublicRoute = PublicRouteImport.update({
@@ -265,6 +266,11 @@ const AppLedgerNewRoute = AppLedgerNewRouteImport.update({
   path: '/ledger/new',
   getParentRoute: () => AppRoute,
 } as any)
+const AppLedgerJournalEntryIdRoute = AppLedgerJournalEntryIdRouteImport.update({
+  id: '/ledger/$journalEntryId',
+  path: '/ledger/$journalEntryId',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAssetsAssetIdRoute = AppAssetsAssetIdRouteImport.update({
   id: '/assets/$assetId',
   path: '/assets/$assetId',
@@ -275,6 +281,7 @@ export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/dashboard': typeof AppDashboardRoute
   '/assets/$assetId': typeof AppAssetsAssetIdRoute
+  '/ledger/$journalEntryId': typeof AppLedgerJournalEntryIdRoute
   '/ledger/new': typeof AppLedgerNewRoute
   '/reconciliation/statements': typeof AppReconciliationStatementsRoute
   '/reports/1099': typeof AppReports1099Route
@@ -318,6 +325,7 @@ export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/dashboard': typeof AppDashboardRoute
   '/assets/$assetId': typeof AppAssetsAssetIdRoute
+  '/ledger/$journalEntryId': typeof AppLedgerJournalEntryIdRoute
   '/ledger/new': typeof AppLedgerNewRoute
   '/reconciliation/statements': typeof AppReconciliationStatementsRoute
   '/reports/1099': typeof AppReports1099Route
@@ -364,6 +372,7 @@ export interface FileRoutesById {
   '/_app/dashboard': typeof AppDashboardRoute
   '/_public/': typeof PublicIndexRoute
   '/_app/assets/$assetId': typeof AppAssetsAssetIdRoute
+  '/_app/ledger/$journalEntryId': typeof AppLedgerJournalEntryIdRoute
   '/_app/ledger/new': typeof AppLedgerNewRoute
   '/_app/reconciliation/statements': typeof AppReconciliationStatementsRoute
   '/_app/reports/1099': typeof AppReports1099Route
@@ -409,6 +418,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/assets/$assetId'
+    | '/ledger/$journalEntryId'
     | '/ledger/new'
     | '/reconciliation/statements'
     | '/reports/1099'
@@ -452,6 +462,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/assets/$assetId'
+    | '/ledger/$journalEntryId'
     | '/ledger/new'
     | '/reconciliation/statements'
     | '/reports/1099'
@@ -497,6 +508,7 @@ export interface FileRouteTypes {
     | '/_app/dashboard'
     | '/_public/'
     | '/_app/assets/$assetId'
+    | '/_app/ledger/$journalEntryId'
     | '/_app/ledger/new'
     | '/_app/reconciliation/statements'
     | '/_app/reports/1099'
@@ -839,6 +851,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLedgerNewRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/ledger/$journalEntryId': {
+      id: '/_app/ledger/$journalEntryId'
+      path: '/ledger/$journalEntryId'
+      fullPath: '/ledger/$journalEntryId'
+      preLoaderRoute: typeof AppLedgerJournalEntryIdRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/assets/$assetId': {
       id: '/_app/assets/$assetId'
       path: '/assets/$assetId'
@@ -852,6 +871,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppAssetsAssetIdRoute: typeof AppAssetsAssetIdRoute
+  AppLedgerJournalEntryIdRoute: typeof AppLedgerJournalEntryIdRoute
   AppLedgerNewRoute: typeof AppLedgerNewRoute
   AppReconciliationStatementsRoute: typeof AppReconciliationStatementsRoute
   AppReports1099Route: typeof AppReports1099Route
@@ -894,6 +914,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppAssetsAssetIdRoute: AppAssetsAssetIdRoute,
+  AppLedgerJournalEntryIdRoute: AppLedgerJournalEntryIdRoute,
   AppLedgerNewRoute: AppLedgerNewRoute,
   AppReconciliationStatementsRoute: AppReconciliationStatementsRoute,
   AppReports1099Route: AppReports1099Route,

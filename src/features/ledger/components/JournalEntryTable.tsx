@@ -1,4 +1,10 @@
-import { ChevronDownIcon, ChevronRightIcon, TrashIcon } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  ExternalLinkIcon,
+  TrashIcon,
+} from "lucide-react";
 import { useCallback, useState } from "react";
 
 import type {
@@ -79,6 +85,7 @@ function JournalEntryTable({ entries, onDelete }: JournalEntryTableProps) {
             <th className="px-3 py-3 font-medium">Source</th>
             <th className="px-3 py-3 font-medium">Status</th>
             <th className="px-3 py-3 text-right font-medium">Total</th>
+            <th className="w-10 px-3 py-3" />
             {onDelete && <th className="w-10 px-3 py-3" />}
           </tr>
         </thead>
@@ -155,6 +162,17 @@ function EntryRow({ entry, isExpanded, onToggle, onDelete }: EntryRowProps) {
         <td className="whitespace-nowrap px-3 py-3 text-right font-mono">
           ${computeTotal(entry)}
         </td>
+        <td className="px-3 py-3">
+          <Link
+            to="/ledger/$journalEntryId"
+            params={{ journalEntryId: entry.rowId }}
+            onClick={(e) => e.stopPropagation()}
+            aria-label={`Open entry ${entry.date}`}
+            className="inline-flex rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          >
+            <ExternalLinkIcon className="size-3.5" />
+          </Link>
+        </td>
         {onDelete && (
           <td className="px-3 py-3">
             <button
@@ -175,7 +193,7 @@ function EntryRow({ entry, isExpanded, onToggle, onDelete }: EntryRowProps) {
       {/* Expanded line detail */}
       {isExpanded && (
         <tr className="border-border border-b bg-muted/30">
-          <td colSpan={onDelete ? 7 : 6} className="px-6 py-3">
+          <td colSpan={onDelete ? 8 : 7} className="px-6 py-3">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-muted-foreground text-xs">
