@@ -55,6 +55,7 @@ import { Route as AppReconciliationStatementsRouteImport } from './routes/_app/r
 import { Route as AppProjectsProjectIdRouteImport } from './routes/_app/projects/$projectId'
 import { Route as AppLoansLoanIdRouteImport } from './routes/_app/loans/$loanId'
 import { Route as AppLedgerNewRouteImport } from './routes/_app/ledger/new'
+import { Route as AppLedgerBatchRouteImport } from './routes/_app/ledger/batch'
 import { Route as AppLedgerJournalEntryIdRouteImport } from './routes/_app/ledger/$journalEntryId'
 import { Route as AppAssetsAssetIdRouteImport } from './routes/_app/assets/$assetId'
 
@@ -290,6 +291,11 @@ const AppLedgerNewRoute = AppLedgerNewRouteImport.update({
   path: '/ledger/new',
   getParentRoute: () => AppRoute,
 } as any)
+const AppLedgerBatchRoute = AppLedgerBatchRouteImport.update({
+  id: '/ledger/batch',
+  path: '/ledger/batch',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppLedgerJournalEntryIdRoute = AppLedgerJournalEntryIdRouteImport.update({
   id: '/ledger/$journalEntryId',
   path: '/ledger/$journalEntryId',
@@ -306,6 +312,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AppDashboardRoute
   '/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/ledger/$journalEntryId': typeof AppLedgerJournalEntryIdRoute
+  '/ledger/batch': typeof AppLedgerBatchRoute
   '/ledger/new': typeof AppLedgerNewRoute
   '/loans/$loanId': typeof AppLoansLoanIdRoute
   '/projects/$projectId': typeof AppProjectsProjectIdRoute
@@ -354,6 +361,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AppDashboardRoute
   '/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/ledger/$journalEntryId': typeof AppLedgerJournalEntryIdRoute
+  '/ledger/batch': typeof AppLedgerBatchRoute
   '/ledger/new': typeof AppLedgerNewRoute
   '/loans/$loanId': typeof AppLoansLoanIdRoute
   '/projects/$projectId': typeof AppProjectsProjectIdRoute
@@ -405,6 +413,7 @@ export interface FileRoutesById {
   '/_public/': typeof PublicIndexRoute
   '/_app/assets/$assetId': typeof AppAssetsAssetIdRoute
   '/_app/ledger/$journalEntryId': typeof AppLedgerJournalEntryIdRoute
+  '/_app/ledger/batch': typeof AppLedgerBatchRoute
   '/_app/ledger/new': typeof AppLedgerNewRoute
   '/_app/loans/$loanId': typeof AppLoansLoanIdRoute
   '/_app/projects/$projectId': typeof AppProjectsProjectIdRoute
@@ -455,6 +464,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/assets/$assetId'
     | '/ledger/$journalEntryId'
+    | '/ledger/batch'
     | '/ledger/new'
     | '/loans/$loanId'
     | '/projects/$projectId'
@@ -503,6 +513,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/assets/$assetId'
     | '/ledger/$journalEntryId'
+    | '/ledger/batch'
     | '/ledger/new'
     | '/loans/$loanId'
     | '/projects/$projectId'
@@ -553,6 +564,7 @@ export interface FileRouteTypes {
     | '/_public/'
     | '/_app/assets/$assetId'
     | '/_app/ledger/$journalEntryId'
+    | '/_app/ledger/batch'
     | '/_app/ledger/new'
     | '/_app/loans/$loanId'
     | '/_app/projects/$projectId'
@@ -927,6 +939,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLedgerNewRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/ledger/batch': {
+      id: '/_app/ledger/batch'
+      path: '/ledger/batch'
+      fullPath: '/ledger/batch'
+      preLoaderRoute: typeof AppLedgerBatchRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/ledger/$journalEntryId': {
       id: '/_app/ledger/$journalEntryId'
       path: '/ledger/$journalEntryId'
@@ -948,6 +967,7 @@ interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppAssetsAssetIdRoute: typeof AppAssetsAssetIdRoute
   AppLedgerJournalEntryIdRoute: typeof AppLedgerJournalEntryIdRoute
+  AppLedgerBatchRoute: typeof AppLedgerBatchRoute
   AppLedgerNewRoute: typeof AppLedgerNewRoute
   AppLoansLoanIdRoute: typeof AppLoansLoanIdRoute
   AppProjectsProjectIdRoute: typeof AppProjectsProjectIdRoute
@@ -995,6 +1015,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppAssetsAssetIdRoute: AppAssetsAssetIdRoute,
   AppLedgerJournalEntryIdRoute: AppLedgerJournalEntryIdRoute,
+  AppLedgerBatchRoute: AppLedgerBatchRoute,
   AppLedgerNewRoute: AppLedgerNewRoute,
   AppLoansLoanIdRoute: AppLoansLoanIdRoute,
   AppProjectsProjectIdRoute: AppProjectsProjectIdRoute,
