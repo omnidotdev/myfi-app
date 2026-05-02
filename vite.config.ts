@@ -7,7 +7,11 @@ import mkcert from "vite-plugin-mkcert";
 import tsConfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig(({ command }) => ({
-  server: { port: Number(process.env.PORT) || 3000, strictPort: true, host: "0.0.0.0" },
+  server: {
+    port: Number(process.env.PORT) || 3000,
+    strictPort: true,
+    host: "0.0.0.0",
+  },
   ssr: {
     external: ["better-auth"],
   },
