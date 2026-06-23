@@ -1,4 +1,3 @@
-import type { OrganizationClaim } from "@omnidotdev/providers";
 import { getCookie } from "@tanstack/react-start/server";
 import { betterAuth } from "better-auth";
 import { customSession, genericOAuth } from "better-auth/plugins";
@@ -45,16 +44,14 @@ if (oauthConfigs.length > 0) {
 
 plugins.push(
   customSession(async ({ user, session }) => {
-    // Try to get cached auth data (identityProviderId, organizations)
+    // Try to get cached auth data (identityProviderId)
     let identityProviderId: string | null = null;
-    let organizations: OrganizationClaim[] = [];
 
     const cachedValue = getCookie(authCache.cookieName);
     if (cachedValue) {
       const cached = await authCache.decrypt(cachedValue);
       if (cached) {
         identityProviderId = cached.identityProviderId;
-        organizations = cached.organizations;
       }
     }
 
@@ -64,7 +61,6 @@ plugins.push(
       user: {
         ...user,
         identityProviderId,
-        organizations,
       },
       session,
     };
