@@ -112,7 +112,15 @@ function BooksSettingsPage() {
       ) : books.length === 0 ? (
         <div className="rounded-lg border border-border bg-card p-8 text-center">
           <p className="text-muted-foreground">
-            No books yet. Create your first book to get started.
+            No books yet.{" "}
+            <button
+              type="button"
+              onClick={() => setShowCreateDialog(true)}
+              className="font-medium text-primary underline-offset-4 hover:underline"
+            >
+              Create your first book
+            </button>{" "}
+            to get started.
           </p>
         </div>
       ) : (
