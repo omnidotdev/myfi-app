@@ -490,7 +490,15 @@ function VendorsPage() {
       {!loading && vendors.length === 0 && !showForm && (
         <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-card p-8 text-center">
           <p className="text-muted-foreground text-sm">
-            No vendors yet. Add one to start tracking 1099 payments.
+            No vendors yet.{" "}
+            <button
+              type="button"
+              onClick={handleAdd}
+              className="font-medium text-primary underline-offset-4 hover:underline"
+            >
+              Add one
+            </button>{" "}
+            to start tracking 1099 payments.
           </p>
         </div>
       )}

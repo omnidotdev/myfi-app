@@ -182,7 +182,15 @@ function AccountsPage() {
       {!loading && accounts.length === 0 && (
         <div className="rounded-lg border border-border bg-card p-8 text-center">
           <p className="text-muted-foreground">
-            No accounts yet. Add your first account to get started.
+            No accounts yet.{" "}
+            <button
+              type="button"
+              onClick={handleAddAccount}
+              className="font-medium text-primary underline-offset-4 hover:underline"
+            >
+              Add your first account
+            </button>{" "}
+            to get started.
           </p>
         </div>
       )}

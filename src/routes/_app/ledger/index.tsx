@@ -236,7 +236,14 @@ function LedgerPage() {
       {!loading && entries.length === 0 && (
         <div className="rounded-lg border border-border bg-card p-8 text-center">
           <p className="text-muted-foreground">
-            No journal entries yet. Create your first entry to get started.
+            No journal entries yet.{" "}
+            <Link
+              to="/ledger/new"
+              className="font-medium text-primary underline-offset-4 hover:underline"
+            >
+              Create your first entry
+            </Link>{" "}
+            to get started.
           </p>
         </div>
       )}
