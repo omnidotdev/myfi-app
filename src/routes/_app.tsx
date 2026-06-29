@@ -1,3 +1,4 @@
+import { LogoLockup } from "@omnidotdev/thornberry/logo-lockup";
 import {
   createFileRoute,
   Link,
@@ -142,9 +143,10 @@ function AuthLayout() {
               <MenuIcon className="size-5" />
             )}
           </button>
-          <span className="font-bold text-lg text-primary tracking-tight">
-            {appConfig.name}
-          </span>
+          <LogoLockup
+            name={appConfig.name}
+            nameClassName="font-bold text-lg text-primary tracking-tight"
+          />
         </div>
 
         {/* Mobile menu overlay */}
@@ -202,9 +204,10 @@ function AuthLayout() {
         <aside className="hidden w-64 shrink-0 flex-col border-sidebar-border border-r bg-sidebar md:flex print:hidden">
           {/* Brand */}
           <div className="flex h-16 items-center gap-2 border-sidebar-border border-b px-4">
-            <span className="font-bold text-lg text-primary tracking-tight">
-              {appConfig.name}
-            </span>
+            <LogoLockup
+              name={appConfig.name}
+              nameClassName="font-bold text-lg text-primary tracking-tight"
+            />
           </div>
 
           {/* Nav */}
