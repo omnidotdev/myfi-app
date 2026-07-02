@@ -14,6 +14,7 @@ import type { Session } from "better-auth/types";
 import type { ReactNode } from "react";
 import DefaultCatchBoundary from "@/components/DefaultCatchBoundary";
 import app from "@/lib/config/app.config";
+import createMetaTags from "@/lib/util/createMetaTags";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { fetchSession } from "@/server/functions/auth";
 import { getTheme } from "@/server/functions/theme";
@@ -62,7 +63,7 @@ export const Route = createRootRouteWithContext<{
       { name: "apple-mobile-web-app-status-bar-style", content: "default" },
       { name: "apple-mobile-web-app-title", content: app.name },
       { name: "mobile-web-app-capable", content: "yes" },
-      { title: `${app.name} — ${app.description}` },
+      ...createMetaTags(),
     ],
     links: [
       { rel: "stylesheet", href: appStyles },
