@@ -1,18 +1,12 @@
 query PendingReconciliation($bookId: UUID!, $status: ReconciliationStatus) {
-  reconciliationQueues(
-    condition: { bookId: $bookId, status: $status }
-    orderBy: CREATED_AT_DESC
-  ) {
+  reconciliationQueues(condition: { bookId: $bookId, status: $status }) {
     nodes {
       rowId
       bookId
       journalEntryId
-      source
-      sourceReferenceId
+      source: categorizationSource
       suggestedDebitAccountId
       suggestedCreditAccountId
-      amount
-      memo
       status
       reviewedAt
       reviewedBy

@@ -1,12 +1,12 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
 import type { Types } from "@graphql-codegen/plugin-helpers";
 
-const API_URL = process.env.VITE_API_URL ?? "https://localhost:4000";
-const API_GRAPHQL_URL = process.env.GRAPHQL_SCHEMA_PATH
-  ? process.env.GRAPHQL_SCHEMA_PATH
-  : `${API_URL}/graphql`;
-
 type GraphQLCodegenConfig = Types.ConfiguredOutput;
+
+// offline schema source: the API's committed SDL, generated from the database
+// (no running server or introspection needed). Override with GRAPHQL_SCHEMA_URL
+// to point at a live endpoint if ever required
+const LOCAL_SCHEMA_PATH = "../myfi-api/src/generated/graphql/schema.graphql";
 
 const sharedPlugins: GraphQLCodegenConfig["plugins"] = [
   "typescript",
@@ -32,7 +32,7 @@ const sharedConfig: GraphQLCodegenConfig["config"] = {
 };
 
 const graphqlCodegenConfig: CodegenConfig = {
-  schema: API_GRAPHQL_URL,
+  schema: process.env.GRAPHQL_SCHEMA_URL || LOCAL_SCHEMA_PATH,
   documents: "src/lib/graphql/**/*.graphql",
   ignoreNoDocuments: true,
   config: {

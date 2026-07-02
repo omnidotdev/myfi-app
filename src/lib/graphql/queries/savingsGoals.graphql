@@ -28,6 +28,6 @@ mutation CreateSavingsGoal($input: CreateSavingsGoalInput!) {
 
 mutation DeleteSavingsGoal($input: DeleteSavingsGoalInput!) {
   deleteSavingsGoal(input: $input) {
-    deletedSavingsGoalNodeId
+    deletedSavingsGoalNodeId: deletedSavingsGoalId
   }
 }

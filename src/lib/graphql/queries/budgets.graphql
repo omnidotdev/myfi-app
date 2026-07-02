@@ -36,6 +36,6 @@ mutation UpdateBudget($input: UpdateBudgetInput!) {
 
 mutation DeleteBudget($input: DeleteBudgetInput!) {
   deleteBudget(input: $input) {
-    deletedBudgetNodeId
+    deletedBudgetNodeId: deletedBudgetId
   }
 }

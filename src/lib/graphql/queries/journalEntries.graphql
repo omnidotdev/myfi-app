@@ -63,6 +63,6 @@ mutation CreateJournalLine($input: CreateJournalLineInput!) {
 
 mutation DeleteJournalEntry($input: DeleteJournalEntryInput!) {
   deleteJournalEntry(input: $input) {
-    deletedJournalEntryNodeId
+    deletedJournalEntryNodeId: deletedJournalEntryId
   }
 }

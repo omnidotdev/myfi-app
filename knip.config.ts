@@ -10,6 +10,11 @@ const config: KnipConfig = {
     "src/features/**/*.{ts,tsx}",
   ],
   project: ["src/**/*.{ts,tsx,css}"],
+  // NB: point knip at the codegen config so it resolves plugins referenced as
+  // strings, see: https://knip.dev/reference/plugins/graphql-codegen
+  "graphql-codegen": {
+    config: ["package.json", "src/lib/graphql/codegen.config.ts"],
+  },
   ignore: ["src/generated/**"],
   ignoreExportsUsedInFile: true,
   ignoreDependencies: [

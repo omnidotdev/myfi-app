@@ -1,5 +1,5 @@
 query AllAccounts($bookId: UUID!) {
-  accounts(condition: { bookId: $bookId }, orderBy: CODE_ASC) {
+  accounts(condition: { bookId: $bookId }) {
     nodes {
       rowId
       bookId
@@ -17,7 +17,7 @@ query AllAccounts($bookId: UUID!) {
         name
         code
       }
-      children: accountsByParentId {
+      children: childAccounts {
         nodes {
           rowId
           name
@@ -53,6 +53,6 @@ mutation UpdateAccount($input: UpdateAccountInput!) {
 
 mutation DeleteAccount($input: DeleteAccountInput!) {
   deleteAccount(input: $input) {
-    deletedAccountNodeId
+    deletedAccountNodeId: deletedAccountId
   }
 }
