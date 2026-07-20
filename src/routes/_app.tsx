@@ -17,6 +17,7 @@ import {
   MenuIcon,
   MoonIcon,
   SunIcon,
+  UserCogIcon,
   WalletIcon,
   XIcon,
 } from "lucide-react";
@@ -27,6 +28,7 @@ import { useEventListener } from "usehooks-ts";
 import ErrorBoundary from "@/components/core/ErrorBoundary";
 import signOut from "@/lib/auth/signOut";
 import appConfig from "@/lib/config/app.config";
+import { CONSOLE_URL } from "@/lib/config/env.config";
 import { OrganizationProvider } from "@/providers/OrganizationProvider";
 import { useTheme } from "@/providers/ThemeProvider";
 import {
@@ -183,6 +185,18 @@ function AuthLayout() {
                 </kbd>
               </button>
 
+              {CONSOLE_URL && (
+                <a
+                  href={CONSOLE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center gap-3 rounded-md px-3 py-2 font-medium text-sidebar-foreground text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                >
+                  <UserCogIcon className="size-4" />
+                  Manage account
+                </a>
+              )}
+
               <div className="flex items-center justify-between rounded-md px-3 py-2">
                 <span className="truncate text-sidebar-foreground text-sm">
                   {session?.user?.name || session?.user?.email}
@@ -241,6 +255,18 @@ function AuthLayout() {
                 T
               </kbd>
             </button>
+
+            {CONSOLE_URL && (
+              <a
+                href={CONSOLE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-full items-center gap-3 rounded-md px-3 py-2 font-medium text-sidebar-foreground text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              >
+                <UserCogIcon className="size-4" />
+                Manage account
+              </a>
+            )}
 
             <div className="flex items-center justify-between rounded-md px-3 py-2">
               <span className="truncate text-sidebar-foreground text-sm">
