@@ -25,7 +25,7 @@ const app = {
   },
   /** External links */
   links: {
-    docs: "https://docs.omni.dev/core/myfi",
+    docs: "https://docs.omni.dev/products/myfi",
     github: "https://github.com/omnidotdev/myfi-stack",
     feedback: "https://backfeed.omni.dev/workspaces/omni/projects/myfi",
   },
