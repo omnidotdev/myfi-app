@@ -1,3 +1,4 @@
+import { accountUrl } from "@omnidotdev/providers/react";
 import { LogoLockup } from "@omnidotdev/thornberry/logo-lockup";
 import {
   createFileRoute,
@@ -28,7 +29,7 @@ import { useEventListener } from "usehooks-ts";
 import ErrorBoundary from "@/components/core/ErrorBoundary";
 import signOut from "@/lib/auth/signOut";
 import appConfig from "@/lib/config/app.config";
-import { CONSOLE_URL } from "@/lib/config/env.config";
+import { ACCOUNT_URL } from "@/lib/config/env.config";
 import { OrganizationProvider } from "@/providers/OrganizationProvider";
 import { useTheme } from "@/providers/ThemeProvider";
 import {
@@ -185,9 +186,9 @@ function AuthLayout() {
                 </kbd>
               </button>
 
-              {CONSOLE_URL && (
+              {ACCOUNT_URL && (
                 <a
-                  href={CONSOLE_URL}
+                  href={accountUrl(ACCOUNT_URL)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex w-full items-center gap-3 rounded-md px-3 py-2 font-medium text-sidebar-foreground text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
@@ -256,9 +257,9 @@ function AuthLayout() {
               </kbd>
             </button>
 
-            {CONSOLE_URL && (
+            {ACCOUNT_URL && (
               <a
-                href={CONSOLE_URL}
+                href={accountUrl(ACCOUNT_URL)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex w-full items-center gap-3 rounded-md px-3 py-2 font-medium text-sidebar-foreground text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
