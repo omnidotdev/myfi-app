@@ -89,13 +89,24 @@ function formatConfidence(confidence: string | null): string {
   return `${Math.round(value * 100)}%`;
 }
 
+/**
+ * Display labels for the categorization source enum. Uses explicit labels so
+ * acronyms render correctly (e.g. "llm" -> "LLM", not "Llm").
+ */
+const CATEGORIZATION_SOURCE_LABELS: Record<CategorizationSource, string> = {
+  rule: "Rule",
+  llm: "LLM",
+  manual: "Manual",
+  uncategorized: "Uncategorized",
+};
+
 /** Format categorization source for display */
 function formatCategorizationSource(
   source: CategorizationSource | null,
 ): string {
   if (!source) return "Unknown";
 
-  return source.charAt(0).toUpperCase() + source.slice(1);
+  return CATEGORIZATION_SOURCE_LABELS[source];
 }
 
 /**
