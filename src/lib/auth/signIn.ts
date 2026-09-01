@@ -11,8 +11,8 @@ interface Params {
  * Sign in with OAuth2 provider
  */
 const signIn = async ({ redirectUrl, providerId }: Params) => {
-  const res = await authClient.signIn.oauth2({
-    providerId,
+  const res = await authClient.signIn.social({
+    provider: providerId,
     callbackURL: redirectUrl,
   });
 

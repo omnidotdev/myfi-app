@@ -21,7 +21,7 @@
   "dependencies": {
     "@graphql-typed-document-node/core": "^3.2.0",
     "@internationalized/date": "^3.10.1",
-    "@omnidotdev/providers": "github:omnidotdev/providers#ae561f8b4ea114ee47c6e1c0ede37fb330cfa130",
+    "@omnidotdev/providers": "github:omnidotdev/providers#8fed1a0e01c1d37425c08bc8ee8c4bb06f2b1357",
     "@omnidotdev/thornberry": "github:omnidotdev/thornberry#372ebb2",
     "@tanstack/react-form": "^1.28.0",
     "@tanstack/react-query": "^5.90.0",
@@ -29,7 +29,7 @@
     "@tanstack/react-router-ssr-query": "^1.163.0",
     "@tanstack/react-start": "1.166.16",
     "@tanstack/zod-adapter": "^1.163.0",
-    "better-auth": "^1.5.6",
+    "better-auth": "1.7.2",
     "cmdk": "^1.1.1",
     "dayjs": "^1.11.19",
     "graphql": "^16.13.0",

@@ -29,8 +29,11 @@ if (AUTH_CLIENT_ID && AUTH_CLIENT_SECRET && AUTH_BASE_URL) {
     mapProfileToUser: (profile) => ({
       name: profile.name,
       email: profile.email,
-      emailVerified: profile.email_verified,
-      image: profile.picture,
+      emailVerified:
+        typeof profile.email_verified === "boolean"
+          ? profile.email_verified
+          : undefined,
+      image: typeof profile.picture === "string" ? profile.picture : undefined,
     }),
   });
 }
