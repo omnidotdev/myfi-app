@@ -20,10 +20,10 @@ const DefaultCatchBoundary = ({ error }: ErrorComponentProps) => {
     <div className="flex min-h-[50vh] flex-col items-center justify-center p-8">
       <div className="text-center">
         <div className="mb-6 text-6xl">💰</div>
-        <h1 className="font-bold text-2xl text-destructive">
+        <h1 className="font-normal font-serif text-3xl text-foreground tracking-tight">
           Something went wrong
         </h1>
-        <p className="mt-2 max-w-md text-muted-foreground">
+        <p className="mt-3 max-w-md text-muted-foreground">
           An unexpected error occurred. Please try again
           {isRoot ? " or return to the home page" : ""}.
         </p>

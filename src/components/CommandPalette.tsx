@@ -21,7 +21,7 @@ import { useTheme } from "@/providers/ThemeProvider";
  * Global command palette (⌘/Ctrl+K). Mounted once at the app root so it works on
  * every route. Exposes top-level navigation and the theme toggle. Built on the
  * shared Thornberry palette so every Omni app shares the same behavior; this
- * wrapper only supplies myFi's own actions. The shell owns the open state and
+ * wrapper only supplies MyFi's own actions. The shell owns the open state and
  * the mod+k hotkey, so no local open state is needed here.
  */
 const CommandPalette = () => {
