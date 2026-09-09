@@ -1,11 +1,10 @@
 /**
  * Application configuration
  *
- * To rename this app, update the `name` field below
- * All other references use this config, so renaming is a single change
+ * Single source of truth for MyFi's name, tagline, links, and module set
  */
 const app = {
-  /** App name - change this to rename the product */
+  /** Product name */
   name: "MyFi",
   /** App description (used in SEO meta tags) */
   description:

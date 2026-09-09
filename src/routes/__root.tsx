@@ -60,7 +60,17 @@ export const Route = createRootRouteWithContext<{
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "theme-color", content: "#0a1628" },
+      // paper ground in light, deep base in dark (approximates the base palette)
+      {
+        name: "theme-color",
+        content: "#f6f7f9",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        name: "theme-color",
+        content: "#191b1d",
+        media: "(prefers-color-scheme: dark)",
+      },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "default" },
       { name: "apple-mobile-web-app-title", content: app.name },
@@ -68,6 +78,17 @@ export const Route = createRootRouteWithContext<{
       ...createMetaTags(),
     ],
     links: [
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+        crossOrigin: "anonymous",
+      },
+      // brand typefaces: Fraunces (display), Inter (text), IBM Plex Mono (figures)
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,340..460&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap",
+      },
       { rel: "stylesheet", href: appStyles },
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       {
@@ -101,7 +122,7 @@ export const Route = createRootRouteWithContext<{
 
 function ErrorComponent(props: ErrorComponentProps) {
   return (
-    <RootDocument theme="dark">
+    <RootDocument theme="light">
       <DefaultCatchBoundary {...props} />
     </RootDocument>
   );

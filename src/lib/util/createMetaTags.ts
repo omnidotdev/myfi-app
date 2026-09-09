@@ -14,8 +14,8 @@ interface Params {
 }
 
 /**
- * Create social/SEO meta tags (title, description, OpenGraph, Twitter card).
- * Mirrors the omni template pattern so link previews render consistently across the fleet.
+ * Create social/SEO meta tags (title, description, OpenGraph, Twitter card)
+ * so MyFi link previews render consistently wherever the app is shared
  */
 const createMetaTags = ({
   title: _title,
@@ -35,7 +35,8 @@ const createMetaTags = ({
     ...(keywords ? [{ name: "keywords", content: keywords }] : []),
     { name: "twitter:title", content: title },
     { name: "twitter:description", content: description },
-    { name: "twitter:creator", content: "@omnidotdev" },
+    // publishing org account (MyFi has no dedicated handle); `site`, not `creator`
+    { name: "twitter:site", content: "@omnidotdev" },
     { name: "twitter:url", content: url },
     { name: "twitter:image", content: ogImage },
     { name: "twitter:card", content: "summary_large_image" },

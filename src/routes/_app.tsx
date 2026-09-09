@@ -148,7 +148,7 @@ function AuthLayout() {
           </button>
           <LogoLockup
             name={appConfig.name}
-            nameClassName="font-bold text-lg text-primary tracking-tight"
+            nameClassName="font-medium font-serif text-foreground text-xl tracking-tight"
           />
         </div>
 
