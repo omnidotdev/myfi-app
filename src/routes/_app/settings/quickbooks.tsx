@@ -4,14 +4,19 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import BookPicker from "@/features/books/components/BookPicker";
+import AccountMappingResolver from "@/features/quickbooks/components/AccountMappingResolver";
+import CutoverButton from "@/features/quickbooks/components/CutoverButton";
 import MigrationStatus from "@/features/quickbooks/components/MigrationStatus";
 import QuickBooksConnectButton from "@/features/quickbooks/components/QuickBooksConnectButton";
+import ReconcileControl from "@/features/quickbooks/components/ReconcileControl";
+import ReconciliationResults from "@/features/quickbooks/components/ReconciliationResults";
 import type { QuickbooksStatus } from "@/features/quickbooks/types/status";
 import { API_URL } from "@/lib/config/env.config";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 const POLL_INTERVAL_MS = 4000;
 const ACTIVE_MIGRATION_STATUSES = new Set(["pending", "importing"]);
+const ACTIVE_RECONCILIATION_STATUSES = new Set(["pending", "running"]);
 
 type QuickbooksSearch = {
   error?: string;
@@ -26,6 +31,7 @@ export const Route = createFileRoute("/_app/settings/quickbooks")({
 
 function QuickbooksSettingsPage() {
   const {
+    activeBook,
     activeBookId,
     books,
     isLoading: booksLoading,
@@ -73,17 +79,22 @@ function QuickbooksSettingsPage() {
     }
   }, [error]);
 
-  // Poll while a migration is in progress
+  // Poll while a migration or reconciliation is in progress
   const migrationStatus = status?.latestMigration?.status;
+  const reconciliationStatus = status?.latestReconciliation?.status;
   useEffect(() => {
-    if (!migrationStatus || !ACTIVE_MIGRATION_STATUSES.has(migrationStatus)) {
-      return;
-    }
+    const migrationActive =
+      !!migrationStatus && ACTIVE_MIGRATION_STATUSES.has(migrationStatus);
+    const reconciliationActive =
+      !!reconciliationStatus &&
+      ACTIVE_RECONCILIATION_STATUSES.has(reconciliationStatus);
+
+    if (!migrationActive && !reconciliationActive) return;
 
     const interval = setInterval(fetchStatus, POLL_INTERVAL_MS);
 
     return () => clearInterval(interval);
-  }, [migrationStatus, fetchStatus]);
+  }, [migrationStatus, reconciliationStatus, fetchStatus]);
 
   const handleImport = useCallback(async () => {
     if (!activeBookId || !status?.connection) return;
@@ -187,6 +198,45 @@ function QuickbooksSettingsPage() {
 
           {status?.latestMigration && (
             <MigrationStatus migration={status.latestMigration} />
+          )}
+
+          {/* Resolve QuickBooks account mappings */}
+          {!status?.cutover && activeBookId && (
+            <AccountMappingResolver
+              bookId={activeBookId}
+              connectedAccountId={connection.id}
+            />
+          )}
+
+          {/* Reconcile the imported book, then review results */}
+          {!status?.cutover && activeBookId && (
+            <>
+              <ReconcileControl
+                bookId={activeBookId}
+                connectedAccountId={connection.id}
+                latestReconciliation={status?.latestReconciliation ?? null}
+                onReconcileStarted={fetchStatus}
+              />
+
+              {status?.latestReconciliation && (
+                <ReconciliationResults
+                  bookId={activeBookId}
+                  reconciliationId={status.latestReconciliation.id}
+                />
+              )}
+            </>
+          )}
+
+          {/* Cut over the system of record to MyFi */}
+          {activeBookId && (
+            <CutoverButton
+              bookId={activeBookId}
+              connectedAccountId={connection.id}
+              bookName={activeBook?.name ?? "this book"}
+              latestReconciliation={status?.latestReconciliation ?? null}
+              cutover={status?.cutover ?? null}
+              onCutover={fetchStatus}
+            />
           )}
         </div>
       )}
