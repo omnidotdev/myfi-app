@@ -30,6 +30,7 @@ import { Route as AppSettingsVendorsRouteImport } from './routes/_app/settings/v
 import { Route as AppSettingsTaxJurisdictionsRouteImport } from './routes/_app/settings/tax-jurisdictions'
 import { Route as AppSettingsTagsRouteImport } from './routes/_app/settings/tags'
 import { Route as AppSettingsRulesRouteImport } from './routes/_app/settings/rules'
+import { Route as AppSettingsQuickbooksRouteImport } from './routes/_app/settings/quickbooks'
 import { Route as AppSettingsMappingsRouteImport } from './routes/_app/settings/mappings'
 import { Route as AppSettingsConnectionsRouteImport } from './routes/_app/settings/connections'
 import { Route as AppSettingsBooksRouteImport } from './routes/_app/settings/books'
@@ -155,6 +156,11 @@ const AppSettingsTagsRoute = AppSettingsTagsRouteImport.update({
 const AppSettingsRulesRoute = AppSettingsRulesRouteImport.update({
   id: '/settings/rules',
   path: '/settings/rules',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsQuickbooksRoute = AppSettingsQuickbooksRouteImport.update({
+  id: '/settings/quickbooks',
+  path: '/settings/quickbooks',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsMappingsRoute = AppSettingsMappingsRouteImport.update({
@@ -296,6 +302,7 @@ export interface FileRoutesByFullPath {
   '/settings/books': typeof AppSettingsBooksRoute
   '/settings/connections': typeof AppSettingsConnectionsRoute
   '/settings/mappings': typeof AppSettingsMappingsRoute
+  '/settings/quickbooks': typeof AppSettingsQuickbooksRoute
   '/settings/rules': typeof AppSettingsRulesRoute
   '/settings/tags': typeof AppSettingsTagsRoute
   '/settings/tax-jurisdictions': typeof AppSettingsTaxJurisdictionsRoute
@@ -339,6 +346,7 @@ export interface FileRoutesByTo {
   '/settings/books': typeof AppSettingsBooksRoute
   '/settings/connections': typeof AppSettingsConnectionsRoute
   '/settings/mappings': typeof AppSettingsMappingsRoute
+  '/settings/quickbooks': typeof AppSettingsQuickbooksRoute
   '/settings/rules': typeof AppSettingsRulesRoute
   '/settings/tags': typeof AppSettingsTagsRoute
   '/settings/tax-jurisdictions': typeof AppSettingsTaxJurisdictionsRoute
@@ -385,6 +393,7 @@ export interface FileRoutesById {
   '/_app/settings/books': typeof AppSettingsBooksRoute
   '/_app/settings/connections': typeof AppSettingsConnectionsRoute
   '/_app/settings/mappings': typeof AppSettingsMappingsRoute
+  '/_app/settings/quickbooks': typeof AppSettingsQuickbooksRoute
   '/_app/settings/rules': typeof AppSettingsRulesRoute
   '/_app/settings/tags': typeof AppSettingsTagsRoute
   '/_app/settings/tax-jurisdictions': typeof AppSettingsTaxJurisdictionsRoute
@@ -430,6 +439,7 @@ export interface FileRouteTypes {
     | '/settings/books'
     | '/settings/connections'
     | '/settings/mappings'
+    | '/settings/quickbooks'
     | '/settings/rules'
     | '/settings/tags'
     | '/settings/tax-jurisdictions'
@@ -473,6 +483,7 @@ export interface FileRouteTypes {
     | '/settings/books'
     | '/settings/connections'
     | '/settings/mappings'
+    | '/settings/quickbooks'
     | '/settings/rules'
     | '/settings/tags'
     | '/settings/tax-jurisdictions'
@@ -518,6 +529,7 @@ export interface FileRouteTypes {
     | '/_app/settings/books'
     | '/_app/settings/connections'
     | '/_app/settings/mappings'
+    | '/_app/settings/quickbooks'
     | '/_app/settings/rules'
     | '/_app/settings/tags'
     | '/_app/settings/tax-jurisdictions'
@@ -690,6 +702,13 @@ declare module '@tanstack/react-router' {
       path: '/settings/rules'
       fullPath: '/settings/rules'
       preLoaderRoute: typeof AppSettingsRulesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/quickbooks': {
+      id: '/_app/settings/quickbooks'
+      path: '/settings/quickbooks'
+      fullPath: '/settings/quickbooks'
+      preLoaderRoute: typeof AppSettingsQuickbooksRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/settings/mappings': {
@@ -873,6 +892,7 @@ interface AppRouteChildren {
   AppSettingsBooksRoute: typeof AppSettingsBooksRoute
   AppSettingsConnectionsRoute: typeof AppSettingsConnectionsRoute
   AppSettingsMappingsRoute: typeof AppSettingsMappingsRoute
+  AppSettingsQuickbooksRoute: typeof AppSettingsQuickbooksRoute
   AppSettingsRulesRoute: typeof AppSettingsRulesRoute
   AppSettingsTagsRoute: typeof AppSettingsTagsRoute
   AppSettingsTaxJurisdictionsRoute: typeof AppSettingsTaxJurisdictionsRoute
@@ -915,6 +935,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsBooksRoute: AppSettingsBooksRoute,
   AppSettingsConnectionsRoute: AppSettingsConnectionsRoute,
   AppSettingsMappingsRoute: AppSettingsMappingsRoute,
+  AppSettingsQuickbooksRoute: AppSettingsQuickbooksRoute,
   AppSettingsRulesRoute: AppSettingsRulesRoute,
   AppSettingsTagsRoute: AppSettingsTagsRoute,
   AppSettingsTaxJurisdictionsRoute: AppSettingsTaxJurisdictionsRoute,

@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   BookOpenIcon,
+  ImportIcon,
   LandmarkIcon,
   Link2Icon,
   MapIcon,
@@ -27,6 +28,12 @@ const settingsItems = [
     description: "Manage bank and exchange connections",
     href: "/settings/connections",
     icon: Link2Icon,
+  },
+  {
+    label: "QuickBooks",
+    description: "Migrate your books from QuickBooks",
+    href: "/settings/quickbooks",
+    icon: ImportIcon,
   },
   {
     label: "Mappings",
