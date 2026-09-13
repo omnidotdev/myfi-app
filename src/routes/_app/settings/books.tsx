@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import CreateBookDialog from "@/features/books/components/CreateBookDialog";
 import type Book from "@/features/books/types/book";
 import type { BookType } from "@/features/books/types/book";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBookStore from "@/lib/stores/activeBook";
 import { useOrganization } from "@/providers/OrganizationProvider";
 
@@ -28,9 +28,7 @@ function BooksSettingsPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/books?organizationId=${organizationId}`,
-      );
+      const res = await apiFetch(`/api/books?organizationId=${organizationId}`);
       const data = await res.json();
       const mapped = (data.books ?? []).map((b: Record<string, unknown>) => ({
         ...b,
@@ -57,7 +55,7 @@ function BooksSettingsPage() {
     template: string;
   }) => {
     try {
-      await fetch(`${API_URL}/api/books`, {
+      await apiFetch(`/api/books`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ organizationId, ...data }),
@@ -72,7 +70,7 @@ function BooksSettingsPage() {
 
   const handleDelete = async (bookId: string) => {
     try {
-      await fetch(`${API_URL}/api/books/${bookId}`, { method: "DELETE" });
+      await apiFetch(`/api/books/${bookId}`, { method: "DELETE" });
 
       // If the deleted book was active, clear the selection
       if (activeBookId === bookId) {

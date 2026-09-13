@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type Book from "@/features/books/types/book";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBookStore from "@/lib/stores/activeBook";
 import { useOrganization } from "@/providers/OrganizationProvider";
 
@@ -14,7 +14,7 @@ const useActiveBook = () => {
   useEffect(() => {
     if (!organizationId) return;
     setIsLoading(true);
-    fetch(`${API_URL}/api/books?organizationId=${organizationId}`)
+    apiFetch(`/api/books?organizationId=${organizationId}`)
       .then((r) => r.json())
       .then((data) => {
         const mapped = (data.books ?? []).map((b: Record<string, unknown>) => ({

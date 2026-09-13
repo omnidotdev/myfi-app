@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import type { QuickbooksStatus } from "@/features/quickbooks/types/status";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 
 type Reconciliation = NonNullable<QuickbooksStatus["latestReconciliation"]>;
 type Cutover = NonNullable<QuickbooksStatus["cutover"]>;
@@ -39,7 +39,7 @@ function CutoverButton({
     setCuttingOver(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/quickbooks/cutover`, {
+      const res = await apiFetch(`/api/quickbooks/cutover`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

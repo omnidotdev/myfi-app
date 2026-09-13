@@ -1,7 +1,7 @@
 import { Loader2Icon } from "lucide-react";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 
 type Props = {
   bookId: string;
@@ -20,7 +20,7 @@ function QuickBooksConnectButton({ bookId }: Props) {
     setConnecting(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/quickbooks/connect`, {
+      const res = await apiFetch(`/api/quickbooks/connect`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bookId }),

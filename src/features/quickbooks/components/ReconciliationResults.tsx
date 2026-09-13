@@ -5,7 +5,7 @@ import type {
   ReconciliationLine,
   ReconciliationLinesResponse,
 } from "@/features/quickbooks/types/reconciliation";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 
 type Props = {
   bookId: string;
@@ -31,8 +31,8 @@ function ReconciliationResults({ bookId, reconciliationId }: Props) {
     setLoading(true);
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/quickbooks/reconciliation/${reconciliationId}/lines?bookId=${bookId}`,
+      const res = await apiFetch(
+        `/api/quickbooks/reconciliation/${reconciliationId}/lines?bookId=${bookId}`,
       );
 
       if (!res.ok) throw new Error("failed to load reconciliation lines");

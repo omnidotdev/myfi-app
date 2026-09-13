@@ -6,7 +6,7 @@ import type {
   MyfiAccountOption,
   QboAccountMapping,
 } from "@/features/quickbooks/types/accountMap";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 
 type Props = {
   bookId: string;
@@ -30,8 +30,8 @@ function AccountMappingResolver({ bookId, connectedAccountId }: Props) {
 
   const fetchMap = useCallback(async () => {
     try {
-      const res = await fetch(
-        `${API_URL}/api/quickbooks/account-map?bookId=${bookId}&connectedAccountId=${connectedAccountId}`,
+      const res = await apiFetch(
+        `/api/quickbooks/account-map?bookId=${bookId}&connectedAccountId=${connectedAccountId}`,
       );
 
       if (!res.ok) throw new Error("failed to load account map");
@@ -58,7 +58,7 @@ function AccountMappingResolver({ bookId, connectedAccountId }: Props) {
       setSavingId(account.qboAccountId);
 
       try {
-        const res = await fetch(`${API_URL}/api/quickbooks/account-map`, {
+        const res = await apiFetch(`/api/quickbooks/account-map`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

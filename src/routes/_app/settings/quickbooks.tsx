@@ -11,7 +11,7 @@ import QuickBooksConnectButton from "@/features/quickbooks/components/QuickBooks
 import ReconcileControl from "@/features/quickbooks/components/ReconcileControl";
 import ReconciliationResults from "@/features/quickbooks/components/ReconciliationResults";
 import type { QuickbooksStatus } from "@/features/quickbooks/types/status";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 const POLL_INTERVAL_MS = 4000;
@@ -55,8 +55,8 @@ function QuickbooksSettingsPage() {
     }
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/quickbooks/status?bookId=${activeBookId}`,
+      const res = await apiFetch(
+        `/api/quickbooks/status?bookId=${activeBookId}`,
       );
 
       if (!res.ok) throw new Error("failed to load status");
@@ -107,7 +107,7 @@ function QuickbooksSettingsPage() {
     setImporting(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/quickbooks/backfill`, {
+      const res = await apiFetch(`/api/quickbooks/backfill`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

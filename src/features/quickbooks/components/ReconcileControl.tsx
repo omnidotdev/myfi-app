@@ -2,7 +2,7 @@ import { Loader2Icon } from "lucide-react";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import type { QuickbooksStatus } from "@/features/quickbooks/types/status";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 
 type Reconciliation = NonNullable<QuickbooksStatus["latestReconciliation"]>;
 
@@ -64,7 +64,7 @@ function ReconcileControl({
     setSubmitting(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/quickbooks/reconcile`, {
+      const res = await apiFetch(`/api/quickbooks/reconcile`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
