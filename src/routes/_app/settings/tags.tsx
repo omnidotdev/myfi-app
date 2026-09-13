@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
+import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
 import { API_URL } from "@/lib/config/env.config";
 import useActiveBook from "@/lib/hooks/useActiveBook";
@@ -309,11 +310,10 @@ function TagsPage() {
 
       {/* Empty state */}
       {!loading && groups.length === 0 && (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-card p-8 text-center">
-          <p className="text-muted-foreground text-sm">
-            No tag groups yet. Create one above to get started.
-          </p>
-        </div>
+        <EmptyState
+          title="No tag groups yet"
+          description="Create one above to get started."
+        />
       )}
 
       {/* Tag groups */}

@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
 import JournalEntryTable from "@/features/ledger/components/JournalEntryTable";
 import type {
@@ -234,18 +235,19 @@ function LedgerPage() {
 
       {/* Empty state */}
       {!loading && entries.length === 0 && (
-        <div className="rounded-lg border border-border bg-card p-8 text-center">
-          <p className="text-muted-foreground">
-            No journal entries yet.{" "}
+        <EmptyState
+          title="No journal entries yet"
+          description="Create an entry to start recording transactions."
+          action={
             <Link
               to="/ledger/new"
-              className="font-medium text-primary underline-offset-4 hover:underline"
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
             >
-              Create your first entry
-            </Link>{" "}
-            to get started.
-          </p>
-        </div>
+              <PlusIcon className="size-4" />
+              Create an entry
+            </Link>
+          }
+        />
       )}
 
       {/* Journal entry table */}

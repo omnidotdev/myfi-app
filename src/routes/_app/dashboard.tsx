@@ -6,6 +6,7 @@ import {
   ClockIcon,
   DollarSignIcon,
   Loader2Icon,
+  PlusIcon,
   TrendingDownIcon,
   TrendingUpIcon,
 } from "lucide-react";
@@ -20,6 +21,7 @@ import {
   YAxis,
 } from "recharts";
 
+import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
 import type { NetWorthSummary } from "@/features/savings/types/savingsGoal";
 import { API_URL } from "@/lib/config/env.config";
@@ -503,18 +505,21 @@ function DashboardPage() {
       )}
 
       {!loading && showAllBooks && !summary && (
-        <div className="rounded-lg border border-border bg-card p-8 text-center">
-          <p className="text-muted-foreground text-sm">
-            No books available yet.{" "}
+        <EmptyState
+          icon={BookOpenIcon}
+          title="No books yet"
+          description="Create a book to start tracking your finances."
+          action={
             <Link
               to="/settings/books"
-              className="font-medium text-primary underline-offset-4 hover:underline"
+              search={{ create: true }}
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
             >
+              <PlusIcon className="size-4" />
               Create a book
-            </Link>{" "}
-            to get started.
-          </p>
-        </div>
+            </Link>
+          }
+        />
       )}
 
       {/* Single-book: Net worth hero card */}
@@ -568,11 +573,7 @@ function DashboardPage() {
       )}
 
       {!loading && !showAllBooks && !netWorth && (
-        <div className="rounded-lg border border-border bg-card p-8 text-center">
-          <p className="text-muted-foreground text-sm">
-            No financial summary available yet
-          </p>
-        </div>
+        <EmptyState title="No financial summary available yet" />
       )}
 
       {/* Single-book: Net worth trend chart */}

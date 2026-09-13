@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon, ShieldIcon, TrashIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
+import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
 import { API_URL } from "@/lib/config/env.config";
 import useActiveBook from "@/lib/hooks/useActiveBook";
@@ -216,12 +217,11 @@ function AccessPage() {
 
       {/* Empty state */}
       {!loading && records.length === 0 && (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-card p-8 text-center">
-          <ShieldIcon className="mb-2 size-8 text-muted-foreground" />
-          <p className="text-muted-foreground text-sm">
-            No access records yet. Grant someone access above.
-          </p>
-        </div>
+        <EmptyState
+          icon={ShieldIcon}
+          title="No access records yet"
+          description="Grant someone access above to get started."
+        />
       )}
 
       {/* Access list */}

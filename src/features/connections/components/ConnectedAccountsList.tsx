@@ -1,5 +1,6 @@
 import { Link2Icon, Link2OffIcon, RefreshCwIcon } from "lucide-react";
 
+import EmptyState from "@/components/EmptyState";
 import type {
   ConnectedAccount,
   ConnectedAccountStatus,
@@ -59,9 +60,11 @@ function ConnectedAccountsList({
 }: Props) {
   if (accounts.length === 0) {
     return (
-      <div className="rounded-lg border border-border bg-card p-8 text-center">
-        <p className="text-muted-foreground">No connected accounts yet</p>
-      </div>
+      <EmptyState
+        icon={Link2Icon}
+        title="No connected accounts yet"
+        description="Connect a bank or exchange to sync transactions automatically."
+      />
     );
   }
 

@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import EmptyState from "@/components/EmptyState";
 import type { Account } from "@/features/accounts/types/account";
 import { API_URL } from "@/lib/config/env.config";
 import formatCurrency from "@/lib/format/currency";
@@ -333,11 +334,7 @@ function AssetDetailPage() {
             </table>
           </div>
         ) : (
-          <div className="rounded-lg border border-border bg-card p-6 text-center">
-            <p className="text-muted-foreground text-sm">
-              No depreciation entries yet
-            </p>
-          </div>
+          <EmptyState title="No depreciation entries yet" />
         )}
       </div>
 

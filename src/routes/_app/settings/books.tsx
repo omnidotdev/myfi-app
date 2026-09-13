@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Loader2Icon, PlusIcon, TrashIcon } from "lucide-react";
+import { BookOpenIcon, Loader2Icon, PlusIcon, TrashIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
+import EmptyState from "@/components/EmptyState";
 import CreateBookDialog from "@/features/books/components/CreateBookDialog";
 import type Book from "@/features/books/types/book";
 import type { BookType } from "@/features/books/types/book";
@@ -9,7 +10,15 @@ import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBookStore from "@/lib/stores/activeBook";
 import { useOrganization } from "@/providers/OrganizationProvider";
 
+type BooksSearch = {
+  /** Auto-open the create dialog on arrival (e.g. from the dashboard CTA) */
+  create?: boolean;
+};
+
 export const Route = createFileRoute("/_app/settings/books")({
+  validateSearch: (search: Record<string, unknown>): BooksSearch => ({
+    create: search.create === true || search.create === "true",
+  }),
   component: BooksSettingsPage,
 });
 
@@ -18,9 +27,21 @@ function BooksSettingsPage() {
   const organizationId = org?.currentOrganization?.id;
   const { activeBookId, setActiveBookId } = useActiveBookStore();
 
+  const { create } = Route.useSearch();
+  const navigate = Route.useNavigate();
+
   const [books, setBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+
+  // Open the create dialog automatically when arriving with ?create=true, then
+  // clear the param so a refresh does not reopen it
+  useEffect(() => {
+    if (!create) return;
+
+    setShowCreateDialog(true);
+    navigate({ to: "/settings/books", search: {}, replace: true });
+  }, [create, navigate]);
 
   const fetchBooks = useCallback(async () => {
     if (!organizationId) return;
@@ -108,19 +129,21 @@ function BooksSettingsPage() {
           <Loader2Icon className="size-5 animate-spin text-muted-foreground" />
         </div>
       ) : books.length === 0 ? (
-        <div className="rounded-lg border border-border bg-card p-8 text-center">
-          <p className="text-muted-foreground">
-            No books yet.{" "}
+        <EmptyState
+          icon={BookOpenIcon}
+          title="No books yet"
+          description="Create a book to start tracking your finances."
+          action={
             <button
               type="button"
               onClick={() => setShowCreateDialog(true)}
-              className="font-medium text-primary underline-offset-4 hover:underline"
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
             >
-              Create your first book
-            </button>{" "}
-            to get started.
-          </p>
-        </div>
+              <PlusIcon className="size-4" />
+              Create a book
+            </button>
+          }
+        />
       ) : (
         <div className="flex flex-col gap-3">
           {books.map((book) => (

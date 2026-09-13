@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon, WalletIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
+import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
 import AddWalletForm from "@/features/crypto/components/AddWalletForm";
 import CryptoAssetCard from "@/features/crypto/components/CryptoAssetCard";
@@ -243,22 +244,21 @@ function CryptoPage() {
 
       {/* Empty state */}
       {!loading && assets.length === 0 && (
-        <div className="rounded-lg border border-border bg-card p-8 text-center">
-          <WalletIcon className="mx-auto mb-3 size-10 text-muted-foreground" />
-          <p className="font-medium">No crypto assets yet</p>
-          <p className="mt-1 text-muted-foreground text-sm">
-            Add your first wallet or asset to start tracking your crypto
-            portfolio
-          </p>
-          <button
-            type="button"
-            onClick={handleAddAsset}
-            className="mt-4 inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
-          >
-            <PlusIcon className="size-4" />
-            Add Asset
-          </button>
-        </div>
+        <EmptyState
+          icon={WalletIcon}
+          title="No crypto assets yet"
+          description="Add a wallet or asset to start tracking your crypto portfolio."
+          action={
+            <button
+              type="button"
+              onClick={handleAddAsset}
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
+            >
+              <PlusIcon className="size-4" />
+              Add asset
+            </button>
+          }
+        />
       )}
 
       {/* Lot detail panel */}

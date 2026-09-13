@@ -1,5 +1,6 @@
 import { PlusIcon, WalletIcon } from "lucide-react";
 
+import EmptyState from "@/components/EmptyState";
 import BudgetCard from "@/features/budgets/components/BudgetCard";
 
 import type { Budget, BudgetTracking } from "@/features/budgets/types/budget";
@@ -24,25 +25,21 @@ function BudgetList({
 }: BudgetListProps) {
   if (budgets.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-border border-dashed py-16">
-        <div className="flex size-12 items-center justify-center rounded-full bg-muted">
-          <WalletIcon className="size-6 text-muted-foreground" />
-        </div>
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h3 className="font-semibold text-base">No budgets yet</h3>
-          <p className="max-w-sm text-muted-foreground text-sm">
-            Create a budget to track spending against your expense accounts
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={onNew}
-          className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
-        >
-          <PlusIcon className="size-4" />
-          Create Budget
-        </button>
-      </div>
+      <EmptyState
+        icon={WalletIcon}
+        title="No budgets yet"
+        description="Create a budget to track spending against your expense accounts."
+        action={
+          <button
+            type="button"
+            onClick={onNew}
+            className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
+          >
+            <PlusIcon className="size-4" />
+            Create a budget
+          </button>
+        }
+      />
     );
   }
 

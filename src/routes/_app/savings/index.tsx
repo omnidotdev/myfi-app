@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
+import EmptyState from "@/components/EmptyState";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
 import SavingsGoalCard from "@/features/savings/components/SavingsGoalCard";
@@ -220,17 +221,20 @@ function SavingsPage() {
 
       {/* Goals grid */}
       {!loading && goals.length === 0 && (
-        <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-border border-dashed py-16">
-          <p className="text-muted-foreground text-sm">No savings goals yet</p>
-          <button
-            type="button"
-            onClick={handleNew}
-            className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
-          >
-            <PlusIcon className="size-4" />
-            Create your first goal
-          </button>
-        </div>
+        <EmptyState
+          title="No savings goals yet"
+          description="Create a goal to track progress toward what you are saving for."
+          action={
+            <button
+              type="button"
+              onClick={handleNew}
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
+            >
+              <PlusIcon className="size-4" />
+              Create a goal
+            </button>
+          }
+        />
       )}
 
       {!loading && goals.length > 0 && (

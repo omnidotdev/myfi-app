@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
+import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
 import { API_URL } from "@/lib/config/env.config";
 import useActiveBook from "@/lib/hooks/useActiveBook";
@@ -407,11 +408,10 @@ function TaxJurisdictionsPage() {
 
       {/* Empty state */}
       {!loading && jurisdictions.length === 0 && !showForm && (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-card p-8 text-center">
-          <p className="text-muted-foreground text-sm">
-            No tax jurisdictions yet. Add one to start tracking sales tax.
-          </p>
-        </div>
+        <EmptyState
+          title="No tax jurisdictions yet"
+          description="Add one to start tracking sales tax."
+        />
       )}
 
       {/* Jurisdiction table */}

@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
+import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
 import { API_URL } from "@/lib/config/env.config";
 import useActiveBook from "@/lib/hooks/useActiveBook";
@@ -488,19 +489,19 @@ function VendorsPage() {
 
       {/* Empty state */}
       {!loading && vendors.length === 0 && !showForm && (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-card p-8 text-center">
-          <p className="text-muted-foreground text-sm">
-            No vendors yet.{" "}
+        <EmptyState
+          title="No vendors yet"
+          description="Add a vendor to start tracking 1099 payments."
+          action={
             <button
               type="button"
               onClick={handleAdd}
-              className="font-medium text-primary underline-offset-4 hover:underline"
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
             >
-              Add one
-            </button>{" "}
-            to start tracking 1099 payments.
-          </p>
-        </div>
+              Add vendor
+            </button>
+          }
+        />
       )}
 
       {/* Vendor table */}
