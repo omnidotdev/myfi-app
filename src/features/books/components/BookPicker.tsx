@@ -20,7 +20,7 @@ function BookPicker({ books, selectedBookId, onSelect }: BookPickerProps) {
     return (
       <Link
         to="/settings/books"
-        className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+        className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
       >
         <PlusIcon className="size-4" />
         Create book

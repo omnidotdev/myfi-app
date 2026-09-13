@@ -27,6 +27,7 @@ import { Toaster } from "sonner";
 import { useEventListener } from "usehooks-ts";
 
 import ErrorBoundary from "@/components/core/ErrorBoundary";
+import OrganizationSwitcher from "@/components/layout/OrganizationSwitcher";
 import signOut from "@/lib/auth/signOut";
 import appConfig from "@/lib/config/app.config";
 import { ACCOUNT_URL } from "@/lib/config/env.config";
@@ -155,6 +156,12 @@ function AuthLayout() {
         {/* Mobile menu overlay */}
         {mobileMenuOpen && (
           <div className="fixed inset-0 z-30 flex flex-col bg-sidebar pt-14 md:hidden print:hidden">
+            {organizations.length > 0 && (
+              <div className="border-sidebar-border border-b p-3">
+                <OrganizationSwitcher />
+              </div>
+            )}
+
             <nav className="flex-1 space-y-1 p-3">
               {navItems.map((item) => (
                 <Link
@@ -224,6 +231,13 @@ function AuthLayout() {
               nameClassName="font-bold text-lg text-primary tracking-tight"
             />
           </div>
+
+          {/* Workspace switcher */}
+          {organizations.length > 0 && (
+            <div className="border-sidebar-border border-b p-3">
+              <OrganizationSwitcher />
+            </div>
+          )}
 
           {/* Nav */}
           <nav className="flex-1 space-y-1 p-3">
