@@ -15,7 +15,18 @@ export const Route = createFileRoute("/_public/")({
       return;
     }
 
-    if (session?.user?.identityProviderId) throw redirect({ to: "/dashboard" });
+    if (session?.user?.identityProviderId) {
+      const orgs = session.organizations ?? [];
+      const org = orgs.find((o) => o.type === "personal") ?? orgs[0];
+      // Zero-org (or degraded) sessions have no workspace URL to land on; fall
+      // through to the landing page rather than redirect to a broken handle
+      if (org) {
+        throw redirect({
+          to: "/@{$workspaceSlug}/~",
+          params: { workspaceSlug: org.slug },
+        });
+      }
+    }
   },
   component: HomePage,
 });
@@ -105,7 +116,9 @@ function HomePage() {
   const handleGetStarted = async () => {
     try {
       await signIn({
-        redirectUrl: `${window.location.origin}/dashboard`,
+        // Land on the base route; its loader resolves the user's workspace and
+        // redirects into `/@{slug}/~`
+        redirectUrl: `${window.location.origin}/`,
         providerId: "omni",
       });
     } catch {

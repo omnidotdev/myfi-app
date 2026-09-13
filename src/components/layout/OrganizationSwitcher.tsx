@@ -1,7 +1,4 @@
-import {
-  gatekeeperDashboardUrl,
-  useOrganization,
-} from "@omnidotdev/providers/react";
+import { gatekeeperDashboardUrl } from "@omnidotdev/providers/react";
 import {
   MenuContent,
   MenuItem,
@@ -10,20 +7,25 @@ import {
   MenuSeparator,
   MenuTrigger,
 } from "@omnidotdev/thornberry/menu";
+import { useNavigate } from "@tanstack/react-router";
 import { Building2, Check, ChevronsUpDown, Settings2 } from "lucide-react";
 
 import { AUTH_BASE_URL } from "@/lib/config/env.config";
+import { useOrganization } from "@/providers/OrganizationProvider";
 
 /**
  * Workspace switcher for the authed shell
  *
- * Reads the user's Omni organizations from the shared organization context
- * (sourced from JWT claims, not a DB query) and switches the active workspace
- * through the provider, which MyFi's data hooks key off for the current
- * organization. This is top-level tenancy, distinct from the per-book picker
+ * Reads the user's Omni organizations from the organization context (sourced
+ * from JWT claims, not a DB query) and switches the active workspace by
+ * navigating to that workspace's URL (`/@{slug}/~`). The URL is the source of
+ * truth, so the switch persists across refresh and deep links; the provider
+ * also records it as last-used. This is top-level tenancy, distinct from the
+ * per-book picker
  */
 const OrganizationSwitcher = () => {
   const orgContext = useOrganization();
+  const navigate = useNavigate();
 
   const organizations = orgContext?.organizations ?? [];
   const current = orgContext?.currentOrganization;
@@ -43,7 +45,15 @@ const OrganizationSwitcher = () => {
         // Anchor items (e.g. manage workspaces) navigate on their own, so only
         // react to values that map to a known organization
         const org = organizations.find((o) => o.id === details.value);
-        if (org) orgContext?.setCurrentOrganization(org.id);
+        if (!org) return;
+
+        // Remember as last-used, then navigate so the URL owns the active
+        // workspace (survives refresh and is shareable)
+        orgContext?.setCurrentOrganization(org.id);
+        navigate({
+          to: "/@{$workspaceSlug}/~",
+          params: { workspaceSlug: org.slug },
+        });
       }}
     >
       <MenuTrigger asChild>

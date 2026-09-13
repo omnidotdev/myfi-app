@@ -5,6 +5,7 @@ import {
   Link,
   Outlet,
   redirect,
+  useParams,
 } from "@tanstack/react-router";
 import {
   BarChart3Icon,
@@ -28,78 +29,64 @@ import { useEventListener } from "usehooks-ts";
 
 import ErrorBoundary from "@/components/core/ErrorBoundary";
 import OrganizationSwitcher from "@/components/layout/OrganizationSwitcher";
+import { isSessionDegraded } from "@/lib/auth/sessionState";
 import signOut from "@/lib/auth/signOut";
 import appConfig from "@/lib/config/app.config";
 import { ACCOUNT_URL } from "@/lib/config/env.config";
 import { OrganizationProvider } from "@/providers/OrganizationProvider";
 import { useTheme } from "@/providers/ThemeProvider";
-import {
-  getLastOrgCookie,
-  setLastOrgCookie,
-} from "@/server/functions/lastWorkspace";
 
 export const Route = createFileRoute("/_app")({
-  beforeLoad: async ({ context: { session } }) => {
+  beforeLoad: ({ context: { session } }) => {
     if (!session?.user) throw redirect({ to: "/" });
-
-    const slug = await getLastOrgCookie();
-    const orgs = session.organizations ?? [];
-
-    const matched = slug ? orgs.find((o) => o.slug === slug) : undefined;
-    const active = matched ?? orgs[0];
-
-    // Persist default when no cookie or cookie didn't match
-    if (active && active.slug !== slug) {
-      await setLastOrgCookie({ data: active.slug });
-    }
-
-    return { organizationId: active?.id };
   },
   component: AuthLayout,
 });
 
+// The active workspace is carried in the URL (`/@{slug}/~/...`), so every nav
+// target is a workspace-scoped template filled with the current slug at render
 const navItems = [
   {
     label: appConfig.modules.dashboard.label,
-    href: "/dashboard",
+    to: "/@{$workspaceSlug}/~",
     icon: LayoutDashboardIcon,
   },
   {
     label: appConfig.modules.ledger.label,
-    href: "/ledger",
+    to: "/@{$workspaceSlug}/~/ledger",
     icon: BookOpenIcon,
   },
   {
     label: appConfig.modules.accounts.label,
-    href: "/accounts",
+    to: "/@{$workspaceSlug}/~/accounts",
     icon: LandmarkIcon,
   },
   {
     label: appConfig.modules.budgets.label,
-    href: "/budgets",
+    to: "/@{$workspaceSlug}/~/budgets",
     icon: WalletIcon,
   },
   {
     label: appConfig.modules.crypto.label,
-    href: "/crypto",
+    to: "/@{$workspaceSlug}/~/crypto",
     icon: BitcoinIcon,
   },
   {
     label: appConfig.modules.assets.label,
-    href: "/assets",
+    to: "/@{$workspaceSlug}/~/assets",
     icon: HardDriveIcon,
   },
   {
     label: appConfig.modules.mileage.label,
-    href: "/mileage",
+    to: "/@{$workspaceSlug}/~/mileage",
     icon: CarIcon,
   },
   {
     label: appConfig.modules.reports.label,
-    href: "/reports",
+    to: "/@{$workspaceSlug}/~/reports",
     icon: BarChart3Icon,
   },
-];
+] as const;
 
 function AuthLayout() {
   const { session } = Route.useRouteContext();
@@ -130,8 +117,22 @@ function AuthLayout() {
     [session?.organizations],
   );
 
+  // The URL owns the active workspace; the provider resolves it (falling back to
+  // last-used, then first org). For nav link params we need a concrete slug, so
+  // mirror that fallback here (personal org preferred)
+  const { workspaceSlug } = useParams({ strict: false });
+  const navSlug =
+    workspaceSlug ??
+    organizations.find((o) => o.type === "personal")?.slug ??
+    organizations[0]?.slug ??
+    "";
+
   return (
-    <OrganizationProvider organizations={organizations}>
+    <OrganizationProvider
+      organizations={organizations}
+      activeSlug={workspaceSlug}
+      isDegraded={isSessionDegraded(session)}
+    >
       <div className="flex h-dvh w-full">
         {/* Mobile top bar */}
         <div className="fixed inset-x-0 top-0 z-40 flex h-14 items-center gap-3 border-sidebar-border border-b bg-sidebar px-4 md:hidden print:hidden">
@@ -165,8 +166,9 @@ function AuthLayout() {
             <nav className="flex-1 space-y-1 p-3">
               {navItems.map((item) => (
                 <Link
-                  key={item.href}
-                  to={item.href}
+                  key={item.to}
+                  to={item.to}
+                  params={{ workspaceSlug: navSlug }}
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center gap-3 rounded-md px-3 py-2 font-medium text-sidebar-foreground text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 >
@@ -243,8 +245,9 @@ function AuthLayout() {
           <nav className="flex-1 space-y-1 p-3">
             {navItems.map((item) => (
               <Link
-                key={item.href}
-                to={item.href}
+                key={item.to}
+                to={item.to}
+                params={{ workspaceSlug: navSlug }}
                 className="flex items-center gap-3 rounded-md px-3 py-2 font-medium text-sidebar-foreground text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               >
                 <item.icon className="size-4" />

@@ -4,7 +4,11 @@ import {
   GLOBAL_HOTKEYS,
   hotkeyLabel,
 } from "@omnidotdev/thornberry/use-hotkeys";
-import { useNavigate, useRouteContext } from "@tanstack/react-router";
+import {
+  useNavigate,
+  useParams,
+  useRouteContext,
+} from "@tanstack/react-router";
 import {
   BarChart3Icon,
   BookOpenIcon,
@@ -29,6 +33,15 @@ const CommandPalette = () => {
   const { theme, setTheme } = useTheme();
   const { session } = useRouteContext({ from: "__root__" });
 
+  // The active workspace is carried in the URL; when the palette is opened off a
+  // workspace route (e.g. the landing page) fall back to the user's own org so
+  // the nav targets still resolve to a valid handle
+  const { workspaceSlug } = useParams({ strict: false });
+  const activeWorkspaceSlug =
+    workspaceSlug ??
+    session?.organizations?.find((o) => o.type === "personal")?.slug ??
+    session?.organizations?.[0]?.slug;
+
   const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
 
   // The authenticated layout (`_app`) already binds "t" to the theme toggle, so
@@ -43,14 +56,19 @@ const CommandPalette = () => {
       onSelect: () => navigate({ to: "/" }),
     },
     // Navigation into the authenticated app is only offered to signed-in users
-    ...(session?.user
+    // with a resolvable workspace handle
+    ...(session?.user && activeWorkspaceSlug
       ? ([
           {
             id: "dashboard",
             label: "Dashboard",
             group: "Navigation",
             icon: LayoutDashboardIcon,
-            onSelect: () => navigate({ to: "/dashboard" }),
+            onSelect: () =>
+              navigate({
+                to: "/@{$workspaceSlug}/~",
+                params: { workspaceSlug: activeWorkspaceSlug },
+              }),
           },
           {
             id: "ledger",
@@ -58,35 +76,55 @@ const CommandPalette = () => {
             group: "Navigation",
             icon: BookOpenIcon,
             keywords: ["transactions"],
-            onSelect: () => navigate({ to: "/ledger" }),
+            onSelect: () =>
+              navigate({
+                to: "/@{$workspaceSlug}/~/ledger",
+                params: { workspaceSlug: activeWorkspaceSlug },
+              }),
           },
           {
             id: "accounts",
             label: "Accounts",
             group: "Navigation",
             icon: LandmarkIcon,
-            onSelect: () => navigate({ to: "/accounts" }),
+            onSelect: () =>
+              navigate({
+                to: "/@{$workspaceSlug}/~/accounts",
+                params: { workspaceSlug: activeWorkspaceSlug },
+              }),
           },
           {
             id: "budgets",
             label: "Budgets",
             group: "Navigation",
             icon: WalletIcon,
-            onSelect: () => navigate({ to: "/budgets" }),
+            onSelect: () =>
+              navigate({
+                to: "/@{$workspaceSlug}/~/budgets",
+                params: { workspaceSlug: activeWorkspaceSlug },
+              }),
           },
           {
             id: "reports",
             label: "Reports",
             group: "Navigation",
             icon: BarChart3Icon,
-            onSelect: () => navigate({ to: "/reports" }),
+            onSelect: () =>
+              navigate({
+                to: "/@{$workspaceSlug}/~/reports",
+                params: { workspaceSlug: activeWorkspaceSlug },
+              }),
           },
           {
             id: "settings",
             label: "Settings",
             group: "Navigation",
             icon: SettingsIcon,
-            onSelect: () => navigate({ to: "/settings" }),
+            onSelect: () =>
+              navigate({
+                to: "/@{$workspaceSlug}/~/settings",
+                params: { workspaceSlug: activeWorkspaceSlug },
+              }),
           },
         ] satisfies CommandAction[])
       : []),
