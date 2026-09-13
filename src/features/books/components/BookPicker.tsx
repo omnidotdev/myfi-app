@@ -1,6 +1,3 @@
-import { Link } from "@tanstack/react-router";
-import { PlusIcon } from "lucide-react";
-
 import type { Book } from "@/features/books/types/book";
 
 type BookPickerProps = {
@@ -15,18 +12,8 @@ const ALL_BOOKS_VALUE = "__all__";
  * Dropdown for switching between books
  */
 function BookPicker({ books, selectedBookId, onSelect }: BookPickerProps) {
-  // With no books there is nothing to switch between, so guide the user to create one
-  if (books.length === 0) {
-    return (
-      <Link
-        to="/settings/books"
-        className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
-      >
-        <PlusIcon className="size-4" />
-        Create book
-      </Link>
-    );
-  }
+  // With no books there is nothing to switch between, so render nothing (the empty-state message guides the user elsewhere)
+  if (books.length === 0) return null;
 
   return (
     <select

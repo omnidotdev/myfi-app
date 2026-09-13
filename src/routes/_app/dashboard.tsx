@@ -505,7 +505,14 @@ function DashboardPage() {
       {!loading && showAllBooks && !summary && (
         <div className="rounded-lg border border-border bg-card p-8 text-center">
           <p className="text-muted-foreground text-sm">
-            No books available yet
+            No books available yet.{" "}
+            <Link
+              to="/settings/books"
+              className="font-medium text-primary underline-offset-4 hover:underline"
+            >
+              Create a book
+            </Link>{" "}
+            to get started.
           </p>
         </div>
       )}
