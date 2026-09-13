@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Loader2Icon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -47,7 +47,12 @@ function QuickbooksSettingsPage() {
   const oauthErrorShown = useRef(false);
 
   const fetchStatus = useCallback(async () => {
-    if (!activeBookId) return;
+    // No active book means there is nothing to fetch, so resolve loading and
+    // let the empty state render instead of an infinite spinner
+    if (!activeBookId) {
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch(
@@ -149,12 +154,31 @@ function QuickbooksSettingsPage() {
         </div>
       )}
 
-      {!loading && !connection && (
+      {!loading && !activeBookId && (
+        <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-border bg-card p-8 text-center">
+          <div className="flex flex-col gap-1">
+            <h2 className="font-semibold text-lg">Connect QuickBooks</h2>
+            <p className="text-muted-foreground text-sm">
+              Select a book from the top-right menu, or create one in Settings
+              {" -> "}
+              Books, to start a QuickBooks migration.
+            </p>
+          </div>
+          <Link
+            to="/settings/books"
+            className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
+          >
+            Go to Books
+          </Link>
+        </div>
+      )}
+
+      {!loading && activeBookId && !connection && (
         <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-border bg-card p-8">
           <p className="text-center text-muted-foreground text-sm">
             Connect your QuickBooks account to import your existing books
           </p>
-          <QuickBooksConnectButton bookId={activeBookId ?? ""} />
+          <QuickBooksConnectButton bookId={activeBookId} />
         </div>
       )}
 
