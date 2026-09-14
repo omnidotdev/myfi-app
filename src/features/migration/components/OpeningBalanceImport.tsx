@@ -42,8 +42,8 @@ const toIsoDate = (text: string | null): string => {
 /**
  * File-based QuickBooks migration: upload a Trial Balance CSV, review the
  * auto-matched accounts (resolving any the matcher could not place), confirm the
- * cutover date, and import the opening balances. Re-running replaces the prior
- * opening-balance entry, so a slipped cutover date never duplicates.
+ * as-of date, and import the opening balances. Re-running replaces the prior
+ * opening-balance entry, so re-importing to stay in parity never duplicates.
  */
 function OpeningBalanceImport({ bookId }: Props) {
   const [accounts, setAccounts] = useState<MyfiAccount[]>([]);
@@ -169,10 +169,11 @@ function OpeningBalanceImport({ bookId }: Props) {
         <h2 className="font-semibold text-lg">Migrate from QuickBooks</h2>
         <p className="text-muted-foreground text-sm">
           Export your <span className="font-medium">Trial Balance</span> from
-          QuickBooks (Reports {"->"} Trial Balance, as of your cutover date,
-          save as CSV) and upload it here. MyFi imports it as your opening
-          balances. Re-uploading a newer export replaces the prior opening
-          balances, so a shifting cutover date never double-counts.
+          QuickBooks (Reports {"->"} Trial Balance, on a Cash basis, as of the
+          date your books are current through, save as CSV) and upload it here.
+          MyFi imports it as your opening balances. Re-uploading a newer export
+          replaces the prior balances, so you can keep re-importing to stay in
+          parity as your bookkeeping progresses.
         </p>
       </div>
 
@@ -213,7 +214,7 @@ function OpeningBalanceImport({ bookId }: Props) {
               {result.replaced
                 ? " (replaced the previous opening balances)"
                 : ""}
-              . Your books tie out to this trial balance as of the cutover date.
+              . Your books now match this trial balance as of that date.
             </p>
           </div>
         </div>
@@ -237,13 +238,13 @@ function OpeningBalanceImport({ bookId }: Props) {
             </div>
             <div className="flex flex-col">
               <label
-                htmlFor="cutover-date"
+                htmlFor="as-of-date"
                 className="text-muted-foreground text-xs"
               >
-                Cutover date
+                As-of date
               </label>
               <input
-                id="cutover-date"
+                id="as-of-date"
                 type="date"
                 value={asOf}
                 onChange={(e) => setAsOf(e.target.value)}
@@ -318,7 +319,7 @@ function OpeningBalanceImport({ bookId }: Props) {
       <ConfirmDialog
         open={confirmOpen}
         title="Import opening balances"
-        description={`This sets the opening balances as of ${asOf} and replaces any opening balances imported before. Continue?`}
+        description={`This sets the opening balances as of ${asOf} and replaces any imported before. Safe to re-run as your books update. Continue?`}
         confirmLabel="Import"
         loading={importing}
         onConfirm={runImport}
