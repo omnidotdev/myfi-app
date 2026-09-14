@@ -236,7 +236,7 @@ function AuthLayout() {
           <div className="flex h-16 items-center gap-2 border-sidebar-border border-b px-4">
             <LogoLockup
               name={appConfig.name}
-              nameClassName="font-bold text-lg text-primary tracking-tight"
+              nameClassName="font-medium font-serif text-foreground text-xl tracking-tight"
             />
           </div>
 
