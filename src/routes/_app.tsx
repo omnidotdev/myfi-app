@@ -18,6 +18,7 @@ import {
   LogOutIcon,
   MenuIcon,
   MoonIcon,
+  SettingsIcon,
   SunIcon,
   UserCogIcon,
   WalletIcon,
@@ -85,6 +86,11 @@ const navItems = [
     label: appConfig.modules.reports.label,
     to: "/@{$workspaceSlug}/~/reports",
     icon: BarChart3Icon,
+  },
+  {
+    label: "Settings",
+    to: "/@{$workspaceSlug}/~/settings",
+    icon: SettingsIcon,
   },
 ] as const;
 

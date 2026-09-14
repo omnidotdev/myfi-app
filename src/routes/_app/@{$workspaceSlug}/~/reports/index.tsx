@@ -25,99 +25,101 @@ const reportCards = [
     description:
       "Revenue minus expenses over a date range. See where your money comes from and where it goes",
     icon: BarChart3Icon,
-    href: "/reports/profit-and-loss",
+    href: "/@{$workspaceSlug}/~/reports/profit-and-loss",
   },
   {
     title: "Balance Sheet",
     description:
       "Assets, liabilities, and equity as of a specific date. A snapshot of your financial position",
     icon: ScaleIcon,
-    href: "/reports/balance-sheet",
+    href: "/@{$workspaceSlug}/~/reports/balance-sheet",
   },
   {
     title: "Trial Balance",
     description:
       "Debit and credit totals for all accounts. Verify that your books are balanced",
     icon: FileSpreadsheetIcon,
-    href: "/reports/trial-balance",
+    href: "/@{$workspaceSlug}/~/reports/trial-balance",
   },
   {
     title: "Cash Flow Statement",
     description:
       "Track cash movements across operating, investing, and financing activities",
     icon: ArrowRightLeftIcon,
-    href: "/reports/cash-flow",
+    href: "/@{$workspaceSlug}/~/reports/cash-flow",
   },
   {
     title: "General Ledger",
     description:
       "Full transaction history for a specific account with running balance",
     icon: BookOpenIcon,
-    href: "/reports/general-ledger",
+    href: "/@{$workspaceSlug}/~/reports/general-ledger",
   },
   {
     title: "Schedule C",
     description:
       "Self-employment income and expenses grouped by IRS categories",
     icon: ReceiptTextIcon,
-    href: "/reports/schedule-c",
+    href: "/@{$workspaceSlug}/~/reports/schedule-c",
   },
   {
     title: "Form 8949",
     description:
       "Crypto capital gains and losses classified as short-term or long-term",
     icon: CoinsIcon,
-    href: "/reports/form-8949",
+    href: "/@{$workspaceSlug}/~/reports/form-8949",
   },
   {
     title: "Quarterly Estimates",
     description:
       "Estimated tax payments with due dates and safe harbor calculations",
     icon: CalendarIcon,
-    href: "/reports/quarterly-estimates",
+    href: "/@{$workspaceSlug}/~/reports/quarterly-estimates",
   },
   {
     title: "Tax-Loss Harvesting",
     description:
       "Identify crypto positions with unrealized losses to offset capital gains",
     icon: LeafIcon,
-    href: "/reports/tax-loss-harvesting",
+    href: "/@{$workspaceSlug}/~/reports/tax-loss-harvesting",
   },
   {
     title: "Sales Tax",
     description:
       "Tax collected, remitted, and owed by jurisdiction and filing period",
     icon: LandmarkIcon,
-    href: "/reports/sales-tax",
+    href: "/@{$workspaceSlug}/~/reports/sales-tax",
   },
   {
     title: "1099-NEC",
     description:
       "Non-employee compensation reporting for vendors meeting the filing threshold",
     icon: UsersIcon,
-    href: "/reports/1099",
+    href: "/@{$workspaceSlug}/~/reports/1099",
   },
   {
     title: "Payroll",
     description: "Payroll runs, wages, taxes, and benefits summarized by year",
     icon: DollarSignIcon,
-    href: "/reports/payroll",
+    href: "/@{$workspaceSlug}/~/reports/payroll",
   },
   {
     title: "AP Aging",
     description: "Outstanding payables grouped by vendor and aging bucket",
     icon: ClockIcon,
-    href: "/reports/ap-aging",
+    href: "/@{$workspaceSlug}/~/reports/ap-aging",
   },
   {
     title: "AR Aging",
     description: "Outstanding receivables grouped by customer and aging bucket",
     icon: ClockIcon,
-    href: "/reports/ar-aging",
+    href: "/@{$workspaceSlug}/~/reports/ar-aging",
   },
 ];
 
 function ReportsPage() {
+  const { workspaceSlug } = Route.useParams();
+
   return (
     <div className="flex flex-col gap-6 p-6">
       <div>
@@ -132,6 +134,7 @@ function ReportsPage() {
           <Link
             key={card.href}
             to={card.href}
+            params={{ workspaceSlug }}
             className="group flex flex-col gap-3 rounded-lg border border-border bg-card p-6 transition-colors hover:border-primary/50 hover:bg-accent/50"
           >
             <div className="flex size-10 items-center justify-center rounded-md bg-primary/10 text-primary">
