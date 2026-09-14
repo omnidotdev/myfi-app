@@ -2,7 +2,9 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { ArrowRightIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import NoWorkspace from "@/components/NoWorkspace";
 import NetWorthComposition from "@/features/marketing/components/NetWorthComposition";
+import { isSessionDegraded } from "@/lib/auth/sessionState";
 import signIn from "@/lib/auth/signIn";
 import appConfig from "@/lib/config/app.config";
 import { signOutLocal } from "@/server/functions/auth";
@@ -111,6 +113,22 @@ function Eyebrow({ children }: { children: string }) {
 }
 
 function HomePage() {
+  const { session } = Route.useRouteContext();
+
+  // An authed, provisioned user only reaches this route with no workspace (the
+  // loader redirects everyone else into /@{slug}/~). Show a real "no workspace"
+  // state rather than the marketing page, which would look like being signed out
+  if (
+    session?.user?.identityProviderId &&
+    (session.organizations ?? []).length === 0
+  ) {
+    return <NoWorkspace degraded={isSessionDegraded(session)} />;
+  }
+
+  return <Landing />;
+}
+
+function Landing() {
   const [openModule, setOpenModule] = useState(0);
 
   const handleGetStarted = async () => {
