@@ -218,7 +218,12 @@ function ConnectionsSettingsPage() {
       const res = await fetch(`${API_URL}/api/payroll/connect`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bookId: activeBookId }),
+        // Return the browser to this workspace-scoped page after the OAuth
+        // round-trip (the callback runs on the API host and has no slug)
+        body: JSON.stringify({
+          bookId: activeBookId,
+          returnPath: window.location.pathname,
+        }),
       });
       const json = await res.json();
 

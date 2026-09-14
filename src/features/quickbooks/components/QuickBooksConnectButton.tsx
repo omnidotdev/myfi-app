@@ -23,7 +23,12 @@ function QuickBooksConnectButton({ bookId }: Props) {
       const res = await apiFetch(`/api/quickbooks/connect`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bookId }),
+        // Return the browser to the current workspace-scoped page after the
+        // OAuth round-trip (the callback runs on the API host and has no slug)
+        body: JSON.stringify({
+          bookId,
+          returnPath: window.location.pathname,
+        }),
       });
 
       const data = await res.json();
