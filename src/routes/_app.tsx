@@ -176,6 +176,11 @@ function AuthLayout() {
                   to={item.to}
                   params={{ workspaceSlug: navSlug }}
                   onClick={() => setMobileMenuOpen(false)}
+                  activeOptions={{ exact: item.to === "/@{$workspaceSlug}/~" }}
+                  activeProps={{
+                    className:
+                      "bg-sidebar-accent text-sidebar-accent-foreground",
+                  }}
                   className="flex items-center gap-3 rounded-md px-3 py-2 font-medium text-sidebar-foreground text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 >
                   <item.icon className="size-4" />
@@ -254,6 +259,10 @@ function AuthLayout() {
                 key={item.to}
                 to={item.to}
                 params={{ workspaceSlug: navSlug }}
+                activeOptions={{ exact: item.to === "/@{$workspaceSlug}/~" }}
+                activeProps={{
+                  className: "bg-sidebar-accent text-sidebar-accent-foreground",
+                }}
                 className="flex items-center gap-3 rounded-md px-3 py-2 font-medium text-sidebar-foreground text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               >
                 <item.icon className="size-4" />
