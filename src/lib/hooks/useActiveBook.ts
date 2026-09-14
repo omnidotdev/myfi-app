@@ -27,6 +27,16 @@ const useActiveBook = () => {
       .finally(() => setIsLoading(false));
   }, [organizationId]);
 
+  // Default the active book to the first one when nothing valid is selected
+  // (first run, or the previously-selected book was deleted). Without this a
+  // user with a book but no selection sees "no active book" empty states and
+  // dead-ends (e.g. the QuickBooks page never shows its connect button)
+  useEffect(() => {
+    if (books.length === 0) return;
+    const hasValidSelection = books.some((b) => b.rowId === activeBookId);
+    if (!hasValidSelection) setActiveBookId(books[0].rowId);
+  }, [books, activeBookId, setActiveBookId]);
+
   const activeBook = books.find((b) => b.rowId === activeBookId) ?? null;
 
   return {
