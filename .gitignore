@@ -4,4 +4,8 @@ node_modules/
 dist/
 .env.local
 generated/
+# Track the committed GraphQL client artifact so CI (which does not run codegen)
+# can typecheck and run the codegen-artifact guardrail test. Regenerate with
+# `bun graphql:generate` when the API schema changes
+!/src/generated/
 *.tsbuildinfo
