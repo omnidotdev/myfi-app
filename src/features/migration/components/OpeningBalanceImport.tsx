@@ -1,9 +1,4 @@
-import {
-  AlertTriangleIcon,
-  CheckCircle2Icon,
-  Loader2Icon,
-  UploadIcon,
-} from "lucide-react";
+import { CheckCircle2Icon, Loader2Icon, UploadIcon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -12,11 +7,12 @@ import { apiFetch } from "@/lib/api/apiFetch";
 
 type MyfiAccount = { id: string; name: string; code?: string | null };
 
-type UnmatchedAccount = {
+type CreateAccount = {
   name: string;
   accountNum?: string;
   debit: number;
   credit: number;
+  type: string;
 };
 
 type Preview = {
@@ -24,14 +20,19 @@ type Preview = {
   accountCount: number;
   balances: boolean;
   matched: { name: string; debit: number; credit: number }[];
-  unmatched: UnmatchedAccount[];
+  toCreate: CreateAccount[];
 };
 
-type ImportResult = { imported: number; replaced: boolean; asOf: string };
+type ImportResult = {
+  imported: number;
+  created: number;
+  replaced: boolean;
+  asOf: string;
+};
 
 type Props = { bookId: string };
 
-/** Convert a QuickBooks "As of" date (e.g. "August 31, 2026") to YYYY-MM-DD */
+/** Convert a QuickBooks "As of" date (e.g. "Sep 13, 2026") to YYYY-MM-DD */
 const toIsoDate = (text: string | null): string => {
   if (!text) return "";
   const parsed = new Date(text);
@@ -41,14 +42,16 @@ const toIsoDate = (text: string | null): string => {
 
 /**
  * File-based QuickBooks migration: upload a Trial Balance CSV, review the
- * auto-matched accounts (resolving any the matcher could not place), confirm the
- * as-of date, and import the opening balances. Re-running replaces the prior
- * opening-balance entry, so re-importing to stay in parity never duplicates.
+ * balances (accounts matched to the chart, plus any that will be created to
+ * mirror QuickBooks), confirm the as-of date, and import the opening balances.
+ * Re-running replaces the prior opening-balance entry, so re-importing to stay
+ * in parity never duplicates.
  */
 function OpeningBalanceImport({ bookId }: Props) {
   const [accounts, setAccounts] = useState<MyfiAccount[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<Preview | null>(null);
+  // Optional overrides: map a to-create account onto an existing MyFi account
   const [mappings, setMappings] = useState<Record<string, string>>({});
   const [asOf, setAsOf] = useState("");
   const [previewing, setPreviewing] = useState(false);
@@ -58,7 +61,6 @@ function OpeningBalanceImport({ bookId }: Props) {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load the book's chart so unmatched accounts can be mapped to a MyFi account
   useEffect(() => {
     apiFetch(`/api/accounts?bookId=${bookId}`)
       .then((r) => r.json())
@@ -124,10 +126,8 @@ function OpeningBalanceImport({ bookId }: Props) {
     if (selected) runPreview(selected);
   };
 
-  const allResolved =
-    !!preview && preview.unmatched.every((u) => mappings[u.name]);
   const dateValid = /^\d{4}-\d{2}-\d{2}$/.test(asOf);
-  const canImport = !!file && !!preview && allResolved && dateValid;
+  const canImport = !!file && !!preview && preview.balances && dateValid;
 
   const runImport = useCallback(async () => {
     if (!file) return;
@@ -171,13 +171,13 @@ function OpeningBalanceImport({ bookId }: Props) {
           Export your <span className="font-medium">Trial Balance</span> from
           QuickBooks (Reports {"->"} Trial Balance, on a Cash basis, as of the
           date your books are current through, save as CSV) and upload it here.
-          MyFi imports it as your opening balances. Re-uploading a newer export
-          replaces the prior balances, so you can keep re-importing to stay in
-          parity as your bookkeeping progresses.
+          MyFi imports it as your opening balances, creating any accounts it
+          does not already have so your chart mirrors QuickBooks. Re-uploading a
+          newer export replaces the prior balances, so you can re-import to stay
+          in parity as your bookkeeping progresses.
         </p>
       </div>
 
-      {/* Upload */}
       <div>
         <input
           ref={fileInputRef}
@@ -201,7 +201,6 @@ function OpeningBalanceImport({ bookId }: Props) {
         </button>
       </div>
 
-      {/* Result */}
       {result && (
         <div className="flex items-start gap-3 rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-900 dark:bg-green-950">
           <CheckCircle2Icon className="mt-0.5 size-5 text-green-600 dark:text-green-400" />
@@ -211,16 +210,14 @@ function OpeningBalanceImport({ bookId }: Props) {
             </p>
             <p className="text-green-700 dark:text-green-400">
               {result.imported} accounts posted
-              {result.replaced
-                ? " (replaced the previous opening balances)"
-                : ""}
-              . Your books now match this trial balance as of that date.
+              {result.created > 0 ? `, ${result.created} created` : ""}
+              {result.replaced ? " (replaced the previous import)" : ""}. Your
+              books now match this trial balance as of that date.
             </p>
           </div>
         </div>
       )}
 
-      {/* Preview + resolve */}
       {preview && !result && (
         <div className="flex flex-col gap-4">
           <div className="flex flex-wrap items-center gap-4 rounded-lg border border-border bg-card p-4">
@@ -229,11 +226,19 @@ function OpeningBalanceImport({ bookId }: Props) {
               <span className="font-medium">{preview.accountCount}</span>
             </div>
             <div className="flex flex-col">
+              <span className="text-muted-foreground text-xs">Matched</span>
+              <span className="font-medium">{preview.matched.length}</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-muted-foreground text-xs">To create</span>
+              <span className="font-medium">{preview.toCreate.length}</span>
+            </div>
+            <div className="flex flex-col">
               <span className="text-muted-foreground text-xs">Balances</span>
               <span
                 className={`font-medium ${preview.balances ? "text-green-600" : "text-destructive"}`}
               >
-                {preview.balances ? "Yes" : "No — not a balanced trial balance"}
+                {preview.balances ? "Yes" : "No"}
               </span>
             </div>
             <div className="flex flex-col">
@@ -253,41 +258,48 @@ function OpeningBalanceImport({ bookId }: Props) {
             </div>
           </div>
 
-          {preview.unmatched.length > 0 && (
-            <div className="flex flex-col gap-2 rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-900 dark:bg-amber-950">
-              <div className="flex items-center gap-2">
-                <AlertTriangleIcon className="size-4 text-amber-600 dark:text-amber-400" />
-                <span className="font-medium text-amber-800 text-sm dark:text-amber-300">
-                  {preview.unmatched.length} account
-                  {preview.unmatched.length === 1 ? "" : "s"} need mapping
-                </span>
-              </div>
-              <p className="text-amber-700 text-xs dark:text-amber-400">
-                Pick the MyFi account each QuickBooks account maps to.
+          {preview.toCreate.length > 0 && (
+            <div className="flex flex-col gap-2 rounded-lg border border-border bg-card p-4">
+              <span className="font-medium text-sm">
+                {preview.toCreate.length} account
+                {preview.toCreate.length === 1 ? "" : "s"} will be created to
+                mirror QuickBooks
+              </span>
+              <p className="text-muted-foreground text-xs">
+                MyFi guesses each type from the account number; you can change
+                it later, or map one onto an existing MyFi account instead.
               </p>
 
               <div className="mt-2 flex flex-col gap-2">
-                {preview.unmatched.map((u) => (
+                {preview.toCreate.map((a) => (
                   <div
-                    key={u.name}
+                    key={a.name}
                     className="flex flex-wrap items-center gap-2 text-sm"
                   >
                     <span className="min-w-40 flex-1 truncate">
-                      {u.accountNum ? `${u.accountNum} ` : ""}
-                      {u.name}
+                      {a.accountNum ? `${a.accountNum} ` : ""}
+                      {a.name}
+                    </span>
+                    <span className="rounded-full bg-muted px-2 py-0.5 text-muted-foreground text-xs capitalize">
+                      {a.type}
                     </span>
                     <select
-                      value={mappings[u.name] ?? ""}
+                      value={mappings[a.name] ?? ""}
                       onChange={(e) =>
-                        setMappings((m) => ({ ...m, [u.name]: e.target.value }))
+                        setMappings((m) => {
+                          const next = { ...m };
+                          if (e.target.value) next[a.name] = e.target.value;
+                          else delete next[a.name];
+                          return next;
+                        })
                       }
                       className="rounded-md border border-border bg-background px-2 py-1 text-sm"
                     >
-                      <option value="">Select MyFi account…</option>
-                      {accounts.map((a) => (
-                        <option key={a.id} value={a.id}>
-                          {a.code ? `${a.code} ` : ""}
-                          {a.name}
+                      <option value="">Create new</option>
+                      {accounts.map((existing) => (
+                        <option key={existing.id} value={existing.id}>
+                          Map to: {existing.code ? `${existing.code} ` : ""}
+                          {existing.name}
                         </option>
                       ))}
                     </select>
