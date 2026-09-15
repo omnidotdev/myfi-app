@@ -12,6 +12,7 @@ import {
   BitcoinIcon,
   BookOpenIcon,
   CarIcon,
+  FileTextIcon,
   HardDriveIcon,
   LandmarkIcon,
   LayoutDashboardIcon,
@@ -21,6 +22,7 @@ import {
   SettingsIcon,
   SunIcon,
   UserCogIcon,
+  UsersIcon,
   WalletIcon,
   XIcon,
 } from "lucide-react";
@@ -61,6 +63,16 @@ const navItems = [
     label: appConfig.modules.accounts.label,
     to: "/@{$workspaceSlug}/~/accounts",
     icon: LandmarkIcon,
+  },
+  {
+    label: "Invoices",
+    to: "/@{$workspaceSlug}/~/invoices",
+    icon: FileTextIcon,
+  },
+  {
+    label: "Customers",
+    to: "/@{$workspaceSlug}/~/customers",
+    icon: UsersIcon,
   },
   {
     label: appConfig.modules.budgets.label,
