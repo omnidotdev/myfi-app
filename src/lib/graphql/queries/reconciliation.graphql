@@ -1,4 +1,4 @@
-query PendingReconciliation($bookId: UUID!, $status: ReconciliationStatus) {
+query PendingReconciliation($bookId: UUID!, $status: String) {
   reconciliationQueues(condition: { bookId: $bookId, status: $status }) {
     nodes {
       rowId

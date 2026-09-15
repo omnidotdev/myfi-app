@@ -607,16 +607,6 @@ export type Book = Node & {
   organizationId: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `PayrollConnection`. */
   payrollConnections: PayrollConnectionConnection;
-  /** Reads and enables pagination through a set of `QuickbooksAccountMap`. */
-  quickbooksAccountMaps: QuickbooksAccountMapConnection;
-  /** Reads and enables pagination through a set of `QuickbooksCutover`. */
-  quickbooksCutovers: QuickbooksCutoverConnection;
-  /** Reads and enables pagination through a set of `QuickbooksMigration`. */
-  quickbooksMigrations: QuickbooksMigrationConnection;
-  /** Reads and enables pagination through a set of `QuickbooksReconciliationLine`. */
-  quickbooksReconciliationLines: QuickbooksReconciliationLineConnection;
-  /** Reads and enables pagination through a set of `QuickbooksReconciliation`. */
-  quickbooksReconciliations: QuickbooksReconciliationConnection;
   /** Reads and enables pagination through a set of `ReconciliationQueue`. */
   reconciliationQueues: ReconciliationQueueConnection;
   /** Reads and enables pagination through a set of `ReconciliationStatement`. */
@@ -630,7 +620,7 @@ export type Book = Node & {
   tagGroups: TagGroupConnection;
   /** Reads and enables pagination through a set of `TaxJurisdiction`. */
   taxJurisdictions: TaxJurisdictionConnection;
-  type: BookType;
+  type: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['Datetime']['output']>;
   /** Reads and enables pagination through a set of `Vehicle`. */
   vehicles: VehicleConnection;
@@ -792,66 +782,6 @@ export type BookPayrollConnectionsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PayrollConnectionOrderBy>>;
-};
-
-
-export type BookQuickbooksAccountMapsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<QuickbooksAccountMapCondition>;
-  filter?: InputMaybe<QuickbooksAccountMapFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<QuickbooksAccountMapOrderBy>>;
-};
-
-
-export type BookQuickbooksCutoversArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<QuickbooksCutoverCondition>;
-  filter?: InputMaybe<QuickbooksCutoverFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<QuickbooksCutoverOrderBy>>;
-};
-
-
-export type BookQuickbooksMigrationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<QuickbooksMigrationCondition>;
-  filter?: InputMaybe<QuickbooksMigrationFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<QuickbooksMigrationOrderBy>>;
-};
-
-
-export type BookQuickbooksReconciliationLinesArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<QuickbooksReconciliationLineCondition>;
-  filter?: InputMaybe<QuickbooksReconciliationLineFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<QuickbooksReconciliationLineOrderBy>>;
-};
-
-
-export type BookQuickbooksReconciliationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<QuickbooksReconciliationCondition>;
-  filter?: InputMaybe<QuickbooksReconciliationFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<QuickbooksReconciliationOrderBy>>;
 };
 
 
@@ -1145,26 +1075,6 @@ export type BookFilter = {
   payrollConnections?: InputMaybe<BookToManyPayrollConnectionFilter>;
   /** Some related `payrollConnections` exist. */
   payrollConnectionsExist?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Filter by the object’s `quickbooksAccountMaps` relation. */
-  quickbooksAccountMaps?: InputMaybe<BookToManyQuickbooksAccountMapFilter>;
-  /** Some related `quickbooksAccountMaps` exist. */
-  quickbooksAccountMapsExist?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Filter by the object’s `quickbooksCutovers` relation. */
-  quickbooksCutovers?: InputMaybe<BookToManyQuickbooksCutoverFilter>;
-  /** Some related `quickbooksCutovers` exist. */
-  quickbooksCutoversExist?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Filter by the object’s `quickbooksMigrations` relation. */
-  quickbooksMigrations?: InputMaybe<BookToManyQuickbooksMigrationFilter>;
-  /** Some related `quickbooksMigrations` exist. */
-  quickbooksMigrationsExist?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Filter by the object’s `quickbooksReconciliationLines` relation. */
-  quickbooksReconciliationLines?: InputMaybe<BookToManyQuickbooksReconciliationLineFilter>;
-  /** Some related `quickbooksReconciliationLines` exist. */
-  quickbooksReconciliationLinesExist?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Filter by the object’s `quickbooksReconciliations` relation. */
-  quickbooksReconciliations?: InputMaybe<BookToManyQuickbooksReconciliationFilter>;
-  /** Some related `quickbooksReconciliations` exist. */
-  quickbooksReconciliationsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `reconciliationQueues` relation. */
   reconciliationQueues?: InputMaybe<BookToManyReconciliationQueueFilter>;
   /** Some related `reconciliationQueues` exist. */
@@ -1209,7 +1119,7 @@ export type BookInput = {
   name: Scalars['String']['input'];
   organizationId: Scalars['String']['input'];
   rowId?: InputMaybe<Scalars['UUID']['input']>;
-  type: BookType;
+  type: Scalars['String']['input'];
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -1232,7 +1142,7 @@ export type BookPatch = {
   name?: InputMaybe<Scalars['String']['input']>;
   organizationId?: InputMaybe<Scalars['String']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
-  type?: InputMaybe<BookType>;
+  type?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -1366,56 +1276,6 @@ export type BookToManyPayrollConnectionFilter = {
   some?: InputMaybe<PayrollConnectionFilter>;
 };
 
-/** A filter to be used against many `QuickbooksAccountMap` object types. All fields are combined with a logical ‘and.’ */
-export type BookToManyQuickbooksAccountMapFilter = {
-  /** Every related `QuickbooksAccountMap` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<QuickbooksAccountMapFilter>;
-  /** No related `QuickbooksAccountMap` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<QuickbooksAccountMapFilter>;
-  /** Some related `QuickbooksAccountMap` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<QuickbooksAccountMapFilter>;
-};
-
-/** A filter to be used against many `QuickbooksCutover` object types. All fields are combined with a logical ‘and.’ */
-export type BookToManyQuickbooksCutoverFilter = {
-  /** Every related `QuickbooksCutover` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<QuickbooksCutoverFilter>;
-  /** No related `QuickbooksCutover` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<QuickbooksCutoverFilter>;
-  /** Some related `QuickbooksCutover` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<QuickbooksCutoverFilter>;
-};
-
-/** A filter to be used against many `QuickbooksMigration` object types. All fields are combined with a logical ‘and.’ */
-export type BookToManyQuickbooksMigrationFilter = {
-  /** Every related `QuickbooksMigration` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<QuickbooksMigrationFilter>;
-  /** No related `QuickbooksMigration` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<QuickbooksMigrationFilter>;
-  /** Some related `QuickbooksMigration` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<QuickbooksMigrationFilter>;
-};
-
-/** A filter to be used against many `QuickbooksReconciliation` object types. All fields are combined with a logical ‘and.’ */
-export type BookToManyQuickbooksReconciliationFilter = {
-  /** Every related `QuickbooksReconciliation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<QuickbooksReconciliationFilter>;
-  /** No related `QuickbooksReconciliation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<QuickbooksReconciliationFilter>;
-  /** Some related `QuickbooksReconciliation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<QuickbooksReconciliationFilter>;
-};
-
-/** A filter to be used against many `QuickbooksReconciliationLine` object types. All fields are combined with a logical ‘and.’ */
-export type BookToManyQuickbooksReconciliationLineFilter = {
-  /** Every related `QuickbooksReconciliationLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<QuickbooksReconciliationLineFilter>;
-  /** No related `QuickbooksReconciliationLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<QuickbooksReconciliationLineFilter>;
-  /** Some related `QuickbooksReconciliationLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<QuickbooksReconciliationLineFilter>;
-};
-
 /** A filter to be used against many `ReconciliationQueue` object types. All fields are combined with a logical ‘and.’ */
 export type BookToManyReconciliationQueueFilter = {
   /** Every related `ReconciliationQueue` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -1495,11 +1355,6 @@ export type BookToManyVendorFilter = {
   /** Some related `Vendor` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<VendorFilter>;
 };
-
-export enum BookType {
-  Business = 'business',
-  Personal = 'personal'
-}
 
 export type Budget = Node & {
   __typename?: 'Budget';
@@ -1773,12 +1628,10 @@ export type ConnectedAccount = Node & {
   institutionName?: Maybe<Scalars['String']['output']>;
   lastSyncedAt?: Maybe<Scalars['Datetime']['output']>;
   mask?: Maybe<Scalars['String']['output']>;
-  provider: ConnectedAccountProvider;
+  provider: Scalars['String']['output'];
   providerAccountId?: Maybe<Scalars['String']['output']>;
-  realmId?: Maybe<Scalars['String']['output']>;
-  refreshToken?: Maybe<Scalars['String']['output']>;
   rowId: Scalars['UUID']['output'];
-  status: ConnectedAccountStatus;
+  status: Scalars['String']['output'];
   syncCursor?: Maybe<Scalars['String']['output']>;
 };
 
@@ -1790,7 +1643,7 @@ export type ConnectedAccountCondition = {
   /** Checks for equality with the object’s `bookId` field. */
   bookId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `provider` field. */
-  provider?: InputMaybe<ConnectedAccountProvider>;
+  provider?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['UUID']['input']>;
 };
@@ -1834,7 +1687,7 @@ export type ConnectedAccountFilter = {
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<ConnectedAccountFilter>>;
   /** Filter by the object’s `provider` field. */
-  provider?: InputMaybe<ConnectedAccountProviderFilter>;
+  provider?: InputMaybe<StringFilter>;
   /** Filter by the object’s `rowId` field. */
   rowId?: InputMaybe<UuidFilter>;
 };
@@ -1848,12 +1701,10 @@ export type ConnectedAccountInput = {
   institutionName?: InputMaybe<Scalars['String']['input']>;
   lastSyncedAt?: InputMaybe<Scalars['Datetime']['input']>;
   mask?: InputMaybe<Scalars['String']['input']>;
-  provider: ConnectedAccountProvider;
+  provider: Scalars['String']['input'];
   providerAccountId?: InputMaybe<Scalars['String']['input']>;
-  realmId?: InputMaybe<Scalars['String']['input']>;
-  refreshToken?: InputMaybe<Scalars['String']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
-  status?: InputMaybe<ConnectedAccountStatus>;
+  status?: InputMaybe<Scalars['String']['input']>;
   syncCursor?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -1864,6 +1715,8 @@ export enum ConnectedAccountOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  ProviderAsc = 'PROVIDER_ASC',
+  ProviderDesc = 'PROVIDER_DESC',
   RowIdAsc = 'ROW_ID_ASC',
   RowIdDesc = 'ROW_ID_DESC'
 }
@@ -1877,54 +1730,12 @@ export type ConnectedAccountPatch = {
   institutionName?: InputMaybe<Scalars['String']['input']>;
   lastSyncedAt?: InputMaybe<Scalars['Datetime']['input']>;
   mask?: InputMaybe<Scalars['String']['input']>;
-  provider?: InputMaybe<ConnectedAccountProvider>;
+  provider?: InputMaybe<Scalars['String']['input']>;
   providerAccountId?: InputMaybe<Scalars['String']['input']>;
-  realmId?: InputMaybe<Scalars['String']['input']>;
-  refreshToken?: InputMaybe<Scalars['String']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
-  status?: InputMaybe<ConnectedAccountStatus>;
+  status?: InputMaybe<Scalars['String']['input']>;
   syncCursor?: InputMaybe<Scalars['String']['input']>;
 };
-
-export enum ConnectedAccountProvider {
-  ExchangeApi = 'exchange_api',
-  Manual = 'manual',
-  Mx = 'mx',
-  Plaid = 'plaid',
-  WalletConnect = 'wallet_connect'
-}
-
-/** A filter to be used against ConnectedAccountProvider fields. All fields are combined with a logical ‘and.’ */
-export type ConnectedAccountProviderFilter = {
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<ConnectedAccountProvider>;
-  /** Equal to the specified value. */
-  equalTo?: InputMaybe<ConnectedAccountProvider>;
-  /** Greater than the specified value. */
-  greaterThan?: InputMaybe<ConnectedAccountProvider>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<ConnectedAccountProvider>;
-  /** Included in the specified list. */
-  in?: InputMaybe<Array<ConnectedAccountProvider>>;
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Less than the specified value. */
-  lessThan?: InputMaybe<ConnectedAccountProvider>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<ConnectedAccountProvider>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<ConnectedAccountProvider>;
-  /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<ConnectedAccountProvider>;
-  /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<ConnectedAccountProvider>>;
-};
-
-export enum ConnectedAccountStatus {
-  Active = 'active',
-  Disconnected = 'disconnected',
-  Error = 'error'
-}
 
 export enum CostBasisMethod {
   Acb = 'acb',
@@ -2558,171 +2369,6 @@ export type CreatePayrollConnectionPayload = {
 /** The output of our create `PayrollConnection` mutation. */
 export type CreatePayrollConnectionPayloadPayrollConnectionEdgeArgs = {
   orderBy?: Array<PayrollConnectionOrderBy>;
-};
-
-/** All input for the create `QuickbooksAccountMap` mutation. */
-export type CreateQuickbooksAccountMapInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `QuickbooksAccountMap` to be created by this mutation. */
-  quickbooksAccountMap: QuickbooksAccountMapInput;
-};
-
-/** The output of our create `QuickbooksAccountMap` mutation. */
-export type CreateQuickbooksAccountMapPayload = {
-  __typename?: 'CreateQuickbooksAccountMapPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `QuickbooksAccountMap` that was created by this mutation. */
-  quickbooksAccountMap?: Maybe<QuickbooksAccountMap>;
-  /** An edge for our `QuickbooksAccountMap`. May be used by Relay 1. */
-  quickbooksAccountMapEdge?: Maybe<QuickbooksAccountMapEdge>;
-};
-
-
-/** The output of our create `QuickbooksAccountMap` mutation. */
-export type CreateQuickbooksAccountMapPayloadQuickbooksAccountMapEdgeArgs = {
-  orderBy?: Array<QuickbooksAccountMapOrderBy>;
-};
-
-/** All input for the create `QuickbooksCutover` mutation. */
-export type CreateQuickbooksCutoverInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `QuickbooksCutover` to be created by this mutation. */
-  quickbooksCutover: QuickbooksCutoverInput;
-};
-
-/** The output of our create `QuickbooksCutover` mutation. */
-export type CreateQuickbooksCutoverPayload = {
-  __typename?: 'CreateQuickbooksCutoverPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `QuickbooksCutover` that was created by this mutation. */
-  quickbooksCutover?: Maybe<QuickbooksCutover>;
-  /** An edge for our `QuickbooksCutover`. May be used by Relay 1. */
-  quickbooksCutoverEdge?: Maybe<QuickbooksCutoverEdge>;
-};
-
-
-/** The output of our create `QuickbooksCutover` mutation. */
-export type CreateQuickbooksCutoverPayloadQuickbooksCutoverEdgeArgs = {
-  orderBy?: Array<QuickbooksCutoverOrderBy>;
-};
-
-/** All input for the create `QuickbooksMigration` mutation. */
-export type CreateQuickbooksMigrationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `QuickbooksMigration` to be created by this mutation. */
-  quickbooksMigration: QuickbooksMigrationInput;
-};
-
-/** The output of our create `QuickbooksMigration` mutation. */
-export type CreateQuickbooksMigrationPayload = {
-  __typename?: 'CreateQuickbooksMigrationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `QuickbooksMigration` that was created by this mutation. */
-  quickbooksMigration?: Maybe<QuickbooksMigration>;
-  /** An edge for our `QuickbooksMigration`. May be used by Relay 1. */
-  quickbooksMigrationEdge?: Maybe<QuickbooksMigrationEdge>;
-};
-
-
-/** The output of our create `QuickbooksMigration` mutation. */
-export type CreateQuickbooksMigrationPayloadQuickbooksMigrationEdgeArgs = {
-  orderBy?: Array<QuickbooksMigrationOrderBy>;
-};
-
-/** All input for the create `QuickbooksReconciliation` mutation. */
-export type CreateQuickbooksReconciliationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `QuickbooksReconciliation` to be created by this mutation. */
-  quickbooksReconciliation: QuickbooksReconciliationInput;
-};
-
-/** All input for the create `QuickbooksReconciliationLine` mutation. */
-export type CreateQuickbooksReconciliationLineInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `QuickbooksReconciliationLine` to be created by this mutation. */
-  quickbooksReconciliationLine: QuickbooksReconciliationLineInput;
-};
-
-/** The output of our create `QuickbooksReconciliationLine` mutation. */
-export type CreateQuickbooksReconciliationLinePayload = {
-  __typename?: 'CreateQuickbooksReconciliationLinePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `QuickbooksReconciliationLine` that was created by this mutation. */
-  quickbooksReconciliationLine?: Maybe<QuickbooksReconciliationLine>;
-  /** An edge for our `QuickbooksReconciliationLine`. May be used by Relay 1. */
-  quickbooksReconciliationLineEdge?: Maybe<QuickbooksReconciliationLineEdge>;
-};
-
-
-/** The output of our create `QuickbooksReconciliationLine` mutation. */
-export type CreateQuickbooksReconciliationLinePayloadQuickbooksReconciliationLineEdgeArgs = {
-  orderBy?: Array<QuickbooksReconciliationLineOrderBy>;
-};
-
-/** The output of our create `QuickbooksReconciliation` mutation. */
-export type CreateQuickbooksReconciliationPayload = {
-  __typename?: 'CreateQuickbooksReconciliationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `QuickbooksReconciliation` that was created by this mutation. */
-  quickbooksReconciliation?: Maybe<QuickbooksReconciliation>;
-  /** An edge for our `QuickbooksReconciliation`. May be used by Relay 1. */
-  quickbooksReconciliationEdge?: Maybe<QuickbooksReconciliationEdge>;
-};
-
-
-/** The output of our create `QuickbooksReconciliation` mutation. */
-export type CreateQuickbooksReconciliationPayloadQuickbooksReconciliationEdgeArgs = {
-  orderBy?: Array<QuickbooksReconciliationOrderBy>;
 };
 
 /** All input for the create `ReconciliationQueue` mutation. */
@@ -4139,226 +3785,6 @@ export type DeletePayrollConnectionPayloadPayrollConnectionEdgeArgs = {
   orderBy?: Array<PayrollConnectionOrderBy>;
 };
 
-/** All input for the `deleteQuickbooksAccountMapById` mutation. */
-export type DeleteQuickbooksAccountMapByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `QuickbooksAccountMap` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteQuickbooksAccountMap` mutation. */
-export type DeleteQuickbooksAccountMapInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `QuickbooksAccountMap` mutation. */
-export type DeleteQuickbooksAccountMapPayload = {
-  __typename?: 'DeleteQuickbooksAccountMapPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedQuickbooksAccountMapId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `QuickbooksAccountMap` that was deleted by this mutation. */
-  quickbooksAccountMap?: Maybe<QuickbooksAccountMap>;
-  /** An edge for our `QuickbooksAccountMap`. May be used by Relay 1. */
-  quickbooksAccountMapEdge?: Maybe<QuickbooksAccountMapEdge>;
-};
-
-
-/** The output of our delete `QuickbooksAccountMap` mutation. */
-export type DeleteQuickbooksAccountMapPayloadQuickbooksAccountMapEdgeArgs = {
-  orderBy?: Array<QuickbooksAccountMapOrderBy>;
-};
-
-/** All input for the `deleteQuickbooksCutoverById` mutation. */
-export type DeleteQuickbooksCutoverByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `QuickbooksCutover` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteQuickbooksCutover` mutation. */
-export type DeleteQuickbooksCutoverInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `QuickbooksCutover` mutation. */
-export type DeleteQuickbooksCutoverPayload = {
-  __typename?: 'DeleteQuickbooksCutoverPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedQuickbooksCutoverId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `QuickbooksCutover` that was deleted by this mutation. */
-  quickbooksCutover?: Maybe<QuickbooksCutover>;
-  /** An edge for our `QuickbooksCutover`. May be used by Relay 1. */
-  quickbooksCutoverEdge?: Maybe<QuickbooksCutoverEdge>;
-};
-
-
-/** The output of our delete `QuickbooksCutover` mutation. */
-export type DeleteQuickbooksCutoverPayloadQuickbooksCutoverEdgeArgs = {
-  orderBy?: Array<QuickbooksCutoverOrderBy>;
-};
-
-/** All input for the `deleteQuickbooksMigrationById` mutation. */
-export type DeleteQuickbooksMigrationByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `QuickbooksMigration` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteQuickbooksMigration` mutation. */
-export type DeleteQuickbooksMigrationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `QuickbooksMigration` mutation. */
-export type DeleteQuickbooksMigrationPayload = {
-  __typename?: 'DeleteQuickbooksMigrationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedQuickbooksMigrationId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `QuickbooksMigration` that was deleted by this mutation. */
-  quickbooksMigration?: Maybe<QuickbooksMigration>;
-  /** An edge for our `QuickbooksMigration`. May be used by Relay 1. */
-  quickbooksMigrationEdge?: Maybe<QuickbooksMigrationEdge>;
-};
-
-
-/** The output of our delete `QuickbooksMigration` mutation. */
-export type DeleteQuickbooksMigrationPayloadQuickbooksMigrationEdgeArgs = {
-  orderBy?: Array<QuickbooksMigrationOrderBy>;
-};
-
-/** All input for the `deleteQuickbooksReconciliationById` mutation. */
-export type DeleteQuickbooksReconciliationByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `QuickbooksReconciliation` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteQuickbooksReconciliation` mutation. */
-export type DeleteQuickbooksReconciliationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** All input for the `deleteQuickbooksReconciliationLineById` mutation. */
-export type DeleteQuickbooksReconciliationLineByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `QuickbooksReconciliationLine` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteQuickbooksReconciliationLine` mutation. */
-export type DeleteQuickbooksReconciliationLineInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `QuickbooksReconciliationLine` mutation. */
-export type DeleteQuickbooksReconciliationLinePayload = {
-  __typename?: 'DeleteQuickbooksReconciliationLinePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedQuickbooksReconciliationLineId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `QuickbooksReconciliationLine` that was deleted by this mutation. */
-  quickbooksReconciliationLine?: Maybe<QuickbooksReconciliationLine>;
-  /** An edge for our `QuickbooksReconciliationLine`. May be used by Relay 1. */
-  quickbooksReconciliationLineEdge?: Maybe<QuickbooksReconciliationLineEdge>;
-};
-
-
-/** The output of our delete `QuickbooksReconciliationLine` mutation. */
-export type DeleteQuickbooksReconciliationLinePayloadQuickbooksReconciliationLineEdgeArgs = {
-  orderBy?: Array<QuickbooksReconciliationLineOrderBy>;
-};
-
-/** The output of our delete `QuickbooksReconciliation` mutation. */
-export type DeleteQuickbooksReconciliationPayload = {
-  __typename?: 'DeleteQuickbooksReconciliationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedQuickbooksReconciliationId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `QuickbooksReconciliation` that was deleted by this mutation. */
-  quickbooksReconciliation?: Maybe<QuickbooksReconciliation>;
-  /** An edge for our `QuickbooksReconciliation`. May be used by Relay 1. */
-  quickbooksReconciliationEdge?: Maybe<QuickbooksReconciliationEdge>;
-};
-
-
-/** The output of our delete `QuickbooksReconciliation` mutation. */
-export type DeleteQuickbooksReconciliationPayloadQuickbooksReconciliationEdgeArgs = {
-  orderBy?: Array<QuickbooksReconciliationOrderBy>;
-};
-
 /** All input for the `deleteReconciliationQueueById` mutation. */
 export type DeleteReconciliationQueueByIdInput = {
   /**
@@ -5029,7 +4455,7 @@ export type JournalEntry = Node & {
   journalLines: JournalLineConnection;
   memo?: Maybe<Scalars['String']['output']>;
   rowId: Scalars['UUID']['output'];
-  source: JournalEntrySource;
+  source: Scalars['String']['output'];
   sourceReferenceId?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `Vendor` that is related to this `JournalEntry`. */
@@ -5061,7 +4487,7 @@ export type JournalEntryCondition = {
   /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `source` field. */
-  source?: InputMaybe<JournalEntrySource>;
+  source?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `sourceReferenceId` field. */
   sourceReferenceId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5109,7 +4535,7 @@ export type JournalEntryFilter = {
   /** Filter by the object’s `rowId` field. */
   rowId?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `source` field. */
-  source?: InputMaybe<JournalEntrySourceFilter>;
+  source?: InputMaybe<StringFilter>;
   /** Filter by the object’s `sourceReferenceId` field. */
   sourceReferenceId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `vendor` relation. */
@@ -5127,7 +4553,7 @@ export type JournalEntryInput = {
   isReviewed?: InputMaybe<Scalars['Boolean']['input']>;
   memo?: InputMaybe<Scalars['String']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
-  source?: InputMaybe<JournalEntrySource>;
+  source?: InputMaybe<Scalars['String']['input']>;
   sourceReferenceId?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   vendorId?: InputMaybe<Scalars['UUID']['input']>;
@@ -5144,6 +4570,8 @@ export enum JournalEntryOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RowIdAsc = 'ROW_ID_ASC',
   RowIdDesc = 'ROW_ID_DESC',
+  SourceAsc = 'SOURCE_ASC',
+  SourceDesc = 'SOURCE_DESC',
   SourceReferenceIdAsc = 'SOURCE_REFERENCE_ID_ASC',
   SourceReferenceIdDesc = 'SOURCE_REFERENCE_ID_DESC'
 }
@@ -5157,44 +4585,10 @@ export type JournalEntryPatch = {
   isReviewed?: InputMaybe<Scalars['Boolean']['input']>;
   memo?: InputMaybe<Scalars['String']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
-  source?: InputMaybe<JournalEntrySource>;
+  source?: InputMaybe<Scalars['String']['input']>;
   sourceReferenceId?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   vendorId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
-export enum JournalEntrySource {
-  CryptoSync = 'crypto_sync',
-  MantleSync = 'mantle_sync',
-  Manual = 'manual',
-  PlaidImport = 'plaid_import',
-  Recurring = 'recurring'
-}
-
-/** A filter to be used against JournalEntrySource fields. All fields are combined with a logical ‘and.’ */
-export type JournalEntrySourceFilter = {
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<JournalEntrySource>;
-  /** Equal to the specified value. */
-  equalTo?: InputMaybe<JournalEntrySource>;
-  /** Greater than the specified value. */
-  greaterThan?: InputMaybe<JournalEntrySource>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<JournalEntrySource>;
-  /** Included in the specified list. */
-  in?: InputMaybe<Array<JournalEntrySource>>;
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Less than the specified value. */
-  lessThan?: InputMaybe<JournalEntrySource>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<JournalEntrySource>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<JournalEntrySource>;
-  /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<JournalEntrySource>;
-  /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<JournalEntrySource>>;
 };
 
 /** A filter to be used against many `JournalLine` object types. All fields are combined with a logical ‘and.’ */
@@ -5609,16 +5003,6 @@ export type Mutation = {
   createNetWorthSnapshot?: Maybe<CreateNetWorthSnapshotPayload>;
   /** Creates a single `PayrollConnection`. */
   createPayrollConnection?: Maybe<CreatePayrollConnectionPayload>;
-  /** Creates a single `QuickbooksAccountMap`. */
-  createQuickbooksAccountMap?: Maybe<CreateQuickbooksAccountMapPayload>;
-  /** Creates a single `QuickbooksCutover`. */
-  createQuickbooksCutover?: Maybe<CreateQuickbooksCutoverPayload>;
-  /** Creates a single `QuickbooksMigration`. */
-  createQuickbooksMigration?: Maybe<CreateQuickbooksMigrationPayload>;
-  /** Creates a single `QuickbooksReconciliation`. */
-  createQuickbooksReconciliation?: Maybe<CreateQuickbooksReconciliationPayload>;
-  /** Creates a single `QuickbooksReconciliationLine`. */
-  createQuickbooksReconciliationLine?: Maybe<CreateQuickbooksReconciliationLinePayload>;
   /** Creates a single `ReconciliationQueue`. */
   createReconciliationQueue?: Maybe<CreateReconciliationQueuePayload>;
   /** Creates a single `ReconciliationStatement`. */
@@ -5713,26 +5097,6 @@ export type Mutation = {
   deletePayrollConnection?: Maybe<DeletePayrollConnectionPayload>;
   /** Deletes a single `PayrollConnection` using its globally unique id. */
   deletePayrollConnectionById?: Maybe<DeletePayrollConnectionPayload>;
-  /** Deletes a single `QuickbooksAccountMap` using a unique key. */
-  deleteQuickbooksAccountMap?: Maybe<DeleteQuickbooksAccountMapPayload>;
-  /** Deletes a single `QuickbooksAccountMap` using its globally unique id. */
-  deleteQuickbooksAccountMapById?: Maybe<DeleteQuickbooksAccountMapPayload>;
-  /** Deletes a single `QuickbooksCutover` using a unique key. */
-  deleteQuickbooksCutover?: Maybe<DeleteQuickbooksCutoverPayload>;
-  /** Deletes a single `QuickbooksCutover` using its globally unique id. */
-  deleteQuickbooksCutoverById?: Maybe<DeleteQuickbooksCutoverPayload>;
-  /** Deletes a single `QuickbooksMigration` using a unique key. */
-  deleteQuickbooksMigration?: Maybe<DeleteQuickbooksMigrationPayload>;
-  /** Deletes a single `QuickbooksMigration` using its globally unique id. */
-  deleteQuickbooksMigrationById?: Maybe<DeleteQuickbooksMigrationPayload>;
-  /** Deletes a single `QuickbooksReconciliation` using a unique key. */
-  deleteQuickbooksReconciliation?: Maybe<DeleteQuickbooksReconciliationPayload>;
-  /** Deletes a single `QuickbooksReconciliation` using its globally unique id. */
-  deleteQuickbooksReconciliationById?: Maybe<DeleteQuickbooksReconciliationPayload>;
-  /** Deletes a single `QuickbooksReconciliationLine` using a unique key. */
-  deleteQuickbooksReconciliationLine?: Maybe<DeleteQuickbooksReconciliationLinePayload>;
-  /** Deletes a single `QuickbooksReconciliationLine` using its globally unique id. */
-  deleteQuickbooksReconciliationLineById?: Maybe<DeleteQuickbooksReconciliationLinePayload>;
   /** Deletes a single `ReconciliationQueue` using a unique key. */
   deleteReconciliationQueue?: Maybe<DeleteReconciliationQueuePayload>;
   /** Deletes a single `ReconciliationQueue` using its globally unique id. */
@@ -5845,26 +5209,6 @@ export type Mutation = {
   updatePayrollConnection?: Maybe<UpdatePayrollConnectionPayload>;
   /** Updates a single `PayrollConnection` using its globally unique id and a patch. */
   updatePayrollConnectionById?: Maybe<UpdatePayrollConnectionPayload>;
-  /** Updates a single `QuickbooksAccountMap` using a unique key and a patch. */
-  updateQuickbooksAccountMap?: Maybe<UpdateQuickbooksAccountMapPayload>;
-  /** Updates a single `QuickbooksAccountMap` using its globally unique id and a patch. */
-  updateQuickbooksAccountMapById?: Maybe<UpdateQuickbooksAccountMapPayload>;
-  /** Updates a single `QuickbooksCutover` using a unique key and a patch. */
-  updateQuickbooksCutover?: Maybe<UpdateQuickbooksCutoverPayload>;
-  /** Updates a single `QuickbooksCutover` using its globally unique id and a patch. */
-  updateQuickbooksCutoverById?: Maybe<UpdateQuickbooksCutoverPayload>;
-  /** Updates a single `QuickbooksMigration` using a unique key and a patch. */
-  updateQuickbooksMigration?: Maybe<UpdateQuickbooksMigrationPayload>;
-  /** Updates a single `QuickbooksMigration` using its globally unique id and a patch. */
-  updateQuickbooksMigrationById?: Maybe<UpdateQuickbooksMigrationPayload>;
-  /** Updates a single `QuickbooksReconciliation` using a unique key and a patch. */
-  updateQuickbooksReconciliation?: Maybe<UpdateQuickbooksReconciliationPayload>;
-  /** Updates a single `QuickbooksReconciliation` using its globally unique id and a patch. */
-  updateQuickbooksReconciliationById?: Maybe<UpdateQuickbooksReconciliationPayload>;
-  /** Updates a single `QuickbooksReconciliationLine` using a unique key and a patch. */
-  updateQuickbooksReconciliationLine?: Maybe<UpdateQuickbooksReconciliationLinePayload>;
-  /** Updates a single `QuickbooksReconciliationLine` using its globally unique id and a patch. */
-  updateQuickbooksReconciliationLineById?: Maybe<UpdateQuickbooksReconciliationLinePayload>;
   /** Updates a single `ReconciliationQueue` using a unique key and a patch. */
   updateReconciliationQueue?: Maybe<UpdateReconciliationQueuePayload>;
   /** Updates a single `ReconciliationQueue` using its globally unique id and a patch. */
@@ -6015,36 +5359,6 @@ export type MutationCreateNetWorthSnapshotArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreatePayrollConnectionArgs = {
   input: CreatePayrollConnectionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateQuickbooksAccountMapArgs = {
-  input: CreateQuickbooksAccountMapInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateQuickbooksCutoverArgs = {
-  input: CreateQuickbooksCutoverInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateQuickbooksMigrationArgs = {
-  input: CreateQuickbooksMigrationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateQuickbooksReconciliationArgs = {
-  input: CreateQuickbooksReconciliationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateQuickbooksReconciliationLineArgs = {
-  input: CreateQuickbooksReconciliationLineInput;
 };
 
 
@@ -6327,66 +5641,6 @@ export type MutationDeletePayrollConnectionArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeletePayrollConnectionByIdArgs = {
   input: DeletePayrollConnectionByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteQuickbooksAccountMapArgs = {
-  input: DeleteQuickbooksAccountMapInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteQuickbooksAccountMapByIdArgs = {
-  input: DeleteQuickbooksAccountMapByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteQuickbooksCutoverArgs = {
-  input: DeleteQuickbooksCutoverInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteQuickbooksCutoverByIdArgs = {
-  input: DeleteQuickbooksCutoverByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteQuickbooksMigrationArgs = {
-  input: DeleteQuickbooksMigrationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteQuickbooksMigrationByIdArgs = {
-  input: DeleteQuickbooksMigrationByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteQuickbooksReconciliationArgs = {
-  input: DeleteQuickbooksReconciliationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteQuickbooksReconciliationByIdArgs = {
-  input: DeleteQuickbooksReconciliationByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteQuickbooksReconciliationLineArgs = {
-  input: DeleteQuickbooksReconciliationLineInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteQuickbooksReconciliationLineByIdArgs = {
-  input: DeleteQuickbooksReconciliationLineByIdInput;
 };
 
 
@@ -6723,66 +5977,6 @@ export type MutationUpdatePayrollConnectionArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdatePayrollConnectionByIdArgs = {
   input: UpdatePayrollConnectionByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateQuickbooksAccountMapArgs = {
-  input: UpdateQuickbooksAccountMapInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateQuickbooksAccountMapByIdArgs = {
-  input: UpdateQuickbooksAccountMapByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateQuickbooksCutoverArgs = {
-  input: UpdateQuickbooksCutoverInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateQuickbooksCutoverByIdArgs = {
-  input: UpdateQuickbooksCutoverByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateQuickbooksMigrationArgs = {
-  input: UpdateQuickbooksMigrationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateQuickbooksMigrationByIdArgs = {
-  input: UpdateQuickbooksMigrationByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateQuickbooksReconciliationArgs = {
-  input: UpdateQuickbooksReconciliationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateQuickbooksReconciliationByIdArgs = {
-  input: UpdateQuickbooksReconciliationByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateQuickbooksReconciliationLineArgs = {
-  input: UpdateQuickbooksReconciliationLineInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateQuickbooksReconciliationLineByIdArgs = {
-  input: UpdateQuickbooksReconciliationLineByIdInput;
 };
 
 
@@ -7256,36 +6450,6 @@ export type Query = Node & {
    * which can only query top level fields if they are in a particular form.
    */
   query: Query;
-  /** Get a single `QuickbooksAccountMap`. */
-  quickbooksAccountMap?: Maybe<QuickbooksAccountMap>;
-  /** Reads a single `QuickbooksAccountMap` using its globally unique `ID`. */
-  quickbooksAccountMapById?: Maybe<QuickbooksAccountMap>;
-  /** Reads and enables pagination through a set of `QuickbooksAccountMap`. */
-  quickbooksAccountMaps?: Maybe<QuickbooksAccountMapConnection>;
-  /** Get a single `QuickbooksCutover`. */
-  quickbooksCutover?: Maybe<QuickbooksCutover>;
-  /** Reads a single `QuickbooksCutover` using its globally unique `ID`. */
-  quickbooksCutoverById?: Maybe<QuickbooksCutover>;
-  /** Reads and enables pagination through a set of `QuickbooksCutover`. */
-  quickbooksCutovers?: Maybe<QuickbooksCutoverConnection>;
-  /** Get a single `QuickbooksMigration`. */
-  quickbooksMigration?: Maybe<QuickbooksMigration>;
-  /** Reads a single `QuickbooksMigration` using its globally unique `ID`. */
-  quickbooksMigrationById?: Maybe<QuickbooksMigration>;
-  /** Reads and enables pagination through a set of `QuickbooksMigration`. */
-  quickbooksMigrations?: Maybe<QuickbooksMigrationConnection>;
-  /** Get a single `QuickbooksReconciliation`. */
-  quickbooksReconciliation?: Maybe<QuickbooksReconciliation>;
-  /** Reads a single `QuickbooksReconciliation` using its globally unique `ID`. */
-  quickbooksReconciliationById?: Maybe<QuickbooksReconciliation>;
-  /** Get a single `QuickbooksReconciliationLine`. */
-  quickbooksReconciliationLine?: Maybe<QuickbooksReconciliationLine>;
-  /** Reads a single `QuickbooksReconciliationLine` using its globally unique `ID`. */
-  quickbooksReconciliationLineById?: Maybe<QuickbooksReconciliationLine>;
-  /** Reads and enables pagination through a set of `QuickbooksReconciliationLine`. */
-  quickbooksReconciliationLines?: Maybe<QuickbooksReconciliationLineConnection>;
-  /** Reads and enables pagination through a set of `QuickbooksReconciliation`. */
-  quickbooksReconciliations?: Maybe<QuickbooksReconciliationConnection>;
   /** Get a single `ReconciliationQueue`. */
   reconciliationQueue?: Maybe<ReconciliationQueue>;
   /** Reads a single `ReconciliationQueue` using its globally unique `ID`. */
@@ -7825,131 +6989,6 @@ export type QueryPayrollConnectionsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryQuickbooksAccountMapArgs = {
-  rowId: Scalars['UUID']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryQuickbooksAccountMapByIdArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryQuickbooksAccountMapsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<QuickbooksAccountMapCondition>;
-  filter?: InputMaybe<QuickbooksAccountMapFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<QuickbooksAccountMapOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryQuickbooksCutoverArgs = {
-  rowId: Scalars['UUID']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryQuickbooksCutoverByIdArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryQuickbooksCutoversArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<QuickbooksCutoverCondition>;
-  filter?: InputMaybe<QuickbooksCutoverFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<QuickbooksCutoverOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryQuickbooksMigrationArgs = {
-  rowId: Scalars['UUID']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryQuickbooksMigrationByIdArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryQuickbooksMigrationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<QuickbooksMigrationCondition>;
-  filter?: InputMaybe<QuickbooksMigrationFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<QuickbooksMigrationOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryQuickbooksReconciliationArgs = {
-  rowId: Scalars['UUID']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryQuickbooksReconciliationByIdArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryQuickbooksReconciliationLineArgs = {
-  rowId: Scalars['UUID']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryQuickbooksReconciliationLineByIdArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryQuickbooksReconciliationLinesArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<QuickbooksReconciliationLineCondition>;
-  filter?: InputMaybe<QuickbooksReconciliationLineFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<QuickbooksReconciliationLineOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryQuickbooksReconciliationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<QuickbooksReconciliationCondition>;
-  filter?: InputMaybe<QuickbooksReconciliationFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<QuickbooksReconciliationOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryReconciliationQueueArgs = {
   rowId: Scalars['UUID']['input'];
 };
@@ -8173,591 +7212,6 @@ export type QueryVendorsArgs = {
   orderBy?: InputMaybe<Array<VendorOrderBy>>;
 };
 
-export type QuickbooksAccountMap = Node & {
-  __typename?: 'QuickbooksAccountMap';
-  /** Reads a single `Book` that is related to this `QuickbooksAccountMap`. */
-  book?: Maybe<Book>;
-  bookId: Scalars['UUID']['output'];
-  createdAt?: Maybe<Scalars['Datetime']['output']>;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  id: Scalars['ID']['output'];
-  /** Reads a single `Account` that is related to this `QuickbooksAccountMap`. */
-  myfiAccount?: Maybe<Account>;
-  myfiAccountId: Scalars['UUID']['output'];
-  qboAccountId: Scalars['String']['output'];
-  qboAccountName?: Maybe<Scalars['String']['output']>;
-  qboAccountType?: Maybe<Scalars['String']['output']>;
-  rowId: Scalars['UUID']['output'];
-  updatedAt?: Maybe<Scalars['Datetime']['output']>;
-};
-
-/**
- * A condition to be used against `QuickbooksAccountMap` object types. All fields
- * are tested for equality and combined with a logical ‘and.’
- */
-export type QuickbooksAccountMapCondition = {
-  /** Checks for equality with the object’s `bookId` field. */
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  /** Checks for equality with the object’s `qboAccountId` field. */
-  qboAccountId?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `rowId` field. */
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
-/** A connection to a list of `QuickbooksAccountMap` values. */
-export type QuickbooksAccountMapConnection = {
-  __typename?: 'QuickbooksAccountMapConnection';
-  /** A list of edges which contains the `QuickbooksAccountMap` and cursor to aid in pagination. */
-  edges: Array<Maybe<QuickbooksAccountMapEdge>>;
-  /** A list of `QuickbooksAccountMap` objects. */
-  nodes: Array<Maybe<QuickbooksAccountMap>>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `QuickbooksAccountMap` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `QuickbooksAccountMap` edge in the connection. */
-export type QuickbooksAccountMapEdge = {
-  __typename?: 'QuickbooksAccountMapEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `QuickbooksAccountMap` at the end of the edge. */
-  node?: Maybe<QuickbooksAccountMap>;
-};
-
-/** A filter to be used against `QuickbooksAccountMap` object types. All fields are combined with a logical ‘and.’ */
-export type QuickbooksAccountMapFilter = {
-  /** Checks for all expressions in this list. */
-  and?: InputMaybe<Array<QuickbooksAccountMapFilter>>;
-  /** Filter by the object’s `book` relation. */
-  book?: InputMaybe<BookFilter>;
-  /** Filter by the object’s `bookId` field. */
-  bookId?: InputMaybe<UuidFilter>;
-  /** Filter by the object’s `myfiAccount` relation. */
-  myfiAccount?: InputMaybe<AccountFilter>;
-  /** Negates the expression. */
-  not?: InputMaybe<QuickbooksAccountMapFilter>;
-  /** Checks for any expressions in this list. */
-  or?: InputMaybe<Array<QuickbooksAccountMapFilter>>;
-  /** Filter by the object’s `qboAccountId` field. */
-  qboAccountId?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `rowId` field. */
-  rowId?: InputMaybe<UuidFilter>;
-};
-
-/** An input for mutations affecting `QuickbooksAccountMap` */
-export type QuickbooksAccountMapInput = {
-  bookId: Scalars['UUID']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  myfiAccountId: Scalars['UUID']['input'];
-  qboAccountId: Scalars['String']['input'];
-  qboAccountName?: InputMaybe<Scalars['String']['input']>;
-  qboAccountType?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** Methods to use when ordering `QuickbooksAccountMap`. */
-export enum QuickbooksAccountMapOrderBy {
-  BookIdAsc = 'BOOK_ID_ASC',
-  BookIdDesc = 'BOOK_ID_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  QboAccountIdAsc = 'QBO_ACCOUNT_ID_ASC',
-  QboAccountIdDesc = 'QBO_ACCOUNT_ID_DESC',
-  RowIdAsc = 'ROW_ID_ASC',
-  RowIdDesc = 'ROW_ID_DESC'
-}
-
-/** Represents an update to a `QuickbooksAccountMap`. Fields that are set will be updated. */
-export type QuickbooksAccountMapPatch = {
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  myfiAccountId?: InputMaybe<Scalars['UUID']['input']>;
-  qboAccountId?: InputMaybe<Scalars['String']['input']>;
-  qboAccountName?: InputMaybe<Scalars['String']['input']>;
-  qboAccountType?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-export type QuickbooksCutover = Node & {
-  __typename?: 'QuickbooksCutover';
-  /** Reads a single `Book` that is related to this `QuickbooksCutover`. */
-  book?: Maybe<Book>;
-  bookId: Scalars['UUID']['output'];
-  /** Reads a single `ConnectedAccount` that is related to this `QuickbooksCutover`. */
-  connectedAccount?: Maybe<ConnectedAccount>;
-  connectedAccountId: Scalars['UUID']['output'];
-  createdAt?: Maybe<Scalars['Datetime']['output']>;
-  cutoverAt: Scalars['Datetime']['output'];
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  id: Scalars['ID']['output'];
-  /** Reads a single `QuickbooksReconciliation` that is related to this `QuickbooksCutover`. */
-  reconciliation?: Maybe<QuickbooksReconciliation>;
-  reconciliationId: Scalars['UUID']['output'];
-  rowId: Scalars['UUID']['output'];
-};
-
-/**
- * A condition to be used against `QuickbooksCutover` object types. All fields are
- * tested for equality and combined with a logical ‘and.’
- */
-export type QuickbooksCutoverCondition = {
-  /** Checks for equality with the object’s `bookId` field. */
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  /** Checks for equality with the object’s `rowId` field. */
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
-/** A connection to a list of `QuickbooksCutover` values. */
-export type QuickbooksCutoverConnection = {
-  __typename?: 'QuickbooksCutoverConnection';
-  /** A list of edges which contains the `QuickbooksCutover` and cursor to aid in pagination. */
-  edges: Array<Maybe<QuickbooksCutoverEdge>>;
-  /** A list of `QuickbooksCutover` objects. */
-  nodes: Array<Maybe<QuickbooksCutover>>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `QuickbooksCutover` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `QuickbooksCutover` edge in the connection. */
-export type QuickbooksCutoverEdge = {
-  __typename?: 'QuickbooksCutoverEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `QuickbooksCutover` at the end of the edge. */
-  node?: Maybe<QuickbooksCutover>;
-};
-
-/** A filter to be used against `QuickbooksCutover` object types. All fields are combined with a logical ‘and.’ */
-export type QuickbooksCutoverFilter = {
-  /** Checks for all expressions in this list. */
-  and?: InputMaybe<Array<QuickbooksCutoverFilter>>;
-  /** Filter by the object’s `book` relation. */
-  book?: InputMaybe<BookFilter>;
-  /** Filter by the object’s `bookId` field. */
-  bookId?: InputMaybe<UuidFilter>;
-  /** Filter by the object’s `connectedAccount` relation. */
-  connectedAccount?: InputMaybe<ConnectedAccountFilter>;
-  /** Negates the expression. */
-  not?: InputMaybe<QuickbooksCutoverFilter>;
-  /** Checks for any expressions in this list. */
-  or?: InputMaybe<Array<QuickbooksCutoverFilter>>;
-  /** Filter by the object’s `reconciliation` relation. */
-  reconciliation?: InputMaybe<QuickbooksReconciliationFilter>;
-  /** Filter by the object’s `rowId` field. */
-  rowId?: InputMaybe<UuidFilter>;
-};
-
-/** An input for mutations affecting `QuickbooksCutover` */
-export type QuickbooksCutoverInput = {
-  bookId: Scalars['UUID']['input'];
-  connectedAccountId: Scalars['UUID']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  cutoverAt?: InputMaybe<Scalars['Datetime']['input']>;
-  reconciliationId: Scalars['UUID']['input'];
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
-/** Methods to use when ordering `QuickbooksCutover`. */
-export enum QuickbooksCutoverOrderBy {
-  BookIdAsc = 'BOOK_ID_ASC',
-  BookIdDesc = 'BOOK_ID_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  RowIdAsc = 'ROW_ID_ASC',
-  RowIdDesc = 'ROW_ID_DESC'
-}
-
-/** Represents an update to a `QuickbooksCutover`. Fields that are set will be updated. */
-export type QuickbooksCutoverPatch = {
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  connectedAccountId?: InputMaybe<Scalars['UUID']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  cutoverAt?: InputMaybe<Scalars['Datetime']['input']>;
-  reconciliationId?: InputMaybe<Scalars['UUID']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
-export type QuickbooksMigration = Node & {
-  __typename?: 'QuickbooksMigration';
-  /** Reads a single `Book` that is related to this `QuickbooksMigration`. */
-  book?: Maybe<Book>;
-  bookId: Scalars['UUID']['output'];
-  /** Reads a single `ConnectedAccount` that is related to this `QuickbooksMigration`. */
-  connectedAccount?: Maybe<ConnectedAccount>;
-  connectedAccountId: Scalars['UUID']['output'];
-  createdAt?: Maybe<Scalars['Datetime']['output']>;
-  entriesImported: Scalars['Int']['output'];
-  errorMessage?: Maybe<Scalars['String']['output']>;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  id: Scalars['ID']['output'];
-  periodEnd?: Maybe<Scalars['Datetime']['output']>;
-  periodStart?: Maybe<Scalars['Datetime']['output']>;
-  rowId: Scalars['UUID']['output'];
-  status: Scalars['String']['output'];
-  updatedAt?: Maybe<Scalars['Datetime']['output']>;
-};
-
-/**
- * A condition to be used against `QuickbooksMigration` object types. All fields
- * are tested for equality and combined with a logical ‘and.’
- */
-export type QuickbooksMigrationCondition = {
-  /** Checks for equality with the object’s `bookId` field. */
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  /** Checks for equality with the object’s `rowId` field. */
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
-/** A connection to a list of `QuickbooksMigration` values. */
-export type QuickbooksMigrationConnection = {
-  __typename?: 'QuickbooksMigrationConnection';
-  /** A list of edges which contains the `QuickbooksMigration` and cursor to aid in pagination. */
-  edges: Array<Maybe<QuickbooksMigrationEdge>>;
-  /** A list of `QuickbooksMigration` objects. */
-  nodes: Array<Maybe<QuickbooksMigration>>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `QuickbooksMigration` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `QuickbooksMigration` edge in the connection. */
-export type QuickbooksMigrationEdge = {
-  __typename?: 'QuickbooksMigrationEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `QuickbooksMigration` at the end of the edge. */
-  node?: Maybe<QuickbooksMigration>;
-};
-
-/** A filter to be used against `QuickbooksMigration` object types. All fields are combined with a logical ‘and.’ */
-export type QuickbooksMigrationFilter = {
-  /** Checks for all expressions in this list. */
-  and?: InputMaybe<Array<QuickbooksMigrationFilter>>;
-  /** Filter by the object’s `book` relation. */
-  book?: InputMaybe<BookFilter>;
-  /** Filter by the object’s `bookId` field. */
-  bookId?: InputMaybe<UuidFilter>;
-  /** Filter by the object’s `connectedAccount` relation. */
-  connectedAccount?: InputMaybe<ConnectedAccountFilter>;
-  /** Negates the expression. */
-  not?: InputMaybe<QuickbooksMigrationFilter>;
-  /** Checks for any expressions in this list. */
-  or?: InputMaybe<Array<QuickbooksMigrationFilter>>;
-  /** Filter by the object’s `rowId` field. */
-  rowId?: InputMaybe<UuidFilter>;
-};
-
-/** An input for mutations affecting `QuickbooksMigration` */
-export type QuickbooksMigrationInput = {
-  bookId: Scalars['UUID']['input'];
-  connectedAccountId: Scalars['UUID']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  entriesImported?: InputMaybe<Scalars['Int']['input']>;
-  errorMessage?: InputMaybe<Scalars['String']['input']>;
-  periodEnd?: InputMaybe<Scalars['Datetime']['input']>;
-  periodStart?: InputMaybe<Scalars['Datetime']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** Methods to use when ordering `QuickbooksMigration`. */
-export enum QuickbooksMigrationOrderBy {
-  BookIdAsc = 'BOOK_ID_ASC',
-  BookIdDesc = 'BOOK_ID_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  RowIdAsc = 'ROW_ID_ASC',
-  RowIdDesc = 'ROW_ID_DESC'
-}
-
-/** Represents an update to a `QuickbooksMigration`. Fields that are set will be updated. */
-export type QuickbooksMigrationPatch = {
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  connectedAccountId?: InputMaybe<Scalars['UUID']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  entriesImported?: InputMaybe<Scalars['Int']['input']>;
-  errorMessage?: InputMaybe<Scalars['String']['input']>;
-  periodEnd?: InputMaybe<Scalars['Datetime']['input']>;
-  periodStart?: InputMaybe<Scalars['Datetime']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-export type QuickbooksReconciliation = Node & {
-  __typename?: 'QuickbooksReconciliation';
-  /** Reads a single `Book` that is related to this `QuickbooksReconciliation`. */
-  book?: Maybe<Book>;
-  bookId: Scalars['UUID']['output'];
-  /** Reads a single `ConnectedAccount` that is related to this `QuickbooksReconciliation`. */
-  connectedAccount?: Maybe<ConnectedAccount>;
-  connectedAccountId: Scalars['UUID']['output'];
-  createdAt?: Maybe<Scalars['Datetime']['output']>;
-  errorMessage?: Maybe<Scalars['String']['output']>;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  id: Scalars['ID']['output'];
-  mismatchCount: Scalars['Int']['output'];
-  periodEnd: Scalars['Datetime']['output'];
-  periodStart: Scalars['Datetime']['output'];
-  /** Reads and enables pagination through a set of `QuickbooksReconciliationLine`. */
-  quickbooksReconciliationLinesByReconciliationId: QuickbooksReconciliationLineConnection;
-  rowId: Scalars['UUID']['output'];
-  status: Scalars['String']['output'];
-  totalVariance?: Maybe<Scalars['BigFloat']['output']>;
-  updatedAt?: Maybe<Scalars['Datetime']['output']>;
-};
-
-
-export type QuickbooksReconciliationQuickbooksReconciliationLinesByReconciliationIdArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<QuickbooksReconciliationLineCondition>;
-  filter?: InputMaybe<QuickbooksReconciliationLineFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<QuickbooksReconciliationLineOrderBy>>;
-};
-
-/**
- * A condition to be used against `QuickbooksReconciliation` object types. All
- * fields are tested for equality and combined with a logical ‘and.’
- */
-export type QuickbooksReconciliationCondition = {
-  /** Checks for equality with the object’s `bookId` field. */
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  /** Checks for equality with the object’s `rowId` field. */
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
-/** A connection to a list of `QuickbooksReconciliation` values. */
-export type QuickbooksReconciliationConnection = {
-  __typename?: 'QuickbooksReconciliationConnection';
-  /** A list of edges which contains the `QuickbooksReconciliation` and cursor to aid in pagination. */
-  edges: Array<Maybe<QuickbooksReconciliationEdge>>;
-  /** A list of `QuickbooksReconciliation` objects. */
-  nodes: Array<Maybe<QuickbooksReconciliation>>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `QuickbooksReconciliation` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `QuickbooksReconciliation` edge in the connection. */
-export type QuickbooksReconciliationEdge = {
-  __typename?: 'QuickbooksReconciliationEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `QuickbooksReconciliation` at the end of the edge. */
-  node?: Maybe<QuickbooksReconciliation>;
-};
-
-/** A filter to be used against `QuickbooksReconciliation` object types. All fields are combined with a logical ‘and.’ */
-export type QuickbooksReconciliationFilter = {
-  /** Checks for all expressions in this list. */
-  and?: InputMaybe<Array<QuickbooksReconciliationFilter>>;
-  /** Filter by the object’s `book` relation. */
-  book?: InputMaybe<BookFilter>;
-  /** Filter by the object’s `bookId` field. */
-  bookId?: InputMaybe<UuidFilter>;
-  /** Filter by the object’s `connectedAccount` relation. */
-  connectedAccount?: InputMaybe<ConnectedAccountFilter>;
-  /** Negates the expression. */
-  not?: InputMaybe<QuickbooksReconciliationFilter>;
-  /** Checks for any expressions in this list. */
-  or?: InputMaybe<Array<QuickbooksReconciliationFilter>>;
-  /** Filter by the object’s `quickbooksReconciliationLinesByReconciliationId` relation. */
-  quickbooksReconciliationLinesByReconciliationId?: InputMaybe<QuickbooksReconciliationToManyQuickbooksReconciliationLineFilter>;
-  /** Some related `quickbooksReconciliationLinesByReconciliationId` exist. */
-  quickbooksReconciliationLinesByReconciliationIdExist?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Filter by the object’s `rowId` field. */
-  rowId?: InputMaybe<UuidFilter>;
-};
-
-/** An input for mutations affecting `QuickbooksReconciliation` */
-export type QuickbooksReconciliationInput = {
-  bookId: Scalars['UUID']['input'];
-  connectedAccountId: Scalars['UUID']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  errorMessage?: InputMaybe<Scalars['String']['input']>;
-  mismatchCount?: InputMaybe<Scalars['Int']['input']>;
-  periodEnd: Scalars['Datetime']['input'];
-  periodStart: Scalars['Datetime']['input'];
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-  totalVariance?: InputMaybe<Scalars['BigFloat']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-export type QuickbooksReconciliationLine = Node & {
-  __typename?: 'QuickbooksReconciliationLine';
-  accountName: Scalars['String']['output'];
-  /** Reads a single `Book` that is related to this `QuickbooksReconciliationLine`. */
-  book?: Maybe<Book>;
-  bookId: Scalars['UUID']['output'];
-  createdAt?: Maybe<Scalars['Datetime']['output']>;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  id: Scalars['ID']['output'];
-  /** Reads a single `Account` that is related to this `QuickbooksReconciliationLine`. */
-  myfiAccount?: Maybe<Account>;
-  myfiAccountId?: Maybe<Scalars['UUID']['output']>;
-  myfiBalance: Scalars['BigFloat']['output'];
-  qboAccountId?: Maybe<Scalars['String']['output']>;
-  qboBalance: Scalars['BigFloat']['output'];
-  /** Reads a single `QuickbooksReconciliation` that is related to this `QuickbooksReconciliationLine`. */
-  reconciliation?: Maybe<QuickbooksReconciliation>;
-  reconciliationId: Scalars['UUID']['output'];
-  rowId: Scalars['UUID']['output'];
-  variance: Scalars['BigFloat']['output'];
-};
-
-/**
- * A condition to be used against `QuickbooksReconciliationLine` object types. All
- * fields are tested for equality and combined with a logical ‘and.’
- */
-export type QuickbooksReconciliationLineCondition = {
-  /** Checks for equality with the object’s `bookId` field. */
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  /** Checks for equality with the object’s `reconciliationId` field. */
-  reconciliationId?: InputMaybe<Scalars['UUID']['input']>;
-  /** Checks for equality with the object’s `rowId` field. */
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
-/** A connection to a list of `QuickbooksReconciliationLine` values. */
-export type QuickbooksReconciliationLineConnection = {
-  __typename?: 'QuickbooksReconciliationLineConnection';
-  /** A list of edges which contains the `QuickbooksReconciliationLine` and cursor to aid in pagination. */
-  edges: Array<Maybe<QuickbooksReconciliationLineEdge>>;
-  /** A list of `QuickbooksReconciliationLine` objects. */
-  nodes: Array<Maybe<QuickbooksReconciliationLine>>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `QuickbooksReconciliationLine` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `QuickbooksReconciliationLine` edge in the connection. */
-export type QuickbooksReconciliationLineEdge = {
-  __typename?: 'QuickbooksReconciliationLineEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `QuickbooksReconciliationLine` at the end of the edge. */
-  node?: Maybe<QuickbooksReconciliationLine>;
-};
-
-/** A filter to be used against `QuickbooksReconciliationLine` object types. All fields are combined with a logical ‘and.’ */
-export type QuickbooksReconciliationLineFilter = {
-  /** Checks for all expressions in this list. */
-  and?: InputMaybe<Array<QuickbooksReconciliationLineFilter>>;
-  /** Filter by the object’s `book` relation. */
-  book?: InputMaybe<BookFilter>;
-  /** Filter by the object’s `bookId` field. */
-  bookId?: InputMaybe<UuidFilter>;
-  /** Filter by the object’s `myfiAccount` relation. */
-  myfiAccount?: InputMaybe<AccountFilter>;
-  /** A related `myfiAccount` exists. */
-  myfiAccountExists?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Negates the expression. */
-  not?: InputMaybe<QuickbooksReconciliationLineFilter>;
-  /** Checks for any expressions in this list. */
-  or?: InputMaybe<Array<QuickbooksReconciliationLineFilter>>;
-  /** Filter by the object’s `reconciliation` relation. */
-  reconciliation?: InputMaybe<QuickbooksReconciliationFilter>;
-  /** Filter by the object’s `reconciliationId` field. */
-  reconciliationId?: InputMaybe<UuidFilter>;
-  /** Filter by the object’s `rowId` field. */
-  rowId?: InputMaybe<UuidFilter>;
-};
-
-/** An input for mutations affecting `QuickbooksReconciliationLine` */
-export type QuickbooksReconciliationLineInput = {
-  accountName: Scalars['String']['input'];
-  bookId: Scalars['UUID']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  myfiAccountId?: InputMaybe<Scalars['UUID']['input']>;
-  myfiBalance?: InputMaybe<Scalars['BigFloat']['input']>;
-  qboAccountId?: InputMaybe<Scalars['String']['input']>;
-  qboBalance?: InputMaybe<Scalars['BigFloat']['input']>;
-  reconciliationId: Scalars['UUID']['input'];
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  variance?: InputMaybe<Scalars['BigFloat']['input']>;
-};
-
-/** Methods to use when ordering `QuickbooksReconciliationLine`. */
-export enum QuickbooksReconciliationLineOrderBy {
-  BookIdAsc = 'BOOK_ID_ASC',
-  BookIdDesc = 'BOOK_ID_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  ReconciliationIdAsc = 'RECONCILIATION_ID_ASC',
-  ReconciliationIdDesc = 'RECONCILIATION_ID_DESC',
-  RowIdAsc = 'ROW_ID_ASC',
-  RowIdDesc = 'ROW_ID_DESC'
-}
-
-/** Represents an update to a `QuickbooksReconciliationLine`. Fields that are set will be updated. */
-export type QuickbooksReconciliationLinePatch = {
-  accountName?: InputMaybe<Scalars['String']['input']>;
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  myfiAccountId?: InputMaybe<Scalars['UUID']['input']>;
-  myfiBalance?: InputMaybe<Scalars['BigFloat']['input']>;
-  qboAccountId?: InputMaybe<Scalars['String']['input']>;
-  qboBalance?: InputMaybe<Scalars['BigFloat']['input']>;
-  reconciliationId?: InputMaybe<Scalars['UUID']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  variance?: InputMaybe<Scalars['BigFloat']['input']>;
-};
-
-/** Methods to use when ordering `QuickbooksReconciliation`. */
-export enum QuickbooksReconciliationOrderBy {
-  BookIdAsc = 'BOOK_ID_ASC',
-  BookIdDesc = 'BOOK_ID_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  RowIdAsc = 'ROW_ID_ASC',
-  RowIdDesc = 'ROW_ID_DESC'
-}
-
-/** Represents an update to a `QuickbooksReconciliation`. Fields that are set will be updated. */
-export type QuickbooksReconciliationPatch = {
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  connectedAccountId?: InputMaybe<Scalars['UUID']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  errorMessage?: InputMaybe<Scalars['String']['input']>;
-  mismatchCount?: InputMaybe<Scalars['Int']['input']>;
-  periodEnd?: InputMaybe<Scalars['Datetime']['input']>;
-  periodStart?: InputMaybe<Scalars['Datetime']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-  totalVariance?: InputMaybe<Scalars['BigFloat']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** A filter to be used against many `QuickbooksReconciliationLine` object types. All fields are combined with a logical ‘and.’ */
-export type QuickbooksReconciliationToManyQuickbooksReconciliationLineFilter = {
-  /** Every related `QuickbooksReconciliationLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<QuickbooksReconciliationLineFilter>;
-  /** No related `QuickbooksReconciliationLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<QuickbooksReconciliationLineFilter>;
-  /** Some related `QuickbooksReconciliationLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<QuickbooksReconciliationLineFilter>;
-};
-
 export type ReconciliationQueue = Node & {
   __typename?: 'ReconciliationQueue';
   /** Reads a single `Book` that is related to this `ReconciliationQueue`. */
@@ -8777,7 +7231,7 @@ export type ReconciliationQueue = Node & {
   reviewedAt?: Maybe<Scalars['Datetime']['output']>;
   reviewedBy?: Maybe<Scalars['String']['output']>;
   rowId: Scalars['UUID']['output'];
-  status: ReconciliationStatus;
+  status: Scalars['String']['output'];
   /** Reads a single `Account` that is related to this `ReconciliationQueue`. */
   suggestedCreditAccount?: Maybe<Account>;
   suggestedCreditAccountId?: Maybe<Scalars['UUID']['output']>;
@@ -8796,7 +7250,7 @@ export type ReconciliationQueueCondition = {
   /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `status` field. */
-  status?: InputMaybe<ReconciliationStatus>;
+  status?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A connection to a list of `ReconciliationQueue` values. */
@@ -8838,7 +7292,7 @@ export type ReconciliationQueueFilter = {
   /** Filter by the object’s `rowId` field. */
   rowId?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `status` field. */
-  status?: InputMaybe<ReconciliationStatusFilter>;
+  status?: InputMaybe<StringFilter>;
   /** Filter by the object’s `suggestedCreditAccount` relation. */
   suggestedCreditAccount?: InputMaybe<AccountFilter>;
   /** A related `suggestedCreditAccount` exists. */
@@ -8862,7 +7316,7 @@ export type ReconciliationQueueInput = {
   reviewedAt?: InputMaybe<Scalars['Datetime']['input']>;
   reviewedBy?: InputMaybe<Scalars['String']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
-  status?: InputMaybe<ReconciliationStatus>;
+  status?: InputMaybe<Scalars['String']['input']>;
   suggestedCreditAccountId?: InputMaybe<Scalars['UUID']['input']>;
   suggestedDebitAccountId?: InputMaybe<Scalars['UUID']['input']>;
 };
@@ -8875,7 +7329,9 @@ export enum ReconciliationQueueOrderBy {
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RowIdAsc = 'ROW_ID_ASC',
-  RowIdDesc = 'ROW_ID_DESC'
+  RowIdDesc = 'ROW_ID_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC'
 }
 
 /** Represents an update to a `ReconciliationQueue`. Fields that are set will be updated. */
@@ -8891,7 +7347,7 @@ export type ReconciliationQueuePatch = {
   reviewedAt?: InputMaybe<Scalars['Datetime']['input']>;
   reviewedBy?: InputMaybe<Scalars['String']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
-  status?: InputMaybe<ReconciliationStatus>;
+  status?: InputMaybe<Scalars['String']['input']>;
   suggestedCreditAccountId?: InputMaybe<Scalars['UUID']['input']>;
   suggestedDebitAccountId?: InputMaybe<Scalars['UUID']['input']>;
 };
@@ -9010,39 +7466,6 @@ export type ReconciliationStatementPatch = {
   statementBalance?: InputMaybe<Scalars['BigFloat']['input']>;
   statementDate?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
-};
-
-export enum ReconciliationStatus {
-  Adjusted = 'adjusted',
-  Approved = 'approved',
-  PendingReview = 'pending_review',
-  Rejected = 'rejected'
-}
-
-/** A filter to be used against ReconciliationStatus fields. All fields are combined with a logical ‘and.’ */
-export type ReconciliationStatusFilter = {
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<ReconciliationStatus>;
-  /** Equal to the specified value. */
-  equalTo?: InputMaybe<ReconciliationStatus>;
-  /** Greater than the specified value. */
-  greaterThan?: InputMaybe<ReconciliationStatus>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<ReconciliationStatus>;
-  /** Included in the specified list. */
-  in?: InputMaybe<Array<ReconciliationStatus>>;
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Less than the specified value. */
-  lessThan?: InputMaybe<ReconciliationStatus>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<ReconciliationStatus>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<ReconciliationStatus>;
-  /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<ReconciliationStatus>;
-  /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<ReconciliationStatus>>;
 };
 
 export enum RecurringFrequency {
@@ -10612,241 +9035,6 @@ export type UpdatePayrollConnectionPayloadPayrollConnectionEdgeArgs = {
   orderBy?: Array<PayrollConnectionOrderBy>;
 };
 
-/** All input for the `updateQuickbooksAccountMapById` mutation. */
-export type UpdateQuickbooksAccountMapByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `QuickbooksAccountMap` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `QuickbooksAccountMap` being updated. */
-  patch: QuickbooksAccountMapPatch;
-};
-
-/** All input for the `updateQuickbooksAccountMap` mutation. */
-export type UpdateQuickbooksAccountMapInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `QuickbooksAccountMap` being updated. */
-  patch: QuickbooksAccountMapPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `QuickbooksAccountMap` mutation. */
-export type UpdateQuickbooksAccountMapPayload = {
-  __typename?: 'UpdateQuickbooksAccountMapPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `QuickbooksAccountMap` that was updated by this mutation. */
-  quickbooksAccountMap?: Maybe<QuickbooksAccountMap>;
-  /** An edge for our `QuickbooksAccountMap`. May be used by Relay 1. */
-  quickbooksAccountMapEdge?: Maybe<QuickbooksAccountMapEdge>;
-};
-
-
-/** The output of our update `QuickbooksAccountMap` mutation. */
-export type UpdateQuickbooksAccountMapPayloadQuickbooksAccountMapEdgeArgs = {
-  orderBy?: Array<QuickbooksAccountMapOrderBy>;
-};
-
-/** All input for the `updateQuickbooksCutoverById` mutation. */
-export type UpdateQuickbooksCutoverByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `QuickbooksCutover` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `QuickbooksCutover` being updated. */
-  patch: QuickbooksCutoverPatch;
-};
-
-/** All input for the `updateQuickbooksCutover` mutation. */
-export type UpdateQuickbooksCutoverInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `QuickbooksCutover` being updated. */
-  patch: QuickbooksCutoverPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `QuickbooksCutover` mutation. */
-export type UpdateQuickbooksCutoverPayload = {
-  __typename?: 'UpdateQuickbooksCutoverPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `QuickbooksCutover` that was updated by this mutation. */
-  quickbooksCutover?: Maybe<QuickbooksCutover>;
-  /** An edge for our `QuickbooksCutover`. May be used by Relay 1. */
-  quickbooksCutoverEdge?: Maybe<QuickbooksCutoverEdge>;
-};
-
-
-/** The output of our update `QuickbooksCutover` mutation. */
-export type UpdateQuickbooksCutoverPayloadQuickbooksCutoverEdgeArgs = {
-  orderBy?: Array<QuickbooksCutoverOrderBy>;
-};
-
-/** All input for the `updateQuickbooksMigrationById` mutation. */
-export type UpdateQuickbooksMigrationByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `QuickbooksMigration` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `QuickbooksMigration` being updated. */
-  patch: QuickbooksMigrationPatch;
-};
-
-/** All input for the `updateQuickbooksMigration` mutation. */
-export type UpdateQuickbooksMigrationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `QuickbooksMigration` being updated. */
-  patch: QuickbooksMigrationPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `QuickbooksMigration` mutation. */
-export type UpdateQuickbooksMigrationPayload = {
-  __typename?: 'UpdateQuickbooksMigrationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `QuickbooksMigration` that was updated by this mutation. */
-  quickbooksMigration?: Maybe<QuickbooksMigration>;
-  /** An edge for our `QuickbooksMigration`. May be used by Relay 1. */
-  quickbooksMigrationEdge?: Maybe<QuickbooksMigrationEdge>;
-};
-
-
-/** The output of our update `QuickbooksMigration` mutation. */
-export type UpdateQuickbooksMigrationPayloadQuickbooksMigrationEdgeArgs = {
-  orderBy?: Array<QuickbooksMigrationOrderBy>;
-};
-
-/** All input for the `updateQuickbooksReconciliationById` mutation. */
-export type UpdateQuickbooksReconciliationByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `QuickbooksReconciliation` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `QuickbooksReconciliation` being updated. */
-  patch: QuickbooksReconciliationPatch;
-};
-
-/** All input for the `updateQuickbooksReconciliation` mutation. */
-export type UpdateQuickbooksReconciliationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `QuickbooksReconciliation` being updated. */
-  patch: QuickbooksReconciliationPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** All input for the `updateQuickbooksReconciliationLineById` mutation. */
-export type UpdateQuickbooksReconciliationLineByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `QuickbooksReconciliationLine` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `QuickbooksReconciliationLine` being updated. */
-  patch: QuickbooksReconciliationLinePatch;
-};
-
-/** All input for the `updateQuickbooksReconciliationLine` mutation. */
-export type UpdateQuickbooksReconciliationLineInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `QuickbooksReconciliationLine` being updated. */
-  patch: QuickbooksReconciliationLinePatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `QuickbooksReconciliationLine` mutation. */
-export type UpdateQuickbooksReconciliationLinePayload = {
-  __typename?: 'UpdateQuickbooksReconciliationLinePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `QuickbooksReconciliationLine` that was updated by this mutation. */
-  quickbooksReconciliationLine?: Maybe<QuickbooksReconciliationLine>;
-  /** An edge for our `QuickbooksReconciliationLine`. May be used by Relay 1. */
-  quickbooksReconciliationLineEdge?: Maybe<QuickbooksReconciliationLineEdge>;
-};
-
-
-/** The output of our update `QuickbooksReconciliationLine` mutation. */
-export type UpdateQuickbooksReconciliationLinePayloadQuickbooksReconciliationLineEdgeArgs = {
-  orderBy?: Array<QuickbooksReconciliationLineOrderBy>;
-};
-
-/** The output of our update `QuickbooksReconciliation` mutation. */
-export type UpdateQuickbooksReconciliationPayload = {
-  __typename?: 'UpdateQuickbooksReconciliationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `QuickbooksReconciliation` that was updated by this mutation. */
-  quickbooksReconciliation?: Maybe<QuickbooksReconciliation>;
-  /** An edge for our `QuickbooksReconciliation`. May be used by Relay 1. */
-  quickbooksReconciliationEdge?: Maybe<QuickbooksReconciliationEdge>;
-};
-
-
-/** The output of our update `QuickbooksReconciliation` mutation. */
-export type UpdateQuickbooksReconciliationPayloadQuickbooksReconciliationEdgeArgs = {
-  orderBy?: Array<QuickbooksReconciliationOrderBy>;
-};
-
 /** All input for the `updateReconciliationQueueById` mutation. */
 export type UpdateReconciliationQueueByIdInput = {
   /**
@@ -11670,7 +9858,7 @@ export type BookInput = {
   name: string;
   organizationId: string;
   rowId?: string | null | undefined;
-  type: BookType;
+  type: string;
   updatedAt?: Date | null | undefined;
 };
 
@@ -11682,13 +9870,9 @@ export type BookPatch = {
   name?: string | null | undefined;
   organizationId?: string | null | undefined;
   rowId?: string | null | undefined;
-  type?: BookType | null | undefined;
+  type?: string | null | undefined;
   updatedAt?: Date | null | undefined;
 };
-
-export type BookType =
-  | 'business'
-  | 'personal';
 
 /** An input for mutations affecting `Budget` */
 export type BudgetInput = {
@@ -11855,18 +10039,11 @@ export type JournalEntryInput = {
   isReviewed?: boolean | null | undefined;
   memo?: string | null | undefined;
   rowId?: string | null | undefined;
-  source?: JournalEntrySource | null | undefined;
+  source?: string | null | undefined;
   sourceReferenceId?: string | null | undefined;
   updatedAt?: Date | null | undefined;
   vendorId?: string | null | undefined;
 };
-
-export type JournalEntrySource =
-  | 'crypto_sync'
-  | 'mantle_sync'
-  | 'manual'
-  | 'plaid_import'
-  | 'recurring';
 
 /** An input for mutations affecting `JournalLine` */
 export type JournalLineInput = {
@@ -11892,16 +10069,10 @@ export type ReconciliationQueuePatch = {
   reviewedAt?: Date | null | undefined;
   reviewedBy?: string | null | undefined;
   rowId?: string | null | undefined;
-  status?: ReconciliationStatus | null | undefined;
+  status?: string | null | undefined;
   suggestedCreditAccountId?: string | null | undefined;
   suggestedDebitAccountId?: string | null | undefined;
 };
-
-export type ReconciliationStatus =
-  | 'adjusted'
-  | 'approved'
-  | 'pending_review'
-  | 'rejected';
 
 /** An input for mutations affecting `SavingsGoal` */
 export type SavingsGoalInput = {
@@ -12010,21 +10181,21 @@ export type AllBooksQueryVariables = Exact<{
 }>;
 
 
-export type AllBooksQuery = { books: { nodes: Array<{ rowId: string, organizationId: string, name: string, type: BookType, currency: string, fiscalYearStartMonth: number, createdAt: string | null, updatedAt: string | null } | null> } | null };
+export type AllBooksQuery = { books: { nodes: Array<{ rowId: string, organizationId: string, name: string, type: string, currency: string, fiscalYearStartMonth: number, createdAt: string | null, updatedAt: string | null } | null> } | null };
 
 export type CreateBookMutationVariables = Exact<{
   input: CreateBookInput;
 }>;
 
 
-export type CreateBookMutation = { createBook: { book: { rowId: string, name: string, type: BookType } | null } | null };
+export type CreateBookMutation = { createBook: { book: { rowId: string, name: string, type: string } | null } | null };
 
 export type UpdateBookMutationVariables = Exact<{
   input: UpdateBookInput;
 }>;
 
 
-export type UpdateBookMutation = { updateBook: { book: { rowId: string, name: string, type: BookType } | null } | null };
+export type UpdateBookMutation = { updateBook: { book: { rowId: string, name: string, type: string } | null } | null };
 
 export type DeleteBookMutationVariables = Exact<{
   input: DeleteBookInput;
@@ -12068,7 +10239,7 @@ export type AllJournalEntriesQueryVariables = Exact<{
 }>;
 
 
-export type AllJournalEntriesQuery = { journalEntries: { totalCount: number, nodes: Array<{ rowId: string, bookId: string, date: string, memo: string | null, source: JournalEntrySource, sourceReferenceId: string | null, isReviewed: boolean, isReconciled: boolean, createdAt: string | null, updatedAt: string | null, journalLines: { nodes: Array<{ rowId: string, accountId: string, debit: string, credit: string, memo: string | null, account: { rowId: string, name: string, code: string | null, type: AccountType } | null } | null> } } | null>, pageInfo: { hasNextPage: boolean, endCursor: string | null } } | null };
+export type AllJournalEntriesQuery = { journalEntries: { totalCount: number, nodes: Array<{ rowId: string, bookId: string, date: string, memo: string | null, source: string, sourceReferenceId: string | null, isReviewed: boolean, isReconciled: boolean, createdAt: string | null, updatedAt: string | null, journalLines: { nodes: Array<{ rowId: string, accountId: string, debit: string, credit: string, memo: string | null, account: { rowId: string, name: string, code: string | null, type: AccountType } | null } | null> } } | null>, pageInfo: { hasNextPage: boolean, endCursor: string | null } } | null };
 
 export type CreateJournalEntryMutationVariables = Exact<{
   input: CreateJournalEntryInput;
@@ -12093,25 +10264,25 @@ export type DeleteJournalEntryMutation = { deleteJournalEntry: { deletedJournalE
 
 export type PendingReconciliationQueryVariables = Exact<{
   bookId: string;
-  status?: ReconciliationStatus | null | undefined;
+  status?: string | null | undefined;
 }>;
 
 
-export type PendingReconciliationQuery = { reconciliationQueues: { totalCount: number, nodes: Array<{ rowId: string, bookId: string, journalEntryId: string, suggestedDebitAccountId: string | null, suggestedCreditAccountId: string | null, status: ReconciliationStatus, reviewedAt: string | null, reviewedBy: string | null, createdAt: string | null, source: string | null, journalEntry: { rowId: string, date: string, memo: string | null, source: JournalEntrySource, isReviewed: boolean } | null } | null> } | null };
+export type PendingReconciliationQuery = { reconciliationQueues: { totalCount: number, nodes: Array<{ rowId: string, bookId: string, journalEntryId: string, suggestedDebitAccountId: string | null, suggestedCreditAccountId: string | null, status: string, reviewedAt: string | null, reviewedBy: string | null, createdAt: string | null, source: string | null, journalEntry: { rowId: string, date: string, memo: string | null, source: string, isReviewed: boolean } | null } | null> } | null };
 
 export type ApproveReconciliationMutationVariables = Exact<{
   input: UpdateReconciliationQueueInput;
 }>;
 
 
-export type ApproveReconciliationMutation = { updateReconciliationQueue: { reconciliationQueue: { rowId: string, status: ReconciliationStatus, reviewedAt: string | null } | null } | null };
+export type ApproveReconciliationMutation = { updateReconciliationQueue: { reconciliationQueue: { rowId: string, status: string, reviewedAt: string | null } | null } | null };
 
 export type RejectReconciliationMutationVariables = Exact<{
   input: UpdateReconciliationQueueInput;
 }>;
 
 
-export type RejectReconciliationMutation = { updateReconciliationQueue: { reconciliationQueue: { rowId: string, status: ReconciliationStatus } | null } | null };
+export type RejectReconciliationMutation = { updateReconciliationQueue: { reconciliationQueue: { rowId: string, status: string } | null } | null };
 
 export type AllSavingsGoalsQueryVariables = Exact<{
   bookId: string;
@@ -12396,7 +10567,7 @@ export const DeleteJournalEntryDocument = gql`
 }
     `;
 export const PendingReconciliationDocument = gql`
-    query PendingReconciliation($bookId: UUID!, $status: ReconciliationStatus) {
+    query PendingReconciliation($bookId: UUID!, $status: String) {
   reconciliationQueues(condition: {bookId: $bookId, status: $status}) {
     nodes {
       rowId
