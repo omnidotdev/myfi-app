@@ -55,6 +55,10 @@ function AssetsPage() {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  // Once depreciation is posted or the asset is disposed the depreciation basis
+  // is locked, matching the server, so those inputs are read-only when editing
+  const [basisLocked, setBasisLocked] = useState(false);
 
   // Form state
   const [formName, setFormName] = useState("");
@@ -130,11 +134,34 @@ function AssetsPage() {
 
   const handleAddAsset = useCallback(() => {
     resetForm();
+    setEditingId(null);
+    setBasisLocked(false);
     setFormOpen(true);
   }, [resetForm]);
 
+  const handleEdit = useCallback((asset: FixedAsset) => {
+    setFormName(asset.name);
+    setFormDescription(asset.description ?? "");
+    setFormAcquisitionDate(asset.acquisitionDate);
+    setFormAcquisitionCost(asset.acquisitionCost);
+    setFormSalvageValue(asset.salvageValue);
+    setFormUsefulLifeMonths(String(asset.usefulLifeMonths));
+    setFormMethod(asset.depreciationMethod);
+    setFormMacrsClass(asset.macrsClass != null ? String(asset.macrsClass) : "");
+    setFormAssetAccountId(asset.assetAccountId);
+    setFormExpenseAccountId(asset.depreciationExpenseAccountId);
+    setFormAccumAccountId(asset.accumulatedDepreciationAccountId);
+    setEditingId(asset.id);
+    setBasisLocked(
+      Number(asset.totalDepreciated) > 0 || asset.disposedAt != null,
+    );
+    setFormOpen(true);
+  }, []);
+
   const handleCancel = useCallback(() => {
     setFormOpen(false);
+    setEditingId(null);
+    setBasisLocked(false);
     resetForm();
   }, [resetForm]);
 
@@ -143,14 +170,11 @@ function AssetsPage() {
       e.preventDefault();
       if (!activeBookId) return;
 
-      try {
-        await fetch(`${API_URL}/api/fixed-assets`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            bookId: activeBookId,
-            name: formName,
-            description: formDescription || undefined,
+      // When the basis is locked, only descriptive fields are sent so the
+      // server never rejects the edit
+      const basisFields = basisLocked
+        ? {}
+        : {
             acquisitionDate: formAcquisitionDate,
             acquisitionCost: formAcquisitionCost,
             salvageValue: formSalvageValue,
@@ -161,11 +185,27 @@ function AssetsPage() {
             assetAccountId: formAssetAccountId,
             depreciationExpenseAccountId: formExpenseAccountId,
             accumulatedDepreciationAccountId: formAccumAccountId,
+          };
+
+      try {
+        const endpoint = editingId
+          ? `${API_URL}/api/fixed-assets/${editingId}`
+          : `${API_URL}/api/fixed-assets`;
+        await fetch(endpoint, {
+          method: editingId ? "PATCH" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            bookId: activeBookId,
+            name: formName,
+            description: formDescription || undefined,
+            ...basisFields,
           }),
         });
 
         await fetchAssets();
         setFormOpen(false);
+        setEditingId(null);
+        setBasisLocked(false);
         resetForm();
       } catch {
         // Silently handle submit errors
@@ -173,6 +213,8 @@ function AssetsPage() {
     },
     [
       activeBookId,
+      editingId,
+      basisLocked,
       formName,
       formDescription,
       formAcquisitionDate,
@@ -337,6 +379,13 @@ function AssetsPage() {
                   </td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex items-center justify-end gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleEdit(asset)}
+                        className="rounded-md border border-border px-2.5 py-1 text-xs transition-colors hover:bg-accent"
+                      >
+                        Edit
+                      </button>
                       <Link
                         to="/@{$workspaceSlug}/~/assets/$assetId"
                         params={{ workspaceSlug, assetId: asset.id }}
@@ -374,7 +423,17 @@ function AssetsPage() {
 
           {/* Dialog */}
           <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-lg border border-border bg-card p-6 shadow-lg">
-            <h2 className="mb-4 font-semibold text-lg">Add Fixed Asset</h2>
+            <h2 className="mb-4 font-semibold text-lg">
+              {editingId ? "Edit Fixed Asset" : "Add Fixed Asset"}
+            </h2>
+
+            {basisLocked && (
+              <p className="mb-4 rounded-md border border-border bg-muted/50 px-3 py-2 text-muted-foreground text-xs">
+                Depreciation has been posted or this asset was disposed, so the
+                cost basis and accounts are locked. You can still update the
+                name and description.
+              </p>
+            )}
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               {/* Name */}
@@ -419,6 +478,7 @@ function AssetsPage() {
                   </label>
                   <input
                     id="asset-acq-date"
+                    disabled={basisLocked}
                     type="date"
                     required
                     value={formAcquisitionDate}
@@ -435,6 +495,7 @@ function AssetsPage() {
                   </label>
                   <input
                     id="asset-acq-cost"
+                    disabled={basisLocked}
                     type="number"
                     required
                     min="0"
@@ -458,6 +519,7 @@ function AssetsPage() {
                   </label>
                   <input
                     id="asset-salvage"
+                    disabled={basisLocked}
                     type="number"
                     min="0"
                     step="0.01"
@@ -475,6 +537,7 @@ function AssetsPage() {
                   </label>
                   <input
                     id="asset-useful-life"
+                    disabled={basisLocked}
                     type="number"
                     required
                     min="1"
@@ -493,6 +556,7 @@ function AssetsPage() {
                 </label>
                 <select
                   id="asset-method"
+                  disabled={basisLocked}
                   value={formMethod}
                   onChange={(e) =>
                     setFormMethod(e.target.value as "straight_line" | "macrs")
@@ -518,6 +582,7 @@ function AssetsPage() {
                   </label>
                   <select
                     id="asset-macrs-class"
+                    disabled={basisLocked}
                     required
                     value={formMacrsClass}
                     onChange={(e) => setFormMacrsClass(e.target.value)}
@@ -540,6 +605,7 @@ function AssetsPage() {
                 </label>
                 <select
                   id="asset-acct"
+                  disabled={basisLocked}
                   required
                   value={formAssetAccountId}
                   onChange={(e) => setFormAssetAccountId(e.target.value)}
@@ -563,6 +629,7 @@ function AssetsPage() {
                 </label>
                 <select
                   id="asset-expense-acct"
+                  disabled={basisLocked}
                   required
                   value={formExpenseAccountId}
                   onChange={(e) => setFormExpenseAccountId(e.target.value)}
@@ -586,6 +653,7 @@ function AssetsPage() {
                 </label>
                 <select
                   id="asset-accum-acct"
+                  disabled={basisLocked}
                   required
                   value={formAccumAccountId}
                   onChange={(e) => setFormAccumAccountId(e.target.value)}
@@ -613,7 +681,7 @@ function AssetsPage() {
                   type="submit"
                   className="rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
                 >
-                  Create Asset
+                  {editingId ? "Save Changes" : "Create Asset"}
                 </button>
               </div>
             </form>
