@@ -11,6 +11,7 @@ import {
   LandmarkIcon,
   LayersIcon,
   LeafIcon,
+  MapIcon,
   ReceiptTextIcon,
   ScaleIcon,
   UsersIcon,
@@ -97,6 +98,13 @@ const reportCards = [
       "Tax collected, remitted, and owed by jurisdiction and filing period",
     icon: LandmarkIcon,
     href: "/@{$workspaceSlug}/~/reports/sales-tax",
+  },
+  {
+    title: "Sales by State",
+    description:
+      "Invoiced sales grouped by customer state, flagged where you may cross an economic-nexus threshold",
+    icon: MapIcon,
+    href: "/@{$workspaceSlug}/~/reports/sales-by-state",
   },
   {
     title: "1099-NEC",

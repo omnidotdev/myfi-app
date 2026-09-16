@@ -41,6 +41,7 @@ import { Route as AppAtChar123workspaceSlugChar125Char126ReportsGeneralLedgerRou
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsPayrollRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/payroll'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/profit-and-loss'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/quarterly-estimates'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/sales-by-state'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/sales-tax'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/schedule-c'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/statement-of-equity'
@@ -255,6 +256,12 @@ const AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute =
       getParentRoute: () => AppRoute,
     } as any,
   )
+const AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRoute =
+  AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRouteImport.update({
+    id: '/@{$workspaceSlug}/~/reports/sales-by-state',
+    path: '/@{$workspaceSlug}/~/reports/sales-by-state',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute =
   AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRouteImport.update({
     id: '/@{$workspaceSlug}/~/reports/sales-tax',
@@ -393,6 +400,7 @@ export interface FileRoutesByFullPath {
   '/@{$workspaceSlug}/~/reports/payroll': typeof AppAtChar123workspaceSlugChar125Char126ReportsPayrollRoute
   '/@{$workspaceSlug}/~/reports/profit-and-loss': typeof AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRoute
   '/@{$workspaceSlug}/~/reports/quarterly-estimates': typeof AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute
+  '/@{$workspaceSlug}/~/reports/sales-by-state': typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRoute
   '/@{$workspaceSlug}/~/reports/sales-tax': typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute
   '/@{$workspaceSlug}/~/reports/schedule-c': typeof AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute
   '/@{$workspaceSlug}/~/reports/statement-of-equity': typeof AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRoute
@@ -444,6 +452,7 @@ export interface FileRoutesByTo {
   '/@{$workspaceSlug}/~/reports/payroll': typeof AppAtChar123workspaceSlugChar125Char126ReportsPayrollRoute
   '/@{$workspaceSlug}/~/reports/profit-and-loss': typeof AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRoute
   '/@{$workspaceSlug}/~/reports/quarterly-estimates': typeof AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute
+  '/@{$workspaceSlug}/~/reports/sales-by-state': typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRoute
   '/@{$workspaceSlug}/~/reports/sales-tax': typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute
   '/@{$workspaceSlug}/~/reports/schedule-c': typeof AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute
   '/@{$workspaceSlug}/~/reports/statement-of-equity': typeof AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRoute
@@ -498,6 +507,7 @@ export interface FileRoutesById {
   '/_app/@{$workspaceSlug}/~/reports/payroll': typeof AppAtChar123workspaceSlugChar125Char126ReportsPayrollRoute
   '/_app/@{$workspaceSlug}/~/reports/profit-and-loss': typeof AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRoute
   '/_app/@{$workspaceSlug}/~/reports/quarterly-estimates': typeof AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute
+  '/_app/@{$workspaceSlug}/~/reports/sales-by-state': typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRoute
   '/_app/@{$workspaceSlug}/~/reports/sales-tax': typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute
   '/_app/@{$workspaceSlug}/~/reports/schedule-c': typeof AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute
   '/_app/@{$workspaceSlug}/~/reports/statement-of-equity': typeof AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRoute
@@ -551,6 +561,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/reports/payroll'
     | '/@{$workspaceSlug}/~/reports/profit-and-loss'
     | '/@{$workspaceSlug}/~/reports/quarterly-estimates'
+    | '/@{$workspaceSlug}/~/reports/sales-by-state'
     | '/@{$workspaceSlug}/~/reports/sales-tax'
     | '/@{$workspaceSlug}/~/reports/schedule-c'
     | '/@{$workspaceSlug}/~/reports/statement-of-equity'
@@ -602,6 +613,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/reports/payroll'
     | '/@{$workspaceSlug}/~/reports/profit-and-loss'
     | '/@{$workspaceSlug}/~/reports/quarterly-estimates'
+    | '/@{$workspaceSlug}/~/reports/sales-by-state'
     | '/@{$workspaceSlug}/~/reports/sales-tax'
     | '/@{$workspaceSlug}/~/reports/schedule-c'
     | '/@{$workspaceSlug}/~/reports/statement-of-equity'
@@ -655,6 +667,7 @@ export interface FileRouteTypes {
     | '/_app/@{$workspaceSlug}/~/reports/payroll'
     | '/_app/@{$workspaceSlug}/~/reports/profit-and-loss'
     | '/_app/@{$workspaceSlug}/~/reports/quarterly-estimates'
+    | '/_app/@{$workspaceSlug}/~/reports/sales-by-state'
     | '/_app/@{$workspaceSlug}/~/reports/sales-tax'
     | '/_app/@{$workspaceSlug}/~/reports/schedule-c'
     | '/_app/@{$workspaceSlug}/~/reports/statement-of-equity'
@@ -922,6 +935,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/@{$workspaceSlug}/~/reports/sales-by-state': {
+      id: '/_app/@{$workspaceSlug}/~/reports/sales-by-state'
+      path: '/@{$workspaceSlug}/~/reports/sales-by-state'
+      fullPath: '/@{$workspaceSlug}/~/reports/sales-by-state'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/@{$workspaceSlug}/~/reports/sales-tax': {
       id: '/_app/@{$workspaceSlug}/~/reports/sales-tax'
       path: '/@{$workspaceSlug}/~/reports/sales-tax'
@@ -1073,6 +1093,7 @@ interface AppRouteChildren {
   AppAtChar123workspaceSlugChar125Char126ReportsPayrollRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsPayrollRoute
   AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRoute
   AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute
+  AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRoute
   AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute
   AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute
   AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRoute
@@ -1137,6 +1158,8 @@ const AppRouteChildren: AppRouteChildren = {
     AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRoute,
   AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute:
     AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute,
+  AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRoute:
+    AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRoute,
   AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute:
     AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute,
   AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute:
