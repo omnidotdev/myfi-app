@@ -82,6 +82,7 @@ function BalanceSheetPage() {
     null,
   );
   const [compare, setCompare] = useState(false);
+  const [basis, setBasis] = useState<"accrual" | "cash">("accrual");
   const [flagPct, setFlagPct] = useState(10);
   const [flagAmount, setFlagAmount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -99,6 +100,7 @@ function BalanceSheetPage() {
       if (params.asOfDate) searchParams.set("asOfDate", params.asOfDate);
       if (selectedTagIds.length > 0)
         searchParams.set("tagIds", selectedTagIds.join(","));
+      if (basis === "cash") searchParams.set("basis", "cash");
 
       const res = await fetch(
         `${API_URL}/api/reports/balance-sheet?${searchParams.toString()}`,
@@ -178,6 +180,19 @@ function BalanceSheetPage() {
               onChange={setSelectedTagIds}
             />
             <label className="flex items-center gap-2 text-sm">
+              Basis
+              <select
+                value={basis}
+                onChange={(e) =>
+                  setBasis(e.target.value === "cash" ? "cash" : "accrual")
+                }
+                className="rounded-md border border-border bg-background px-2 py-1 text-sm"
+              >
+                <option value="accrual">Accrual</option>
+                <option value="cash">Cash</option>
+              </select>
+            </label>
+            <label className="flex items-center gap-2 text-sm">
               <input
                 type="checkbox"
                 checked={compare}
@@ -211,6 +226,7 @@ function BalanceSheetPage() {
             query={{
               asOfDate: lastParams.current.asOfDate,
               tagIds: selectedTagIds,
+              basis: basis === "cash" ? "cash" : undefined,
             }}
           />
 
