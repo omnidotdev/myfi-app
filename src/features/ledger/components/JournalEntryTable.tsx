@@ -1,4 +1,9 @@
-import { ChevronDownIcon, ChevronRightIcon, TrashIcon } from "lucide-react";
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  RotateCcwIcon,
+  TrashIcon,
+} from "lucide-react";
 import { useCallback, useState } from "react";
 
 import type {
@@ -9,6 +14,7 @@ import type {
 type JournalEntryTableProps = {
   entries: JournalEntry[];
   onDelete?: (entryId: string) => void;
+  onReverse?: (entryId: string) => void;
 };
 
 const SOURCE_BADGE_CLASSES: Record<JournalEntrySource, string> = {
@@ -43,7 +49,12 @@ function computeTotal(entry: JournalEntry): string {
 /**
  * Table displaying journal entries with expandable line detail
  */
-function JournalEntryTable({ entries, onDelete }: JournalEntryTableProps) {
+function JournalEntryTable({
+  entries,
+  onDelete,
+  onReverse,
+}: JournalEntryTableProps) {
+  const hasActions = Boolean(onDelete || onReverse);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   const toggleExpanded = useCallback((entryId: string) => {
@@ -79,7 +90,7 @@ function JournalEntryTable({ entries, onDelete }: JournalEntryTableProps) {
             <th className="px-3 py-3 font-medium">Source</th>
             <th className="px-3 py-3 font-medium">Status</th>
             <th className="px-3 py-3 text-right font-medium">Total</th>
-            {onDelete && <th className="w-10 px-3 py-3" />}
+            {hasActions && <th className="w-20 px-3 py-3" />}
           </tr>
         </thead>
         <tbody>
@@ -93,6 +104,7 @@ function JournalEntryTable({ entries, onDelete }: JournalEntryTableProps) {
                 isExpanded={isExpanded}
                 onToggle={() => toggleExpanded(entry.rowId)}
                 onDelete={onDelete}
+                onReverse={onReverse}
               />
             );
           })}
@@ -107,9 +119,17 @@ type EntryRowProps = {
   isExpanded: boolean;
   onToggle: () => void;
   onDelete?: (entryId: string) => void;
+  onReverse?: (entryId: string) => void;
 };
 
-function EntryRow({ entry, isExpanded, onToggle, onDelete }: EntryRowProps) {
+function EntryRow({
+  entry,
+  isExpanded,
+  onToggle,
+  onDelete,
+  onReverse,
+}: EntryRowProps) {
+  const hasActions = Boolean(onDelete || onReverse);
   return (
     <>
       {/* Summary row */}
@@ -155,19 +175,37 @@ function EntryRow({ entry, isExpanded, onToggle, onDelete }: EntryRowProps) {
         <td className="whitespace-nowrap px-3 py-3 text-right font-mono">
           ${computeTotal(entry)}
         </td>
-        {onDelete && (
+        {hasActions && (
           <td className="px-3 py-3">
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(entry.rowId);
-              }}
-              aria-label={`Delete entry ${entry.date}`}
-              className="rounded p-1 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-            >
-              <TrashIcon className="size-3.5" />
-            </button>
+            <div className="flex items-center gap-1">
+              {onReverse && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onReverse(entry.rowId);
+                  }}
+                  aria-label={`Reverse entry ${entry.date}`}
+                  title="Post a reversing entry"
+                  className="rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                >
+                  <RotateCcwIcon className="size-3.5" />
+                </button>
+              )}
+              {onDelete && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete(entry.rowId);
+                  }}
+                  aria-label={`Delete entry ${entry.date}`}
+                  className="rounded p-1 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                >
+                  <TrashIcon className="size-3.5" />
+                </button>
+              )}
+            </div>
           </td>
         )}
       </tr>
@@ -175,7 +213,7 @@ function EntryRow({ entry, isExpanded, onToggle, onDelete }: EntryRowProps) {
       {/* Expanded line detail */}
       {isExpanded && (
         <tr className="border-border border-b bg-muted/30">
-          <td colSpan={onDelete ? 7 : 6} className="px-6 py-3">
+          <td colSpan={hasActions ? 7 : 6} className="px-6 py-3">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-muted-foreground text-xs">

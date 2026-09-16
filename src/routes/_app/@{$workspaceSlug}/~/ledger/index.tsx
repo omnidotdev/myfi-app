@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 
 import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
@@ -10,6 +11,7 @@ import type {
   JournalEntrySource,
 } from "@/features/ledger/types/journalEntry";
 import { JOURNAL_ENTRY_SOURCES } from "@/features/ledger/types/journalEntry";
+import { apiFetch } from "@/lib/api/apiFetch";
 import { API_URL } from "@/lib/config/env.config";
 import formatLabel from "@/lib/format/label";
 import useActiveBook from "@/lib/hooks/useActiveBook";
@@ -106,6 +108,26 @@ function LedgerPage() {
         await fetchEntries();
       } catch {
         // Silently handle delete errors
+      }
+    },
+    [fetchEntries],
+  );
+
+  const handleReverse = useCallback(
+    async (entryId: string) => {
+      try {
+        const res = await apiFetch(`/api/journal-entries/${entryId}/reverse`, {
+          method: "POST",
+          body: JSON.stringify({}),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error ?? "Reverse failed");
+        }
+        toast.success("Reversing entry posted");
+        await fetchEntries();
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : "Reverse failed");
       }
     },
     [fetchEntries],
@@ -255,7 +277,11 @@ function LedgerPage() {
 
       {/* Journal entry table */}
       {!loading && entries.length > 0 && (
-        <JournalEntryTable entries={filteredEntries} onDelete={handleDelete} />
+        <JournalEntryTable
+          entries={filteredEntries}
+          onDelete={handleDelete}
+          onReverse={handleReverse}
+        />
       )}
     </div>
   );
