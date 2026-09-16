@@ -1,6 +1,8 @@
+import { Link, useParams } from "@tanstack/react-router";
 import {
   ChevronDownIcon,
   ChevronRightIcon,
+  ExternalLinkIcon,
   RotateCcwIcon,
   TrashIcon,
 } from "lucide-react";
@@ -90,6 +92,7 @@ function JournalEntryTable({
             <th className="px-3 py-3 font-medium">Source</th>
             <th className="px-3 py-3 font-medium">Status</th>
             <th className="px-3 py-3 text-right font-medium">Total</th>
+            <th className="w-10 px-3 py-3" />
             {hasActions && <th className="w-20 px-3 py-3" />}
           </tr>
         </thead>
@@ -130,6 +133,8 @@ function EntryRow({
   onReverse,
 }: EntryRowProps) {
   const hasActions = Boolean(onDelete || onReverse);
+  // Shared table, always rendered under the workspace-scoped ledger route
+  const { workspaceSlug } = useParams({ strict: false });
   return (
     <>
       {/* Summary row */}
@@ -175,6 +180,19 @@ function EntryRow({
         <td className="whitespace-nowrap px-3 py-3 text-right font-mono">
           ${computeTotal(entry)}
         </td>
+        <td className="px-3 py-3">
+          {workspaceSlug && (
+            <Link
+              to="/@{$workspaceSlug}/~/ledger/$journalEntryId"
+              params={{ workspaceSlug, journalEntryId: entry.rowId }}
+              onClick={(e) => e.stopPropagation()}
+              aria-label={`Open entry ${entry.date}`}
+              className="inline-flex rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            >
+              <ExternalLinkIcon className="size-3.5" />
+            </Link>
+          )}
+        </td>
         {hasActions && (
           <td className="px-3 py-3">
             <div className="flex items-center gap-1">
@@ -213,7 +231,7 @@ function EntryRow({
       {/* Expanded line detail */}
       {isExpanded && (
         <tr className="border-border border-b bg-muted/30">
-          <td colSpan={hasActions ? 7 : 6} className="px-6 py-3">
+          <td colSpan={hasActions ? 8 : 7} className="px-6 py-3">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-muted-foreground text-xs">
