@@ -10,7 +10,8 @@ import type { ChangeEvent, DragEvent } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
-import { API_URL } from "@/lib/config/env.config";
+import ConfirmDialog from "@/components/ConfirmDialog";
+import { apiFetch } from "@/lib/api/apiFetch";
 
 type AttachmentPanelProps = {
   bookId: string;
@@ -23,7 +24,6 @@ type Attachment = {
   contentType: string;
   sizeBytes: number;
   uploadStatus: string;
-  downloadUrl: string | null;
   journalEntryId: string | null;
   createdAt: string;
 };
@@ -48,21 +48,25 @@ function formatFileSize(bytes: number): string {
 
 /**
  * Panel for uploading, viewing, unlinking, and deleting attachments on a
- * journal entry via the presigned-URL flow
+ * journal entry. Uploads and downloads are proxied through the authed API
+ * (the bucket is private), so files never transit a shareable URL
  */
 function AttachmentPanel({ bookId, journalEntryId }: AttachmentPanelProps) {
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [viewingId, setViewingId] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<Attachment | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchAttachments = useCallback(async () => {
     setIsLoading(true);
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/attachments?bookId=${bookId}&journalEntryId=${journalEntryId}`,
+      const res = await apiFetch(
+        `/api/attachments?bookId=${bookId}&journalEntryId=${journalEntryId}`,
       );
 
       if (!res.ok) {
@@ -99,56 +103,21 @@ function AttachmentPanel({ bookId, journalEntryId }: AttachmentPanelProps) {
       setIsUploading(true);
 
       try {
-        // Request a presigned upload URL
-        const presignRes = await fetch(`${API_URL}/api/attachments/presign`, {
+        const form = new FormData();
+        form.append("file", file);
+        form.append("bookId", bookId);
+        form.append("journalEntryId", journalEntryId);
+
+        const res = await apiFetch("/api/attachments", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            bookId,
-            journalEntryId,
-            filename: file.name,
-            contentType: file.type,
-            sizeBytes: file.size,
-          }),
+          body: form,
         });
 
-        if (!presignRes.ok) {
-          const body = (await presignRes.json().catch(() => null)) as {
+        if (!res.ok) {
+          const body = (await res.json().catch(() => null)) as {
             error?: string;
           } | null;
-          throw new Error(body?.error ?? "Failed to presign upload");
-        }
-
-        const { attachment, uploadUrl } = (await presignRes.json()) as {
-          attachment: Attachment;
-          uploadUrl: string;
-        };
-
-        // Immediately surface the pending attachment in the list
-        setAttachments((prev) => [...prev, attachment]);
-
-        // Upload the raw bytes directly to storage
-        const putRes = await fetch(uploadUrl, {
-          method: "PUT",
-          headers: { "Content-Type": file.type },
-          body: file,
-        });
-
-        if (!putRes.ok) {
-          throw new Error(`Storage upload failed (${putRes.status})`);
-        }
-
-        // Confirm the upload so the server marks the row complete
-        const confirmRes = await fetch(
-          `${API_URL}/api/attachments/${attachment.id}/confirm`,
-          { method: "POST" },
-        );
-
-        if (!confirmRes.ok) {
-          const body = (await confirmRes.json().catch(() => null)) as {
-            error?: string;
-          } | null;
-          throw new Error(body?.error ?? "Failed to confirm upload");
+          throw new Error(body?.error ?? "Failed to upload file");
         }
 
         toast.success(`Uploaded ${file.name}`);
@@ -157,8 +126,6 @@ function AttachmentPanel({ bookId, journalEntryId }: AttachmentPanelProps) {
         const message =
           err instanceof Error ? err.message : "Failed to upload file";
         toast.error(message);
-        // Refresh to drop any pending placeholder on failure
-        await fetchAttachments();
       } finally {
         setIsUploading(false);
       }
@@ -203,12 +170,41 @@ function AttachmentPanel({ bookId, journalEntryId }: AttachmentPanelProps) {
     setIsDragging(false);
   }, []);
 
+  // Downloads require the auth header, so fetch the bytes through apiFetch and
+  // open them from a short-lived object URL rather than a plain link
+  const handleView = useCallback(
+    async (attachment: Attachment) => {
+      setViewingId(attachment.id);
+      try {
+        const res = await apiFetch(
+          `/api/attachments/${attachment.id}/download?bookId=${bookId}`,
+        );
+
+        if (!res.ok) {
+          throw new Error(`Failed to open file (${res.status})`);
+        }
+
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        window.open(url, "_blank", "noopener,noreferrer");
+        // Revoke after a delay so the new tab has time to load the blob
+        setTimeout(() => URL.revokeObjectURL(url), 60_000);
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : "Failed to open attachment";
+        toast.error(message);
+      } finally {
+        setViewingId(null);
+      }
+    },
+    [bookId],
+  );
+
   const handleUnlink = useCallback(
     async (id: string) => {
       try {
-        const res = await fetch(`${API_URL}/api/attachments/${id}`, {
+        const res = await apiFetch(`/api/attachments/${id}?bookId=${bookId}`, {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ journalEntryId: null }),
         });
 
@@ -224,30 +220,33 @@ function AttachmentPanel({ bookId, journalEntryId }: AttachmentPanelProps) {
         toast.error(message);
       }
     },
-    [fetchAttachments],
+    [bookId, fetchAttachments],
   );
 
-  const handleDelete = useCallback(
-    async (id: string) => {
-      try {
-        const res = await fetch(`${API_URL}/api/attachments/${id}`, {
-          method: "DELETE",
-        });
+  const handleDelete = useCallback(async () => {
+    if (!pendingDelete) return;
+    setIsDeleting(true);
+    try {
+      const res = await apiFetch(
+        `/api/attachments/${pendingDelete.id}?bookId=${bookId}`,
+        { method: "DELETE" },
+      );
 
-        if (!res.ok) {
-          throw new Error(`Failed to delete (${res.status})`);
-        }
-
-        toast.success("Attachment deleted");
-        await fetchAttachments();
-      } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Failed to delete attachment";
-        toast.error(message);
+      if (!res.ok) {
+        throw new Error(`Failed to delete (${res.status})`);
       }
-    },
-    [fetchAttachments],
-  );
+
+      toast.success("Attachment deleted");
+      setPendingDelete(null);
+      await fetchAttachments();
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Failed to delete attachment";
+      toast.error(message);
+    } finally {
+      setIsDeleting(false);
+    }
+  }, [pendingDelete, bookId, fetchAttachments]);
 
   return (
     <section className="flex flex-col gap-4 rounded-md border border-border bg-card p-4">
@@ -305,65 +304,73 @@ function AttachmentPanel({ bookId, journalEntryId }: AttachmentPanelProps) {
         </p>
       ) : (
         <ul className="flex flex-col gap-2">
-          {attachments.map((attachment) => {
-            const isPending = attachment.uploadStatus !== "complete";
+          {attachments.map((attachment) => (
+            <li
+              key={attachment.id}
+              className="flex items-center gap-3 rounded-md border border-border bg-background p-3"
+            >
+              <div className="flex min-w-0 flex-1 flex-col">
+                <span className="truncate font-medium text-sm">
+                  {attachment.filename}
+                </span>
+                <span className="text-muted-foreground text-xs">
+                  {formatFileSize(attachment.sizeBytes)} ·{" "}
+                  {attachment.contentType}
+                </span>
+              </div>
 
-            return (
-              <li
-                key={attachment.id}
-                className="flex items-center gap-3 rounded-md border border-border bg-background p-3"
-              >
-                <div className="flex min-w-0 flex-1 flex-col">
-                  <span className="truncate font-medium text-sm">
-                    {attachment.filename}
-                  </span>
-                  <span className="text-muted-foreground text-xs">
-                    {formatFileSize(attachment.sizeBytes)} ·{" "}
-                    {attachment.contentType}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-1">
-                  {isPending || !attachment.downloadUrl ? (
-                    <span className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-muted-foreground text-xs">
-                      <Loader2Icon className="size-3 animate-spin" />
-                      Uploading...
-                    </span>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => handleView(attachment)}
+                  disabled={viewingId === attachment.id}
+                  className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs transition-colors hover:bg-accent disabled:opacity-50"
+                >
+                  {viewingId === attachment.id ? (
+                    <Loader2Icon className="size-3 animate-spin" />
                   ) : (
-                    <a
-                      href={attachment.downloadUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs transition-colors hover:bg-accent"
-                    >
-                      <ExternalLinkIcon className="size-3" />
-                      View
-                    </a>
+                    <ExternalLinkIcon className="size-3" />
                   )}
-                  <button
-                    type="button"
-                    onClick={() => handleUnlink(attachment.id)}
-                    aria-label={`Unlink ${attachment.filename}`}
-                    className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs transition-colors hover:bg-accent"
-                  >
-                    <UnlinkIcon className="size-3" />
-                    Unlink
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(attachment.id)}
-                    aria-label={`Delete ${attachment.filename}`}
-                    className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-destructive text-xs transition-colors hover:bg-destructive/10"
-                  >
-                    <TrashIcon className="size-3" />
-                    Delete
-                  </button>
-                </div>
-              </li>
-            );
-          })}
+                  View
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleUnlink(attachment.id)}
+                  aria-label={`Unlink ${attachment.filename}`}
+                  className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs transition-colors hover:bg-accent"
+                >
+                  <UnlinkIcon className="size-3" />
+                  Unlink
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPendingDelete(attachment)}
+                  aria-label={`Delete ${attachment.filename}`}
+                  className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-destructive text-xs transition-colors hover:bg-destructive/10"
+                >
+                  <TrashIcon className="size-3" />
+                  Delete
+                </button>
+              </div>
+            </li>
+          ))}
         </ul>
       )}
+
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        title="Delete attachment?"
+        description={
+          pendingDelete
+            ? `"${pendingDelete.filename}" will be permanently deleted. This cannot be undone.`
+            : undefined
+        }
+        confirmLabel="Delete"
+        destructive
+        loading={isDeleting}
+        onConfirm={handleDelete}
+        onCancel={() => setPendingDelete(null)}
+      />
     </section>
   );
 }
