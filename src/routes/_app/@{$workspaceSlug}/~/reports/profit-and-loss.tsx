@@ -3,6 +3,9 @@ import { DownloadIcon, PrinterIcon } from "lucide-react";
 import { useRef, useState } from "react";
 
 import BookPicker from "@/features/books/components/BookPicker";
+import ComparativeReportTable, {
+  type ComparativeRow,
+} from "@/features/reports/components/ComparativeReportTable";
 import HierarchicalReportTable from "@/features/reports/components/HierarchicalReportTable";
 import ReportFilters from "@/features/reports/components/ReportFilters";
 import TagFilter from "@/features/tags/components/TagFilter";
@@ -30,6 +33,36 @@ type ProfitAndLossData = {
   netIncome: string;
 };
 
+type ComparativeTotal = {
+  current: string;
+  prior: string;
+  variance: string;
+  variancePct: string | null;
+};
+
+type ComparativePnlData = {
+  revenue: ComparativeRow[];
+  expenses: ComparativeRow[];
+  totals: {
+    totalRevenue: ComparativeTotal;
+    totalExpenses: ComparativeTotal;
+    netIncome: ComparativeTotal;
+  };
+};
+
+/** The equal-length period immediately preceding [startDate, endDate] */
+const priorWindow = (startDate: string, endDate: string) => {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const lengthMs = end.getTime() - start.getTime();
+  const priorEnd = new Date(start.getTime() - 86_400_000);
+  const priorStart = new Date(priorEnd.getTime() - lengthMs);
+  return {
+    priorStartDate: priorStart.toISOString().slice(0, 10),
+    priorEndDate: priorEnd.toISOString().slice(0, 10),
+  };
+};
+
 export const Route = createFileRoute(
   "/_app/@{$workspaceSlug}/~/reports/profit-and-loss",
 )({
@@ -46,6 +79,10 @@ function ProfitAndLossPage() {
   const { tagGroups } = useTagGroups(activeBookId);
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
   const [data, setData] = useState<ProfitAndLossData | null>(null);
+  const [comparative, setComparative] = useState<ComparativePnlData | null>(
+    null,
+  );
+  const [compare, setCompare] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const lastParams = useRef<{ startDate?: string; endDate?: string }>({});
@@ -76,6 +113,22 @@ function ProfitAndLossPage() {
 
       const json = await res.json();
       setData(json);
+
+      if (compare && params.startDate && params.endDate) {
+        const { priorStartDate, priorEndDate } = priorWindow(
+          params.startDate,
+          params.endDate,
+        );
+        const cmp = new URLSearchParams(searchParams);
+        cmp.set("priorStartDate", priorStartDate);
+        cmp.set("priorEndDate", priorEndDate);
+        const cmpRes = await fetch(
+          `${API_URL}/api/reports/comparative-profit-and-loss?${cmp.toString()}`,
+        );
+        setComparative(cmpRes.ok ? await cmpRes.json() : null);
+      } else {
+        setComparative(null);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load report");
     } finally {
@@ -120,11 +173,22 @@ function ProfitAndLossPage() {
         mode="range"
         onGenerate={handleGenerate}
         extraFilters={
-          <TagFilter
-            tagGroups={tagGroups}
-            selectedTagIds={selectedTagIds}
-            onChange={setSelectedTagIds}
-          />
+          <>
+            <TagFilter
+              tagGroups={tagGroups}
+              selectedTagIds={selectedTagIds}
+              onChange={setSelectedTagIds}
+            />
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={compare}
+                onChange={(e) => setCompare(e.target.checked)}
+                className="size-4 rounded border-border"
+              />
+              Compare to prior period
+            </label>
+          </>
         }
       />
 
@@ -187,10 +251,33 @@ function ProfitAndLossPage() {
             </button>
           </div>
 
-          <HierarchicalReportTable
-            sections={sections}
-            grandTotal={{ label: "Net Income", value: data.netIncome }}
-          />
+          {comparative ? (
+            <ComparativeReportTable
+              sections={[
+                {
+                  title: "Revenue",
+                  totalLabel: "Total Revenue",
+                  rows: comparative.revenue,
+                  total: comparative.totals.totalRevenue,
+                },
+                {
+                  title: "Expenses",
+                  totalLabel: "Total Expenses",
+                  rows: comparative.expenses,
+                  total: comparative.totals.totalExpenses,
+                },
+              ]}
+              grandTotal={{
+                label: "Net Income",
+                total: comparative.totals.netIncome,
+              }}
+            />
+          ) : (
+            <HierarchicalReportTable
+              sections={sections}
+              grandTotal={{ label: "Net Income", value: data.netIncome }}
+            />
+          )}
 
           {/* Net income summary */}
           <div className="flex items-center justify-between rounded-lg border border-border bg-card p-4">
