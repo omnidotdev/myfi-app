@@ -36,6 +36,35 @@ const varianceClass = (v: string) =>
     ? "text-green-600 dark:text-green-400"
     : "text-red-600 dark:text-red-400";
 
+export type VarianceThresholds = {
+  /** Flag rows whose absolute percent change is at least this (0 = off) */
+  pct?: number;
+  /** Flag rows whose absolute dollar variance is at least this (0 = off) */
+  amount?: number;
+};
+
+/**
+ * A row is flagged when it exceeds either threshold that is set. Thresholds of
+ * 0 or undefined are treated as off
+ */
+const isFlagged = (
+  variance: string,
+  variancePct: string | null,
+  thresholds?: VarianceThresholds,
+): boolean => {
+  if (!thresholds) return false;
+  const { pct, amount } = thresholds;
+  if (
+    pct &&
+    variancePct !== null &&
+    Math.abs(Number.parseFloat(variancePct)) >= pct
+  )
+    return true;
+  if (amount && Math.abs(Number.parseFloat(variance) || 0) >= amount)
+    return true;
+  return false;
+};
+
 /**
  * Renders a period-over-period comparative statement: each account with its
  * current value, prior value, variance, and percent change, grouped into
@@ -44,9 +73,11 @@ const varianceClass = (v: string) =>
 function ComparativeReportTable({
   sections,
   grandTotal,
+  thresholds,
 }: {
   sections: ComparativeSection[];
   grandTotal?: { label: string; total: ComparativeTotal };
+  thresholds?: VarianceThresholds;
 }) {
   return (
     <div className="overflow-x-auto rounded-lg border border-border bg-card">
@@ -62,7 +93,11 @@ function ComparativeReportTable({
         </thead>
         <tbody>
           {sections.map((section) => (
-            <FragmentSection key={section.title} section={section} />
+            <FragmentSection
+              key={section.title}
+              section={section}
+              thresholds={thresholds}
+            />
           ))}
           {grandTotal && (
             <tr className="border-border border-t-2 font-semibold">
@@ -91,7 +126,13 @@ function ComparativeReportTable({
   );
 }
 
-function FragmentSection({ section }: { section: ComparativeSection }) {
+function FragmentSection({
+  section,
+  thresholds,
+}: {
+  section: ComparativeSection;
+  thresholds?: VarianceThresholds;
+}) {
   return (
     <>
       <tr className="bg-muted/40">
@@ -99,31 +140,42 @@ function FragmentSection({ section }: { section: ComparativeSection }) {
           {section.title}
         </td>
       </tr>
-      {section.rows.map((row) => (
-        <tr
-          key={row.accountId}
-          className="border-border/50 border-b last:border-0"
-        >
-          <td className="px-4 py-2 pl-6">
-            {row.accountCode ? `${row.accountCode} - ` : ""}
-            {row.accountName}
-          </td>
-          <td className="px-4 py-2 text-right font-mono">
-            {money(row.current)}
-          </td>
-          <td className="px-4 py-2 text-right font-mono text-muted-foreground">
-            {money(row.prior)}
-          </td>
-          <td
-            className={`px-4 py-2 text-right font-mono ${varianceClass(row.variance)}`}
+      {section.rows.map((row) => {
+        const flagged = isFlagged(row.variance, row.variancePct, thresholds);
+        return (
+          <tr
+            key={row.accountId}
+            className={`border-border/50 border-b last:border-0 ${flagged ? "bg-amber-50 dark:bg-amber-950/40" : ""}`}
           >
-            {money(row.variance)}
-          </td>
-          <td className="px-4 py-2 text-right font-mono text-muted-foreground">
-            {row.variancePct === null ? "-" : `${row.variancePct}%`}
-          </td>
-        </tr>
-      ))}
+            <td className="px-4 py-2 pl-6">
+              {flagged && (
+                <span
+                  className="mr-1.5 text-amber-500"
+                  title="Variance exceeds the threshold"
+                >
+                  ⚑
+                </span>
+              )}
+              {row.accountCode ? `${row.accountCode} - ` : ""}
+              {row.accountName}
+            </td>
+            <td className="px-4 py-2 text-right font-mono">
+              {money(row.current)}
+            </td>
+            <td className="px-4 py-2 text-right font-mono text-muted-foreground">
+              {money(row.prior)}
+            </td>
+            <td
+              className={`px-4 py-2 text-right font-mono ${varianceClass(row.variance)}`}
+            >
+              {money(row.variance)}
+            </td>
+            <td className="px-4 py-2 text-right font-mono text-muted-foreground">
+              {row.variancePct === null ? "-" : `${row.variancePct}%`}
+            </td>
+          </tr>
+        );
+      })}
       <tr className="border-border border-b font-medium">
         <td className="px-4 py-2 pl-6">{section.totalLabel}</td>
         <td className="px-4 py-2 text-right font-mono">

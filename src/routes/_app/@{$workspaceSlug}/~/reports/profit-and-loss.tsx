@@ -7,6 +7,7 @@ import ComparativeReportTable, {
 import HierarchicalReportTable from "@/features/reports/components/HierarchicalReportTable";
 import ReportExportActions from "@/features/reports/components/ReportExportActions";
 import ReportFilters from "@/features/reports/components/ReportFilters";
+import VarianceThresholdControls from "@/features/reports/components/VarianceThresholdControls";
 import TagFilter from "@/features/tags/components/TagFilter";
 
 import { API_URL } from "@/lib/config/env.config";
@@ -82,6 +83,8 @@ function ProfitAndLossPage() {
     null,
   );
   const [compare, setCompare] = useState(false);
+  const [flagPct, setFlagPct] = useState(10);
+  const [flagAmount, setFlagAmount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const lastParams = useRef<{ startDate?: string; endDate?: string }>({});
@@ -217,26 +220,35 @@ function ProfitAndLossPage() {
           />
 
           {comparative ? (
-            <ComparativeReportTable
-              sections={[
-                {
-                  title: "Revenue",
-                  totalLabel: "Total Revenue",
-                  rows: comparative.revenue,
-                  total: comparative.totals.totalRevenue,
-                },
-                {
-                  title: "Expenses",
-                  totalLabel: "Total Expenses",
-                  rows: comparative.expenses,
-                  total: comparative.totals.totalExpenses,
-                },
-              ]}
-              grandTotal={{
-                label: "Net Income",
-                total: comparative.totals.netIncome,
-              }}
-            />
+            <div className="flex flex-col gap-3">
+              <VarianceThresholdControls
+                pct={flagPct}
+                amount={flagAmount}
+                onPctChange={setFlagPct}
+                onAmountChange={setFlagAmount}
+              />
+              <ComparativeReportTable
+                sections={[
+                  {
+                    title: "Revenue",
+                    totalLabel: "Total Revenue",
+                    rows: comparative.revenue,
+                    total: comparative.totals.totalRevenue,
+                  },
+                  {
+                    title: "Expenses",
+                    totalLabel: "Total Expenses",
+                    rows: comparative.expenses,
+                    total: comparative.totals.totalExpenses,
+                  },
+                ]}
+                grandTotal={{
+                  label: "Net Income",
+                  total: comparative.totals.netIncome,
+                }}
+                thresholds={{ pct: flagPct, amount: flagAmount }}
+              />
+            </div>
           ) : (
             <HierarchicalReportTable
               sections={sections}

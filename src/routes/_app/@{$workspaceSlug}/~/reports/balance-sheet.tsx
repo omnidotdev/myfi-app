@@ -7,6 +7,7 @@ import ComparativeReportTable, {
 import HierarchicalReportTable from "@/features/reports/components/HierarchicalReportTable";
 import ReportExportActions from "@/features/reports/components/ReportExportActions";
 import ReportFilters from "@/features/reports/components/ReportFilters";
+import VarianceThresholdControls from "@/features/reports/components/VarianceThresholdControls";
 import TagFilter from "@/features/tags/components/TagFilter";
 
 import { API_URL } from "@/lib/config/env.config";
@@ -81,6 +82,8 @@ function BalanceSheetPage() {
     null,
   );
   const [compare, setCompare] = useState(false);
+  const [flagPct, setFlagPct] = useState(10);
+  const [flagAmount, setFlagAmount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const lastParams = useRef<{ asOfDate?: string }>({});
@@ -212,28 +215,37 @@ function BalanceSheetPage() {
           />
 
           {comparative ? (
-            <ComparativeReportTable
-              sections={[
-                {
-                  title: "Assets",
-                  totalLabel: "Total Assets",
-                  rows: comparative.assets,
-                  total: comparative.totals.totalAssets,
-                },
-                {
-                  title: "Liabilities",
-                  totalLabel: "Total Liabilities",
-                  rows: comparative.liabilities,
-                  total: comparative.totals.totalLiabilities,
-                },
-                {
-                  title: "Equity",
-                  totalLabel: "Total Equity",
-                  rows: comparative.equity,
-                  total: comparative.totals.totalEquity,
-                },
-              ]}
-            />
+            <div className="flex flex-col gap-3">
+              <VarianceThresholdControls
+                pct={flagPct}
+                amount={flagAmount}
+                onPctChange={setFlagPct}
+                onAmountChange={setFlagAmount}
+              />
+              <ComparativeReportTable
+                sections={[
+                  {
+                    title: "Assets",
+                    totalLabel: "Total Assets",
+                    rows: comparative.assets,
+                    total: comparative.totals.totalAssets,
+                  },
+                  {
+                    title: "Liabilities",
+                    totalLabel: "Total Liabilities",
+                    rows: comparative.liabilities,
+                    total: comparative.totals.totalLiabilities,
+                  },
+                  {
+                    title: "Equity",
+                    totalLabel: "Total Equity",
+                    rows: comparative.equity,
+                    total: comparative.totals.totalEquity,
+                  },
+                ]}
+                thresholds={{ pct: flagPct, amount: flagAmount }}
+              />
+            </div>
           ) : (
             <HierarchicalReportTable sections={sections} />
           )}
