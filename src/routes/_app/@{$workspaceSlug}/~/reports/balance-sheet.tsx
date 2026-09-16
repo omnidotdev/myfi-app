@@ -3,6 +3,9 @@ import { DownloadIcon, PrinterIcon } from "lucide-react";
 import { useRef, useState } from "react";
 
 import BookPicker from "@/features/books/components/BookPicker";
+import ComparativeReportTable, {
+  type ComparativeRow,
+} from "@/features/reports/components/ComparativeReportTable";
 import HierarchicalReportTable from "@/features/reports/components/HierarchicalReportTable";
 import ReportFilters from "@/features/reports/components/ReportFilters";
 import TagFilter from "@/features/tags/components/TagFilter";
@@ -33,6 +36,32 @@ type BalanceSheetData = {
   isBalanced: boolean;
 };
 
+type ComparativeTotal = {
+  current: string;
+  prior: string;
+  variance: string;
+  variancePct: string | null;
+};
+
+type ComparativeBsData = {
+  priorAsOfDate: string;
+  assets: ComparativeRow[];
+  liabilities: ComparativeRow[];
+  equity: ComparativeRow[];
+  totals: {
+    totalAssets: ComparativeTotal;
+    totalLiabilities: ComparativeTotal;
+    totalEquity: ComparativeTotal;
+  };
+};
+
+/** The same calendar date one year earlier, for a year-over-year balance sheet */
+const priorYear = (asOfDate: string) => {
+  const d = new Date(asOfDate);
+  d.setFullYear(d.getFullYear() - 1);
+  return d.toISOString().slice(0, 10);
+};
+
 export const Route = createFileRoute(
   "/_app/@{$workspaceSlug}/~/reports/balance-sheet",
 )({
@@ -49,6 +78,10 @@ function BalanceSheetPage() {
   const { tagGroups } = useTagGroups(activeBookId);
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
   const [data, setData] = useState<BalanceSheetData | null>(null);
+  const [comparative, setComparative] = useState<ComparativeBsData | null>(
+    null,
+  );
+  const [compare, setCompare] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const lastParams = useRef<{ asOfDate?: string }>({});
@@ -75,6 +108,17 @@ function BalanceSheetPage() {
 
       const json = await res.json();
       setData(json);
+
+      if (compare && params.asOfDate) {
+        const cmp = new URLSearchParams(searchParams);
+        cmp.set("priorAsOfDate", priorYear(params.asOfDate));
+        const cmpRes = await fetch(
+          `${API_URL}/api/reports/comparative-balance-sheet?${cmp.toString()}`,
+        );
+        setComparative(cmpRes.ok ? await cmpRes.json() : null);
+      } else {
+        setComparative(null);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load report");
     } finally {
@@ -125,11 +169,22 @@ function BalanceSheetPage() {
         mode="point-in-time"
         onGenerate={handleGenerate}
         extraFilters={
-          <TagFilter
-            tagGroups={tagGroups}
-            selectedTagIds={selectedTagIds}
-            onChange={setSelectedTagIds}
-          />
+          <>
+            <TagFilter
+              tagGroups={tagGroups}
+              selectedTagIds={selectedTagIds}
+              onChange={setSelectedTagIds}
+            />
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={compare}
+                onChange={(e) => setCompare(e.target.checked)}
+                className="size-4 rounded border-border"
+              />
+              Compare to prior year
+            </label>
+          </>
         }
       />
 
@@ -190,7 +245,32 @@ function BalanceSheetPage() {
             </button>
           </div>
 
-          <HierarchicalReportTable sections={sections} />
+          {comparative ? (
+            <ComparativeReportTable
+              sections={[
+                {
+                  title: "Assets",
+                  totalLabel: "Total Assets",
+                  rows: comparative.assets,
+                  total: comparative.totals.totalAssets,
+                },
+                {
+                  title: "Liabilities",
+                  totalLabel: "Total Liabilities",
+                  rows: comparative.liabilities,
+                  total: comparative.totals.totalLiabilities,
+                },
+                {
+                  title: "Equity",
+                  totalLabel: "Total Equity",
+                  rows: comparative.equity,
+                  total: comparative.totals.totalEquity,
+                },
+              ]}
+            />
+          ) : (
+            <HierarchicalReportTable sections={sections} />
+          )}
 
           {/* Balance indicator */}
           <div

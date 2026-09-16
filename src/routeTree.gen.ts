@@ -43,6 +43,7 @@ import { Route as AppAtChar123workspaceSlugChar125Char126SettingsAuditRouteImpor
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsAccessRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/access'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/trial-balance'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/tax-loss-harvesting'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/statement-of-equity'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/schedule-c'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/sales-tax'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/quarterly-estimates'
@@ -261,6 +262,14 @@ const AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRoute =
       getParentRoute: () => AppRoute,
     } as any,
   )
+const AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRoute =
+  AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRouteImport.update(
+    {
+      id: '/@{$workspaceSlug}/~/reports/statement-of-equity',
+      path: '/@{$workspaceSlug}/~/reports/statement-of-equity',
+      getParentRoute: () => AppRoute,
+    } as any,
+  )
 const AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute =
   AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRouteImport.update({
     id: '/@{$workspaceSlug}/~/reports/schedule-c',
@@ -379,6 +388,7 @@ export interface FileRoutesByFullPath {
   '/@{$workspaceSlug}/~/reports/quarterly-estimates': typeof AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute
   '/@{$workspaceSlug}/~/reports/sales-tax': typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute
   '/@{$workspaceSlug}/~/reports/schedule-c': typeof AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute
+  '/@{$workspaceSlug}/~/reports/statement-of-equity': typeof AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRoute
   '/@{$workspaceSlug}/~/reports/tax-loss-harvesting': typeof AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRoute
   '/@{$workspaceSlug}/~/reports/trial-balance': typeof AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRoute
   '/@{$workspaceSlug}/~/settings/access': typeof AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute
@@ -428,6 +438,7 @@ export interface FileRoutesByTo {
   '/@{$workspaceSlug}/~/reports/quarterly-estimates': typeof AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute
   '/@{$workspaceSlug}/~/reports/sales-tax': typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute
   '/@{$workspaceSlug}/~/reports/schedule-c': typeof AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute
+  '/@{$workspaceSlug}/~/reports/statement-of-equity': typeof AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRoute
   '/@{$workspaceSlug}/~/reports/tax-loss-harvesting': typeof AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRoute
   '/@{$workspaceSlug}/~/reports/trial-balance': typeof AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRoute
   '/@{$workspaceSlug}/~/settings/access': typeof AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute
@@ -480,6 +491,7 @@ export interface FileRoutesById {
   '/_app/@{$workspaceSlug}/~/reports/quarterly-estimates': typeof AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute
   '/_app/@{$workspaceSlug}/~/reports/sales-tax': typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute
   '/_app/@{$workspaceSlug}/~/reports/schedule-c': typeof AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute
+  '/_app/@{$workspaceSlug}/~/reports/statement-of-equity': typeof AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRoute
   '/_app/@{$workspaceSlug}/~/reports/tax-loss-harvesting': typeof AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRoute
   '/_app/@{$workspaceSlug}/~/reports/trial-balance': typeof AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRoute
   '/_app/@{$workspaceSlug}/~/settings/access': typeof AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute
@@ -531,6 +543,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/reports/quarterly-estimates'
     | '/@{$workspaceSlug}/~/reports/sales-tax'
     | '/@{$workspaceSlug}/~/reports/schedule-c'
+    | '/@{$workspaceSlug}/~/reports/statement-of-equity'
     | '/@{$workspaceSlug}/~/reports/tax-loss-harvesting'
     | '/@{$workspaceSlug}/~/reports/trial-balance'
     | '/@{$workspaceSlug}/~/settings/access'
@@ -580,6 +593,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/reports/quarterly-estimates'
     | '/@{$workspaceSlug}/~/reports/sales-tax'
     | '/@{$workspaceSlug}/~/reports/schedule-c'
+    | '/@{$workspaceSlug}/~/reports/statement-of-equity'
     | '/@{$workspaceSlug}/~/reports/tax-loss-harvesting'
     | '/@{$workspaceSlug}/~/reports/trial-balance'
     | '/@{$workspaceSlug}/~/settings/access'
@@ -631,6 +645,7 @@ export interface FileRouteTypes {
     | '/_app/@{$workspaceSlug}/~/reports/quarterly-estimates'
     | '/_app/@{$workspaceSlug}/~/reports/sales-tax'
     | '/_app/@{$workspaceSlug}/~/reports/schedule-c'
+    | '/_app/@{$workspaceSlug}/~/reports/statement-of-equity'
     | '/_app/@{$workspaceSlug}/~/reports/tax-loss-harvesting'
     | '/_app/@{$workspaceSlug}/~/reports/trial-balance'
     | '/_app/@{$workspaceSlug}/~/settings/access'
@@ -908,6 +923,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/@{$workspaceSlug}/~/reports/statement-of-equity': {
+      id: '/_app/@{$workspaceSlug}/~/reports/statement-of-equity'
+      path: '/@{$workspaceSlug}/~/reports/statement-of-equity'
+      fullPath: '/@{$workspaceSlug}/~/reports/statement-of-equity'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/@{$workspaceSlug}/~/reports/schedule-c': {
       id: '/_app/@{$workspaceSlug}/~/reports/schedule-c'
       path: '/@{$workspaceSlug}/~/reports/schedule-c'
@@ -1033,6 +1055,7 @@ interface AppRouteChildren {
   AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute
   AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute
   AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute
+  AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRoute
   AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRoute
   AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRoute
   AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute
@@ -1097,6 +1120,8 @@ const AppRouteChildren: AppRouteChildren = {
     AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute,
   AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute:
     AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute,
+  AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRoute:
+    AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRoute,
   AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRoute:
     AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRoute,
   AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRoute:

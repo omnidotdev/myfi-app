@@ -9,6 +9,7 @@ import {
   DollarSignIcon,
   FileSpreadsheetIcon,
   LandmarkIcon,
+  LayersIcon,
   LeafIcon,
   ReceiptTextIcon,
   ScaleIcon,
@@ -47,6 +48,13 @@ const reportCards = [
       "Track cash movements across operating, investing, and financing activities",
     icon: ArrowRightLeftIcon,
     href: "/@{$workspaceSlug}/~/reports/cash-flow",
+  },
+  {
+    title: "Statement of Equity",
+    description:
+      "How each equity account changed over a period, plus net income for the period",
+    icon: LayersIcon,
+    href: "/@{$workspaceSlug}/~/reports/statement-of-equity",
   },
   {
     title: "General Ledger",
