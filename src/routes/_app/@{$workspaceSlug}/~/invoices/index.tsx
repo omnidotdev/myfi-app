@@ -14,6 +14,7 @@ import type {
   ArAging,
   Customer,
   InvoiceAccount,
+  InvoiceInventoryOption,
   InvoiceListItem,
   InvoiceStatus,
   TaxJurisdiction,
@@ -49,6 +50,9 @@ function InvoicesPage() {
     [],
   );
   const [aging, setAging] = useState<ArAging | null>(null);
+  const [inventoryItems, setInventoryItems] = useState<
+    InvoiceInventoryOption[]
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -68,22 +72,25 @@ function InvoicesPage() {
     setIsLoading(true);
     const asOf = new Date().toISOString().slice(0, 10);
     try {
-      const [invRes, custRes, acctRes, taxRes, agingRes] = await Promise.all([
-        apiFetch(`/api/invoices?bookId=${activeBookId}`),
-        apiFetch(`/api/customers?bookId=${activeBookId}`),
-        apiFetch(`/api/accounts?bookId=${activeBookId}`),
-        apiFetch(`/api/tax-jurisdictions?bookId=${activeBookId}`),
-        apiFetch(
-          `/api/reports/ar-aging?bookId=${activeBookId}&asOfDate=${asOf}`,
-        ),
-      ]);
-      const [invData, custData, acctData, taxData, agingData] =
+      const [invRes, custRes, acctRes, taxRes, agingRes, itemRes] =
+        await Promise.all([
+          apiFetch(`/api/invoices?bookId=${activeBookId}`),
+          apiFetch(`/api/customers?bookId=${activeBookId}`),
+          apiFetch(`/api/accounts?bookId=${activeBookId}`),
+          apiFetch(`/api/tax-jurisdictions?bookId=${activeBookId}`),
+          apiFetch(
+            `/api/reports/ar-aging?bookId=${activeBookId}&asOfDate=${asOf}`,
+          ),
+          apiFetch(`/api/inventory-items?bookId=${activeBookId}`),
+        ]);
+      const [invData, custData, acctData, taxData, agingData, itemData] =
         await Promise.all([
           invRes.json(),
           custRes.json(),
           acctRes.json(),
           taxRes.json(),
           agingRes.json(),
+          itemRes.json(),
         ]);
       setInvoices(invData.invoices ?? []);
       setCustomers(custData.customers ?? []);
@@ -92,6 +99,7 @@ function InvoicesPage() {
         taxData.taxJurisdictions ?? taxData.jurisdictions ?? [],
       );
       setAging(agingData ?? null);
+      setInventoryItems(itemData.items ?? []);
     } catch {
       toast.error("Could not load invoices");
     } finally {
@@ -331,6 +339,7 @@ function InvoicesPage() {
               customers={customers}
               incomeAccounts={incomeAccounts}
               taxJurisdictions={taxJurisdictions}
+              inventoryItems={inventoryItems}
               saving={saving}
               onSubmit={handleCreate}
               onCancel={() => setFormOpen(false)}

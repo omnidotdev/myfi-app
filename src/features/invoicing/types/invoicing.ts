@@ -53,6 +53,16 @@ export interface DraftLine {
   unitPrice: string;
   incomeAccountId: string;
   taxJurisdictionId: string;
+  /** optional inventory item this line sells (drives auto-COGS on posting) */
+  inventoryItemId: string;
+}
+
+/** An inventory item option for an invoice line (drives auto-COGS) */
+export interface InvoiceInventoryOption {
+  id: string;
+  name: string;
+  salePrice: string;
+  incomeAccountId: string;
 }
 
 /** One customer row in the AR aging report */

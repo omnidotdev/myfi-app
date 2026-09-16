@@ -5,6 +5,7 @@ import type {
   Customer,
   DraftLine,
   InvoiceAccount,
+  InvoiceInventoryOption,
   TaxJurisdiction,
 } from "@/features/invoicing/types/invoicing";
 import formatCurrency from "@/lib/format/currency";
@@ -21,6 +22,7 @@ interface InvoiceFormPayload {
     unitPrice: number;
     incomeAccountId: string;
     taxJurisdictionId?: string;
+    inventoryItemId?: string;
   }[];
 }
 
@@ -28,6 +30,7 @@ interface InvoiceFormProps {
   customers: Customer[];
   incomeAccounts: InvoiceAccount[];
   taxJurisdictions: TaxJurisdiction[];
+  inventoryItems: InvoiceInventoryOption[];
   saving: boolean;
   onSubmit: (payload: InvoiceFormPayload) => void;
   onCancel: () => void;
@@ -43,6 +46,7 @@ const emptyLine = (): EditableLine => ({
   unitPrice: "0",
   incomeAccountId: "",
   taxJurisdictionId: "",
+  inventoryItemId: "",
 });
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -54,6 +58,7 @@ function InvoiceForm({
   customers,
   incomeAccounts,
   taxJurisdictions,
+  inventoryItems,
   saving,
   onSubmit,
   onCancel,
@@ -69,6 +74,22 @@ function InvoiceForm({
     setLines((prev) =>
       prev.map((line, i) => (i === index ? { ...line, ...patch } : line)),
     );
+  };
+
+  // Selecting an inventory item prefills the line's description, price, and
+  // income account from the item (all still editable)
+  const selectItem = (index: number, itemId: string) => {
+    const item = inventoryItems.find((it) => it.id === itemId);
+    if (!item) {
+      updateLine(index, { inventoryItemId: "" });
+      return;
+    }
+    updateLine(index, {
+      inventoryItemId: item.id,
+      description: item.name,
+      unitPrice: item.salePrice,
+      incomeAccountId: item.incomeAccountId,
+    });
   };
 
   const subtotal = lines.reduce(
@@ -93,6 +114,7 @@ function InvoiceForm({
         unitPrice: Number.parseFloat(l.unitPrice) || 0,
         incomeAccountId: l.incomeAccountId,
         taxJurisdictionId: l.taxJurisdictionId || undefined,
+        inventoryItemId: l.inventoryItemId || undefined,
       })),
     });
   };
@@ -170,6 +192,21 @@ function InvoiceForm({
             key={line.key}
             className="flex flex-col gap-2 rounded-md border border-border p-3"
           >
+            {inventoryItems.length > 0 && (
+              <select
+                value={line.inventoryItemId}
+                onChange={(e) => selectItem(index, e.target.value)}
+                aria-label="Inventory item"
+                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              >
+                <option value="">Custom line (no inventory item)</option>
+                {inventoryItems.map((it) => (
+                  <option key={it.id} value={it.id}>
+                    {it.name}
+                  </option>
+                ))}
+              </select>
+            )}
             <input
               type="text"
               required
