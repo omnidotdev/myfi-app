@@ -42,9 +42,9 @@ import {
 import { useCallback, useMemo, useState } from "react";
 import { Toaster } from "sonner";
 import { useEventListener } from "usehooks-ts";
-
 import ErrorBoundary from "@/components/core/ErrorBoundary";
 import OrganizationSwitcher from "@/components/layout/OrganizationSwitcher";
+import MyfiMark from "@/components/MyfiMark";
 import { isSessionDegraded } from "@/lib/auth/sessionState";
 import signOut from "@/lib/auth/signOut";
 import appConfig from "@/lib/config/app.config";
@@ -294,6 +294,7 @@ function AuthLayout() {
             )}
           </button>
           <LogoLockup
+            logo={<MyfiMark className="size-6 shrink-0 text-foreground" />}
             name={appConfig.name}
             nameClassName="font-medium font-serif text-foreground text-xl tracking-tight"
           />
@@ -374,6 +375,7 @@ function AuthLayout() {
           {/* Brand */}
           <div className="flex h-16 shrink-0 items-center gap-2 border-sidebar-border border-b px-4">
             <LogoLockup
+              logo={<MyfiMark className="size-6 shrink-0 text-foreground" />}
               name={appConfig.name}
               nameClassName="font-medium font-serif text-foreground text-xl tracking-tight"
             />

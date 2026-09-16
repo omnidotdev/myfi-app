@@ -1,8 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-130 -130 1860 1755">
-<style>path{fill:#0a0a0a}@media (prefers-color-scheme:dark){path{fill:#fafafa}}</style>
-<g transform="translate(0.000000,1495.000000) scale(0.100000,-0.100000)"
- stroke="none">
-<path d="M13720 11613 l-65 -24 -15 -14 -16 -15 -55 -19 -54 -19 -65 -26 -65
+/**
+ * The MyFi brand mark: an "M" whose right leg rises into a growth arrow.
+ * Traced from the source artwork; fill follows currentColor so it inherits the
+ * surrounding text color in both themes.
+ */
+function MyfiMark({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 1600 1495"
+      fill="currentColor"
+      role="img"
+      aria-label="MyFi"
+      className={className}
+    >
+      <g
+        transform="translate(0.000000,1495.000000) scale(0.100000,-0.100000)"
+        fill="currentColor"
+        stroke="none"
+      >
+        <path
+          d="M13720 11613 l-65 -24 -15 -14 -16 -15 -55 -19 -54 -19 -65 -26 -65
 -27 -60 -29 -60 -28 -25 -7 -25 -8 -40 -22 -40 -23 -29 -6 -30 -7 -28 -20 -27
 -20 -57 -19 -57 -20 -11 -9 -11 -10 -65 -24 -65 -25 -83 -35 -84 -36 -11 -9
 -12 -9 -40 -13 -40 -12 -35 -20 -35 -21 -70 -29 -70 -30 -65 -25 -65 -24 -11
@@ -37,12 +54,19 @@
 26 26 104 95 105 95 101 97 101 97 28 7 29 7 21 -14 22 -14 32 -20 33 -20 51
 -37 52 -37 30 -21 30 -21 70 -44 70 -44 30 -21 30 -21 35 -24 35 -24 22 -16
 22 -17 20 7 20 6 7 22 8 22 -2 465 -2 465 -6 1045 -6 1045 -14 23 -14 22 -13
--1 -12 -1 -65 -25z"/>
-<path d="M12905 7947 l-30 -22 -61 -50 -61 -50 -98 -80 -97 -80 -126 -105
+-1 -12 -1 -65 -25z"
+        />
+        <path
+          d="M12905 7947 l-30 -22 -61 -50 -61 -50 -98 -80 -97 -80 -126 -105
 -127 -106 -75 -59 -75 -59 -106 -91 -107 -90 -52 -40 -52 -40 -143 -120 -142
 -120 -93 -75 -92 -75 -22 -20 -21 -20 -46 -40 -46 -40 -53 -40 -53 -40 -136
 -116 -136 -115 -45 -31 -45 -31 -65 -60 -65 -59 -3 -1959 -3 -1959 6 -33 6
 -33 32 -19 32 -20 1112 0 1112 0 28 24 28 24 2 2909 3 2908 -13 25 -13 25 -14
-2 -15 2 -30 -22z"/>
-</g>
-</svg>
+2 -15 2 -30 -22z"
+        />
+      </g>
+    </svg>
+  );
+}
+
+export default MyfiMark;
