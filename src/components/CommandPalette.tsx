@@ -9,17 +9,196 @@ import {
   useParams,
   useRouteContext,
 } from "@tanstack/react-router";
+import type { LucideIcon } from "lucide-react";
 import {
   BarChart3Icon,
+  BitcoinIcon,
   BookOpenIcon,
+  CarIcon,
+  ClipboardListIcon,
+  FileTextIcon,
+  HardDriveIcon,
   HomeIcon,
   LandmarkIcon,
   LayoutDashboardIcon,
   MoonStar,
+  PackageIcon,
+  PieChartIcon,
+  PiggyBankIcon,
+  ReceiptIcon,
+  RepeatIcon,
+  ScaleIcon,
   SettingsIcon,
+  UsersIcon,
   WalletIcon,
 } from "lucide-react";
 import { useTheme } from "@/providers/ThemeProvider";
+
+// Workspace-scoped destinations, grouped to match the sidebar. `to` is a
+// TanStack route template filled with the active workspace slug at select time
+type Destination = {
+  id: string;
+  label: string;
+  to: string;
+  icon: LucideIcon;
+  group: string;
+  keywords?: string[];
+};
+
+const DESTINATIONS: Destination[] = [
+  {
+    id: "dashboard",
+    label: "Dashboard",
+    to: "/@{$workspaceSlug}/~",
+    icon: LayoutDashboardIcon,
+    group: "Overview",
+    keywords: ["home", "summary"],
+  },
+  {
+    id: "estimates",
+    label: "Estimates",
+    to: "/@{$workspaceSlug}/~/estimates",
+    icon: ClipboardListIcon,
+    group: "Sales",
+    keywords: ["quotes", "proposals"],
+  },
+  {
+    id: "invoices",
+    label: "Invoices",
+    to: "/@{$workspaceSlug}/~/invoices",
+    icon: FileTextIcon,
+    group: "Sales",
+    keywords: ["accounts receivable", "ar", "billing"],
+  },
+  {
+    id: "customers",
+    label: "Customers",
+    to: "/@{$workspaceSlug}/~/customers",
+    icon: UsersIcon,
+    group: "Sales",
+    keywords: ["clients"],
+  },
+  {
+    id: "bills",
+    label: "Bills",
+    to: "/@{$workspaceSlug}/~/bills",
+    icon: ReceiptIcon,
+    group: "Expenses",
+    keywords: ["accounts payable", "ap", "vendors"],
+  },
+  {
+    id: "recurring",
+    label: "Recurring",
+    to: "/@{$workspaceSlug}/~/recurring",
+    icon: RepeatIcon,
+    group: "Expenses",
+    keywords: ["subscriptions", "memorized", "scheduled"],
+  },
+  {
+    id: "mileage",
+    label: "Mileage",
+    to: "/@{$workspaceSlug}/~/mileage",
+    icon: CarIcon,
+    group: "Expenses",
+    keywords: ["vehicle", "trips", "deduction"],
+  },
+  {
+    id: "reconciliation",
+    label: "Reconciliation",
+    to: "/@{$workspaceSlug}/~/reconciliation",
+    icon: ScaleIcon,
+    group: "Banking",
+    keywords: ["reconcile", "bank", "statements"],
+  },
+  {
+    id: "spending",
+    label: "Spending",
+    to: "/@{$workspaceSlug}/~/spending",
+    icon: PieChartIcon,
+    group: "Banking",
+    keywords: ["expenses", "categories", "trends"],
+  },
+  {
+    id: "savings",
+    label: "Savings",
+    to: "/@{$workspaceSlug}/~/savings",
+    icon: PiggyBankIcon,
+    group: "Banking",
+    keywords: ["goals"],
+  },
+  {
+    id: "ledger",
+    label: "Ledger",
+    to: "/@{$workspaceSlug}/~/ledger",
+    icon: BookOpenIcon,
+    group: "Accounting",
+    keywords: ["transactions", "journal", "entries"],
+  },
+  {
+    id: "accounts",
+    label: "Accounts",
+    to: "/@{$workspaceSlug}/~/accounts",
+    icon: LandmarkIcon,
+    group: "Accounting",
+    keywords: ["chart of accounts", "coa"],
+  },
+  {
+    id: "reports",
+    label: "Reports",
+    to: "/@{$workspaceSlug}/~/reports",
+    icon: BarChart3Icon,
+    group: "Accounting",
+    keywords: [
+      "financials",
+      "statements",
+      "profit and loss",
+      "balance sheet",
+      "cash flow",
+      "1099",
+      "taxes",
+    ],
+  },
+  {
+    id: "items",
+    label: "Inventory",
+    to: "/@{$workspaceSlug}/~/items",
+    icon: PackageIcon,
+    group: "Assets & Budgeting",
+    keywords: ["products", "stock", "items"],
+  },
+  {
+    id: "assets",
+    label: "Assets",
+    to: "/@{$workspaceSlug}/~/assets",
+    icon: HardDriveIcon,
+    group: "Assets & Budgeting",
+    keywords: ["fixed assets", "depreciation"],
+  },
+  {
+    id: "crypto",
+    label: "Crypto",
+    to: "/@{$workspaceSlug}/~/crypto",
+    icon: BitcoinIcon,
+    group: "Assets & Budgeting",
+    keywords: ["bitcoin", "cost basis"],
+  },
+  {
+    id: "budgets",
+    label: "Budgets",
+    to: "/@{$workspaceSlug}/~/budgets",
+    icon: WalletIcon,
+    group: "Assets & Budgeting",
+    keywords: ["budget", "planning"],
+  },
+  {
+    id: "settings",
+    label: "Settings",
+    to: "/@{$workspaceSlug}/~/settings",
+    icon: SettingsIcon,
+    group: "Workspace",
+    keywords: ["preferences", "vendors", "tax", "members"],
+  },
+];
 
 /**
  * Global command palette (⌘/Ctrl+K). Mounted once at the app root so it works on
@@ -51,82 +230,27 @@ const CommandPalette = () => {
     {
       id: "home",
       label: "Home",
-      group: "Navigation",
+      group: "Overview",
       icon: HomeIcon,
       onSelect: () => navigate({ to: "/" }),
     },
     // Navigation into the authenticated app is only offered to signed-in users
     // with a resolvable workspace handle
     ...(session?.user && activeWorkspaceSlug
-      ? ([
-          {
-            id: "dashboard",
-            label: "Dashboard",
-            group: "Navigation",
-            icon: LayoutDashboardIcon,
+      ? DESTINATIONS.map(
+          (dest): CommandAction => ({
+            id: dest.id,
+            label: dest.label,
+            group: dest.group,
+            icon: dest.icon,
+            keywords: dest.keywords,
             onSelect: () =>
               navigate({
-                to: "/@{$workspaceSlug}/~",
+                to: dest.to,
                 params: { workspaceSlug: activeWorkspaceSlug },
               }),
-          },
-          {
-            id: "ledger",
-            label: "Ledger",
-            group: "Navigation",
-            icon: BookOpenIcon,
-            keywords: ["transactions"],
-            onSelect: () =>
-              navigate({
-                to: "/@{$workspaceSlug}/~/ledger",
-                params: { workspaceSlug: activeWorkspaceSlug },
-              }),
-          },
-          {
-            id: "accounts",
-            label: "Accounts",
-            group: "Navigation",
-            icon: LandmarkIcon,
-            onSelect: () =>
-              navigate({
-                to: "/@{$workspaceSlug}/~/accounts",
-                params: { workspaceSlug: activeWorkspaceSlug },
-              }),
-          },
-          {
-            id: "budgets",
-            label: "Budgets",
-            group: "Navigation",
-            icon: WalletIcon,
-            onSelect: () =>
-              navigate({
-                to: "/@{$workspaceSlug}/~/budgets",
-                params: { workspaceSlug: activeWorkspaceSlug },
-              }),
-          },
-          {
-            id: "reports",
-            label: "Reports",
-            group: "Navigation",
-            icon: BarChart3Icon,
-            onSelect: () =>
-              navigate({
-                to: "/@{$workspaceSlug}/~/reports",
-                params: { workspaceSlug: activeWorkspaceSlug },
-              }),
-          },
-          {
-            id: "settings",
-            label: "Settings",
-            group: "Navigation",
-            icon: SettingsIcon,
-            onSelect: () =>
-              navigate({
-                to: "/@{$workspaceSlug}/~/settings",
-                params: { workspaceSlug: activeWorkspaceSlug },
-              }),
-          },
-        ] satisfies CommandAction[])
+          }),
+        )
       : []),
     {
       id: "toggle-theme",
@@ -141,7 +265,10 @@ const CommandPalette = () => {
   ];
 
   return (
-    <CommandPaletteShell commands={commands} placeholder="Search actions..." />
+    <CommandPaletteShell
+      commands={commands}
+      placeholder="Search pages and actions..."
+    />
   );
 };
 
