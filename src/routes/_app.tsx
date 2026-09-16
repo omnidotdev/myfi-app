@@ -20,6 +20,7 @@ import {
   LogOutIcon,
   MenuIcon,
   MoonIcon,
+  PackageIcon,
   ReceiptIcon,
   SettingsIcon,
   SunIcon,
@@ -80,6 +81,11 @@ const navItems = [
     label: "Bills",
     to: "/@{$workspaceSlug}/~/bills",
     icon: ReceiptIcon,
+  },
+  {
+    label: "Inventory",
+    to: "/@{$workspaceSlug}/~/items",
+    icon: PackageIcon,
   },
   {
     label: "Customers",

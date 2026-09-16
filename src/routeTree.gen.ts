@@ -21,6 +21,7 @@ import { Route as AppAtChar123workspaceSlugChar125Char126ReportsIndexRouteImport
 import { Route as AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/reconciliation/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126MileageIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/mileage/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126LedgerIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/ledger/index'
+import { Route as AppAtChar123workspaceSlugChar125Char126ItemsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/items/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126InvoicesIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/invoices/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126EstimatesIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/estimates/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126CustomersIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/customers/index'
@@ -122,6 +123,12 @@ const AppAtChar123workspaceSlugChar125Char126LedgerIndexRoute =
   AppAtChar123workspaceSlugChar125Char126LedgerIndexRouteImport.update({
     id: '/@{$workspaceSlug}/~/ledger/',
     path: '/@{$workspaceSlug}/~/ledger/',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126ItemsIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126ItemsIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/items/',
+    path: '/@{$workspaceSlug}/~/items/',
     getParentRoute: () => AppRoute,
   } as any)
 const AppAtChar123workspaceSlugChar125Char126InvoicesIndexRoute =
@@ -393,6 +400,7 @@ export interface FileRoutesByFullPath {
   '/@{$workspaceSlug}/~/customers/': typeof AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute
   '/@{$workspaceSlug}/~/estimates/': typeof AppAtChar123workspaceSlugChar125Char126EstimatesIndexRoute
   '/@{$workspaceSlug}/~/invoices/': typeof AppAtChar123workspaceSlugChar125Char126InvoicesIndexRoute
+  '/@{$workspaceSlug}/~/items/': typeof AppAtChar123workspaceSlugChar125Char126ItemsIndexRoute
   '/@{$workspaceSlug}/~/ledger/': typeof AppAtChar123workspaceSlugChar125Char126LedgerIndexRoute
   '/@{$workspaceSlug}/~/mileage/': typeof AppAtChar123workspaceSlugChar125Char126MileageIndexRoute
   '/@{$workspaceSlug}/~/reconciliation/': typeof AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRoute
@@ -441,6 +449,7 @@ export interface FileRoutesByTo {
   '/@{$workspaceSlug}/~/customers': typeof AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute
   '/@{$workspaceSlug}/~/estimates': typeof AppAtChar123workspaceSlugChar125Char126EstimatesIndexRoute
   '/@{$workspaceSlug}/~/invoices': typeof AppAtChar123workspaceSlugChar125Char126InvoicesIndexRoute
+  '/@{$workspaceSlug}/~/items': typeof AppAtChar123workspaceSlugChar125Char126ItemsIndexRoute
   '/@{$workspaceSlug}/~/ledger': typeof AppAtChar123workspaceSlugChar125Char126LedgerIndexRoute
   '/@{$workspaceSlug}/~/mileage': typeof AppAtChar123workspaceSlugChar125Char126MileageIndexRoute
   '/@{$workspaceSlug}/~/reconciliation': typeof AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRoute
@@ -492,6 +501,7 @@ export interface FileRoutesById {
   '/_app/@{$workspaceSlug}/~/customers/': typeof AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute
   '/_app/@{$workspaceSlug}/~/estimates/': typeof AppAtChar123workspaceSlugChar125Char126EstimatesIndexRoute
   '/_app/@{$workspaceSlug}/~/invoices/': typeof AppAtChar123workspaceSlugChar125Char126InvoicesIndexRoute
+  '/_app/@{$workspaceSlug}/~/items/': typeof AppAtChar123workspaceSlugChar125Char126ItemsIndexRoute
   '/_app/@{$workspaceSlug}/~/ledger/': typeof AppAtChar123workspaceSlugChar125Char126LedgerIndexRoute
   '/_app/@{$workspaceSlug}/~/mileage/': typeof AppAtChar123workspaceSlugChar125Char126MileageIndexRoute
   '/_app/@{$workspaceSlug}/~/reconciliation/': typeof AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRoute
@@ -542,6 +552,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/customers/'
     | '/@{$workspaceSlug}/~/estimates/'
     | '/@{$workspaceSlug}/~/invoices/'
+    | '/@{$workspaceSlug}/~/items/'
     | '/@{$workspaceSlug}/~/ledger/'
     | '/@{$workspaceSlug}/~/mileage/'
     | '/@{$workspaceSlug}/~/reconciliation/'
@@ -590,6 +601,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/customers'
     | '/@{$workspaceSlug}/~/estimates'
     | '/@{$workspaceSlug}/~/invoices'
+    | '/@{$workspaceSlug}/~/items'
     | '/@{$workspaceSlug}/~/ledger'
     | '/@{$workspaceSlug}/~/mileage'
     | '/@{$workspaceSlug}/~/reconciliation'
@@ -640,6 +652,7 @@ export interface FileRouteTypes {
     | '/_app/@{$workspaceSlug}/~/customers/'
     | '/_app/@{$workspaceSlug}/~/estimates/'
     | '/_app/@{$workspaceSlug}/~/invoices/'
+    | '/_app/@{$workspaceSlug}/~/items/'
     | '/_app/@{$workspaceSlug}/~/ledger/'
     | '/_app/@{$workspaceSlug}/~/mileage/'
     | '/_app/@{$workspaceSlug}/~/reconciliation/'
@@ -739,6 +752,13 @@ declare module '@tanstack/react-router' {
       path: '/@{$workspaceSlug}/~/ledger'
       fullPath: '/@{$workspaceSlug}/~/ledger/'
       preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126LedgerIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/items/': {
+      id: '/_app/@{$workspaceSlug}/~/items/'
+      path: '/@{$workspaceSlug}/~/items'
+      fullPath: '/@{$workspaceSlug}/~/items/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ItemsIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/@{$workspaceSlug}/~/invoices/': {
@@ -1034,6 +1054,7 @@ interface AppRouteChildren {
   AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute
   AppAtChar123workspaceSlugChar125Char126EstimatesIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126EstimatesIndexRoute
   AppAtChar123workspaceSlugChar125Char126InvoicesIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126InvoicesIndexRoute
+  AppAtChar123workspaceSlugChar125Char126ItemsIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126ItemsIndexRoute
   AppAtChar123workspaceSlugChar125Char126LedgerIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126LedgerIndexRoute
   AppAtChar123workspaceSlugChar125Char126MileageIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126MileageIndexRoute
   AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRoute
@@ -1118,6 +1139,8 @@ const AppRouteChildren: AppRouteChildren = {
     AppAtChar123workspaceSlugChar125Char126EstimatesIndexRoute,
   AppAtChar123workspaceSlugChar125Char126InvoicesIndexRoute:
     AppAtChar123workspaceSlugChar125Char126InvoicesIndexRoute,
+  AppAtChar123workspaceSlugChar125Char126ItemsIndexRoute:
+    AppAtChar123workspaceSlugChar125Char126ItemsIndexRoute,
   AppAtChar123workspaceSlugChar125Char126LedgerIndexRoute:
     AppAtChar123workspaceSlugChar125Char126LedgerIndexRoute,
   AppAtChar123workspaceSlugChar125Char126MileageIndexRoute:
