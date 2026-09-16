@@ -83,6 +83,7 @@ function ProfitAndLossPage() {
     null,
   );
   const [compare, setCompare] = useState(false);
+  const [basis, setBasis] = useState<"accrual" | "cash">("accrual");
   const [flagPct, setFlagPct] = useState(10);
   const [flagAmount, setFlagAmount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -104,6 +105,7 @@ function ProfitAndLossPage() {
       if (params.endDate) searchParams.set("endDate", params.endDate);
       if (selectedTagIds.length > 0)
         searchParams.set("tagIds", selectedTagIds.join(","));
+      if (basis === "cash") searchParams.set("basis", "cash");
 
       const res = await fetch(
         `${API_URL}/api/reports/profit-and-loss?${searchParams.toString()}`,
@@ -190,6 +192,19 @@ function ProfitAndLossPage() {
               />
               Compare to prior period
             </label>
+            <label className="flex items-center gap-2 text-sm">
+              <span className="text-muted-foreground">Basis</span>
+              <select
+                value={basis}
+                onChange={(e) =>
+                  setBasis(e.target.value === "cash" ? "cash" : "accrual")
+                }
+                className="rounded-md border border-border bg-card px-2 py-1 text-sm"
+              >
+                <option value="accrual">Accrual</option>
+                <option value="cash">Cash</option>
+              </select>
+            </label>
           </>
         }
       />
@@ -216,6 +231,7 @@ function ProfitAndLossPage() {
               startDate: lastParams.current.startDate,
               endDate: lastParams.current.endDate,
               tagIds: selectedTagIds,
+              basis: basis === "cash" ? "cash" : undefined,
             }}
           />
 
