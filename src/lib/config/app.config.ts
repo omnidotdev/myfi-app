@@ -40,6 +40,7 @@ const app = {
     projects: { enabled: true, label: "Projects", icon: "folder" },
     loans: { enabled: true, label: "Loans", icon: "banknote" },
     documents: { enabled: true, label: "Documents", icon: "file-text" },
+    close: { enabled: true, label: "Close", icon: "lock" },
     reports: { enabled: true, label: "Reports", icon: "chart-bar" },
   },
 };
