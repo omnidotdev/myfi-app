@@ -1,6 +1,17 @@
 import { CheckIcon, PencilIcon, TrashIcon, XIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 
+type CategorizationRuleSplit = {
+  id?: string;
+  accountId: string;
+  side: string;
+  percentage?: string | null;
+  fixedAmount?: string | null;
+  memo?: string | null;
+  tagId?: string | null;
+  sortOrder?: number;
+};
+
 type CategorizationRule = {
   rowId: string;
   name: string;
@@ -13,6 +24,7 @@ type CategorizationRule = {
   priority: number;
   hitCount: number;
   lastHitAt: string | null;
+  splits?: CategorizationRuleSplit[];
 };
 
 type CategorizationRuleTableProps = {
@@ -23,6 +35,7 @@ type CategorizationRuleTableProps = {
     ruleId: string,
     updates: { debitAccountId: string; creditAccountId: string },
   ) => void;
+  onEditSplit?: (rule: CategorizationRule) => void;
 };
 
 /** Resolve an account ID to a display name */
@@ -43,6 +56,7 @@ function CategorizationRuleTable({
   accounts,
   onDelete,
   onEdit,
+  onEditSplit,
 }: CategorizationRuleTableProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editDebitAccountId, setEditDebitAccountId] = useState("");
@@ -102,14 +116,27 @@ function CategorizationRuleTable({
       {/* Rows */}
       {rules.map((rule) => {
         const isEditing = editingId === rule.rowId;
+        const isSplit = (rule.splits?.length ?? 0) >= 2;
+        const debitSplitCount =
+          rule.splits?.filter((s) => s.side === "debit").length ?? 0;
+        const creditSplitCount =
+          rule.splits?.filter((s) => s.side === "credit").length ?? 0;
 
         return (
           <div
             key={rule.rowId}
             className="grid grid-cols-[1fr_1.5fr_1fr_1fr_0.5fr_0.5fr_auto] items-center gap-4 border-border border-b px-4 py-3 last:border-b-0"
           >
-            <span className="truncate text-sm" title={rule.name}>
-              {rule.name}
+            <span
+              className="flex items-center gap-2 truncate text-sm"
+              title={rule.name}
+            >
+              <span className="truncate">{rule.name}</span>
+              {isSplit && (
+                <span className="inline-block rounded-full bg-blue-100 px-2 py-0.5 text-blue-800 text-xs">
+                  Split
+                </span>
+              )}
             </span>
 
             <span
@@ -119,7 +146,7 @@ function CategorizationRuleTable({
               {rule.matchField} {rule.matchType}: {rule.matchValue}
             </span>
 
-            {isEditing ? (
+            {isEditing && !isSplit ? (
               <select
                 value={editDebitAccountId}
                 onChange={(e) => setEditDebitAccountId(e.target.value)}
@@ -133,11 +160,15 @@ function CategorizationRuleTable({
               </select>
             ) : (
               <span className="truncate text-sm">
-                {resolveAccount(rule.debitAccountId, accounts)}
+                {isSplit
+                  ? `${debitSplitCount} debit line${
+                      debitSplitCount === 1 ? "" : "s"
+                    }`
+                  : resolveAccount(rule.debitAccountId, accounts)}
               </span>
             )}
 
-            {isEditing ? (
+            {isEditing && !isSplit ? (
               <select
                 value={editCreditAccountId}
                 onChange={(e) => setEditCreditAccountId(e.target.value)}
@@ -151,7 +182,11 @@ function CategorizationRuleTable({
               </select>
             ) : (
               <span className="truncate text-sm">
-                {resolveAccount(rule.creditAccountId, accounts)}
+                {isSplit
+                  ? `${creditSplitCount} credit line${
+                      creditSplitCount === 1 ? "" : "s"
+                    }`
+                  : resolveAccount(rule.creditAccountId, accounts)}
               </span>
             )}
 
@@ -163,7 +198,7 @@ function CategorizationRuleTable({
               {rule.hitCount}
             </span>
 
-            {isEditing ? (
+            {isEditing && !isSplit ? (
               <div className="flex items-center gap-1">
                 <button
                   type="button"
@@ -186,7 +221,13 @@ function CategorizationRuleTable({
               <div className="flex items-center gap-1">
                 <button
                   type="button"
-                  onClick={() => startEdit(rule)}
+                  onClick={() => {
+                    if (isSplit && onEditSplit) {
+                      onEditSplit(rule);
+                      return;
+                    }
+                    startEdit(rule);
+                  }}
                   aria-label={`Edit rule ${rule.name}`}
                   className="inline-flex size-9 items-center justify-center rounded-md text-muted-foreground text-sm transition-colors hover:bg-accent"
                 >
@@ -210,4 +251,4 @@ function CategorizationRuleTable({
 }
 
 export default CategorizationRuleTable;
-export type { CategorizationRule };
+export type { CategorizationRule, CategorizationRuleSplit };
