@@ -164,6 +164,11 @@ const navGroups = [
         to: "/@{$workspaceSlug}/~/reports",
         icon: BarChart3Icon,
       },
+      {
+        label: appConfig.modules.documents.label,
+        to: "/@{$workspaceSlug}/~/documents",
+        icon: FileTextIcon,
+      },
     ],
   },
   {

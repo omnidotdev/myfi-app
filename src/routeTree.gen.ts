@@ -27,6 +27,7 @@ import { Route as AppAtChar123workspaceSlugChar125Char126LedgerIndexRouteImport 
 import { Route as AppAtChar123workspaceSlugChar125Char126ItemsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/items/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126InvoicesIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/invoices/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126EstimatesIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/estimates/index'
+import { Route as AppAtChar123workspaceSlugChar125Char126DocumentsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/documents/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126CustomersIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/customers/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126CryptoIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/crypto/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126BudgetsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/budgets/index'
@@ -168,6 +169,12 @@ const AppAtChar123workspaceSlugChar125Char126EstimatesIndexRoute =
   AppAtChar123workspaceSlugChar125Char126EstimatesIndexRouteImport.update({
     id: '/@{$workspaceSlug}/~/estimates/',
     path: '/@{$workspaceSlug}/~/estimates/',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126DocumentsIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126DocumentsIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/documents/',
+    path: '/@{$workspaceSlug}/~/documents/',
     getParentRoute: () => AppRoute,
   } as any)
 const AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute =
@@ -471,6 +478,7 @@ export interface FileRoutesByFullPath {
   '/@{$workspaceSlug}/~/budgets/': typeof AppAtChar123workspaceSlugChar125Char126BudgetsIndexRoute
   '/@{$workspaceSlug}/~/crypto/': typeof AppAtChar123workspaceSlugChar125Char126CryptoIndexRoute
   '/@{$workspaceSlug}/~/customers/': typeof AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute
+  '/@{$workspaceSlug}/~/documents/': typeof AppAtChar123workspaceSlugChar125Char126DocumentsIndexRoute
   '/@{$workspaceSlug}/~/estimates/': typeof AppAtChar123workspaceSlugChar125Char126EstimatesIndexRoute
   '/@{$workspaceSlug}/~/invoices/': typeof AppAtChar123workspaceSlugChar125Char126InvoicesIndexRoute
   '/@{$workspaceSlug}/~/items/': typeof AppAtChar123workspaceSlugChar125Char126ItemsIndexRoute
@@ -529,6 +537,7 @@ export interface FileRoutesByTo {
   '/@{$workspaceSlug}/~/budgets': typeof AppAtChar123workspaceSlugChar125Char126BudgetsIndexRoute
   '/@{$workspaceSlug}/~/crypto': typeof AppAtChar123workspaceSlugChar125Char126CryptoIndexRoute
   '/@{$workspaceSlug}/~/customers': typeof AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute
+  '/@{$workspaceSlug}/~/documents': typeof AppAtChar123workspaceSlugChar125Char126DocumentsIndexRoute
   '/@{$workspaceSlug}/~/estimates': typeof AppAtChar123workspaceSlugChar125Char126EstimatesIndexRoute
   '/@{$workspaceSlug}/~/invoices': typeof AppAtChar123workspaceSlugChar125Char126InvoicesIndexRoute
   '/@{$workspaceSlug}/~/items': typeof AppAtChar123workspaceSlugChar125Char126ItemsIndexRoute
@@ -590,6 +599,7 @@ export interface FileRoutesById {
   '/_app/@{$workspaceSlug}/~/budgets/': typeof AppAtChar123workspaceSlugChar125Char126BudgetsIndexRoute
   '/_app/@{$workspaceSlug}/~/crypto/': typeof AppAtChar123workspaceSlugChar125Char126CryptoIndexRoute
   '/_app/@{$workspaceSlug}/~/customers/': typeof AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute
+  '/_app/@{$workspaceSlug}/~/documents/': typeof AppAtChar123workspaceSlugChar125Char126DocumentsIndexRoute
   '/_app/@{$workspaceSlug}/~/estimates/': typeof AppAtChar123workspaceSlugChar125Char126EstimatesIndexRoute
   '/_app/@{$workspaceSlug}/~/invoices/': typeof AppAtChar123workspaceSlugChar125Char126InvoicesIndexRoute
   '/_app/@{$workspaceSlug}/~/items/': typeof AppAtChar123workspaceSlugChar125Char126ItemsIndexRoute
@@ -650,6 +660,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/budgets/'
     | '/@{$workspaceSlug}/~/crypto/'
     | '/@{$workspaceSlug}/~/customers/'
+    | '/@{$workspaceSlug}/~/documents/'
     | '/@{$workspaceSlug}/~/estimates/'
     | '/@{$workspaceSlug}/~/invoices/'
     | '/@{$workspaceSlug}/~/items/'
@@ -708,6 +719,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/budgets'
     | '/@{$workspaceSlug}/~/crypto'
     | '/@{$workspaceSlug}/~/customers'
+    | '/@{$workspaceSlug}/~/documents'
     | '/@{$workspaceSlug}/~/estimates'
     | '/@{$workspaceSlug}/~/invoices'
     | '/@{$workspaceSlug}/~/items'
@@ -768,6 +780,7 @@ export interface FileRouteTypes {
     | '/_app/@{$workspaceSlug}/~/budgets/'
     | '/_app/@{$workspaceSlug}/~/crypto/'
     | '/_app/@{$workspaceSlug}/~/customers/'
+    | '/_app/@{$workspaceSlug}/~/documents/'
     | '/_app/@{$workspaceSlug}/~/estimates/'
     | '/_app/@{$workspaceSlug}/~/invoices/'
     | '/_app/@{$workspaceSlug}/~/items/'
@@ -915,6 +928,13 @@ declare module '@tanstack/react-router' {
       path: '/@{$workspaceSlug}/~/estimates'
       fullPath: '/@{$workspaceSlug}/~/estimates/'
       preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126EstimatesIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/documents/': {
+      id: '/_app/@{$workspaceSlug}/~/documents/'
+      path: '/@{$workspaceSlug}/~/documents'
+      fullPath: '/@{$workspaceSlug}/~/documents/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126DocumentsIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/@{$workspaceSlug}/~/customers/': {
@@ -1242,6 +1262,7 @@ interface AppRouteChildren {
   AppAtChar123workspaceSlugChar125Char126BudgetsIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126BudgetsIndexRoute
   AppAtChar123workspaceSlugChar125Char126CryptoIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126CryptoIndexRoute
   AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute
+  AppAtChar123workspaceSlugChar125Char126DocumentsIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126DocumentsIndexRoute
   AppAtChar123workspaceSlugChar125Char126EstimatesIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126EstimatesIndexRoute
   AppAtChar123workspaceSlugChar125Char126InvoicesIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126InvoicesIndexRoute
   AppAtChar123workspaceSlugChar125Char126ItemsIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126ItemsIndexRoute
@@ -1340,6 +1361,8 @@ const AppRouteChildren: AppRouteChildren = {
     AppAtChar123workspaceSlugChar125Char126CryptoIndexRoute,
   AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute:
     AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute,
+  AppAtChar123workspaceSlugChar125Char126DocumentsIndexRoute:
+    AppAtChar123workspaceSlugChar125Char126DocumentsIndexRoute,
   AppAtChar123workspaceSlugChar125Char126EstimatesIndexRoute:
     AppAtChar123workspaceSlugChar125Char126EstimatesIndexRoute,
   AppAtChar123workspaceSlugChar125Char126InvoicesIndexRoute:

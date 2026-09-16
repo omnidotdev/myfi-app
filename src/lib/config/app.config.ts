@@ -39,6 +39,7 @@ const app = {
     mileage: { enabled: true, label: "Mileage", icon: "car" },
     projects: { enabled: true, label: "Projects", icon: "folder" },
     loans: { enabled: true, label: "Loans", icon: "banknote" },
+    documents: { enabled: true, label: "Documents", icon: "file-text" },
     reports: { enabled: true, label: "Reports", icon: "chart-bar" },
   },
 };
