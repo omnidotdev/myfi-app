@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { DownloadIcon, PrinterIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-
 import BookPicker from "@/features/books/components/BookPicker";
+import ReportExportActions from "@/features/reports/components/ReportExportActions";
 import ReportFilters from "@/features/reports/components/ReportFilters";
 import TagFilter from "@/features/tags/components/TagFilter";
 
@@ -184,51 +183,17 @@ function GeneralLedgerPage() {
 
       {!loading && !error && data && (
         <>
-          {/* Export actions */}
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => window.print()}
-              className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm transition-colors hover:bg-muted"
-            >
-              <PrinterIcon className="size-4" />
-              Print
-            </button>
-            <button
-              type="button"
-              onClick={async () => {
-                const sp = new URLSearchParams();
-                sp.set("type", "general-ledger");
-                sp.set("format", "csv");
-                if (activeBookId) sp.set("bookId", activeBookId);
-                if (selectedAccountId) sp.set("accountId", selectedAccountId);
-                if (lastParams.current.startDate)
-                  sp.set("startDate", lastParams.current.startDate);
-                if (lastParams.current.endDate)
-                  sp.set("endDate", lastParams.current.endDate);
-                if (selectedTagIds.length > 0)
-                  sp.set("tagIds", selectedTagIds.join(","));
-
-                const res = await fetch(
-                  `${API_URL}/api/reports/export?${sp.toString()}`,
-                );
-
-                if (!res.ok) return;
-
-                const blob = await res.blob();
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement("a");
-                link.href = url;
-                link.download = "general-ledger.csv";
-                link.click();
-                URL.revokeObjectURL(url);
-              }}
-              className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm transition-colors hover:bg-muted"
-            >
-              <DownloadIcon className="size-4" />
-              Download CSV
-            </button>
-          </div>
+          <ReportExportActions
+            reportType="general-ledger"
+            filename="general-ledger"
+            bookId={activeBookId}
+            query={{
+              accountId: selectedAccountId,
+              startDate: lastParams.current.startDate,
+              endDate: lastParams.current.endDate,
+              tagIds: selectedTagIds,
+            }}
+          />
 
           {/* Account header */}
           <div className="flex flex-wrap items-center gap-4 rounded-lg border border-border bg-card p-4">
