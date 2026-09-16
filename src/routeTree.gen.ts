@@ -9,63 +9,64 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AppRouteImport } from './routes/_app'
+import { Route as PublicRouteImport } from './routes/_public'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AppAtChar123workspaceSlugChar125Char126IndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/index'
-import { Route as AppAtChar123workspaceSlugChar125Char126SpendingIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/spending/index'
-import { Route as AppAtChar123workspaceSlugChar125Char126SettingsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/index'
-import { Route as AppAtChar123workspaceSlugChar125Char126SavingsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/savings/index'
-import { Route as AppAtChar123workspaceSlugChar125Char126ReportsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/index'
-import { Route as AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/reconciliation/index'
-import { Route as AppAtChar123workspaceSlugChar125Char126MileageIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/mileage/index'
-import { Route as AppAtChar123workspaceSlugChar125Char126LedgerIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/ledger/index'
-import { Route as AppAtChar123workspaceSlugChar125Char126ItemsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/items/index'
-import { Route as AppAtChar123workspaceSlugChar125Char126InvoicesIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/invoices/index'
-import { Route as AppAtChar123workspaceSlugChar125Char126EstimatesIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/estimates/index'
-import { Route as AppAtChar123workspaceSlugChar125Char126CustomersIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/customers/index'
-import { Route as AppAtChar123workspaceSlugChar125Char126CryptoIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/crypto/index'
-import { Route as AppAtChar123workspaceSlugChar125Char126BudgetsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/budgets/index'
-import { Route as AppAtChar123workspaceSlugChar125Char126BillsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/bills/index'
-import { Route as AppAtChar123workspaceSlugChar125Char126AssetsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/assets/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126AccountsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/accounts/index'
-import { Route as AppAtChar123workspaceSlugChar125Char126SpendingRecurringRouteImport } from './routes/_app/@{$workspaceSlug}/~/spending/recurring'
-import { Route as AppAtChar123workspaceSlugChar125Char126SettingsVendorsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/vendors'
-import { Route as AppAtChar123workspaceSlugChar125Char126SettingsTaxJurisdictionsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/tax-jurisdictions'
-import { Route as AppAtChar123workspaceSlugChar125Char126SettingsTagsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/tags'
-import { Route as AppAtChar123workspaceSlugChar125Char126SettingsRulesRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/rules'
-import { Route as AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/quickbooks'
-import { Route as AppAtChar123workspaceSlugChar125Char126SettingsMappingsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/mappings'
-import { Route as AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/connections'
-import { Route as AppAtChar123workspaceSlugChar125Char126SettingsBooksRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/books'
-import { Route as AppAtChar123workspaceSlugChar125Char126SettingsAuditRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/audit'
-import { Route as AppAtChar123workspaceSlugChar125Char126SettingsAccessRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/access'
-import { Route as AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/trial-balance'
-import { Route as AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/tax-loss-harvesting'
-import { Route as AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/statement-of-equity'
-import { Route as AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/schedule-c'
-import { Route as AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/sales-tax'
-import { Route as AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/quarterly-estimates'
-import { Route as AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/profit-and-loss'
-import { Route as AppAtChar123workspaceSlugChar125Char126ReportsPayrollRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/payroll'
-import { Route as AppAtChar123workspaceSlugChar125Char126ReportsGeneralLedgerRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/general-ledger'
-import { Route as AppAtChar123workspaceSlugChar125Char126ReportsForm8949RouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/form-8949'
-import { Route as AppAtChar123workspaceSlugChar125Char126ReportsCashFlowRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/cash-flow'
-import { Route as AppAtChar123workspaceSlugChar125Char126ReportsBalanceSheetRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/balance-sheet'
-import { Route as AppAtChar123workspaceSlugChar125Char126ReportsArAgingRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/ar-aging'
-import { Route as AppAtChar123workspaceSlugChar125Char126ReportsApAgingRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/ap-aging'
-import { Route as AppAtChar123workspaceSlugChar125Char126Reports1099RouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/1099'
-import { Route as AppAtChar123workspaceSlugChar125Char126ReconciliationStatementsRouteImport } from './routes/_app/@{$workspaceSlug}/~/reconciliation/statements'
-import { Route as AppAtChar123workspaceSlugChar125Char126LedgerNewRouteImport } from './routes/_app/@{$workspaceSlug}/~/ledger/new'
+import { Route as AppAtChar123workspaceSlugChar125Char126AssetsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/assets/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126AssetsAssetIdRouteImport } from './routes/_app/@{$workspaceSlug}/~/assets/$assetId'
+import { Route as AppAtChar123workspaceSlugChar125Char126BillsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/bills/index'
+import { Route as AppAtChar123workspaceSlugChar125Char126BudgetsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/budgets/index'
+import { Route as AppAtChar123workspaceSlugChar125Char126CryptoIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/crypto/index'
+import { Route as AppAtChar123workspaceSlugChar125Char126CustomersIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/customers/index'
+import { Route as AppAtChar123workspaceSlugChar125Char126EstimatesIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/estimates/index'
+import { Route as AppAtChar123workspaceSlugChar125Char126InvoicesIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/invoices/index'
+import { Route as AppAtChar123workspaceSlugChar125Char126ItemsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/items/index'
+import { Route as AppAtChar123workspaceSlugChar125Char126LedgerIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/ledger/index'
+import { Route as AppAtChar123workspaceSlugChar125Char126LedgerNewRouteImport } from './routes/_app/@{$workspaceSlug}/~/ledger/new'
+import { Route as AppAtChar123workspaceSlugChar125Char126MileageIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/mileage/index'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/reconciliation/index'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReconciliationStatementsRouteImport } from './routes/_app/@{$workspaceSlug}/~/reconciliation/statements'
+import { Route as AppAtChar123workspaceSlugChar125Char126RecurringIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/recurring/index'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReportsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/index'
+import { Route as AppAtChar123workspaceSlugChar125Char126Reports1099RouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/1099'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReportsApAgingRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/ap-aging'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReportsArAgingRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/ar-aging'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReportsBalanceSheetRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/balance-sheet'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReportsCashFlowRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/cash-flow'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReportsForm8949RouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/form-8949'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReportsGeneralLedgerRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/general-ledger'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReportsPayrollRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/payroll'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/profit-and-loss'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/quarterly-estimates'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/sales-tax'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/schedule-c'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/statement-of-equity'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/tax-loss-harvesting'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/trial-balance'
+import { Route as AppAtChar123workspaceSlugChar125Char126SavingsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/savings/index'
+import { Route as AppAtChar123workspaceSlugChar125Char126SettingsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/index'
+import { Route as AppAtChar123workspaceSlugChar125Char126SettingsAccessRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/access'
+import { Route as AppAtChar123workspaceSlugChar125Char126SettingsAuditRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/audit'
+import { Route as AppAtChar123workspaceSlugChar125Char126SettingsBooksRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/books'
+import { Route as AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/connections'
+import { Route as AppAtChar123workspaceSlugChar125Char126SettingsMappingsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/mappings'
+import { Route as AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/quickbooks'
+import { Route as AppAtChar123workspaceSlugChar125Char126SettingsRulesRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/rules'
+import { Route as AppAtChar123workspaceSlugChar125Char126SettingsTagsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/tags'
+import { Route as AppAtChar123workspaceSlugChar125Char126SettingsTaxJurisdictionsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/tax-jurisdictions'
+import { Route as AppAtChar123workspaceSlugChar125Char126SettingsVendorsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/vendors'
+import { Route as AppAtChar123workspaceSlugChar125Char126SpendingIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/spending/index'
+import { Route as AppAtChar123workspaceSlugChar125Char126SpendingRecurringRouteImport } from './routes/_app/@{$workspaceSlug}/~/spending/recurring'
 
-const PublicRoute = PublicRouteImport.update({
-  id: '/_public',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicIndexRoute = PublicIndexRouteImport.update({
@@ -84,88 +85,10 @@ const AppAtChar123workspaceSlugChar125Char126IndexRoute =
     path: '/@{$workspaceSlug}/~/',
     getParentRoute: () => AppRoute,
   } as any)
-const AppAtChar123workspaceSlugChar125Char126SpendingIndexRoute =
-  AppAtChar123workspaceSlugChar125Char126SpendingIndexRouteImport.update({
-    id: '/@{$workspaceSlug}/~/spending/',
-    path: '/@{$workspaceSlug}/~/spending/',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126SettingsIndexRoute =
-  AppAtChar123workspaceSlugChar125Char126SettingsIndexRouteImport.update({
-    id: '/@{$workspaceSlug}/~/settings/',
-    path: '/@{$workspaceSlug}/~/settings/',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126SavingsIndexRoute =
-  AppAtChar123workspaceSlugChar125Char126SavingsIndexRouteImport.update({
-    id: '/@{$workspaceSlug}/~/savings/',
-    path: '/@{$workspaceSlug}/~/savings/',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126ReportsIndexRoute =
-  AppAtChar123workspaceSlugChar125Char126ReportsIndexRouteImport.update({
-    id: '/@{$workspaceSlug}/~/reports/',
-    path: '/@{$workspaceSlug}/~/reports/',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRoute =
-  AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRouteImport.update({
-    id: '/@{$workspaceSlug}/~/reconciliation/',
-    path: '/@{$workspaceSlug}/~/reconciliation/',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126MileageIndexRoute =
-  AppAtChar123workspaceSlugChar125Char126MileageIndexRouteImport.update({
-    id: '/@{$workspaceSlug}/~/mileage/',
-    path: '/@{$workspaceSlug}/~/mileage/',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126LedgerIndexRoute =
-  AppAtChar123workspaceSlugChar125Char126LedgerIndexRouteImport.update({
-    id: '/@{$workspaceSlug}/~/ledger/',
-    path: '/@{$workspaceSlug}/~/ledger/',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126ItemsIndexRoute =
-  AppAtChar123workspaceSlugChar125Char126ItemsIndexRouteImport.update({
-    id: '/@{$workspaceSlug}/~/items/',
-    path: '/@{$workspaceSlug}/~/items/',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126InvoicesIndexRoute =
-  AppAtChar123workspaceSlugChar125Char126InvoicesIndexRouteImport.update({
-    id: '/@{$workspaceSlug}/~/invoices/',
-    path: '/@{$workspaceSlug}/~/invoices/',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126EstimatesIndexRoute =
-  AppAtChar123workspaceSlugChar125Char126EstimatesIndexRouteImport.update({
-    id: '/@{$workspaceSlug}/~/estimates/',
-    path: '/@{$workspaceSlug}/~/estimates/',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute =
-  AppAtChar123workspaceSlugChar125Char126CustomersIndexRouteImport.update({
-    id: '/@{$workspaceSlug}/~/customers/',
-    path: '/@{$workspaceSlug}/~/customers/',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126CryptoIndexRoute =
-  AppAtChar123workspaceSlugChar125Char126CryptoIndexRouteImport.update({
-    id: '/@{$workspaceSlug}/~/crypto/',
-    path: '/@{$workspaceSlug}/~/crypto/',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126BudgetsIndexRoute =
-  AppAtChar123workspaceSlugChar125Char126BudgetsIndexRouteImport.update({
-    id: '/@{$workspaceSlug}/~/budgets/',
-    path: '/@{$workspaceSlug}/~/budgets/',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126BillsIndexRoute =
-  AppAtChar123workspaceSlugChar125Char126BillsIndexRouteImport.update({
-    id: '/@{$workspaceSlug}/~/bills/',
-    path: '/@{$workspaceSlug}/~/bills/',
+const AppAtChar123workspaceSlugChar125Char126AccountsIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126AccountsIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/accounts/',
+    path: '/@{$workspaceSlug}/~/accounts/',
     getParentRoute: () => AppRoute,
   } as any)
 const AppAtChar123workspaceSlugChar125Char126AssetsIndexRoute =
@@ -174,178 +97,76 @@ const AppAtChar123workspaceSlugChar125Char126AssetsIndexRoute =
     path: '/@{$workspaceSlug}/~/assets/',
     getParentRoute: () => AppRoute,
   } as any)
-const AppAtChar123workspaceSlugChar125Char126AccountsIndexRoute =
-  AppAtChar123workspaceSlugChar125Char126AccountsIndexRouteImport.update({
-    id: '/@{$workspaceSlug}/~/accounts/',
-    path: '/@{$workspaceSlug}/~/accounts/',
+const AppAtChar123workspaceSlugChar125Char126AssetsAssetIdRoute =
+  AppAtChar123workspaceSlugChar125Char126AssetsAssetIdRouteImport.update({
+    id: '/@{$workspaceSlug}/~/assets/$assetId',
+    path: '/@{$workspaceSlug}/~/assets/$assetId',
     getParentRoute: () => AppRoute,
   } as any)
-const AppAtChar123workspaceSlugChar125Char126SpendingRecurringRoute =
-  AppAtChar123workspaceSlugChar125Char126SpendingRecurringRouteImport.update({
-    id: '/@{$workspaceSlug}/~/spending/recurring',
-    path: '/@{$workspaceSlug}/~/spending/recurring',
+const AppAtChar123workspaceSlugChar125Char126BillsIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126BillsIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/bills/',
+    path: '/@{$workspaceSlug}/~/bills/',
     getParentRoute: () => AppRoute,
   } as any)
-const AppAtChar123workspaceSlugChar125Char126SettingsVendorsRoute =
-  AppAtChar123workspaceSlugChar125Char126SettingsVendorsRouteImport.update({
-    id: '/@{$workspaceSlug}/~/settings/vendors',
-    path: '/@{$workspaceSlug}/~/settings/vendors',
+const AppAtChar123workspaceSlugChar125Char126BudgetsIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126BudgetsIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/budgets/',
+    path: '/@{$workspaceSlug}/~/budgets/',
     getParentRoute: () => AppRoute,
   } as any)
-const AppAtChar123workspaceSlugChar125Char126SettingsTaxJurisdictionsRoute =
-  AppAtChar123workspaceSlugChar125Char126SettingsTaxJurisdictionsRouteImport.update(
-    {
-      id: '/@{$workspaceSlug}/~/settings/tax-jurisdictions',
-      path: '/@{$workspaceSlug}/~/settings/tax-jurisdictions',
-      getParentRoute: () => AppRoute,
-    } as any,
-  )
-const AppAtChar123workspaceSlugChar125Char126SettingsTagsRoute =
-  AppAtChar123workspaceSlugChar125Char126SettingsTagsRouteImport.update({
-    id: '/@{$workspaceSlug}/~/settings/tags',
-    path: '/@{$workspaceSlug}/~/settings/tags',
+const AppAtChar123workspaceSlugChar125Char126CryptoIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126CryptoIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/crypto/',
+    path: '/@{$workspaceSlug}/~/crypto/',
     getParentRoute: () => AppRoute,
   } as any)
-const AppAtChar123workspaceSlugChar125Char126SettingsRulesRoute =
-  AppAtChar123workspaceSlugChar125Char126SettingsRulesRouteImport.update({
-    id: '/@{$workspaceSlug}/~/settings/rules',
-    path: '/@{$workspaceSlug}/~/settings/rules',
+const AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126CustomersIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/customers/',
+    path: '/@{$workspaceSlug}/~/customers/',
     getParentRoute: () => AppRoute,
   } as any)
-const AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute =
-  AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRouteImport.update({
-    id: '/@{$workspaceSlug}/~/settings/quickbooks',
-    path: '/@{$workspaceSlug}/~/settings/quickbooks',
+const AppAtChar123workspaceSlugChar125Char126EstimatesIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126EstimatesIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/estimates/',
+    path: '/@{$workspaceSlug}/~/estimates/',
     getParentRoute: () => AppRoute,
   } as any)
-const AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute =
-  AppAtChar123workspaceSlugChar125Char126SettingsMappingsRouteImport.update({
-    id: '/@{$workspaceSlug}/~/settings/mappings',
-    path: '/@{$workspaceSlug}/~/settings/mappings',
+const AppAtChar123workspaceSlugChar125Char126InvoicesIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126InvoicesIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/invoices/',
+    path: '/@{$workspaceSlug}/~/invoices/',
     getParentRoute: () => AppRoute,
   } as any)
-const AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute =
-  AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRouteImport.update({
-    id: '/@{$workspaceSlug}/~/settings/connections',
-    path: '/@{$workspaceSlug}/~/settings/connections',
+const AppAtChar123workspaceSlugChar125Char126ItemsIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126ItemsIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/items/',
+    path: '/@{$workspaceSlug}/~/items/',
     getParentRoute: () => AppRoute,
   } as any)
-const AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute =
-  AppAtChar123workspaceSlugChar125Char126SettingsBooksRouteImport.update({
-    id: '/@{$workspaceSlug}/~/settings/books',
-    path: '/@{$workspaceSlug}/~/settings/books',
+const AppAtChar123workspaceSlugChar125Char126LedgerIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126LedgerIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/ledger/',
+    path: '/@{$workspaceSlug}/~/ledger/',
     getParentRoute: () => AppRoute,
   } as any)
-const AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute =
-  AppAtChar123workspaceSlugChar125Char126SettingsAuditRouteImport.update({
-    id: '/@{$workspaceSlug}/~/settings/audit',
-    path: '/@{$workspaceSlug}/~/settings/audit',
+const AppAtChar123workspaceSlugChar125Char126LedgerNewRoute =
+  AppAtChar123workspaceSlugChar125Char126LedgerNewRouteImport.update({
+    id: '/@{$workspaceSlug}/~/ledger/new',
+    path: '/@{$workspaceSlug}/~/ledger/new',
     getParentRoute: () => AppRoute,
   } as any)
-const AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute =
-  AppAtChar123workspaceSlugChar125Char126SettingsAccessRouteImport.update({
-    id: '/@{$workspaceSlug}/~/settings/access',
-    path: '/@{$workspaceSlug}/~/settings/access',
+const AppAtChar123workspaceSlugChar125Char126MileageIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126MileageIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/mileage/',
+    path: '/@{$workspaceSlug}/~/mileage/',
     getParentRoute: () => AppRoute,
   } as any)
-const AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRoute =
-  AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRouteImport.update({
-    id: '/@{$workspaceSlug}/~/reports/trial-balance',
-    path: '/@{$workspaceSlug}/~/reports/trial-balance',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRoute =
-  AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRouteImport.update(
-    {
-      id: '/@{$workspaceSlug}/~/reports/tax-loss-harvesting',
-      path: '/@{$workspaceSlug}/~/reports/tax-loss-harvesting',
-      getParentRoute: () => AppRoute,
-    } as any,
-  )
-const AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRoute =
-  AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRouteImport.update(
-    {
-      id: '/@{$workspaceSlug}/~/reports/statement-of-equity',
-      path: '/@{$workspaceSlug}/~/reports/statement-of-equity',
-      getParentRoute: () => AppRoute,
-    } as any,
-  )
-const AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute =
-  AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRouteImport.update({
-    id: '/@{$workspaceSlug}/~/reports/schedule-c',
-    path: '/@{$workspaceSlug}/~/reports/schedule-c',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute =
-  AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRouteImport.update({
-    id: '/@{$workspaceSlug}/~/reports/sales-tax',
-    path: '/@{$workspaceSlug}/~/reports/sales-tax',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute =
-  AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRouteImport.update(
-    {
-      id: '/@{$workspaceSlug}/~/reports/quarterly-estimates',
-      path: '/@{$workspaceSlug}/~/reports/quarterly-estimates',
-      getParentRoute: () => AppRoute,
-    } as any,
-  )
-const AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRoute =
-  AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRouteImport.update(
-    {
-      id: '/@{$workspaceSlug}/~/reports/profit-and-loss',
-      path: '/@{$workspaceSlug}/~/reports/profit-and-loss',
-      getParentRoute: () => AppRoute,
-    } as any,
-  )
-const AppAtChar123workspaceSlugChar125Char126ReportsPayrollRoute =
-  AppAtChar123workspaceSlugChar125Char126ReportsPayrollRouteImport.update({
-    id: '/@{$workspaceSlug}/~/reports/payroll',
-    path: '/@{$workspaceSlug}/~/reports/payroll',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126ReportsGeneralLedgerRoute =
-  AppAtChar123workspaceSlugChar125Char126ReportsGeneralLedgerRouteImport.update(
-    {
-      id: '/@{$workspaceSlug}/~/reports/general-ledger',
-      path: '/@{$workspaceSlug}/~/reports/general-ledger',
-      getParentRoute: () => AppRoute,
-    } as any,
-  )
-const AppAtChar123workspaceSlugChar125Char126ReportsForm8949Route =
-  AppAtChar123workspaceSlugChar125Char126ReportsForm8949RouteImport.update({
-    id: '/@{$workspaceSlug}/~/reports/form-8949',
-    path: '/@{$workspaceSlug}/~/reports/form-8949',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126ReportsCashFlowRoute =
-  AppAtChar123workspaceSlugChar125Char126ReportsCashFlowRouteImport.update({
-    id: '/@{$workspaceSlug}/~/reports/cash-flow',
-    path: '/@{$workspaceSlug}/~/reports/cash-flow',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126ReportsBalanceSheetRoute =
-  AppAtChar123workspaceSlugChar125Char126ReportsBalanceSheetRouteImport.update({
-    id: '/@{$workspaceSlug}/~/reports/balance-sheet',
-    path: '/@{$workspaceSlug}/~/reports/balance-sheet',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126ReportsArAgingRoute =
-  AppAtChar123workspaceSlugChar125Char126ReportsArAgingRouteImport.update({
-    id: '/@{$workspaceSlug}/~/reports/ar-aging',
-    path: '/@{$workspaceSlug}/~/reports/ar-aging',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126ReportsApAgingRoute =
-  AppAtChar123workspaceSlugChar125Char126ReportsApAgingRouteImport.update({
-    id: '/@{$workspaceSlug}/~/reports/ap-aging',
-    path: '/@{$workspaceSlug}/~/reports/ap-aging',
-    getParentRoute: () => AppRoute,
-  } as any)
-const AppAtChar123workspaceSlugChar125Char126Reports1099Route =
-  AppAtChar123workspaceSlugChar125Char126Reports1099RouteImport.update({
-    id: '/@{$workspaceSlug}/~/reports/1099',
-    path: '/@{$workspaceSlug}/~/reports/1099',
+const AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/reconciliation/',
+    path: '/@{$workspaceSlug}/~/reconciliation/',
     getParentRoute: () => AppRoute,
   } as any)
 const AppAtChar123workspaceSlugChar125Char126ReconciliationStatementsRoute =
@@ -356,16 +177,202 @@ const AppAtChar123workspaceSlugChar125Char126ReconciliationStatementsRoute =
       getParentRoute: () => AppRoute,
     } as any,
   )
-const AppAtChar123workspaceSlugChar125Char126LedgerNewRoute =
-  AppAtChar123workspaceSlugChar125Char126LedgerNewRouteImport.update({
-    id: '/@{$workspaceSlug}/~/ledger/new',
-    path: '/@{$workspaceSlug}/~/ledger/new',
+const AppAtChar123workspaceSlugChar125Char126RecurringIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126RecurringIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/recurring/',
+    path: '/@{$workspaceSlug}/~/recurring/',
     getParentRoute: () => AppRoute,
   } as any)
-const AppAtChar123workspaceSlugChar125Char126AssetsAssetIdRoute =
-  AppAtChar123workspaceSlugChar125Char126AssetsAssetIdRouteImport.update({
-    id: '/@{$workspaceSlug}/~/assets/$assetId',
-    path: '/@{$workspaceSlug}/~/assets/$assetId',
+const AppAtChar123workspaceSlugChar125Char126ReportsIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126ReportsIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/reports/',
+    path: '/@{$workspaceSlug}/~/reports/',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126Reports1099Route =
+  AppAtChar123workspaceSlugChar125Char126Reports1099RouteImport.update({
+    id: '/@{$workspaceSlug}/~/reports/1099',
+    path: '/@{$workspaceSlug}/~/reports/1099',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126ReportsApAgingRoute =
+  AppAtChar123workspaceSlugChar125Char126ReportsApAgingRouteImport.update({
+    id: '/@{$workspaceSlug}/~/reports/ap-aging',
+    path: '/@{$workspaceSlug}/~/reports/ap-aging',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126ReportsArAgingRoute =
+  AppAtChar123workspaceSlugChar125Char126ReportsArAgingRouteImport.update({
+    id: '/@{$workspaceSlug}/~/reports/ar-aging',
+    path: '/@{$workspaceSlug}/~/reports/ar-aging',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126ReportsBalanceSheetRoute =
+  AppAtChar123workspaceSlugChar125Char126ReportsBalanceSheetRouteImport.update({
+    id: '/@{$workspaceSlug}/~/reports/balance-sheet',
+    path: '/@{$workspaceSlug}/~/reports/balance-sheet',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126ReportsCashFlowRoute =
+  AppAtChar123workspaceSlugChar125Char126ReportsCashFlowRouteImport.update({
+    id: '/@{$workspaceSlug}/~/reports/cash-flow',
+    path: '/@{$workspaceSlug}/~/reports/cash-flow',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126ReportsForm8949Route =
+  AppAtChar123workspaceSlugChar125Char126ReportsForm8949RouteImport.update({
+    id: '/@{$workspaceSlug}/~/reports/form-8949',
+    path: '/@{$workspaceSlug}/~/reports/form-8949',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126ReportsGeneralLedgerRoute =
+  AppAtChar123workspaceSlugChar125Char126ReportsGeneralLedgerRouteImport.update(
+    {
+      id: '/@{$workspaceSlug}/~/reports/general-ledger',
+      path: '/@{$workspaceSlug}/~/reports/general-ledger',
+      getParentRoute: () => AppRoute,
+    } as any,
+  )
+const AppAtChar123workspaceSlugChar125Char126ReportsPayrollRoute =
+  AppAtChar123workspaceSlugChar125Char126ReportsPayrollRouteImport.update({
+    id: '/@{$workspaceSlug}/~/reports/payroll',
+    path: '/@{$workspaceSlug}/~/reports/payroll',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRoute =
+  AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRouteImport.update(
+    {
+      id: '/@{$workspaceSlug}/~/reports/profit-and-loss',
+      path: '/@{$workspaceSlug}/~/reports/profit-and-loss',
+      getParentRoute: () => AppRoute,
+    } as any,
+  )
+const AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute =
+  AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRouteImport.update(
+    {
+      id: '/@{$workspaceSlug}/~/reports/quarterly-estimates',
+      path: '/@{$workspaceSlug}/~/reports/quarterly-estimates',
+      getParentRoute: () => AppRoute,
+    } as any,
+  )
+const AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute =
+  AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRouteImport.update({
+    id: '/@{$workspaceSlug}/~/reports/sales-tax',
+    path: '/@{$workspaceSlug}/~/reports/sales-tax',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute =
+  AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRouteImport.update({
+    id: '/@{$workspaceSlug}/~/reports/schedule-c',
+    path: '/@{$workspaceSlug}/~/reports/schedule-c',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRoute =
+  AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRouteImport.update(
+    {
+      id: '/@{$workspaceSlug}/~/reports/statement-of-equity',
+      path: '/@{$workspaceSlug}/~/reports/statement-of-equity',
+      getParentRoute: () => AppRoute,
+    } as any,
+  )
+const AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRoute =
+  AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRouteImport.update(
+    {
+      id: '/@{$workspaceSlug}/~/reports/tax-loss-harvesting',
+      path: '/@{$workspaceSlug}/~/reports/tax-loss-harvesting',
+      getParentRoute: () => AppRoute,
+    } as any,
+  )
+const AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRoute =
+  AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRouteImport.update({
+    id: '/@{$workspaceSlug}/~/reports/trial-balance',
+    path: '/@{$workspaceSlug}/~/reports/trial-balance',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126SavingsIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126SavingsIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/savings/',
+    path: '/@{$workspaceSlug}/~/savings/',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126SettingsIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126SettingsIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/settings/',
+    path: '/@{$workspaceSlug}/~/settings/',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute =
+  AppAtChar123workspaceSlugChar125Char126SettingsAccessRouteImport.update({
+    id: '/@{$workspaceSlug}/~/settings/access',
+    path: '/@{$workspaceSlug}/~/settings/access',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute =
+  AppAtChar123workspaceSlugChar125Char126SettingsAuditRouteImport.update({
+    id: '/@{$workspaceSlug}/~/settings/audit',
+    path: '/@{$workspaceSlug}/~/settings/audit',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute =
+  AppAtChar123workspaceSlugChar125Char126SettingsBooksRouteImport.update({
+    id: '/@{$workspaceSlug}/~/settings/books',
+    path: '/@{$workspaceSlug}/~/settings/books',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute =
+  AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRouteImport.update({
+    id: '/@{$workspaceSlug}/~/settings/connections',
+    path: '/@{$workspaceSlug}/~/settings/connections',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute =
+  AppAtChar123workspaceSlugChar125Char126SettingsMappingsRouteImport.update({
+    id: '/@{$workspaceSlug}/~/settings/mappings',
+    path: '/@{$workspaceSlug}/~/settings/mappings',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute =
+  AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRouteImport.update({
+    id: '/@{$workspaceSlug}/~/settings/quickbooks',
+    path: '/@{$workspaceSlug}/~/settings/quickbooks',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126SettingsRulesRoute =
+  AppAtChar123workspaceSlugChar125Char126SettingsRulesRouteImport.update({
+    id: '/@{$workspaceSlug}/~/settings/rules',
+    path: '/@{$workspaceSlug}/~/settings/rules',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126SettingsTagsRoute =
+  AppAtChar123workspaceSlugChar125Char126SettingsTagsRouteImport.update({
+    id: '/@{$workspaceSlug}/~/settings/tags',
+    path: '/@{$workspaceSlug}/~/settings/tags',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126SettingsTaxJurisdictionsRoute =
+  AppAtChar123workspaceSlugChar125Char126SettingsTaxJurisdictionsRouteImport.update(
+    {
+      id: '/@{$workspaceSlug}/~/settings/tax-jurisdictions',
+      path: '/@{$workspaceSlug}/~/settings/tax-jurisdictions',
+      getParentRoute: () => AppRoute,
+    } as any,
+  )
+const AppAtChar123workspaceSlugChar125Char126SettingsVendorsRoute =
+  AppAtChar123workspaceSlugChar125Char126SettingsVendorsRouteImport.update({
+    id: '/@{$workspaceSlug}/~/settings/vendors',
+    path: '/@{$workspaceSlug}/~/settings/vendors',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126SpendingIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126SpendingIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/spending/',
+    path: '/@{$workspaceSlug}/~/spending/',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126SpendingRecurringRoute =
+  AppAtChar123workspaceSlugChar125Char126SpendingRecurringRouteImport.update({
+    id: '/@{$workspaceSlug}/~/spending/recurring',
+    path: '/@{$workspaceSlug}/~/spending/recurring',
     getParentRoute: () => AppRoute,
   } as any)
 
@@ -414,6 +421,7 @@ export interface FileRoutesByFullPath {
   '/@{$workspaceSlug}/~/ledger/': typeof AppAtChar123workspaceSlugChar125Char126LedgerIndexRoute
   '/@{$workspaceSlug}/~/mileage/': typeof AppAtChar123workspaceSlugChar125Char126MileageIndexRoute
   '/@{$workspaceSlug}/~/reconciliation/': typeof AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRoute
+  '/@{$workspaceSlug}/~/recurring/': typeof AppAtChar123workspaceSlugChar125Char126RecurringIndexRoute
   '/@{$workspaceSlug}/~/reports/': typeof AppAtChar123workspaceSlugChar125Char126ReportsIndexRoute
   '/@{$workspaceSlug}/~/savings/': typeof AppAtChar123workspaceSlugChar125Char126SavingsIndexRoute
   '/@{$workspaceSlug}/~/settings/': typeof AppAtChar123workspaceSlugChar125Char126SettingsIndexRoute
@@ -464,6 +472,7 @@ export interface FileRoutesByTo {
   '/@{$workspaceSlug}/~/ledger': typeof AppAtChar123workspaceSlugChar125Char126LedgerIndexRoute
   '/@{$workspaceSlug}/~/mileage': typeof AppAtChar123workspaceSlugChar125Char126MileageIndexRoute
   '/@{$workspaceSlug}/~/reconciliation': typeof AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRoute
+  '/@{$workspaceSlug}/~/recurring': typeof AppAtChar123workspaceSlugChar125Char126RecurringIndexRoute
   '/@{$workspaceSlug}/~/reports': typeof AppAtChar123workspaceSlugChar125Char126ReportsIndexRoute
   '/@{$workspaceSlug}/~/savings': typeof AppAtChar123workspaceSlugChar125Char126SavingsIndexRoute
   '/@{$workspaceSlug}/~/settings': typeof AppAtChar123workspaceSlugChar125Char126SettingsIndexRoute
@@ -517,6 +526,7 @@ export interface FileRoutesById {
   '/_app/@{$workspaceSlug}/~/ledger/': typeof AppAtChar123workspaceSlugChar125Char126LedgerIndexRoute
   '/_app/@{$workspaceSlug}/~/mileage/': typeof AppAtChar123workspaceSlugChar125Char126MileageIndexRoute
   '/_app/@{$workspaceSlug}/~/reconciliation/': typeof AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRoute
+  '/_app/@{$workspaceSlug}/~/recurring/': typeof AppAtChar123workspaceSlugChar125Char126RecurringIndexRoute
   '/_app/@{$workspaceSlug}/~/reports/': typeof AppAtChar123workspaceSlugChar125Char126ReportsIndexRoute
   '/_app/@{$workspaceSlug}/~/savings/': typeof AppAtChar123workspaceSlugChar125Char126SavingsIndexRoute
   '/_app/@{$workspaceSlug}/~/settings/': typeof AppAtChar123workspaceSlugChar125Char126SettingsIndexRoute
@@ -569,6 +579,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/ledger/'
     | '/@{$workspaceSlug}/~/mileage/'
     | '/@{$workspaceSlug}/~/reconciliation/'
+    | '/@{$workspaceSlug}/~/recurring/'
     | '/@{$workspaceSlug}/~/reports/'
     | '/@{$workspaceSlug}/~/savings/'
     | '/@{$workspaceSlug}/~/settings/'
@@ -619,6 +630,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/ledger'
     | '/@{$workspaceSlug}/~/mileage'
     | '/@{$workspaceSlug}/~/reconciliation'
+    | '/@{$workspaceSlug}/~/recurring'
     | '/@{$workspaceSlug}/~/reports'
     | '/@{$workspaceSlug}/~/savings'
     | '/@{$workspaceSlug}/~/settings'
@@ -671,6 +683,7 @@ export interface FileRouteTypes {
     | '/_app/@{$workspaceSlug}/~/ledger/'
     | '/_app/@{$workspaceSlug}/~/mileage/'
     | '/_app/@{$workspaceSlug}/~/reconciliation/'
+    | '/_app/@{$workspaceSlug}/~/recurring/'
     | '/_app/@{$workspaceSlug}/~/reports/'
     | '/_app/@{$workspaceSlug}/~/savings/'
     | '/_app/@{$workspaceSlug}/~/settings/'
@@ -685,18 +698,18 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_public': {
-      id: '/_public'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof PublicRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_app': {
       id: '/_app'
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PublicRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_public/': {
@@ -720,102 +733,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126IndexRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/@{$workspaceSlug}/~/spending/': {
-      id: '/_app/@{$workspaceSlug}/~/spending/'
-      path: '/@{$workspaceSlug}/~/spending'
-      fullPath: '/@{$workspaceSlug}/~/spending/'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SpendingIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/settings/': {
-      id: '/_app/@{$workspaceSlug}/~/settings/'
-      path: '/@{$workspaceSlug}/~/settings'
-      fullPath: '/@{$workspaceSlug}/~/settings/'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/savings/': {
-      id: '/_app/@{$workspaceSlug}/~/savings/'
-      path: '/@{$workspaceSlug}/~/savings'
-      fullPath: '/@{$workspaceSlug}/~/savings/'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SavingsIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/reports/': {
-      id: '/_app/@{$workspaceSlug}/~/reports/'
-      path: '/@{$workspaceSlug}/~/reports'
-      fullPath: '/@{$workspaceSlug}/~/reports/'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/reconciliation/': {
-      id: '/_app/@{$workspaceSlug}/~/reconciliation/'
-      path: '/@{$workspaceSlug}/~/reconciliation'
-      fullPath: '/@{$workspaceSlug}/~/reconciliation/'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/mileage/': {
-      id: '/_app/@{$workspaceSlug}/~/mileage/'
-      path: '/@{$workspaceSlug}/~/mileage'
-      fullPath: '/@{$workspaceSlug}/~/mileage/'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126MileageIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/ledger/': {
-      id: '/_app/@{$workspaceSlug}/~/ledger/'
-      path: '/@{$workspaceSlug}/~/ledger'
-      fullPath: '/@{$workspaceSlug}/~/ledger/'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126LedgerIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/items/': {
-      id: '/_app/@{$workspaceSlug}/~/items/'
-      path: '/@{$workspaceSlug}/~/items'
-      fullPath: '/@{$workspaceSlug}/~/items/'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ItemsIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/invoices/': {
-      id: '/_app/@{$workspaceSlug}/~/invoices/'
-      path: '/@{$workspaceSlug}/~/invoices'
-      fullPath: '/@{$workspaceSlug}/~/invoices/'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126InvoicesIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/estimates/': {
-      id: '/_app/@{$workspaceSlug}/~/estimates/'
-      path: '/@{$workspaceSlug}/~/estimates'
-      fullPath: '/@{$workspaceSlug}/~/estimates/'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126EstimatesIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/customers/': {
-      id: '/_app/@{$workspaceSlug}/~/customers/'
-      path: '/@{$workspaceSlug}/~/customers'
-      fullPath: '/@{$workspaceSlug}/~/customers/'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126CustomersIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/crypto/': {
-      id: '/_app/@{$workspaceSlug}/~/crypto/'
-      path: '/@{$workspaceSlug}/~/crypto'
-      fullPath: '/@{$workspaceSlug}/~/crypto/'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126CryptoIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/budgets/': {
-      id: '/_app/@{$workspaceSlug}/~/budgets/'
-      path: '/@{$workspaceSlug}/~/budgets'
-      fullPath: '/@{$workspaceSlug}/~/budgets/'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126BudgetsIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/bills/': {
-      id: '/_app/@{$workspaceSlug}/~/bills/'
-      path: '/@{$workspaceSlug}/~/bills'
-      fullPath: '/@{$workspaceSlug}/~/bills/'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126BillsIndexRouteImport
+    '/_app/@{$workspaceSlug}/~/accounts/': {
+      id: '/_app/@{$workspaceSlug}/~/accounts/'
+      path: '/@{$workspaceSlug}/~/accounts'
+      fullPath: '/@{$workspaceSlug}/~/accounts/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126AccountsIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/@{$workspaceSlug}/~/assets/': {
@@ -825,200 +747,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126AssetsIndexRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/@{$workspaceSlug}/~/accounts/': {
-      id: '/_app/@{$workspaceSlug}/~/accounts/'
-      path: '/@{$workspaceSlug}/~/accounts'
-      fullPath: '/@{$workspaceSlug}/~/accounts/'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126AccountsIndexRouteImport
+    '/_app/@{$workspaceSlug}/~/assets/$assetId': {
+      id: '/_app/@{$workspaceSlug}/~/assets/$assetId'
+      path: '/@{$workspaceSlug}/~/assets/$assetId'
+      fullPath: '/@{$workspaceSlug}/~/assets/$assetId'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126AssetsAssetIdRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/@{$workspaceSlug}/~/spending/recurring': {
-      id: '/_app/@{$workspaceSlug}/~/spending/recurring'
-      path: '/@{$workspaceSlug}/~/spending/recurring'
-      fullPath: '/@{$workspaceSlug}/~/spending/recurring'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SpendingRecurringRouteImport
+    '/_app/@{$workspaceSlug}/~/bills/': {
+      id: '/_app/@{$workspaceSlug}/~/bills/'
+      path: '/@{$workspaceSlug}/~/bills'
+      fullPath: '/@{$workspaceSlug}/~/bills/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126BillsIndexRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/@{$workspaceSlug}/~/settings/vendors': {
-      id: '/_app/@{$workspaceSlug}/~/settings/vendors'
-      path: '/@{$workspaceSlug}/~/settings/vendors'
-      fullPath: '/@{$workspaceSlug}/~/settings/vendors'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsVendorsRouteImport
+    '/_app/@{$workspaceSlug}/~/budgets/': {
+      id: '/_app/@{$workspaceSlug}/~/budgets/'
+      path: '/@{$workspaceSlug}/~/budgets'
+      fullPath: '/@{$workspaceSlug}/~/budgets/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126BudgetsIndexRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/@{$workspaceSlug}/~/settings/tax-jurisdictions': {
-      id: '/_app/@{$workspaceSlug}/~/settings/tax-jurisdictions'
-      path: '/@{$workspaceSlug}/~/settings/tax-jurisdictions'
-      fullPath: '/@{$workspaceSlug}/~/settings/tax-jurisdictions'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsTaxJurisdictionsRouteImport
+    '/_app/@{$workspaceSlug}/~/crypto/': {
+      id: '/_app/@{$workspaceSlug}/~/crypto/'
+      path: '/@{$workspaceSlug}/~/crypto'
+      fullPath: '/@{$workspaceSlug}/~/crypto/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126CryptoIndexRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/@{$workspaceSlug}/~/settings/tags': {
-      id: '/_app/@{$workspaceSlug}/~/settings/tags'
-      path: '/@{$workspaceSlug}/~/settings/tags'
-      fullPath: '/@{$workspaceSlug}/~/settings/tags'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsTagsRouteImport
+    '/_app/@{$workspaceSlug}/~/customers/': {
+      id: '/_app/@{$workspaceSlug}/~/customers/'
+      path: '/@{$workspaceSlug}/~/customers'
+      fullPath: '/@{$workspaceSlug}/~/customers/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126CustomersIndexRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/@{$workspaceSlug}/~/settings/rules': {
-      id: '/_app/@{$workspaceSlug}/~/settings/rules'
-      path: '/@{$workspaceSlug}/~/settings/rules'
-      fullPath: '/@{$workspaceSlug}/~/settings/rules'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsRulesRouteImport
+    '/_app/@{$workspaceSlug}/~/estimates/': {
+      id: '/_app/@{$workspaceSlug}/~/estimates/'
+      path: '/@{$workspaceSlug}/~/estimates'
+      fullPath: '/@{$workspaceSlug}/~/estimates/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126EstimatesIndexRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/@{$workspaceSlug}/~/settings/quickbooks': {
-      id: '/_app/@{$workspaceSlug}/~/settings/quickbooks'
-      path: '/@{$workspaceSlug}/~/settings/quickbooks'
-      fullPath: '/@{$workspaceSlug}/~/settings/quickbooks'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRouteImport
+    '/_app/@{$workspaceSlug}/~/invoices/': {
+      id: '/_app/@{$workspaceSlug}/~/invoices/'
+      path: '/@{$workspaceSlug}/~/invoices'
+      fullPath: '/@{$workspaceSlug}/~/invoices/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126InvoicesIndexRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/@{$workspaceSlug}/~/settings/mappings': {
-      id: '/_app/@{$workspaceSlug}/~/settings/mappings'
-      path: '/@{$workspaceSlug}/~/settings/mappings'
-      fullPath: '/@{$workspaceSlug}/~/settings/mappings'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsMappingsRouteImport
+    '/_app/@{$workspaceSlug}/~/items/': {
+      id: '/_app/@{$workspaceSlug}/~/items/'
+      path: '/@{$workspaceSlug}/~/items'
+      fullPath: '/@{$workspaceSlug}/~/items/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ItemsIndexRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/@{$workspaceSlug}/~/settings/connections': {
-      id: '/_app/@{$workspaceSlug}/~/settings/connections'
-      path: '/@{$workspaceSlug}/~/settings/connections'
-      fullPath: '/@{$workspaceSlug}/~/settings/connections'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/settings/books': {
-      id: '/_app/@{$workspaceSlug}/~/settings/books'
-      path: '/@{$workspaceSlug}/~/settings/books'
-      fullPath: '/@{$workspaceSlug}/~/settings/books'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/settings/audit': {
-      id: '/_app/@{$workspaceSlug}/~/settings/audit'
-      path: '/@{$workspaceSlug}/~/settings/audit'
-      fullPath: '/@{$workspaceSlug}/~/settings/audit'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsAuditRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/settings/access': {
-      id: '/_app/@{$workspaceSlug}/~/settings/access'
-      path: '/@{$workspaceSlug}/~/settings/access'
-      fullPath: '/@{$workspaceSlug}/~/settings/access'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsAccessRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/reports/trial-balance': {
-      id: '/_app/@{$workspaceSlug}/~/reports/trial-balance'
-      path: '/@{$workspaceSlug}/~/reports/trial-balance'
-      fullPath: '/@{$workspaceSlug}/~/reports/trial-balance'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/reports/tax-loss-harvesting': {
-      id: '/_app/@{$workspaceSlug}/~/reports/tax-loss-harvesting'
-      path: '/@{$workspaceSlug}/~/reports/tax-loss-harvesting'
-      fullPath: '/@{$workspaceSlug}/~/reports/tax-loss-harvesting'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/reports/statement-of-equity': {
-      id: '/_app/@{$workspaceSlug}/~/reports/statement-of-equity'
-      path: '/@{$workspaceSlug}/~/reports/statement-of-equity'
-      fullPath: '/@{$workspaceSlug}/~/reports/statement-of-equity'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/reports/schedule-c': {
-      id: '/_app/@{$workspaceSlug}/~/reports/schedule-c'
-      path: '/@{$workspaceSlug}/~/reports/schedule-c'
-      fullPath: '/@{$workspaceSlug}/~/reports/schedule-c'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/reports/sales-tax': {
-      id: '/_app/@{$workspaceSlug}/~/reports/sales-tax'
-      path: '/@{$workspaceSlug}/~/reports/sales-tax'
-      fullPath: '/@{$workspaceSlug}/~/reports/sales-tax'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/reports/quarterly-estimates': {
-      id: '/_app/@{$workspaceSlug}/~/reports/quarterly-estimates'
-      path: '/@{$workspaceSlug}/~/reports/quarterly-estimates'
-      fullPath: '/@{$workspaceSlug}/~/reports/quarterly-estimates'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/reports/profit-and-loss': {
-      id: '/_app/@{$workspaceSlug}/~/reports/profit-and-loss'
-      path: '/@{$workspaceSlug}/~/reports/profit-and-loss'
-      fullPath: '/@{$workspaceSlug}/~/reports/profit-and-loss'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/reports/payroll': {
-      id: '/_app/@{$workspaceSlug}/~/reports/payroll'
-      path: '/@{$workspaceSlug}/~/reports/payroll'
-      fullPath: '/@{$workspaceSlug}/~/reports/payroll'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsPayrollRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/reports/general-ledger': {
-      id: '/_app/@{$workspaceSlug}/~/reports/general-ledger'
-      path: '/@{$workspaceSlug}/~/reports/general-ledger'
-      fullPath: '/@{$workspaceSlug}/~/reports/general-ledger'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsGeneralLedgerRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/reports/form-8949': {
-      id: '/_app/@{$workspaceSlug}/~/reports/form-8949'
-      path: '/@{$workspaceSlug}/~/reports/form-8949'
-      fullPath: '/@{$workspaceSlug}/~/reports/form-8949'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsForm8949RouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/reports/cash-flow': {
-      id: '/_app/@{$workspaceSlug}/~/reports/cash-flow'
-      path: '/@{$workspaceSlug}/~/reports/cash-flow'
-      fullPath: '/@{$workspaceSlug}/~/reports/cash-flow'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsCashFlowRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/reports/balance-sheet': {
-      id: '/_app/@{$workspaceSlug}/~/reports/balance-sheet'
-      path: '/@{$workspaceSlug}/~/reports/balance-sheet'
-      fullPath: '/@{$workspaceSlug}/~/reports/balance-sheet'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsBalanceSheetRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/reports/ar-aging': {
-      id: '/_app/@{$workspaceSlug}/~/reports/ar-aging'
-      path: '/@{$workspaceSlug}/~/reports/ar-aging'
-      fullPath: '/@{$workspaceSlug}/~/reports/ar-aging'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsArAgingRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/reports/ap-aging': {
-      id: '/_app/@{$workspaceSlug}/~/reports/ap-aging'
-      path: '/@{$workspaceSlug}/~/reports/ap-aging'
-      fullPath: '/@{$workspaceSlug}/~/reports/ap-aging'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsApAgingRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/reports/1099': {
-      id: '/_app/@{$workspaceSlug}/~/reports/1099'
-      path: '/@{$workspaceSlug}/~/reports/1099'
-      fullPath: '/@{$workspaceSlug}/~/reports/1099'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126Reports1099RouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/@{$workspaceSlug}/~/reconciliation/statements': {
-      id: '/_app/@{$workspaceSlug}/~/reconciliation/statements'
-      path: '/@{$workspaceSlug}/~/reconciliation/statements'
-      fullPath: '/@{$workspaceSlug}/~/reconciliation/statements'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReconciliationStatementsRouteImport
+    '/_app/@{$workspaceSlug}/~/ledger/': {
+      id: '/_app/@{$workspaceSlug}/~/ledger/'
+      path: '/@{$workspaceSlug}/~/ledger'
+      fullPath: '/@{$workspaceSlug}/~/ledger/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126LedgerIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/@{$workspaceSlug}/~/ledger/new': {
@@ -1028,11 +817,242 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126LedgerNewRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/@{$workspaceSlug}/~/assets/$assetId': {
-      id: '/_app/@{$workspaceSlug}/~/assets/$assetId'
-      path: '/@{$workspaceSlug}/~/assets/$assetId'
-      fullPath: '/@{$workspaceSlug}/~/assets/$assetId'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126AssetsAssetIdRouteImport
+    '/_app/@{$workspaceSlug}/~/mileage/': {
+      id: '/_app/@{$workspaceSlug}/~/mileage/'
+      path: '/@{$workspaceSlug}/~/mileage'
+      fullPath: '/@{$workspaceSlug}/~/mileage/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126MileageIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/reconciliation/': {
+      id: '/_app/@{$workspaceSlug}/~/reconciliation/'
+      path: '/@{$workspaceSlug}/~/reconciliation'
+      fullPath: '/@{$workspaceSlug}/~/reconciliation/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/reconciliation/statements': {
+      id: '/_app/@{$workspaceSlug}/~/reconciliation/statements'
+      path: '/@{$workspaceSlug}/~/reconciliation/statements'
+      fullPath: '/@{$workspaceSlug}/~/reconciliation/statements'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReconciliationStatementsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/recurring/': {
+      id: '/_app/@{$workspaceSlug}/~/recurring/'
+      path: '/@{$workspaceSlug}/~/recurring'
+      fullPath: '/@{$workspaceSlug}/~/recurring/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126RecurringIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/reports/': {
+      id: '/_app/@{$workspaceSlug}/~/reports/'
+      path: '/@{$workspaceSlug}/~/reports'
+      fullPath: '/@{$workspaceSlug}/~/reports/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/reports/1099': {
+      id: '/_app/@{$workspaceSlug}/~/reports/1099'
+      path: '/@{$workspaceSlug}/~/reports/1099'
+      fullPath: '/@{$workspaceSlug}/~/reports/1099'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126Reports1099RouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/reports/ap-aging': {
+      id: '/_app/@{$workspaceSlug}/~/reports/ap-aging'
+      path: '/@{$workspaceSlug}/~/reports/ap-aging'
+      fullPath: '/@{$workspaceSlug}/~/reports/ap-aging'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsApAgingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/reports/ar-aging': {
+      id: '/_app/@{$workspaceSlug}/~/reports/ar-aging'
+      path: '/@{$workspaceSlug}/~/reports/ar-aging'
+      fullPath: '/@{$workspaceSlug}/~/reports/ar-aging'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsArAgingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/reports/balance-sheet': {
+      id: '/_app/@{$workspaceSlug}/~/reports/balance-sheet'
+      path: '/@{$workspaceSlug}/~/reports/balance-sheet'
+      fullPath: '/@{$workspaceSlug}/~/reports/balance-sheet'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsBalanceSheetRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/reports/cash-flow': {
+      id: '/_app/@{$workspaceSlug}/~/reports/cash-flow'
+      path: '/@{$workspaceSlug}/~/reports/cash-flow'
+      fullPath: '/@{$workspaceSlug}/~/reports/cash-flow'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsCashFlowRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/reports/form-8949': {
+      id: '/_app/@{$workspaceSlug}/~/reports/form-8949'
+      path: '/@{$workspaceSlug}/~/reports/form-8949'
+      fullPath: '/@{$workspaceSlug}/~/reports/form-8949'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsForm8949RouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/reports/general-ledger': {
+      id: '/_app/@{$workspaceSlug}/~/reports/general-ledger'
+      path: '/@{$workspaceSlug}/~/reports/general-ledger'
+      fullPath: '/@{$workspaceSlug}/~/reports/general-ledger'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsGeneralLedgerRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/reports/payroll': {
+      id: '/_app/@{$workspaceSlug}/~/reports/payroll'
+      path: '/@{$workspaceSlug}/~/reports/payroll'
+      fullPath: '/@{$workspaceSlug}/~/reports/payroll'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsPayrollRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/reports/profit-and-loss': {
+      id: '/_app/@{$workspaceSlug}/~/reports/profit-and-loss'
+      path: '/@{$workspaceSlug}/~/reports/profit-and-loss'
+      fullPath: '/@{$workspaceSlug}/~/reports/profit-and-loss'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/reports/quarterly-estimates': {
+      id: '/_app/@{$workspaceSlug}/~/reports/quarterly-estimates'
+      path: '/@{$workspaceSlug}/~/reports/quarterly-estimates'
+      fullPath: '/@{$workspaceSlug}/~/reports/quarterly-estimates'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/reports/sales-tax': {
+      id: '/_app/@{$workspaceSlug}/~/reports/sales-tax'
+      path: '/@{$workspaceSlug}/~/reports/sales-tax'
+      fullPath: '/@{$workspaceSlug}/~/reports/sales-tax'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/reports/schedule-c': {
+      id: '/_app/@{$workspaceSlug}/~/reports/schedule-c'
+      path: '/@{$workspaceSlug}/~/reports/schedule-c'
+      fullPath: '/@{$workspaceSlug}/~/reports/schedule-c'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/reports/statement-of-equity': {
+      id: '/_app/@{$workspaceSlug}/~/reports/statement-of-equity'
+      path: '/@{$workspaceSlug}/~/reports/statement-of-equity'
+      fullPath: '/@{$workspaceSlug}/~/reports/statement-of-equity'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquityRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/reports/tax-loss-harvesting': {
+      id: '/_app/@{$workspaceSlug}/~/reports/tax-loss-harvesting'
+      path: '/@{$workspaceSlug}/~/reports/tax-loss-harvesting'
+      fullPath: '/@{$workspaceSlug}/~/reports/tax-loss-harvesting'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/reports/trial-balance': {
+      id: '/_app/@{$workspaceSlug}/~/reports/trial-balance'
+      path: '/@{$workspaceSlug}/~/reports/trial-balance'
+      fullPath: '/@{$workspaceSlug}/~/reports/trial-balance'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/savings/': {
+      id: '/_app/@{$workspaceSlug}/~/savings/'
+      path: '/@{$workspaceSlug}/~/savings'
+      fullPath: '/@{$workspaceSlug}/~/savings/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SavingsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/settings/': {
+      id: '/_app/@{$workspaceSlug}/~/settings/'
+      path: '/@{$workspaceSlug}/~/settings'
+      fullPath: '/@{$workspaceSlug}/~/settings/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/settings/access': {
+      id: '/_app/@{$workspaceSlug}/~/settings/access'
+      path: '/@{$workspaceSlug}/~/settings/access'
+      fullPath: '/@{$workspaceSlug}/~/settings/access'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsAccessRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/settings/audit': {
+      id: '/_app/@{$workspaceSlug}/~/settings/audit'
+      path: '/@{$workspaceSlug}/~/settings/audit'
+      fullPath: '/@{$workspaceSlug}/~/settings/audit'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsAuditRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/settings/books': {
+      id: '/_app/@{$workspaceSlug}/~/settings/books'
+      path: '/@{$workspaceSlug}/~/settings/books'
+      fullPath: '/@{$workspaceSlug}/~/settings/books'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/settings/connections': {
+      id: '/_app/@{$workspaceSlug}/~/settings/connections'
+      path: '/@{$workspaceSlug}/~/settings/connections'
+      fullPath: '/@{$workspaceSlug}/~/settings/connections'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/settings/mappings': {
+      id: '/_app/@{$workspaceSlug}/~/settings/mappings'
+      path: '/@{$workspaceSlug}/~/settings/mappings'
+      fullPath: '/@{$workspaceSlug}/~/settings/mappings'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsMappingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/settings/quickbooks': {
+      id: '/_app/@{$workspaceSlug}/~/settings/quickbooks'
+      path: '/@{$workspaceSlug}/~/settings/quickbooks'
+      fullPath: '/@{$workspaceSlug}/~/settings/quickbooks'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/settings/rules': {
+      id: '/_app/@{$workspaceSlug}/~/settings/rules'
+      path: '/@{$workspaceSlug}/~/settings/rules'
+      fullPath: '/@{$workspaceSlug}/~/settings/rules'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsRulesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/settings/tags': {
+      id: '/_app/@{$workspaceSlug}/~/settings/tags'
+      path: '/@{$workspaceSlug}/~/settings/tags'
+      fullPath: '/@{$workspaceSlug}/~/settings/tags'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsTagsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/settings/tax-jurisdictions': {
+      id: '/_app/@{$workspaceSlug}/~/settings/tax-jurisdictions'
+      path: '/@{$workspaceSlug}/~/settings/tax-jurisdictions'
+      fullPath: '/@{$workspaceSlug}/~/settings/tax-jurisdictions'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsTaxJurisdictionsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/settings/vendors': {
+      id: '/_app/@{$workspaceSlug}/~/settings/vendors'
+      path: '/@{$workspaceSlug}/~/settings/vendors'
+      fullPath: '/@{$workspaceSlug}/~/settings/vendors'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsVendorsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/spending/': {
+      id: '/_app/@{$workspaceSlug}/~/spending/'
+      path: '/@{$workspaceSlug}/~/spending'
+      fullPath: '/@{$workspaceSlug}/~/spending/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SpendingIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/spending/recurring': {
+      id: '/_app/@{$workspaceSlug}/~/spending/recurring'
+      path: '/@{$workspaceSlug}/~/spending/recurring'
+      fullPath: '/@{$workspaceSlug}/~/spending/recurring'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SpendingRecurringRouteImport
       parentRoute: typeof AppRoute
     }
   }
@@ -1081,6 +1101,7 @@ interface AppRouteChildren {
   AppAtChar123workspaceSlugChar125Char126LedgerIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126LedgerIndexRoute
   AppAtChar123workspaceSlugChar125Char126MileageIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126MileageIndexRoute
   AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRoute
+  AppAtChar123workspaceSlugChar125Char126RecurringIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126RecurringIndexRoute
   AppAtChar123workspaceSlugChar125Char126ReportsIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsIndexRoute
   AppAtChar123workspaceSlugChar125Char126SavingsIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126SavingsIndexRoute
   AppAtChar123workspaceSlugChar125Char126SettingsIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsIndexRoute
@@ -1172,6 +1193,8 @@ const AppRouteChildren: AppRouteChildren = {
     AppAtChar123workspaceSlugChar125Char126MileageIndexRoute,
   AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRoute:
     AppAtChar123workspaceSlugChar125Char126ReconciliationIndexRoute,
+  AppAtChar123workspaceSlugChar125Char126RecurringIndexRoute:
+    AppAtChar123workspaceSlugChar125Char126RecurringIndexRoute,
   AppAtChar123workspaceSlugChar125Char126ReportsIndexRoute:
     AppAtChar123workspaceSlugChar125Char126ReportsIndexRoute,
   AppAtChar123workspaceSlugChar125Char126SavingsIndexRoute:
@@ -1203,12 +1226,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}

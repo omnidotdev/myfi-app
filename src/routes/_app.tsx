@@ -22,6 +22,7 @@ import {
   MoonIcon,
   PackageIcon,
   ReceiptIcon,
+  RepeatIcon,
   SettingsIcon,
   SunIcon,
   UserCogIcon,
@@ -86,6 +87,11 @@ const navItems = [
     label: "Inventory",
     to: "/@{$workspaceSlug}/~/items",
     icon: PackageIcon,
+  },
+  {
+    label: "Recurring",
+    to: "/@{$workspaceSlug}/~/recurring",
+    icon: RepeatIcon,
   },
   {
     label: "Customers",
