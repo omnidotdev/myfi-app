@@ -44,6 +44,14 @@ type SpendingMonth = {
   total: string;
 };
 
+type RunwayData = {
+  cashOnHand: string;
+  monthlyBurn: string;
+  averageBurn: string;
+  runwayMonths: number | null;
+  asOf: string;
+};
+
 type RecentEntry = {
   rowId: string;
   date: string;
@@ -102,6 +110,7 @@ function DashboardPage() {
   } = useActiveBook();
 
   const [netWorth, setNetWorth] = useState<NetWorthSummary | null>(null);
+  const [runway, setRunway] = useState<RunwayData | null>(null);
   const [spendingMonths, setSpendingMonths] = useState<SpendingMonth[]>([]);
   const [recentEntries, setRecentEntries] = useState<RecentEntry[]>([]);
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
@@ -214,6 +223,21 @@ function DashboardPage() {
     }
   }, [activeBookId]);
 
+  const fetchRunway = useCallback(async () => {
+    if (!activeBookId) return;
+
+    try {
+      const res = await fetch(
+        `${API_URL}/api/dashboard/runway?bookId=${activeBookId}`,
+      );
+      const data = await res.json();
+
+      setRunway(data);
+    } catch {
+      // Silently handle fetch errors
+    }
+  }, [activeBookId]);
+
   const fetchRecentEntries = useCallback(async () => {
     if (!activeBookId) return;
 
@@ -245,6 +269,7 @@ function DashboardPage() {
       fetchSpendingTrends(),
       fetchRecentEntries(),
       fetchCloseStatus(),
+      fetchRunway(),
     ])
       .catch(() => {
         // Silently handle fetch errors
@@ -259,6 +284,7 @@ function DashboardPage() {
     fetchSpendingTrends,
     fetchRecentEntries,
     fetchCloseStatus,
+    fetchRunway,
   ]);
 
   // Multi-book summary fetch
@@ -572,6 +598,54 @@ function DashboardPage() {
                 </span>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Single-book: cash runway + burn tiles */}
+      {!loading && !showAllBooks && runway && (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="flex flex-col gap-1 rounded-lg border border-border bg-card p-4">
+            <span className="text-muted-foreground text-xs">Cash on Hand</span>
+            <span className="font-semibold text-2xl tracking-tight">
+              {formatCurrency(runway.cashOnHand)}
+            </span>
+            <span className="text-muted-foreground text-xs">
+              cash and bank accounts
+            </span>
+          </div>
+
+          <div className="flex flex-col gap-1 rounded-lg border border-border bg-card p-4">
+            <span className="text-muted-foreground text-xs">Monthly Burn</span>
+            {Number.parseFloat(runway.monthlyBurn) > 0 ? (
+              <span className="font-semibold text-2xl text-red-500 tracking-tight">
+                {formatCurrency(runway.monthlyBurn)}
+              </span>
+            ) : (
+              <span className="font-semibold text-2xl text-green-600 tracking-tight">
+                +
+                {formatCurrency(
+                  Math.abs(Number.parseFloat(runway.monthlyBurn)),
+                )}
+              </span>
+            )}
+            <span className="text-muted-foreground text-xs">
+              {Number.parseFloat(runway.monthlyBurn) > 0
+                ? "this month"
+                : "profit this month"}
+            </span>
+          </div>
+
+          <div className="flex flex-col gap-1 rounded-lg border border-border bg-card p-4">
+            <span className="text-muted-foreground text-xs">Runway</span>
+            <span className="font-semibold text-2xl tracking-tight">
+              {runway.runwayMonths === null ? "∞" : `${runway.runwayMonths} mo`}
+            </span>
+            <span className="text-muted-foreground text-xs">
+              {runway.runwayMonths === null
+                ? "not burning cash"
+                : `at ${formatCurrency(runway.averageBurn)}/mo avg burn`}
+            </span>
           </div>
         </div>
       )}
