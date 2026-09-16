@@ -3,14 +3,17 @@ import {
   BarChart3Icon,
   Loader2Icon,
   RepeatIcon,
+  StoreIcon,
   TrendingUpIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-
 import BookPicker from "@/features/books/components/BookPicker";
+import ReportExportActions from "@/features/reports/components/ReportExportActions";
 import SpendingByCategory from "@/features/spending/components/SpendingByCategory";
 import SpendingTrends from "@/features/spending/components/SpendingTrends";
 import SubscriptionList from "@/features/spending/components/SubscriptionList";
+import type { VendorSpendData } from "@/features/spending/components/VendorSpendMatrix";
+import VendorSpendMatrix from "@/features/spending/components/VendorSpendMatrix";
 import { API_URL } from "@/lib/config/env.config";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
@@ -18,7 +21,7 @@ export const Route = createFileRoute("/_app/@{$workspaceSlug}/~/spending/")({
   component: SpendingPage,
 });
 
-type Tab = "categories" | "trends" | "subscriptions";
+type Tab = "categories" | "trends" | "vendors" | "subscriptions";
 
 type CategoryData = {
   accountId: string;
@@ -46,6 +49,7 @@ type SubscriptionData = {
 const TABS: { id: Tab; label: string; icon: typeof BarChart3Icon }[] = [
   { id: "categories", label: "Categories", icon: BarChart3Icon },
   { id: "trends", label: "Trends", icon: TrendingUpIcon },
+  { id: "vendors", label: "Vendors", icon: StoreIcon },
   { id: "subscriptions", label: "Subscriptions", icon: RepeatIcon },
 ];
 
@@ -81,6 +85,7 @@ function SpendingPage() {
   const [trendsData, setTrendsData] = useState<TrendData[]>([]);
   const [subscriptions, setSubscriptions] = useState<SubscriptionData[]>([]);
   const [totalAnnualCost, setTotalAnnualCost] = useState("0");
+  const [vendorSpend, setVendorSpend] = useState<VendorSpendData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchCategories = useCallback(async () => {
@@ -136,20 +141,52 @@ function SpendingPage() {
     }
   }, [activeBookId]);
 
+  const fetchVendors = useCallback(async () => {
+    if (!activeBookId) return;
+
+    try {
+      const params = new URLSearchParams({
+        bookId: activeBookId,
+        startDate: dateRange.startDate,
+        endDate: dateRange.endDate,
+      });
+
+      const res = await fetch(
+        `${API_URL}/api/spending/vendors?${params.toString()}`,
+      );
+      const data = await res.json();
+
+      setVendorSpend(data);
+    } catch {
+      // Silently handle fetch errors
+    }
+  }, [activeBookId, dateRange]);
+
   // Fetch all spending data when dependencies change
   useEffect(() => {
     if (!activeBookId) return;
 
     setIsLoading(true);
 
-    Promise.all([fetchCategories(), fetchTrends(), fetchSubscriptions()])
+    Promise.all([
+      fetchCategories(),
+      fetchTrends(),
+      fetchSubscriptions(),
+      fetchVendors(),
+    ])
       .catch(() => {
         // Silently handle fetch errors
       })
       .finally(() => {
         setIsLoading(false);
       });
-  }, [activeBookId, fetchCategories, fetchTrends, fetchSubscriptions]);
+  }, [
+    activeBookId,
+    fetchCategories,
+    fetchTrends,
+    fetchSubscriptions,
+    fetchVendors,
+  ]);
 
   const loading = booksLoading || isLoading;
 
@@ -254,6 +291,56 @@ function SpendingPage() {
           selectedRange={trendMonths}
           onRangeChange={setTrendMonths}
         />
+      )}
+
+      {!loading && activeTab === "vendors" && (
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <label className="flex items-center gap-2 text-sm">
+                <span className="text-muted-foreground">From</span>
+                <input
+                  type="date"
+                  value={dateRange.startDate}
+                  onChange={(e) =>
+                    setDateRange((prev) => ({
+                      ...prev,
+                      startDate: e.target.value,
+                    }))
+                  }
+                  className="rounded-md border border-border bg-card px-3 py-1.5 text-sm"
+                />
+              </label>
+              <label className="flex items-center gap-2 text-sm">
+                <span className="text-muted-foreground">To</span>
+                <input
+                  type="date"
+                  value={dateRange.endDate}
+                  onChange={(e) =>
+                    setDateRange((prev) => ({
+                      ...prev,
+                      endDate: e.target.value,
+                    }))
+                  }
+                  className="rounded-md border border-border bg-card px-3 py-1.5 text-sm"
+                />
+              </label>
+            </div>
+
+            <ReportExportActions
+              reportType="vendor-spend"
+              filename="vendor-spend"
+              bookId={activeBookId}
+              showPrint={false}
+              query={{
+                startDate: dateRange.startDate,
+                endDate: dateRange.endDate,
+              }}
+            />
+          </div>
+
+          {vendorSpend && <VendorSpendMatrix data={vendorSpend} />}
+        </div>
       )}
 
       {!loading && activeTab === "subscriptions" && (
