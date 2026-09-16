@@ -13,12 +13,14 @@ import {
   useParams,
 } from "@tanstack/react-router";
 import {
+  BanknoteIcon,
   BarChart3Icon,
   BitcoinIcon,
   BookOpenIcon,
   CarIcon,
   ClipboardListIcon,
   FileTextIcon,
+  FolderIcon,
   HardDriveIcon,
   LandmarkIcon,
   LayoutDashboardIcon,
@@ -146,6 +148,16 @@ const navGroups = [
         label: appConfig.modules.accounts.label,
         to: "/@{$workspaceSlug}/~/accounts",
         icon: LandmarkIcon,
+      },
+      {
+        label: appConfig.modules.loans.label,
+        to: "/@{$workspaceSlug}/~/loans",
+        icon: BanknoteIcon,
+      },
+      {
+        label: appConfig.modules.projects.label,
+        to: "/@{$workspaceSlug}/~/projects",
+        icon: FolderIcon,
       },
       {
         label: appConfig.modules.reports.label,
