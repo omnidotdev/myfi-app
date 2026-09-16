@@ -12,6 +12,7 @@ import {
   BitcoinIcon,
   BookOpenIcon,
   CarIcon,
+  ClipboardListIcon,
   FileTextIcon,
   HardDriveIcon,
   LandmarkIcon,
@@ -64,6 +65,11 @@ const navItems = [
     label: appConfig.modules.accounts.label,
     to: "/@{$workspaceSlug}/~/accounts",
     icon: LandmarkIcon,
+  },
+  {
+    label: "Estimates",
+    to: "/@{$workspaceSlug}/~/estimates",
+    icon: ClipboardListIcon,
   },
   {
     label: "Invoices",
