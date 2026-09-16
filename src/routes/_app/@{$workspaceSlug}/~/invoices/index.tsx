@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
+import MantleManagedBanner from "@/components/MantleManagedBanner";
 import BookPicker from "@/features/books/components/BookPicker";
 import InvoiceForm, {
   type InvoiceFormPayload,
@@ -37,11 +38,13 @@ const STATUS_STYLES: Record<InvoiceStatus, string> = {
 
 function InvoicesPage() {
   const {
+    activeBook,
     activeBookId,
     books,
     isLoading: booksLoading,
     setActiveBookId,
   } = useActiveBook();
+  const mantleManaged = activeBook?.invoiceSource === "mantle";
 
   const [invoices, setInvoices] = useState<InvoiceListItem[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -187,7 +190,7 @@ function InvoicesPage() {
           <button
             type="button"
             onClick={() => setFormOpen(true)}
-            disabled={!activeBookId || customers.length === 0}
+            disabled={!activeBookId || customers.length === 0 || mantleManaged}
             title={customers.length === 0 ? "Add a customer first" : undefined}
             className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
           >
@@ -196,6 +199,8 @@ function InvoicesPage() {
           </button>
         </div>
       </div>
+
+      {mantleManaged && <MantleManagedBanner noun="invoices" />}
 
       {loading && (
         <div className="flex items-center justify-center rounded-lg border border-border bg-card p-8">

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import EmptyState from "@/components/EmptyState";
+import MantleManagedBanner from "@/components/MantleManagedBanner";
 import BookPicker from "@/features/books/components/BookPicker";
 import type { InventoryItem } from "@/features/inventory/types/inventory";
 import type { InvoiceAccount } from "@/features/invoicing/types/invoicing";
@@ -22,11 +23,13 @@ const inputClass =
 
 function ItemsPage() {
   const {
+    activeBook,
     activeBookId,
     books,
     isLoading: booksLoading,
     setActiveBookId,
   } = useActiveBook();
+  const mantleManaged = activeBook?.invoiceSource === "mantle";
 
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [accounts, setAccounts] = useState<InvoiceAccount[]>([]);
@@ -198,7 +201,7 @@ function ItemsPage() {
           <button
             type="button"
             onClick={() => setCreateOpen(true)}
-            disabled={!activeBookId}
+            disabled={!activeBookId || mantleManaged}
             className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
           >
             <PlusIcon className="size-4" />
@@ -206,6 +209,8 @@ function ItemsPage() {
           </button>
         </div>
       </div>
+
+      {mantleManaged && <MantleManagedBanner noun="inventory items" />}
 
       {loading && (
         <div className="flex items-center justify-center rounded-lg border border-border bg-card p-8">

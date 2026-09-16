@@ -9,6 +9,8 @@ export type Book = {
   type: BookType;
   currency: string;
   fiscalYearStartMonth: number;
+  /** source of record for invoices/quotes/inventory: "myfi" or "mantle" */
+  invoiceSource?: string;
   createdAt: string;
   updatedAt: string;
 };
