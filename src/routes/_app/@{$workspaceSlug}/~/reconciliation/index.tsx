@@ -358,6 +358,7 @@ function ReconciliationPage() {
           items={filteredItems}
           accounts={accounts}
           tagGroups={tagGroups}
+          bookId={activeBookId}
           onApprove={handleApprove}
           onEdit={handleEdit}
           onReject={handleReject}

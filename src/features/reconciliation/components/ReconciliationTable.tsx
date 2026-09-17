@@ -1,6 +1,14 @@
-import { CheckIcon, PencilIcon, XIcon } from "lucide-react";
+import {
+  CheckIcon,
+  LightbulbIcon,
+  Loader2Icon,
+  PencilIcon,
+  XIcon,
+} from "lucide-react";
 import { useState } from "react";
 
+import type { CategorySuggestion } from "@/features/reconciliation/api/categorySuggestion";
+import useCategorySuggestion from "@/features/reconciliation/hooks/useCategorySuggestion";
 import type {
   CategorizationSource,
   ReconciliationItem,
@@ -17,6 +25,8 @@ type ReconciliationTableProps = {
   items: ReconciliationItem[];
   accounts: Account[];
   tagGroups?: TagGroup[];
+  /** Active book, needed to request AI categorization suggestions */
+  bookId?: string | null;
   onApprove: (itemId: string) => void;
   onEdit: (itemId: string) => void;
   onReject: (itemId: string) => void;
@@ -116,6 +126,7 @@ function ReconciliationTable({
   items,
   accounts,
   tagGroups = [],
+  bookId,
   onApprove,
   onEdit,
   onReject,
@@ -152,6 +163,7 @@ function ReconciliationTable({
               item={item}
               accounts={accounts}
               tagGroups={tagGroups}
+              bookId={bookId}
               onApprove={onApprove}
               onEdit={onEdit}
               onReject={onReject}
@@ -168,6 +180,7 @@ type ReconciliationRowProps = {
   item: ReconciliationItem;
   accounts: Account[];
   tagGroups: TagGroup[];
+  bookId?: string | null;
   onApprove: (itemId: string) => void;
   onEdit: (itemId: string) => void;
   onReject: (itemId: string) => void;
@@ -184,6 +197,7 @@ function ReconciliationRow({
   item,
   accounts,
   tagGroups,
+  bookId,
   onApprove,
   onEdit,
   onReject,
@@ -199,6 +213,28 @@ function ReconciliationRow({
     item.suggestedCreditAccountId ?? "",
   );
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
+  const [aiSuggestion, setAiSuggestion] = useState<CategorySuggestion | null>(
+    null,
+  );
+
+  const { suggest, isLoading: isSuggesting } = useCategorySuggestion();
+
+  const handleSuggest = async () => {
+    if (!bookId) return;
+
+    const suggestion = await suggest({
+      bookId,
+      description: item.memo ?? "",
+      amount: Number.parseFloat(item.amount),
+      date: item.date,
+    });
+
+    if (suggestion) {
+      setDebitAccountId(suggestion.debitAccountId);
+      setCreditAccountId(suggestion.creditAccountId);
+      setAiSuggestion(suggestion);
+    }
+  };
 
   const categorizationBadgeClass = item.categorizationSource
     ? (CATEGORIZATION_BADGE_CLASSES[item.categorizationSource] ??
@@ -336,6 +372,36 @@ function ReconciliationRow({
                   })}
                 </select>
               </label>
+            )}
+            {bookId && (
+              <div className="flex flex-col gap-1">
+                <button
+                  type="button"
+                  onClick={handleSuggest}
+                  disabled={isSuggesting}
+                  aria-label={`Suggest a category with AI for ${item.memo ?? "transaction"}`}
+                  className="inline-flex w-fit items-center gap-1 rounded border border-border px-1.5 py-0.5 text-purple-700 text-xs transition-colors hover:bg-purple-100 disabled:opacity-50 dark:text-purple-300 dark:hover:bg-purple-900/20"
+                >
+                  {isSuggesting ? (
+                    <Loader2Icon className="size-3 animate-spin" />
+                  ) : (
+                    <LightbulbIcon className="size-3" />
+                  )}
+                  Suggest
+                </button>
+                {aiSuggestion && (
+                  <span className="text-xs">
+                    <span
+                      className={`font-medium ${getConfidenceClass(String(aiSuggestion.confidence))}`}
+                    >
+                      {Math.round(aiSuggestion.confidence * 100)}%
+                    </span>{" "}
+                    <span className="text-muted-foreground">
+                      {aiSuggestion.rationale}
+                    </span>
+                  </span>
+                )}
+              </div>
             )}
           </div>
         ) : (
