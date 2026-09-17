@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   ArrowLeftRightIcon,
+  FileTextIcon,
   Loader2Icon,
   PencilIcon,
   PlusIcon,
@@ -11,6 +12,7 @@ import { useCallback, useEffect, useState } from "react";
 import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
 import RecategorizeVendorDialog from "@/features/vendors/components/RecategorizeVendorDialog";
+import VendorW9Dialog from "@/features/vendors/components/VendorW9Dialog";
 import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
@@ -80,9 +82,11 @@ function VendorsPage() {
 
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [accounts, setAccounts] = useState<Account[]>([]);
+  const [w9VendorIds, setW9VendorIds] = useState<Set<string>>(new Set());
   const [recategorizeVendor, setRecategorizeVendor] = useState<Vendor | null>(
     null,
   );
+  const [w9Vendor, setW9Vendor] = useState<Vendor | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingVendorId, setEditingVendorId] = useState<string | null>(null);
@@ -126,6 +130,28 @@ function VendorsPage() {
     }
   }, [activeBookId]);
 
+  // Which vendors have at least one W9 on file, for the status badge. One
+  // book-level query keyed by category, mapped to a Set of vendor ids
+  const fetchW9Status = useCallback(async () => {
+    if (!activeBookId) return;
+
+    try {
+      const res = await apiFetch(
+        `/api/documents?bookId=${activeBookId}&category=w9`,
+      );
+      const data = await res.json();
+      const ids = new Set<string>(
+        (data.documents ?? [])
+          .map((d: Record<string, unknown>) => d.vendorId as string | null)
+          .filter((id: string | null): id is string => Boolean(id)),
+      );
+
+      setW9VendorIds(ids);
+    } catch {
+      // Silently handle fetch errors
+    }
+  }, [activeBookId]);
+
   useEffect(() => {
     fetchVendors();
   }, [fetchVendors]);
@@ -133,6 +159,10 @@ function VendorsPage() {
   useEffect(() => {
     fetchAccounts();
   }, [fetchAccounts]);
+
+  useEffect(() => {
+    fetchW9Status();
+  }, [fetchW9Status]);
 
   const resetForm = useCallback(() => {
     setForm({ ...EMPTY_FORM });
@@ -545,6 +575,7 @@ function VendorsPage() {
                 <th className="px-4 py-3 font-medium">Name</th>
                 <th className="px-4 py-3 font-medium">Business Name</th>
                 <th className="px-4 py-3 font-medium">1099 Eligible</th>
+                <th className="px-4 py-3 font-medium">W9</th>
                 <th className="px-4 py-3 font-medium">TIN</th>
                 <th className="px-4 py-3 text-right font-medium">Actions</th>
               </tr>
@@ -571,11 +602,30 @@ function VendorsPage() {
                       </span>
                     )}
                   </td>
+                  <td className="px-4 py-3">
+                    {w9VendorIds.has(vendor.id) ? (
+                      <span className="rounded-full bg-green-500/10 px-2 py-0.5 font-medium text-green-600 text-xs dark:text-green-400">
+                        On file
+                      </span>
+                    ) : (
+                      <span className="rounded-full bg-amber-500/10 px-2 py-0.5 font-medium text-amber-600 text-xs dark:text-amber-400">
+                        Missing
+                      </span>
+                    )}
+                  </td>
                   <td className="whitespace-nowrap px-4 py-3 font-mono text-muted-foreground">
                     {maskTin(vendor.tinMasked)}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-1">
+                      <button
+                        type="button"
+                        onClick={() => setW9Vendor(vendor)}
+                        className="rounded-md p-1.5 text-muted-foreground transition-colors hover:text-foreground"
+                        title="Manage W9 documents"
+                      >
+                        <FileTextIcon className="size-4" />
+                      </button>
                       <button
                         type="button"
                         onClick={() => setRecategorizeVendor(vendor)}
@@ -617,6 +667,15 @@ function VendorsPage() {
           accounts={accounts}
           onClose={() => setRecategorizeVendor(null)}
           onDone={fetchVendors}
+        />
+      )}
+
+      {w9Vendor && activeBookId && (
+        <VendorW9Dialog
+          vendor={{ id: w9Vendor.id, name: w9Vendor.name }}
+          bookId={activeBookId}
+          onClose={() => setW9Vendor(null)}
+          onChanged={fetchW9Status}
         />
       )}
     </div>
