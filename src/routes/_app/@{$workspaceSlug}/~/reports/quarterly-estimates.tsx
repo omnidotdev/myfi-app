@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { apiFetch } from "@/lib/api/apiFetch";
 
-import { API_URL } from "@/lib/config/env.config";
 import formatCurrency from "@/lib/format/currency";
 
 type QuarterEstimate = {
@@ -46,8 +46,8 @@ function QuarterlyEstimatesPage() {
 
     try {
       const searchParams = new URLSearchParams({ year: String(year) });
-      const res = await fetch(
-        `${API_URL}/api/tax/quarterly-estimates?${searchParams.toString()}`,
+      const res = await apiFetch(
+        `/api/tax/quarterly-estimates?${searchParams.toString()}`,
       );
 
       if (!res.ok) {

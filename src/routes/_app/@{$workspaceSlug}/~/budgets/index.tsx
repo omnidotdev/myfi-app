@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
 import BudgetForm from "@/features/budgets/components/BudgetForm";
@@ -11,7 +10,7 @@ import type {
   BudgetPeriod,
   BudgetTracking,
 } from "@/features/budgets/types/budget";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 export const Route = createFileRoute("/_app/@{$workspaceSlug}/~/budgets/")({
@@ -40,9 +39,9 @@ function BudgetsPage() {
 
     try {
       const [budgetsRes, trackingRes, accountsRes] = await Promise.all([
-        fetch(`${API_URL}/api/budgets?bookId=${activeBookId}`),
-        fetch(`${API_URL}/api/budgets/tracking?bookId=${activeBookId}`),
-        fetch(`${API_URL}/api/accounts?bookId=${activeBookId}`),
+        apiFetch(`/api/budgets?bookId=${activeBookId}`),
+        apiFetch(`/api/budgets/tracking?bookId=${activeBookId}`),
+        apiFetch(`/api/accounts?bookId=${activeBookId}`),
       ]);
 
       const [budgetsData, trackingData, accountsData] = await Promise.all([
@@ -92,7 +91,7 @@ function BudgetsPage() {
   const handleDelete = useCallback(
     async (budget: Budget) => {
       try {
-        await fetch(`${API_URL}/api/budgets/${budget.rowId}`, {
+        await apiFetch(`/api/budgets/${budget.rowId}`, {
           method: "DELETE",
         });
 
@@ -113,13 +112,13 @@ function BudgetsPage() {
     }) => {
       try {
         if (editingBudget) {
-          await fetch(`${API_URL}/api/budgets/${editingBudget.rowId}`, {
+          await apiFetch(`/api/budgets/${editingBudget.rowId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(values),
           });
         } else {
-          await fetch(`${API_URL}/api/budgets`, {
+          await apiFetch(`/api/budgets`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

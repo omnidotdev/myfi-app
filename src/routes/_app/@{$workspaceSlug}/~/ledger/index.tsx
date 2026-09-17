@@ -12,7 +12,6 @@ import type {
 } from "@/features/ledger/types/journalEntry";
 import { JOURNAL_ENTRY_SOURCES } from "@/features/ledger/types/journalEntry";
 import { apiFetch } from "@/lib/api/apiFetch";
-import { API_URL } from "@/lib/config/env.config";
 import formatLabel from "@/lib/format/label";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
@@ -46,8 +45,8 @@ function LedgerPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/journal-entries?bookId=${activeBookId}&limit=50&offset=0`,
+      const res = await apiFetch(
+        `/api/journal-entries?bookId=${activeBookId}&limit=50&offset=0`,
       );
       const data = await res.json();
       const mapped = (data.entries ?? []).map((e: Record<string, unknown>) => ({
@@ -101,7 +100,7 @@ function LedgerPage() {
   const handleDelete = useCallback(
     async (entryId: string) => {
       try {
-        await fetch(`${API_URL}/api/journal-entries/${entryId}`, {
+        await apiFetch(`/api/journal-entries/${entryId}`, {
           method: "DELETE",
         });
 

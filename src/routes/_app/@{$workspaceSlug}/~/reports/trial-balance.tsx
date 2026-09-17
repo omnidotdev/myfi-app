@@ -5,8 +5,8 @@ import HierarchicalReportTable from "@/features/reports/components/HierarchicalR
 import ReportExportActions from "@/features/reports/components/ReportExportActions";
 import ReportFilters from "@/features/reports/components/ReportFilters";
 import TagFilter from "@/features/tags/components/TagFilter";
+import { apiFetch } from "@/lib/api/apiFetch";
 
-import { API_URL } from "@/lib/config/env.config";
 import formatCurrency from "@/lib/format/currency";
 
 import useActiveBook from "@/lib/hooks/useActiveBook";
@@ -66,8 +66,8 @@ function TrialBalancePage() {
       if (selectedTagIds.length > 0)
         searchParams.set("tagIds", selectedTagIds.join(","));
 
-      const res = await fetch(
-        `${API_URL}/api/reports/trial-balance?${searchParams.toString()}`,
+      const res = await apiFetch(
+        `/api/reports/trial-balance?${searchParams.toString()}`,
       );
 
       if (!res.ok) {

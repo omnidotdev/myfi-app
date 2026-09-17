@@ -1,14 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon, WalletIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-
 import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
 import AddWalletForm from "@/features/crypto/components/AddWalletForm";
 import CryptoAssetCard from "@/features/crypto/components/CryptoAssetCard";
 import LotTable from "@/features/crypto/components/LotTable";
 import type { CryptoAsset, CryptoLot } from "@/features/crypto/types/crypto";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import formatCurrency from "@/lib/format/currency";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
@@ -38,9 +37,7 @@ function CryptoPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/crypto/wallets?bookId=${activeBookId}`,
-      );
+      const res = await apiFetch(`/api/crypto/wallets?bookId=${activeBookId}`);
       const data = await res.json();
       const mapped = (data.assets ?? []).map((a: Record<string, unknown>) => ({
         ...a,
@@ -62,8 +59,8 @@ function CryptoPage() {
   // Fetch lots when viewing a specific asset
   const fetchLots = useCallback(async (cryptoAssetId: string) => {
     try {
-      const res = await fetch(
-        `${API_URL}/api/crypto/lots?cryptoAssetId=${cryptoAssetId}`,
+      const res = await apiFetch(
+        `/api/crypto/lots?cryptoAssetId=${cryptoAssetId}`,
       );
       const data = await res.json();
       const mapped = (data.lots ?? []).map((l: Record<string, unknown>) => ({
@@ -98,7 +95,7 @@ function CryptoPage() {
       if (!activeBookId) return;
 
       try {
-        await fetch(`${API_URL}/api/crypto/wallets`, {
+        await apiFetch(`/api/crypto/wallets`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -135,7 +132,7 @@ function CryptoPage() {
   const handleRefresh = useCallback(
     async (asset: CryptoAsset) => {
       try {
-        await fetch(`${API_URL}/api/crypto/wallets/${asset.rowId}/refresh`, {
+        await apiFetch(`/api/crypto/wallets/${asset.rowId}/refresh`, {
           method: "POST",
         });
 

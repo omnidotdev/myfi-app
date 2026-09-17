@@ -4,8 +4,8 @@ import BookPicker from "@/features/books/components/BookPicker";
 import ReportExportActions from "@/features/reports/components/ReportExportActions";
 import ReportFilters from "@/features/reports/components/ReportFilters";
 import TagFilter from "@/features/tags/components/TagFilter";
+import { apiFetch } from "@/lib/api/apiFetch";
 
-import { API_URL } from "@/lib/config/env.config";
 import formatCurrency from "@/lib/format/currency";
 
 import useActiveBook from "@/lib/hooks/useActiveBook";
@@ -65,9 +65,7 @@ function GeneralLedgerPage() {
     if (!activeBookId) return;
     const fetchAccounts = async () => {
       try {
-        const res = await fetch(
-          `${API_URL}/api/accounts?bookId=${activeBookId}`,
-        );
+        const res = await apiFetch(`/api/accounts?bookId=${activeBookId}`);
         if (!res.ok) return;
         const json = await res.json();
         setAccounts(json.accounts ?? []);
@@ -100,8 +98,8 @@ function GeneralLedgerPage() {
       if (selectedTagIds.length > 0)
         searchParams.set("tagIds", selectedTagIds.join(","));
 
-      const res = await fetch(
-        `${API_URL}/api/reports/general-ledger?${searchParams.toString()}`,
+      const res = await apiFetch(
+        `/api/reports/general-ledger?${searchParams.toString()}`,
       );
 
       if (!res.ok) {

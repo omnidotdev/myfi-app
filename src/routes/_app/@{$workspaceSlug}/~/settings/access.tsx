@@ -1,10 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon, ShieldIcon, TrashIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-
 import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 export const Route = createFileRoute(
@@ -53,9 +52,7 @@ function AccessPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/book-access?bookId=${activeBookId}`,
-      );
+      const res = await apiFetch(`/api/book-access?bookId=${activeBookId}`);
       const data = await res.json();
 
       setRecords(data.records ?? []);
@@ -76,7 +73,7 @@ function AccessPage() {
     setIsSaving(true);
 
     try {
-      await fetch(`${API_URL}/api/book-access`, {
+      await apiFetch(`/api/book-access`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -99,7 +96,7 @@ function AccessPage() {
   const handleUpdateRole = useCallback(
     async (id: string, role: string) => {
       try {
-        await fetch(`${API_URL}/api/book-access/${id}`, {
+        await apiFetch(`/api/book-access/${id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ role }),
@@ -119,7 +116,7 @@ function AccessPage() {
         return;
 
       try {
-        await fetch(`${API_URL}/api/book-access/${id}`, {
+        await apiFetch(`/api/book-access/${id}`, {
           method: "DELETE",
         });
 

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-
 import type { TagGroup } from "@/features/tags/types/tag";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 
 /**
  * Fetch tag groups (with nested tags) for the active book
@@ -16,7 +15,7 @@ const useTagGroups = (bookId: string | null) => {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/tags/groups?bookId=${bookId}`);
+      const res = await apiFetch(`/api/tags/groups?bookId=${bookId}`);
 
       if (!res.ok) return;
 

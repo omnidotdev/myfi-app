@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-
 import BookPicker from "@/features/books/components/BookPicker";
 import ReportFilters from "@/features/reports/components/ReportFilters";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 type EquityAccountRow = {
@@ -55,8 +54,8 @@ function StatementOfEquityPage() {
       const sp = new URLSearchParams({ bookId: activeBookId });
       if (params.startDate) sp.set("startDate", params.startDate);
       if (params.endDate) sp.set("endDate", params.endDate);
-      const res = await fetch(
-        `${API_URL}/api/reports/statement-of-equity?${sp.toString()}`,
+      const res = await apiFetch(
+        `/api/reports/statement-of-equity?${sp.toString()}`,
       );
       if (!res.ok) throw new Error(`Failed to fetch report: ${res.statusText}`);
       setData(await res.json());

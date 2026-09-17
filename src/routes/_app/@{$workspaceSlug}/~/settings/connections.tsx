@@ -12,7 +12,7 @@ import ConnectedAccountsList from "@/features/connections/components/ConnectedAc
 import FileImportButton from "@/features/connections/components/FileImportButton";
 import PlaidLinkButton from "@/features/connections/components/PlaidLinkButton";
 import type { ConnectedAccount } from "@/features/connections/types/connectedAccount";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 const LINKABLE_SUB_TYPES = new Set([
@@ -72,9 +72,7 @@ function ConnectionsSettingsPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/connections?bookId=${activeBookId}`,
-      );
+      const res = await apiFetch(`/api/connections?bookId=${activeBookId}`);
       const data = await res.json();
       const mapped = (data.connections ?? []).map(
         (c: Record<string, unknown>) => ({
@@ -95,7 +93,7 @@ function ConnectionsSettingsPage() {
     if (!activeBookId) return;
 
     try {
-      const res = await fetch(`${API_URL}/api/accounts?bookId=${activeBookId}`);
+      const res = await apiFetch(`/api/accounts?bookId=${activeBookId}`);
       const data = await res.json();
       const filtered = (data.accounts ?? [])
         .filter(
@@ -125,7 +123,7 @@ function ConnectionsSettingsPage() {
   const handleLinkAccount = useCallback(
     async (connectionId: string, accountId: string | null) => {
       try {
-        await fetch(`${API_URL}/api/connections/${connectionId}`, {
+        await apiFetch(`/api/connections/${connectionId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ accountId }),
@@ -160,7 +158,7 @@ function ConnectionsSettingsPage() {
   const handleSync = useCallback(
     async (accountId: string) => {
       try {
-        await fetch(`${API_URL}/api/plaid/sync`, {
+        await apiFetch(`/api/plaid/sync`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ connectedAccountId: accountId }),
@@ -177,7 +175,7 @@ function ConnectionsSettingsPage() {
   const handleDisconnect = useCallback(
     async (accountId: string) => {
       try {
-        await fetch(`${API_URL}/api/connections/${accountId}`, {
+        await apiFetch(`/api/connections/${accountId}`, {
           method: "DELETE",
         });
 
@@ -194,9 +192,7 @@ function ConnectionsSettingsPage() {
     if (!activeBookId) return;
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/payroll/status?bookId=${activeBookId}`,
-      );
+      const res = await apiFetch(`/api/payroll/status?bookId=${activeBookId}`);
       const json = await res.json();
 
       setPayrollStatus(json);
@@ -215,7 +211,7 @@ function ConnectionsSettingsPage() {
     setPayrollLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/payroll/connect`, {
+      const res = await apiFetch(`/api/payroll/connect`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         // Return the browser to this workspace-scoped page after the OAuth
@@ -243,7 +239,7 @@ function ConnectionsSettingsPage() {
     setPayrollLoading(true);
 
     try {
-      await fetch(`${API_URL}/api/payroll/sync`, {
+      await apiFetch(`/api/payroll/sync`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bookId: activeBookId }),
@@ -263,7 +259,7 @@ function ConnectionsSettingsPage() {
     setPayrollLoading(true);
 
     try {
-      await fetch(`${API_URL}/api/payroll/disconnect/${payrollStatus.id}`, {
+      await apiFetch(`/api/payroll/disconnect/${payrollStatus.id}`, {
         method: "DELETE",
       });
 
@@ -289,7 +285,7 @@ function ConnectionsSettingsPage() {
         formData.append("file", file);
         formData.append("bookId", activeBookId);
 
-        const res = await fetch(`${API_URL}/api/payroll/import-csv`, {
+        const res = await apiFetch(`/api/payroll/import-csv`, {
           method: "POST",
           body: formData,
         });

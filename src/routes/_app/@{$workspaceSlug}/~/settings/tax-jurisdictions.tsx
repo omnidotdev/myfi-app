@@ -7,10 +7,9 @@ import {
   XIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-
 import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 export const Route = createFileRoute(
@@ -83,8 +82,8 @@ function TaxJurisdictionsPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/tax-jurisdictions?bookId=${activeBookId}`,
+      const res = await apiFetch(
+        `/api/tax-jurisdictions?bookId=${activeBookId}`,
       );
       const data = await res.json();
 
@@ -100,7 +99,7 @@ function TaxJurisdictionsPage() {
     if (!activeBookId) return;
 
     try {
-      const res = await fetch(`${API_URL}/api/accounts?bookId=${activeBookId}`);
+      const res = await apiFetch(`/api/accounts?bookId=${activeBookId}`);
       const data = await res.json();
 
       // Filter to liability type accounts for tax payable
@@ -153,10 +152,9 @@ function TaxJurisdictionsPage() {
         return;
 
       try {
-        const res = await fetch(
-          `${API_URL}/api/tax-jurisdictions/${jurisdictionId}`,
-          { method: "DELETE" },
-        );
+        const res = await apiFetch(`/api/tax-jurisdictions/${jurisdictionId}`, {
+          method: "DELETE",
+        });
 
         if (!res.ok) {
           throw new Error("Delete failed");
@@ -190,7 +188,7 @@ function TaxJurisdictionsPage() {
         let res: Response;
 
         if (editingId) {
-          res = await fetch(`${API_URL}/api/tax-jurisdictions/${editingId}`, {
+          res = await apiFetch(`/api/tax-jurisdictions/${editingId}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body),
@@ -198,7 +196,7 @@ function TaxJurisdictionsPage() {
         } else {
           body.bookId = activeBookId;
 
-          res = await fetch(`${API_URL}/api/tax-jurisdictions`, {
+          res = await apiFetch(`/api/tax-jurisdictions`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body),

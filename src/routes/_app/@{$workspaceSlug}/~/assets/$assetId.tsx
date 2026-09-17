@@ -6,10 +6,9 @@ import {
   Loader2Icon,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-
 import EmptyState from "@/components/EmptyState";
 import type { Account } from "@/features/accounts/types/account";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import formatCurrency from "@/lib/format/currency";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
@@ -68,7 +67,7 @@ function AssetDetailPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/fixed-assets/${assetId}`);
+      const res = await apiFetch(`/api/fixed-assets/${assetId}`);
       const data = await res.json();
 
       setAsset(data.asset ?? data);
@@ -83,7 +82,7 @@ function AssetDetailPage() {
     if (!activeBookId) return;
 
     try {
-      const res = await fetch(`${API_URL}/api/accounts?bookId=${activeBookId}`);
+      const res = await apiFetch(`/api/accounts?bookId=${activeBookId}`);
       const data = await res.json();
       const mapped = (data.accounts ?? []).map(
         (a: Record<string, unknown>) => ({
@@ -149,7 +148,7 @@ function AssetDetailPage() {
       e.preventDefault();
 
       try {
-        await fetch(`${API_URL}/api/fixed-assets/${assetId}/dispose`, {
+        await apiFetch(`/api/fixed-assets/${assetId}/dispose`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

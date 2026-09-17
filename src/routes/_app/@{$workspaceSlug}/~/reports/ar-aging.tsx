@@ -1,11 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DownloadIcon, PrinterIcon } from "lucide-react";
 import { useState } from "react";
-
 import BookPicker from "@/features/books/components/BookPicker";
 import ReportFilters from "@/features/reports/components/ReportFilters";
+import { apiFetch } from "@/lib/api/apiFetch";
 
-import { API_URL } from "@/lib/config/env.config";
 import formatCurrency from "@/lib/format/currency";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
@@ -53,8 +52,8 @@ function ArAgingPage() {
       if (activeBookId) searchParams.set("bookId", activeBookId);
       if (params.asOfDate) searchParams.set("asOfDate", params.asOfDate);
 
-      const res = await fetch(
-        `${API_URL}/api/reports/ar-aging?${searchParams.toString()}`,
+      const res = await apiFetch(
+        `/api/reports/ar-aging?${searchParams.toString()}`,
       );
 
       if (!res.ok) {

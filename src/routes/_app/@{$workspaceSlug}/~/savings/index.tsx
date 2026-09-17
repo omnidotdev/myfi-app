@@ -7,7 +7,6 @@ import {
   TrendingUpIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-
 import EmptyState from "@/components/EmptyState";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
@@ -17,7 +16,7 @@ import type {
   NetWorthSummary,
   SavingsGoal,
 } from "@/features/savings/types/savingsGoal";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import formatCurrency from "@/lib/format/currency";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
@@ -46,9 +45,9 @@ function SavingsPage() {
 
     try {
       const [goalsRes, accountsRes, netWorthRes] = await Promise.all([
-        fetch(`${API_URL}/api/savings-goals?bookId=${activeBookId}`),
-        fetch(`${API_URL}/api/accounts?bookId=${activeBookId}`),
-        fetch(`${API_URL}/api/net-worth?bookId=${activeBookId}`),
+        apiFetch(`/api/savings-goals?bookId=${activeBookId}`),
+        apiFetch(`/api/accounts?bookId=${activeBookId}`),
+        apiFetch(`/api/net-worth?bookId=${activeBookId}`),
       ]);
 
       const [goalsData, accountsData, netWorthData] = await Promise.all([
@@ -92,7 +91,7 @@ function SavingsPage() {
   const handleDelete = useCallback(
     async (goal: SavingsGoal) => {
       try {
-        await fetch(`${API_URL}/api/savings-goals/${goal.rowId}`, {
+        await apiFetch(`/api/savings-goals/${goal.rowId}`, {
           method: "DELETE",
         });
 
@@ -112,7 +111,7 @@ function SavingsPage() {
       targetDate: string | null;
     }) => {
       try {
-        await fetch(`${API_URL}/api/savings-goals`, {
+        await apiFetch(`/api/savings-goals`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

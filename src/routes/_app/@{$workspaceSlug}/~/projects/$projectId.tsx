@@ -1,9 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeftIcon, Loader2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-
 import BookPicker from "@/features/books/components/BookPicker";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 type Project = {
@@ -89,7 +88,7 @@ function ProjectDetailPage() {
     setError(null);
 
     try {
-      const res = await fetch(`${API_URL}/api/projects?bookId=${activeBookId}`);
+      const res = await apiFetch(`/api/projects?bookId=${activeBookId}`);
       const data = await res.json();
       const found = (data.projects ?? []).find(
         (p: Project) => p.id === projectId,
@@ -114,8 +113,8 @@ function ProjectDetailPage() {
     setPnlLoading(true);
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/reports/project-pnl?bookId=${activeBookId}&projectId=${projectId}`,
+      const res = await apiFetch(
+        `/api/reports/project-pnl?bookId=${activeBookId}&projectId=${projectId}`,
       );
 
       if (res.ok) {

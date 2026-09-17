@@ -11,10 +11,9 @@ import {
   YAxis,
 } from "recharts";
 import { toast } from "sonner";
-
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import formatCurrency from "@/lib/format/currency";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
@@ -106,7 +105,7 @@ function LoanDetailPage() {
     setError(null);
 
     try {
-      const res = await fetch(`${API_URL}/api/loans?bookId=${activeBookId}`);
+      const res = await apiFetch(`/api/loans?bookId=${activeBookId}`);
       const data = await res.json();
       const found = (data.loans ?? []).find((l: Loan) => l.id === loanId);
 
@@ -129,7 +128,7 @@ function LoanDetailPage() {
     setScheduleLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/loans/${loanId}/schedule`);
+      const res = await apiFetch(`/api/loans/${loanId}/schedule`);
 
       if (res.ok) {
         const data = await res.json();
@@ -146,7 +145,7 @@ function LoanDetailPage() {
     if (!activeBookId) return;
 
     try {
-      const res = await fetch(`${API_URL}/api/accounts?bookId=${activeBookId}`);
+      const res = await apiFetch(`/api/accounts?bookId=${activeBookId}`);
       const data = await res.json();
       setAccounts(data.accounts ?? []);
     } catch {
@@ -219,7 +218,7 @@ function LoanDetailPage() {
     const month = dueDate.getMonth() + 1;
 
     try {
-      const res = await fetch(`${API_URL}/api/loans/run-amortization`, {
+      const res = await apiFetch(`/api/loans/run-amortization`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bookId: activeBookId, year, month }),
@@ -248,7 +247,7 @@ function LoanDetailPage() {
       if (!payoffValues.payoffDate || !payoffValues.payoffAmount) return;
 
       try {
-        const res = await fetch(`${API_URL}/api/loans/${loanId}/payoff`, {
+        const res = await apiFetch(`/api/loans/${loanId}/payoff`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

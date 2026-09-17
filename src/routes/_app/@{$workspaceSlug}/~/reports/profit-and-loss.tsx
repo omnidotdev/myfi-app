@@ -9,8 +9,7 @@ import ReportExportActions from "@/features/reports/components/ReportExportActio
 import ReportFilters from "@/features/reports/components/ReportFilters";
 import VarianceThresholdControls from "@/features/reports/components/VarianceThresholdControls";
 import TagFilter from "@/features/tags/components/TagFilter";
-
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 
 import useActiveBook from "@/lib/hooks/useActiveBook";
 import useTagGroups from "@/lib/hooks/useTagGroups";
@@ -107,8 +106,8 @@ function ProfitAndLossPage() {
         searchParams.set("tagIds", selectedTagIds.join(","));
       if (basis === "cash") searchParams.set("basis", "cash");
 
-      const res = await fetch(
-        `${API_URL}/api/reports/profit-and-loss?${searchParams.toString()}`,
+      const res = await apiFetch(
+        `/api/reports/profit-and-loss?${searchParams.toString()}`,
       );
 
       if (!res.ok) {
@@ -126,8 +125,8 @@ function ProfitAndLossPage() {
         const cmp = new URLSearchParams(searchParams);
         cmp.set("priorStartDate", priorStartDate);
         cmp.set("priorEndDate", priorEndDate);
-        const cmpRes = await fetch(
-          `${API_URL}/api/reports/comparative-profit-and-loss?${cmp.toString()}`,
+        const cmpRes = await apiFetch(
+          `/api/reports/comparative-profit-and-loss?${cmp.toString()}`,
         );
         setComparative(cmpRes.ok ? await cmpRes.json() : null);
       } else {

@@ -20,11 +20,10 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-
 import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
 import type { NetWorthSummary } from "@/features/savings/types/savingsGoal";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import formatCurrency from "@/lib/format/currency";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
@@ -128,8 +127,8 @@ function DashboardPage() {
     if (!organizationId) return;
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/dashboard/summary?organizationId=${organizationId}`,
+      const res = await apiFetch(
+        `/api/dashboard/summary?organizationId=${organizationId}`,
       );
       const data = await res.json();
 
@@ -143,8 +142,8 @@ function DashboardPage() {
     if (!organizationId) return;
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/dashboard/close-status?organizationId=${organizationId}`,
+      const res = await apiFetch(
+        `/api/dashboard/close-status?organizationId=${organizationId}`,
       );
       const data = await res.json();
 
@@ -159,7 +158,7 @@ function DashboardPage() {
       setClosingBookId(bookId);
 
       try {
-        const res = await fetch(`${API_URL}/api/periods/close`, {
+        const res = await apiFetch(`/api/periods/close`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ bookId, year, month }),
@@ -182,9 +181,7 @@ function DashboardPage() {
     if (!activeBookId) return;
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/net-worth?bookId=${activeBookId}`,
-      );
+      const res = await apiFetch(`/api/net-worth?bookId=${activeBookId}`);
       const data = await res.json();
 
       setNetWorth(data);
@@ -197,8 +194,8 @@ function DashboardPage() {
     if (!activeBookId) return;
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/net-worth/history?bookId=${activeBookId}&limit=24`,
+      const res = await apiFetch(
+        `/api/net-worth/history?bookId=${activeBookId}&limit=24`,
       );
       const data = await res.json();
 
@@ -212,8 +209,8 @@ function DashboardPage() {
     if (!activeBookId) return;
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/spending/trends?bookId=${activeBookId}&months=12`,
+      const res = await apiFetch(
+        `/api/spending/trends?bookId=${activeBookId}&months=12`,
       );
       const data = await res.json();
 
@@ -227,8 +224,8 @@ function DashboardPage() {
     if (!activeBookId) return;
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/dashboard/runway?bookId=${activeBookId}`,
+      const res = await apiFetch(
+        `/api/dashboard/runway?bookId=${activeBookId}`,
       );
       const data = await res.json();
 
@@ -242,8 +239,8 @@ function DashboardPage() {
     if (!activeBookId) return;
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/journal-entries?bookId=${activeBookId}&limit=5`,
+      const res = await apiFetch(
+        `/api/journal-entries?bookId=${activeBookId}&limit=5`,
       );
       const data = await res.json();
       const mapped = (data.entries ?? []).map((e: Record<string, unknown>) => ({

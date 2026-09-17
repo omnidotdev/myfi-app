@@ -1,7 +1,6 @@
 import { Loader2Icon, SaveIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 
 type CsvColumnMap = {
   date: number;
@@ -84,7 +83,7 @@ function ImportPreviewDialog({ file, bookId, onConfirm, onCancel }: Props) {
         const formData = new FormData();
         formData.append("file", file);
 
-        const res = await fetch(`${API_URL}/api/import/preview`, {
+        const res = await apiFetch(`/api/import/preview`, {
           method: "POST",
           body: formData,
         });
@@ -114,9 +113,7 @@ function ImportPreviewDialog({ file, bookId, onConfirm, onCancel }: Props) {
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
-        const res = await fetch(
-          `${API_URL}/api/import/profiles?bookId=${bookId}`,
-        );
+        const res = await apiFetch(`/api/import/profiles?bookId=${bookId}`);
         const data = await res.json();
 
         setProfiles(data.profiles ?? []);
@@ -175,7 +172,7 @@ function ImportPreviewDialog({ file, bookId, onConfirm, onCancel }: Props) {
     setIsSavingProfile(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/import/profiles`, {
+      const res = await apiFetch(`/api/import/profiles`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -211,7 +208,7 @@ function ImportPreviewDialog({ file, bookId, onConfirm, onCancel }: Props) {
         formData.append("columnMap", JSON.stringify(columnMap));
       }
 
-      const res = await fetch(`${API_URL}/api/import/file`, {
+      const res = await apiFetch(`/api/import/file`, {
         method: "POST",
         body: formData,
       });

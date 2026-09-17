@@ -1,11 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-
 import BookPicker from "@/features/books/components/BookPicker";
 import ReconciliationTable from "@/features/reconciliation/components/ReconciliationTable";
 import type { ReconciliationItem } from "@/features/reconciliation/types/reconciliation";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 import useTagGroups from "@/lib/hooks/useTagGroups";
 
@@ -81,9 +80,7 @@ function ReconciliationPage() {
       if (periodYear > 0) params.set("periodYear", String(periodYear));
       if (periodMonth > 0) params.set("periodMonth", String(periodMonth));
 
-      const res = await fetch(
-        `${API_URL}/api/reconciliation?${params.toString()}`,
-      );
+      const res = await apiFetch(`/api/reconciliation?${params.toString()}`);
       const data = await res.json();
       const mapped = (data.items ?? []).map(
         (item: Record<string, unknown>) => ({
@@ -104,7 +101,7 @@ function ReconciliationPage() {
     if (!activeBookId) return;
 
     try {
-      const res = await fetch(`${API_URL}/api/accounts?bookId=${activeBookId}`);
+      const res = await apiFetch(`/api/accounts?bookId=${activeBookId}`);
       const data = await res.json();
 
       setAccounts(
@@ -163,7 +160,7 @@ function ReconciliationPage() {
   const handleApprove = useCallback(
     async (itemId: string) => {
       try {
-        await fetch(`${API_URL}/api/reconciliation/${itemId}`, {
+        await apiFetch(`/api/reconciliation/${itemId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ status: "approved" }),
@@ -184,7 +181,7 @@ function ReconciliationPage() {
   const handleReject = useCallback(
     async (itemId: string) => {
       try {
-        await fetch(`${API_URL}/api/reconciliation/${itemId}`, {
+        await apiFetch(`/api/reconciliation/${itemId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ status: "rejected" }),
@@ -207,7 +204,7 @@ function ReconciliationPage() {
       tagIds?: string[],
     ) => {
       try {
-        const res = await fetch(`${API_URL}/api/reconciliation/${itemId}`, {
+        const res = await apiFetch(`/api/reconciliation/${itemId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -225,8 +222,8 @@ function ReconciliationPage() {
 
           if (journalEntryId) {
             try {
-              const entryRes = await fetch(
-                `${API_URL}/api/journal-entries/${journalEntryId}`,
+              const entryRes = await apiFetch(
+                `/api/journal-entries/${journalEntryId}`,
               );
               const entryData = await entryRes.json();
               const lines: { id: string }[] = entryData?.lines ?? [];
@@ -239,7 +236,7 @@ function ReconciliationPage() {
               }
 
               if (assignments.length > 0) {
-                await fetch(`${API_URL}/api/tags/line-tags`, {
+                await apiFetch(`/api/tags/line-tags`, {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ assignments }),

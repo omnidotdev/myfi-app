@@ -3,7 +3,7 @@ import { Loader2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import BookPicker from "@/features/books/components/BookPicker";
 import ReportExportActions from "@/features/reports/components/ReportExportActions";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import formatCurrency from "@/lib/format/currency";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
@@ -78,8 +78,8 @@ function SalesTaxReportPage() {
     if (!activeBookId) return;
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/tax-jurisdictions?bookId=${activeBookId}`,
+      const res = await apiFetch(
+        `/api/tax-jurisdictions?bookId=${activeBookId}`,
       );
       const json = await res.json();
 
@@ -114,9 +114,7 @@ function SalesTaxReportPage() {
         params.set("jurisdictionId", jurisdictionId);
       }
 
-      const res = await fetch(
-        `${API_URL}/api/reports/sales-tax?${params.toString()}`,
-      );
+      const res = await apiFetch(`/api/reports/sales-tax?${params.toString()}`);
 
       if (!res.ok) {
         throw new Error(`Failed to fetch report: ${res.statusText}`);

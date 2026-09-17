@@ -1,10 +1,9 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeftIcon, Loader2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-
 import AttachmentPanel from "@/features/ledger/components/AttachmentPanel";
 import type { JournalEntry } from "@/features/ledger/types/journalEntry";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 export const Route = createFileRoute(
@@ -37,8 +36,8 @@ function JournalEntryDetailPage() {
     setNotFound(false);
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/journal-entries?bookId=${activeBookId}&limit=500&offset=0`,
+      const res = await apiFetch(
+        `/api/journal-entries?bookId=${activeBookId}&limit=500&offset=0`,
       );
       const data = await res.json();
       const raw = (data.entries ?? []).find(
@@ -77,7 +76,7 @@ function JournalEntryDetailPage() {
     if (!entry) return;
 
     try {
-      await fetch(`${API_URL}/api/journal-entries/${entry.rowId}`, {
+      await apiFetch(`/api/journal-entries/${entry.rowId}`, {
         method: "DELETE",
       });
 

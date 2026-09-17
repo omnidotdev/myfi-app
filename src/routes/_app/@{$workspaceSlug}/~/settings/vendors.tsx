@@ -7,10 +7,9 @@ import {
   XIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-
 import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 export const Route = createFileRoute(
@@ -89,7 +88,7 @@ function VendorsPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/vendors?bookId=${activeBookId}`);
+      const res = await apiFetch(`/api/vendors?bookId=${activeBookId}`);
       const data = await res.json();
 
       setVendors(data.vendors ?? []);
@@ -143,7 +142,7 @@ function VendorsPage() {
         return;
 
       try {
-        const res = await fetch(`${API_URL}/api/vendors/${vendorId}`, {
+        const res = await apiFetch(`/api/vendors/${vendorId}`, {
           method: "DELETE",
         });
 
@@ -197,7 +196,7 @@ function VendorsPage() {
         let res: Response;
 
         if (editingVendorId) {
-          res = await fetch(`${API_URL}/api/vendors/${editingVendorId}`, {
+          res = await apiFetch(`/api/vendors/${editingVendorId}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body),
@@ -206,7 +205,7 @@ function VendorsPage() {
           body.bookId = activeBookId;
           body.tin = form.tin.trim();
 
-          res = await fetch(`${API_URL}/api/vendors`, {
+          res = await apiFetch(`/api/vendors`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body),

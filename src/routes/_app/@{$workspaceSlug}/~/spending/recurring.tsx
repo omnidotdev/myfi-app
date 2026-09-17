@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, RepeatIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-
 import BookPicker from "@/features/books/components/BookPicker";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import formatCurrency from "@/lib/format/currency";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
@@ -78,8 +77,8 @@ function RecurringTransactionsPage() {
     if (!activeBookId) return;
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/spending/recurring?bookId=${activeBookId}`,
+      const res = await apiFetch(
+        `/api/spending/recurring?bookId=${activeBookId}`,
       );
       const data = await res.json();
 

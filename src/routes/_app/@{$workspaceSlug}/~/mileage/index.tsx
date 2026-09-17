@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CarIcon, Loader2Icon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-
 import BookPicker from "@/features/books/components/BookPicker";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import formatCurrency from "@/lib/format/currency";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
@@ -81,8 +80,8 @@ function MileagePage() {
     if (!activeBookId) return;
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/mileage/vehicles?bookId=${activeBookId}`,
+      const res = await apiFetch(
+        `/api/mileage/vehicles?bookId=${activeBookId}`,
       );
       const data = await res.json();
 
@@ -104,7 +103,7 @@ function MileagePage() {
 
       if (yearFilter) params.set("year", yearFilter);
 
-      const res = await fetch(`${API_URL}/api/mileage?${params}`);
+      const res = await apiFetch(`/api/mileage?${params}`);
       const data = await res.json();
 
       setLogs(data.logs ?? []);
@@ -119,8 +118,8 @@ function MileagePage() {
     if (!activeBookId || !yearFilter) return;
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/mileage/summary?bookId=${activeBookId}&year=${yearFilter}`,
+      const res = await apiFetch(
+        `/api/mileage/summary?bookId=${activeBookId}&year=${yearFilter}`,
       );
       const data = await res.json();
 
@@ -142,7 +141,7 @@ function MileagePage() {
       if (!activeBookId) return;
 
       try {
-        await fetch(`${API_URL}/api/mileage/vehicles`, {
+        await apiFetch(`/api/mileage/vehicles`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -171,7 +170,7 @@ function MileagePage() {
       if (!confirm("Delete this vehicle?")) return;
 
       try {
-        await fetch(`${API_URL}/api/mileage/vehicles/${id}`, {
+        await apiFetch(`/api/mileage/vehicles/${id}`, {
           method: "DELETE",
         });
 
@@ -189,7 +188,7 @@ function MileagePage() {
       if (!activeBookId) return;
 
       try {
-        await fetch(`${API_URL}/api/mileage`, {
+        await apiFetch(`/api/mileage`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -235,7 +234,7 @@ function MileagePage() {
       if (!confirm("Delete this mileage entry?")) return;
 
       try {
-        await fetch(`${API_URL}/api/mileage/${id}`, {
+        await apiFetch(`/api/mileage/${id}`, {
           method: "DELETE",
         });
 

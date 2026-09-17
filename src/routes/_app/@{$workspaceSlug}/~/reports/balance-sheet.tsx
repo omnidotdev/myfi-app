@@ -9,8 +9,8 @@ import ReportExportActions from "@/features/reports/components/ReportExportActio
 import ReportFilters from "@/features/reports/components/ReportFilters";
 import VarianceThresholdControls from "@/features/reports/components/VarianceThresholdControls";
 import TagFilter from "@/features/tags/components/TagFilter";
+import { apiFetch } from "@/lib/api/apiFetch";
 
-import { API_URL } from "@/lib/config/env.config";
 import formatCurrency from "@/lib/format/currency";
 
 import useActiveBook from "@/lib/hooks/useActiveBook";
@@ -102,8 +102,8 @@ function BalanceSheetPage() {
         searchParams.set("tagIds", selectedTagIds.join(","));
       if (basis === "cash") searchParams.set("basis", "cash");
 
-      const res = await fetch(
-        `${API_URL}/api/reports/balance-sheet?${searchParams.toString()}`,
+      const res = await apiFetch(
+        `/api/reports/balance-sheet?${searchParams.toString()}`,
       );
 
       if (!res.ok) {
@@ -116,8 +116,8 @@ function BalanceSheetPage() {
       if (compare && params.asOfDate) {
         const cmp = new URLSearchParams(searchParams);
         cmp.set("priorAsOfDate", priorYear(params.asOfDate));
-        const cmpRes = await fetch(
-          `${API_URL}/api/reports/comparative-balance-sheet?${cmp.toString()}`,
+        const cmpRes = await apiFetch(
+          `/api/reports/comparative-balance-sheet?${cmp.toString()}`,
         );
         setComparative(cmpRes.ok ? await cmpRes.json() : null);
       } else {

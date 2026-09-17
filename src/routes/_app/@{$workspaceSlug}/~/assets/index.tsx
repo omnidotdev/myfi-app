@@ -1,10 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { HardDriveIcon, Loader2Icon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import formatCurrency from "@/lib/format/currency";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
@@ -81,9 +80,7 @@ function AssetsPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/fixed-assets?bookId=${activeBookId}`,
-      );
+      const res = await apiFetch(`/api/fixed-assets?bookId=${activeBookId}`);
       const data = await res.json();
 
       setAssets(data.assets ?? []);
@@ -98,7 +95,7 @@ function AssetsPage() {
     if (!activeBookId) return;
 
     try {
-      const res = await fetch(`${API_URL}/api/accounts?bookId=${activeBookId}`);
+      const res = await apiFetch(`/api/accounts?bookId=${activeBookId}`);
       const data = await res.json();
       const mapped = (data.accounts ?? []).map(
         (a: Record<string, unknown>) => ({
@@ -189,9 +186,9 @@ function AssetsPage() {
 
       try {
         const endpoint = editingId
-          ? `${API_URL}/api/fixed-assets/${editingId}`
-          : `${API_URL}/api/fixed-assets`;
-        await fetch(endpoint, {
+          ? `/api/fixed-assets/${editingId}`
+          : `/api/fixed-assets`;
+        await apiFetch(endpoint, {
           method: editingId ? "PATCH" : "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -236,7 +233,7 @@ function AssetsPage() {
       if (!confirm("Are you sure you want to delete this asset?")) return;
 
       try {
-        await fetch(`${API_URL}/api/fixed-assets/${assetId}`, {
+        await apiFetch(`/api/fixed-assets/${assetId}`, {
           method: "DELETE",
         });
 

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { PlaidLinkOnSuccessMetadata } from "react-plaid-link";
 import { usePlaidLink } from "react-plaid-link";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 
 type Props = {
   bookId: string;
@@ -25,7 +25,7 @@ function PlaidLinkButton({ bookId, userId, onSuccess }: Props) {
       if (!cancelled) setError(null);
 
       try {
-        const res = await fetch(`${API_URL}/api/plaid/create-link-token`, {
+        const res = await apiFetch(`/api/plaid/create-link-token`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ bookId, userId }),
@@ -51,7 +51,7 @@ function PlaidLinkButton({ bookId, userId, onSuccess }: Props) {
       setIsExchanging(true);
 
       try {
-        const exchangeRes = await fetch(`${API_URL}/api/plaid/exchange-token`, {
+        const exchangeRes = await apiFetch(`/api/plaid/exchange-token`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -65,7 +65,7 @@ function PlaidLinkButton({ bookId, userId, onSuccess }: Props) {
         const { connectedAccountId } = await exchangeRes.json();
 
         // Trigger initial sync with the correct ID
-        await fetch(`${API_URL}/api/plaid/sync`, {
+        await apiFetch(`/api/plaid/sync`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ connectedAccountId }),

@@ -9,9 +9,8 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import BookPicker from "@/features/books/components/BookPicker";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 type Project = {
@@ -96,7 +95,7 @@ function ProjectsPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/projects?bookId=${activeBookId}`);
+      const res = await apiFetch(`/api/projects?bookId=${activeBookId}`);
       const data = await res.json();
 
       setProjects(data.projects ?? []);
@@ -154,7 +153,7 @@ function ProjectsPage() {
 
       try {
         if (editingProject) {
-          await fetch(`${API_URL}/api/projects/${editingProject.id}`, {
+          await apiFetch(`/api/projects/${editingProject.id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
@@ -162,7 +161,7 @@ function ProjectsPage() {
           toast.success("Project updated");
         } else {
           payload.bookId = activeBookId;
-          await fetch(`${API_URL}/api/projects`, {
+          await apiFetch(`/api/projects`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
@@ -182,7 +181,7 @@ function ProjectsPage() {
   const handleStatusAction = useCallback(
     async (projectId: string, action: "complete" | "archive") => {
       try {
-        await fetch(`${API_URL}/api/projects/${projectId}/${action}`, {
+        await apiFetch(`/api/projects/${projectId}/${action}`, {
           method: "POST",
         });
         toast.success(
@@ -199,7 +198,7 @@ function ProjectsPage() {
   const handleDelete = useCallback(
     async (projectId: string) => {
       try {
-        await fetch(`${API_URL}/api/projects/${projectId}`, {
+        await apiFetch(`/api/projects/${projectId}`, {
           method: "DELETE",
         });
         toast.success("Project deleted");

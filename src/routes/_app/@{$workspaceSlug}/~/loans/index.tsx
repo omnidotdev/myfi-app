@@ -2,10 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon, TrashIcon, XIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import formatCurrency from "@/lib/format/currency";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
@@ -98,7 +97,7 @@ function LoansPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/loans?bookId=${activeBookId}`);
+      const res = await apiFetch(`/api/loans?bookId=${activeBookId}`);
       const data = await res.json();
 
       setLoans(data.loans ?? []);
@@ -113,7 +112,7 @@ function LoansPage() {
     if (!activeBookId) return;
 
     try {
-      const res = await fetch(`${API_URL}/api/accounts?bookId=${activeBookId}`);
+      const res = await apiFetch(`/api/accounts?bookId=${activeBookId}`);
       const data = await res.json();
 
       setAccounts(data.accounts ?? []);
@@ -169,7 +168,7 @@ function LoansPage() {
       if (formValues.notes.trim()) payload.notes = formValues.notes.trim();
 
       try {
-        const res = await fetch(`${API_URL}/api/loans`, {
+        const res = await apiFetch(`/api/loans`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -195,7 +194,7 @@ function LoansPage() {
   const handleDelete = useCallback(
     async (loanId: string) => {
       try {
-        const res = await fetch(`${API_URL}/api/loans/${loanId}`, {
+        const res = await apiFetch(`/api/loans/${loanId}`, {
           method: "DELETE",
         });
 

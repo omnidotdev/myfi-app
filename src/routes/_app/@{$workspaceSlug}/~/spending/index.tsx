@@ -14,7 +14,7 @@ import SpendingTrends from "@/features/spending/components/SpendingTrends";
 import SubscriptionList from "@/features/spending/components/SubscriptionList";
 import type { VendorSpendData } from "@/features/spending/components/VendorSpendMatrix";
 import VendorSpendMatrix from "@/features/spending/components/VendorSpendMatrix";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 export const Route = createFileRoute("/_app/@{$workspaceSlug}/~/spending/")({
@@ -98,8 +98,8 @@ function SpendingPage() {
         endDate: dateRange.endDate,
       });
 
-      const res = await fetch(
-        `${API_URL}/api/spending/categories?${params.toString()}`,
+      const res = await apiFetch(
+        `/api/spending/categories?${params.toString()}`,
       );
       const data = await res.json();
 
@@ -114,8 +114,8 @@ function SpendingPage() {
     if (!activeBookId) return;
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/spending/trends?bookId=${activeBookId}&months=${trendMonths}`,
+      const res = await apiFetch(
+        `/api/spending/trends?bookId=${activeBookId}&months=${trendMonths}`,
       );
       const data = await res.json();
 
@@ -129,8 +129,8 @@ function SpendingPage() {
     if (!activeBookId) return;
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/spending/recurring?bookId=${activeBookId}`,
+      const res = await apiFetch(
+        `/api/spending/recurring?bookId=${activeBookId}`,
       );
       const data = await res.json();
 
@@ -151,9 +151,7 @@ function SpendingPage() {
         endDate: dateRange.endDate,
       });
 
-      const res = await fetch(
-        `${API_URL}/api/spending/vendors?${params.toString()}`,
-      );
+      const res = await apiFetch(`/api/spending/vendors?${params.toString()}`);
       const data = await res.json();
 
       setVendorSpend(data);

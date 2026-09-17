@@ -8,10 +8,9 @@ import {
   XIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-
 import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 export const Route = createFileRoute("/_app/@{$workspaceSlug}/~/settings/tags")(
@@ -76,9 +75,7 @@ function TagsPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(
-        `${API_URL}/api/tags/groups?bookId=${activeBookId}`,
-      );
+      const res = await apiFetch(`/api/tags/groups?bookId=${activeBookId}`);
       const data = await res.json();
 
       setGroups(data.tagGroups ?? []);
@@ -99,7 +96,7 @@ function TagsPage() {
     setIsCreatingGroup(true);
 
     try {
-      await fetch(`${API_URL}/api/tags/groups`, {
+      await apiFetch(`/api/tags/groups`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -127,7 +124,7 @@ function TagsPage() {
         return;
 
       try {
-        await fetch(`${API_URL}/api/tags/groups/${groupId}`, {
+        await apiFetch(`/api/tags/groups/${groupId}`, {
           method: "DELETE",
         });
 
@@ -147,7 +144,7 @@ function TagsPage() {
       setSavingTagGroupId(groupId);
 
       try {
-        await fetch(`${API_URL}/api/tags`, {
+        await apiFetch(`/api/tags`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -171,7 +168,7 @@ function TagsPage() {
   const handleToggleActive = useCallback(
     async (tag: Tag) => {
       try {
-        await fetch(`${API_URL}/api/tags/${tag.id}`, {
+        await apiFetch(`/api/tags/${tag.id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ isActive: !tag.isActive }),
@@ -199,7 +196,7 @@ function TagsPage() {
       if (!editForm.name.trim()) return;
 
       try {
-        await fetch(`${API_URL}/api/tags/${tagId}`, {
+        await apiFetch(`/api/tags/${tagId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -223,7 +220,7 @@ function TagsPage() {
       if (!confirm(`Delete tag "${tagName}"? This cannot be undone.`)) return;
 
       try {
-        await fetch(`${API_URL}/api/tags/${tagId}`, {
+        await apiFetch(`/api/tags/${tagId}`, {
           method: "DELETE",
         });
 

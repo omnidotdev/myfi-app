@@ -6,8 +6,8 @@ import {
   PlayIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { apiFetch } from "@/lib/api/apiFetch";
 
-import { API_URL } from "@/lib/config/env.config";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 type Account = {
@@ -73,7 +73,7 @@ function StatementReconciliationPage() {
     if (!activeBookId) return;
 
     try {
-      const res = await fetch(`${API_URL}/api/accounts?bookId=${activeBookId}`);
+      const res = await apiFetch(`/api/accounts?bookId=${activeBookId}`);
       const data = await res.json();
       const filtered = (data.accounts ?? []).filter(
         (a: Account) => a.subType && ASSET_SUBTYPES.includes(a.subType),
@@ -95,9 +95,7 @@ function StatementReconciliationPage() {
       if (selectedAccountId) {
         params.set("accountId", selectedAccountId);
       }
-      const res = await fetch(
-        `${API_URL}/api/statement-reconciliations?${params}`,
-      );
+      const res = await apiFetch(`/api/statement-reconciliations?${params}`);
       const data = await res.json();
       setHistory(
         (data.reconciliations ?? []).filter(
@@ -112,9 +110,7 @@ function StatementReconciliationPage() {
   // Fetch reconciliation detail
   const fetchDetail = useCallback(async (reconId: string) => {
     try {
-      const res = await fetch(
-        `${API_URL}/api/statement-reconciliations/${reconId}`,
-      );
+      const res = await apiFetch(`/api/statement-reconciliations/${reconId}`);
       const data = await res.json();
       setActiveRecon(data.reconciliation);
       setLines(data.lines ?? []);
@@ -141,7 +137,7 @@ function StatementReconciliationPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/statement-reconciliations`, {
+      const res = await apiFetch(`/api/statement-reconciliations`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -168,8 +164,8 @@ function StatementReconciliationPage() {
     if (!activeRecon) return;
 
     try {
-      await fetch(
-        `${API_URL}/api/statement-reconciliations/${activeRecon.id}/lines/${lineId}`,
+      await apiFetch(
+        `/api/statement-reconciliations/${activeRecon.id}/lines/${lineId}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -189,8 +185,8 @@ function StatementReconciliationPage() {
     setIsLoading(true);
 
     try {
-      await fetch(
-        `${API_URL}/api/statement-reconciliations/${activeRecon.id}/complete`,
+      await apiFetch(
+        `/api/statement-reconciliations/${activeRecon.id}/complete`,
         { method: "POST" },
       );
       setActiveRecon(null);

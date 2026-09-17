@@ -1,12 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-
 import AccountForm from "@/features/accounts/components/AccountForm";
 import AccountTree from "@/features/accounts/components/AccountTree";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 export const Route = createFileRoute("/_app/@{$workspaceSlug}/~/accounts/")({
@@ -34,7 +33,7 @@ function AccountsPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/accounts?bookId=${activeBookId}`);
+      const res = await apiFetch(`/api/accounts?bookId=${activeBookId}`);
       const data = await res.json();
       const mapped = (data.accounts ?? []).map(
         (a: Record<string, unknown>) => ({
@@ -74,7 +73,7 @@ function AccountsPage() {
   const handleToggleActive = useCallback(
     async (account: Account) => {
       try {
-        await fetch(`${API_URL}/api/accounts/${account.rowId}`, {
+        await apiFetch(`/api/accounts/${account.rowId}`, {
           method: "PATCH",
         });
 
@@ -90,13 +89,13 @@ function AccountsPage() {
     async (values: Partial<Account>) => {
       try {
         if (editingAccount) {
-          await fetch(`${API_URL}/api/accounts/${editingAccount.rowId}`, {
+          await apiFetch(`/api/accounts/${editingAccount.rowId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(values),
           });
         } else {
-          await fetch(`${API_URL}/api/accounts`, {
+          await apiFetch(`/api/accounts`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

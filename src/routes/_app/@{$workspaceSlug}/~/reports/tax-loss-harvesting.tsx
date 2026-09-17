@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { apiFetch } from "@/lib/api/apiFetch";
 
-import { API_URL } from "@/lib/config/env.config";
 import { formatCurrency, formatSignedCurrency } from "@/lib/format/currency";
 
 type HarvestableAsset = {
@@ -38,7 +38,7 @@ function TaxLossHarvestingPage() {
     setError(null);
 
     try {
-      const res = await fetch(`${API_URL}/api/tax/loss-harvesting`);
+      const res = await apiFetch(`/api/tax/loss-harvesting`);
 
       if (!res.ok) {
         throw new Error(`Failed to fetch report: ${res.statusText}`);

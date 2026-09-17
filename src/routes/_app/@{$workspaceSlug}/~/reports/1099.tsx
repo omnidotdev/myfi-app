@@ -3,7 +3,7 @@ import { Loader2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import BookPicker from "@/features/books/components/BookPicker";
 import ReportExportActions from "@/features/reports/components/ReportExportActions";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import formatCurrency from "@/lib/format/currency";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
@@ -51,9 +51,7 @@ function Report1099Page() {
         bookId: activeBookId,
         year: String(year),
       });
-      const res = await fetch(
-        `${API_URL}/api/tax/1099-nec?${params.toString()}`,
-      );
+      const res = await apiFetch(`/api/tax/1099-nec?${params.toString()}`);
 
       if (!res.ok) {
         throw new Error(`Failed to fetch report: ${res.statusText}`);

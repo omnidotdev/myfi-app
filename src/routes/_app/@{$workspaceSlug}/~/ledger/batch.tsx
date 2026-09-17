@@ -2,10 +2,9 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon, TrashIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 export const Route = createFileRoute("/_app/@{$workspaceSlug}/~/ledger/batch")({
@@ -107,7 +106,7 @@ function BatchJournalEntryPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/accounts?bookId=${activeBookId}`);
+      const res = await apiFetch(`/api/accounts?bookId=${activeBookId}`);
       const data = await res.json();
       const mapped = (data.accounts ?? []).map(
         (a: Record<string, unknown>) => ({
@@ -267,7 +266,7 @@ function BatchJournalEntryPage() {
         })),
       };
 
-      const res = await fetch(`${API_URL}/api/journal-entries/batch`, {
+      const res = await apiFetch(`/api/journal-entries/batch`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

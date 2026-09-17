@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon, TrashIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
 import type {
@@ -9,7 +8,7 @@ import type {
   CategorizationRuleSplit,
 } from "@/features/settings/components/CategorizationRuleTable";
 import CategorizationRuleTable from "@/features/settings/components/CategorizationRuleTable";
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 import useTagGroups from "@/lib/hooks/useTagGroups";
 
@@ -157,8 +156,8 @@ function RulesPage() {
 
     try {
       const [rulesRes, accountsRes] = await Promise.all([
-        fetch(`${API_URL}/api/categorization-rules?bookId=${activeBookId}`),
-        fetch(`${API_URL}/api/accounts?bookId=${activeBookId}`),
+        apiFetch(`/api/categorization-rules?bookId=${activeBookId}`),
+        apiFetch(`/api/accounts?bookId=${activeBookId}`),
       ]);
 
       const rulesData = await rulesRes.json();
@@ -265,13 +264,13 @@ function RulesPage() {
       };
 
       if (editingRuleId) {
-        await fetch(`${API_URL}/api/categorization-rules/${editingRuleId}`, {
+        await apiFetch(`/api/categorization-rules/${editingRuleId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
       } else {
-        await fetch(`${API_URL}/api/categorization-rules`, {
+        await apiFetch(`/api/categorization-rules`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -291,7 +290,7 @@ function RulesPage() {
   const handleDelete = useCallback(
     async (ruleId: string) => {
       try {
-        await fetch(`${API_URL}/api/categorization-rules/${ruleId}`, {
+        await apiFetch(`/api/categorization-rules/${ruleId}`, {
           method: "DELETE",
         });
 
@@ -309,7 +308,7 @@ function RulesPage() {
       updates: { debitAccountId: string; creditAccountId: string },
     ) => {
       try {
-        await fetch(`${API_URL}/api/categorization-rules/${ruleId}`, {
+        await apiFetch(`/api/categorization-rules/${ruleId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updates),

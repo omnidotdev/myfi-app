@@ -1,8 +1,7 @@
 import { DownloadIcon, Loader2Icon, PrinterIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-
-import { API_URL } from "@/lib/config/env.config";
+import { apiFetch } from "@/lib/api/apiFetch";
 
 type ExportFormat = "pdf" | "xlsx" | "csv";
 
@@ -67,7 +66,7 @@ function ReportExportActions({
         if (v !== "") sp.set(key, v);
       }
 
-      const res = await fetch(`${API_URL}/api/reports/export?${sp.toString()}`);
+      const res = await apiFetch(`/api/reports/export?${sp.toString()}`);
       if (!res.ok) throw new Error("Export failed");
 
       const blob = await res.blob();
