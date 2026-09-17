@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
+  ArrowLeftRightIcon,
   Loader2Icon,
   PencilIcon,
   PlusIcon,
@@ -9,8 +10,11 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
+import RecategorizeVendorDialog from "@/features/vendors/components/RecategorizeVendorDialog";
 import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
+
+type Account = { id: string; name: string; code: string };
 
 export const Route = createFileRoute(
   "/_app/@{$workspaceSlug}/~/settings/vendors",
@@ -75,6 +79,10 @@ function VendorsPage() {
   } = useActiveBook();
 
   const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [recategorizeVendor, setRecategorizeVendor] = useState<Vendor | null>(
+    null,
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingVendorId, setEditingVendorId] = useState<string | null>(null);
@@ -99,9 +107,32 @@ function VendorsPage() {
     }
   }, [activeBookId]);
 
+  const fetchAccounts = useCallback(async () => {
+    if (!activeBookId) return;
+
+    try {
+      const res = await apiFetch(`/api/accounts?bookId=${activeBookId}`);
+      const data = await res.json();
+
+      setAccounts(
+        (data.accounts ?? []).map((a: Record<string, unknown>) => ({
+          id: a.id as string,
+          name: a.name as string,
+          code: a.code as string,
+        })),
+      );
+    } catch {
+      // Silently handle fetch errors
+    }
+  }, [activeBookId]);
+
   useEffect(() => {
     fetchVendors();
   }, [fetchVendors]);
+
+  useEffect(() => {
+    fetchAccounts();
+  }, [fetchAccounts]);
 
   const resetForm = useCallback(() => {
     setForm({ ...EMPTY_FORM });
@@ -547,6 +578,15 @@ function VendorsPage() {
                     <div className="flex items-center justify-end gap-1">
                       <button
                         type="button"
+                        onClick={() => setRecategorizeVendor(vendor)}
+                        disabled={accounts.length === 0}
+                        className="rounded-md p-1.5 text-muted-foreground transition-colors hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+                        title="Recategorize transactions"
+                      >
+                        <ArrowLeftRightIcon className="size-4" />
+                      </button>
+                      <button
+                        type="button"
                         onClick={() => handleEdit(vendor)}
                         className="rounded-md p-1.5 text-muted-foreground transition-colors hover:text-foreground"
                         title="Edit vendor"
@@ -568,6 +608,16 @@ function VendorsPage() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {recategorizeVendor && activeBookId && (
+        <RecategorizeVendorDialog
+          vendor={{ id: recategorizeVendor.id, name: recategorizeVendor.name }}
+          bookId={activeBookId}
+          accounts={accounts}
+          onClose={() => setRecategorizeVendor(null)}
+          onDone={fetchVendors}
+        />
       )}
     </div>
   );
