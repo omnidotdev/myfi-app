@@ -3,11 +3,13 @@ import {
   ArrowRightLeftIcon,
   BarChart3Icon,
   BookOpenIcon,
+  Building2Icon,
   CalendarIcon,
   ClockIcon,
   CoinsIcon,
   DollarSignIcon,
   FileSpreadsheetIcon,
+  FlaskConicalIcon,
   LandmarkIcon,
   LayersIcon,
   LeafIcon,
@@ -112,6 +114,20 @@ const reportCards = [
       "Non-employee compensation reporting for vendors meeting the filing threshold",
     icon: UsersIcon,
     href: "/@{$workspaceSlug}/~/reports/1099",
+  },
+  {
+    title: "Delaware Franchise Tax",
+    description:
+      "Estimate your annual Delaware franchise tax under both methods and file the lower one",
+    icon: Building2Icon,
+    href: "/@{$workspaceSlug}/~/reports/delaware-franchise-tax",
+  },
+  {
+    title: "R&D Tax Credit",
+    description:
+      "Capture qualified research expenses by year, split domestic and foreign, for your CPA",
+    icon: FlaskConicalIcon,
+    href: "/@{$workspaceSlug}/~/reports/rd-credit",
   },
   {
     title: "Payroll",

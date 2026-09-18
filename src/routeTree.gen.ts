@@ -52,11 +52,13 @@ import { Route as AppAtChar123workspaceSlugChar125Char126ReportsStatementOfEquit
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/schedule-c'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/sales-tax'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/sales-by-state'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReportsRdCreditRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/rd-credit'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/quarterly-estimates'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/profit-and-loss'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsPayrollRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/payroll'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsGeneralLedgerRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/general-ledger'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsForm8949RouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/form-8949'
+import { Route as AppAtChar123workspaceSlugChar125Char126ReportsDelawareFranchiseTaxRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/delaware-franchise-tax'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsCashFlowRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/cash-flow'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsBalanceSheetRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/balance-sheet'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsArAgingRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/ar-aging'
@@ -328,6 +330,12 @@ const AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRoute =
     path: '/@{$workspaceSlug}/~/reports/sales-by-state',
     getParentRoute: () => AppRoute,
   } as any)
+const AppAtChar123workspaceSlugChar125Char126ReportsRdCreditRoute =
+  AppAtChar123workspaceSlugChar125Char126ReportsRdCreditRouteImport.update({
+    id: '/@{$workspaceSlug}/~/reports/rd-credit',
+    path: '/@{$workspaceSlug}/~/reports/rd-credit',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute =
   AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRouteImport.update(
     {
@@ -364,6 +372,14 @@ const AppAtChar123workspaceSlugChar125Char126ReportsForm8949Route =
     path: '/@{$workspaceSlug}/~/reports/form-8949',
     getParentRoute: () => AppRoute,
   } as any)
+const AppAtChar123workspaceSlugChar125Char126ReportsDelawareFranchiseTaxRoute =
+  AppAtChar123workspaceSlugChar125Char126ReportsDelawareFranchiseTaxRouteImport.update(
+    {
+      id: '/@{$workspaceSlug}/~/reports/delaware-franchise-tax',
+      path: '/@{$workspaceSlug}/~/reports/delaware-franchise-tax',
+      getParentRoute: () => AppRoute,
+    } as any,
+  )
 const AppAtChar123workspaceSlugChar125Char126ReportsCashFlowRoute =
   AppAtChar123workspaceSlugChar125Char126ReportsCashFlowRouteImport.update({
     id: '/@{$workspaceSlug}/~/reports/cash-flow',
@@ -457,11 +473,13 @@ export interface FileRoutesByFullPath {
   '/@{$workspaceSlug}/~/reports/ar-aging': typeof AppAtChar123workspaceSlugChar125Char126ReportsArAgingRoute
   '/@{$workspaceSlug}/~/reports/balance-sheet': typeof AppAtChar123workspaceSlugChar125Char126ReportsBalanceSheetRoute
   '/@{$workspaceSlug}/~/reports/cash-flow': typeof AppAtChar123workspaceSlugChar125Char126ReportsCashFlowRoute
+  '/@{$workspaceSlug}/~/reports/delaware-franchise-tax': typeof AppAtChar123workspaceSlugChar125Char126ReportsDelawareFranchiseTaxRoute
   '/@{$workspaceSlug}/~/reports/form-8949': typeof AppAtChar123workspaceSlugChar125Char126ReportsForm8949Route
   '/@{$workspaceSlug}/~/reports/general-ledger': typeof AppAtChar123workspaceSlugChar125Char126ReportsGeneralLedgerRoute
   '/@{$workspaceSlug}/~/reports/payroll': typeof AppAtChar123workspaceSlugChar125Char126ReportsPayrollRoute
   '/@{$workspaceSlug}/~/reports/profit-and-loss': typeof AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRoute
   '/@{$workspaceSlug}/~/reports/quarterly-estimates': typeof AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute
+  '/@{$workspaceSlug}/~/reports/rd-credit': typeof AppAtChar123workspaceSlugChar125Char126ReportsRdCreditRoute
   '/@{$workspaceSlug}/~/reports/sales-by-state': typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRoute
   '/@{$workspaceSlug}/~/reports/sales-tax': typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute
   '/@{$workspaceSlug}/~/reports/schedule-c': typeof AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute
@@ -517,11 +535,13 @@ export interface FileRoutesByTo {
   '/@{$workspaceSlug}/~/reports/ar-aging': typeof AppAtChar123workspaceSlugChar125Char126ReportsArAgingRoute
   '/@{$workspaceSlug}/~/reports/balance-sheet': typeof AppAtChar123workspaceSlugChar125Char126ReportsBalanceSheetRoute
   '/@{$workspaceSlug}/~/reports/cash-flow': typeof AppAtChar123workspaceSlugChar125Char126ReportsCashFlowRoute
+  '/@{$workspaceSlug}/~/reports/delaware-franchise-tax': typeof AppAtChar123workspaceSlugChar125Char126ReportsDelawareFranchiseTaxRoute
   '/@{$workspaceSlug}/~/reports/form-8949': typeof AppAtChar123workspaceSlugChar125Char126ReportsForm8949Route
   '/@{$workspaceSlug}/~/reports/general-ledger': typeof AppAtChar123workspaceSlugChar125Char126ReportsGeneralLedgerRoute
   '/@{$workspaceSlug}/~/reports/payroll': typeof AppAtChar123workspaceSlugChar125Char126ReportsPayrollRoute
   '/@{$workspaceSlug}/~/reports/profit-and-loss': typeof AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRoute
   '/@{$workspaceSlug}/~/reports/quarterly-estimates': typeof AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute
+  '/@{$workspaceSlug}/~/reports/rd-credit': typeof AppAtChar123workspaceSlugChar125Char126ReportsRdCreditRoute
   '/@{$workspaceSlug}/~/reports/sales-by-state': typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRoute
   '/@{$workspaceSlug}/~/reports/sales-tax': typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute
   '/@{$workspaceSlug}/~/reports/schedule-c': typeof AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute
@@ -580,11 +600,13 @@ export interface FileRoutesById {
   '/_app/@{$workspaceSlug}/~/reports/ar-aging': typeof AppAtChar123workspaceSlugChar125Char126ReportsArAgingRoute
   '/_app/@{$workspaceSlug}/~/reports/balance-sheet': typeof AppAtChar123workspaceSlugChar125Char126ReportsBalanceSheetRoute
   '/_app/@{$workspaceSlug}/~/reports/cash-flow': typeof AppAtChar123workspaceSlugChar125Char126ReportsCashFlowRoute
+  '/_app/@{$workspaceSlug}/~/reports/delaware-franchise-tax': typeof AppAtChar123workspaceSlugChar125Char126ReportsDelawareFranchiseTaxRoute
   '/_app/@{$workspaceSlug}/~/reports/form-8949': typeof AppAtChar123workspaceSlugChar125Char126ReportsForm8949Route
   '/_app/@{$workspaceSlug}/~/reports/general-ledger': typeof AppAtChar123workspaceSlugChar125Char126ReportsGeneralLedgerRoute
   '/_app/@{$workspaceSlug}/~/reports/payroll': typeof AppAtChar123workspaceSlugChar125Char126ReportsPayrollRoute
   '/_app/@{$workspaceSlug}/~/reports/profit-and-loss': typeof AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRoute
   '/_app/@{$workspaceSlug}/~/reports/quarterly-estimates': typeof AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute
+  '/_app/@{$workspaceSlug}/~/reports/rd-credit': typeof AppAtChar123workspaceSlugChar125Char126ReportsRdCreditRoute
   '/_app/@{$workspaceSlug}/~/reports/sales-by-state': typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRoute
   '/_app/@{$workspaceSlug}/~/reports/sales-tax': typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute
   '/_app/@{$workspaceSlug}/~/reports/schedule-c': typeof AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute
@@ -642,11 +664,13 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/reports/ar-aging'
     | '/@{$workspaceSlug}/~/reports/balance-sheet'
     | '/@{$workspaceSlug}/~/reports/cash-flow'
+    | '/@{$workspaceSlug}/~/reports/delaware-franchise-tax'
     | '/@{$workspaceSlug}/~/reports/form-8949'
     | '/@{$workspaceSlug}/~/reports/general-ledger'
     | '/@{$workspaceSlug}/~/reports/payroll'
     | '/@{$workspaceSlug}/~/reports/profit-and-loss'
     | '/@{$workspaceSlug}/~/reports/quarterly-estimates'
+    | '/@{$workspaceSlug}/~/reports/rd-credit'
     | '/@{$workspaceSlug}/~/reports/sales-by-state'
     | '/@{$workspaceSlug}/~/reports/sales-tax'
     | '/@{$workspaceSlug}/~/reports/schedule-c'
@@ -702,11 +726,13 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/reports/ar-aging'
     | '/@{$workspaceSlug}/~/reports/balance-sheet'
     | '/@{$workspaceSlug}/~/reports/cash-flow'
+    | '/@{$workspaceSlug}/~/reports/delaware-franchise-tax'
     | '/@{$workspaceSlug}/~/reports/form-8949'
     | '/@{$workspaceSlug}/~/reports/general-ledger'
     | '/@{$workspaceSlug}/~/reports/payroll'
     | '/@{$workspaceSlug}/~/reports/profit-and-loss'
     | '/@{$workspaceSlug}/~/reports/quarterly-estimates'
+    | '/@{$workspaceSlug}/~/reports/rd-credit'
     | '/@{$workspaceSlug}/~/reports/sales-by-state'
     | '/@{$workspaceSlug}/~/reports/sales-tax'
     | '/@{$workspaceSlug}/~/reports/schedule-c'
@@ -764,11 +790,13 @@ export interface FileRouteTypes {
     | '/_app/@{$workspaceSlug}/~/reports/ar-aging'
     | '/_app/@{$workspaceSlug}/~/reports/balance-sheet'
     | '/_app/@{$workspaceSlug}/~/reports/cash-flow'
+    | '/_app/@{$workspaceSlug}/~/reports/delaware-franchise-tax'
     | '/_app/@{$workspaceSlug}/~/reports/form-8949'
     | '/_app/@{$workspaceSlug}/~/reports/general-ledger'
     | '/_app/@{$workspaceSlug}/~/reports/payroll'
     | '/_app/@{$workspaceSlug}/~/reports/profit-and-loss'
     | '/_app/@{$workspaceSlug}/~/reports/quarterly-estimates'
+    | '/_app/@{$workspaceSlug}/~/reports/rd-credit'
     | '/_app/@{$workspaceSlug}/~/reports/sales-by-state'
     | '/_app/@{$workspaceSlug}/~/reports/sales-tax'
     | '/_app/@{$workspaceSlug}/~/reports/schedule-c'
@@ -1118,6 +1146,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/@{$workspaceSlug}/~/reports/rd-credit': {
+      id: '/_app/@{$workspaceSlug}/~/reports/rd-credit'
+      path: '/@{$workspaceSlug}/~/reports/rd-credit'
+      fullPath: '/@{$workspaceSlug}/~/reports/rd-credit'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsRdCreditRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/@{$workspaceSlug}/~/reports/quarterly-estimates': {
       id: '/_app/@{$workspaceSlug}/~/reports/quarterly-estimates'
       path: '/@{$workspaceSlug}/~/reports/quarterly-estimates'
@@ -1151,6 +1186,13 @@ declare module '@tanstack/react-router' {
       path: '/@{$workspaceSlug}/~/reports/form-8949'
       fullPath: '/@{$workspaceSlug}/~/reports/form-8949'
       preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsForm8949RouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/reports/delaware-franchise-tax': {
+      id: '/_app/@{$workspaceSlug}/~/reports/delaware-franchise-tax'
+      path: '/@{$workspaceSlug}/~/reports/delaware-franchise-tax'
+      fullPath: '/@{$workspaceSlug}/~/reports/delaware-franchise-tax'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsDelawareFranchiseTaxRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/@{$workspaceSlug}/~/reports/cash-flow': {
@@ -1254,11 +1296,13 @@ interface AppRouteChildren {
   AppAtChar123workspaceSlugChar125Char126ReportsArAgingRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsArAgingRoute
   AppAtChar123workspaceSlugChar125Char126ReportsBalanceSheetRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsBalanceSheetRoute
   AppAtChar123workspaceSlugChar125Char126ReportsCashFlowRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsCashFlowRoute
+  AppAtChar123workspaceSlugChar125Char126ReportsDelawareFranchiseTaxRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsDelawareFranchiseTaxRoute
   AppAtChar123workspaceSlugChar125Char126ReportsForm8949Route: typeof AppAtChar123workspaceSlugChar125Char126ReportsForm8949Route
   AppAtChar123workspaceSlugChar125Char126ReportsGeneralLedgerRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsGeneralLedgerRoute
   AppAtChar123workspaceSlugChar125Char126ReportsPayrollRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsPayrollRoute
   AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRoute
   AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute
+  AppAtChar123workspaceSlugChar125Char126ReportsRdCreditRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsRdCreditRoute
   AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRoute
   AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute
   AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsScheduleCRoute
@@ -1326,6 +1370,8 @@ const AppRouteChildren: AppRouteChildren = {
     AppAtChar123workspaceSlugChar125Char126ReportsBalanceSheetRoute,
   AppAtChar123workspaceSlugChar125Char126ReportsCashFlowRoute:
     AppAtChar123workspaceSlugChar125Char126ReportsCashFlowRoute,
+  AppAtChar123workspaceSlugChar125Char126ReportsDelawareFranchiseTaxRoute:
+    AppAtChar123workspaceSlugChar125Char126ReportsDelawareFranchiseTaxRoute,
   AppAtChar123workspaceSlugChar125Char126ReportsForm8949Route:
     AppAtChar123workspaceSlugChar125Char126ReportsForm8949Route,
   AppAtChar123workspaceSlugChar125Char126ReportsGeneralLedgerRoute:
@@ -1336,6 +1382,8 @@ const AppRouteChildren: AppRouteChildren = {
     AppAtChar123workspaceSlugChar125Char126ReportsProfitAndLossRoute,
   AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute:
     AppAtChar123workspaceSlugChar125Char126ReportsQuarterlyEstimatesRoute,
+  AppAtChar123workspaceSlugChar125Char126ReportsRdCreditRoute:
+    AppAtChar123workspaceSlugChar125Char126ReportsRdCreditRoute,
   AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRoute:
     AppAtChar123workspaceSlugChar125Char126ReportsSalesByStateRoute,
   AppAtChar123workspaceSlugChar125Char126ReportsSalesTaxRoute:
@@ -1435,12 +1483,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
