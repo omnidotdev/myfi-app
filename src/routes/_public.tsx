@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-router";
 import { GithubIcon, MenuIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-
+import MyfiMark from "@/components/MyfiMark";
 import signIn from "@/lib/auth/signIn";
 import signOut from "@/lib/auth/signOut";
 import appConfig from "@/lib/config/app.config";
@@ -51,8 +51,8 @@ function PublicLayout() {
         }`}
       >
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6 lg:px-8">
-          <a href="/" className="flex items-baseline gap-2">
-            <span className="text-base leading-none">💰</span>
+          <a href="/" className="flex items-center gap-2">
+            <MyfiMark className="size-5 shrink-0 text-foreground" />
             <span className="font-medium font-serif text-foreground text-xl tracking-tight">
               {appConfig.name}
             </span>
@@ -170,7 +170,9 @@ function PublicLayout() {
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground text-xs">
             <span className="inline-flex items-center gap-1.5">
               <span className="size-1.5 rounded-full bg-primary" />
-              Made with 💰 by{" "}
+              Made with{" "}
+              <MyfiMark className="inline-block size-3.5 align-text-bottom text-foreground" />{" "}
+              by{" "}
               <a
                 href={appConfig.organization.website}
                 target="_blank"

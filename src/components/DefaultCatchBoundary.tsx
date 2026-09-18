@@ -2,6 +2,8 @@ import type { ErrorComponentProps } from "@tanstack/react-router";
 import { rootRouteId, useMatch, useRouter } from "@tanstack/react-router";
 import { useEffect } from "react";
 
+import MyfiMark from "@/components/MyfiMark";
+
 /**
  * Default error boundary for caught route errors.
  */
@@ -19,7 +21,7 @@ const DefaultCatchBoundary = ({ error }: ErrorComponentProps) => {
   return (
     <div className="flex min-h-[50vh] flex-col items-center justify-center p-8">
       <div className="text-center">
-        <div className="mb-6 text-6xl">💰</div>
+        <MyfiMark className="mx-auto mb-6 size-16 text-muted-foreground" />
         <h1 className="font-normal font-serif text-3xl text-foreground tracking-tight">
           Something went wrong
         </h1>
