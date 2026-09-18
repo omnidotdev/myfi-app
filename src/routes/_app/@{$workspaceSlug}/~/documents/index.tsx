@@ -43,6 +43,7 @@ const CATEGORIES = [
   { value: "w9", label: "W-9" },
   { value: "statement", label: "Statement" },
   { value: "receipt", label: "Receipt" },
+  { value: "cap_table", label: "Cap Table" },
   { value: "other", label: "Other" },
 ] as const;
 
