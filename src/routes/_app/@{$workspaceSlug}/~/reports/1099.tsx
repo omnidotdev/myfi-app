@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Loader2Icon } from "lucide-react";
+import { DownloadIcon, Loader2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 import BookPicker from "@/features/books/components/BookPicker";
 import ReportExportActions from "@/features/reports/components/ReportExportActions";
 import { apiFetch } from "@/lib/api/apiFetch";
@@ -29,6 +30,7 @@ type Report1099Data = {
 function Report1099Page() {
   const currentYear = new Date().getFullYear();
   const {
+    activeBook,
     activeBookId,
     books,
     isLoading: booksLoading,
@@ -39,6 +41,87 @@ function Report1099Page() {
   const [data, setData] = useState<Report1099Data | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Filer (payer) details, needed on the IRIS e-file export. Seeded from the
+  // active book; the EIN shows masked and is only sent when re-entered.
+  const [filer, setFiler] = useState({
+    legalName: "",
+    ein: "",
+    address: "",
+    city: "",
+    state: "",
+    zip: "",
+    phone: "",
+  });
+  const [savingFiler, setSavingFiler] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+
+  useEffect(() => {
+    setFiler({
+      legalName: activeBook?.legalName ?? "",
+      ein: "",
+      address: activeBook?.address ?? "",
+      city: activeBook?.city ?? "",
+      state: activeBook?.state ?? "",
+      zip: activeBook?.zip ?? "",
+      phone: activeBook?.phone ?? "",
+    });
+  }, [activeBook]);
+
+  const saveFiler = async () => {
+    if (!activeBookId) return;
+    setSavingFiler(true);
+    try {
+      const body: Record<string, string> = {
+        legalName: filer.legalName,
+        address: filer.address,
+        city: filer.city,
+        state: filer.state,
+        zip: filer.zip,
+        phone: filer.phone,
+      };
+      // only send the EIN when the user typed a new one (blank keeps the stored value)
+      if (filer.ein.trim()) body.ein = filer.ein.trim();
+      const res = await apiFetch(`/api/books/${activeBookId}`, {
+        method: "PUT",
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) throw new Error("Failed to save filer details");
+      toast.success("Filer details saved");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to save");
+    } finally {
+      setSavingFiler(false);
+    }
+  };
+
+  const downloadIrisCsv = async () => {
+    if (!activeBookId) return;
+    setDownloading(true);
+    try {
+      const params = new URLSearchParams({
+        bookId: activeBookId,
+        year: String(year),
+      });
+      const res = await apiFetch(
+        `/api/tax/1099-nec/iris-csv?${params.toString()}`,
+      );
+      if (!res.ok) throw new Error("Failed to generate IRIS CSV");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `1099-nec-iris-${year}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to download");
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   const fetchReport = useCallback(async () => {
     if (!activeBookId) return;
@@ -118,6 +201,136 @@ function Report1099Page() {
             ))}
           </select>
         </div>
+      </div>
+
+      {/* Filer details + IRS IRIS e-file */}
+      <div className="flex flex-col gap-4 rounded-lg border border-border bg-card p-4">
+        <div>
+          <h2 className="font-semibold text-base">Filer details & e-file</h2>
+          <p className="text-muted-foreground text-sm">
+            Your company's details as the payer. Used to build a CSV you can
+            upload to the free IRS IRIS portal to e-file these 1099-NECs.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <label className="flex flex-col gap-1 text-sm">
+            <span className="text-muted-foreground text-xs">Legal name</span>
+            <input
+              type="text"
+              value={filer.legalName}
+              onChange={(e) =>
+                setFiler((f) => ({ ...f, legalName: e.target.value }))
+              }
+              placeholder={activeBook?.name ?? ""}
+              className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-sm">
+            <span className="text-muted-foreground text-xs">
+              EIN{" "}
+              {activeBook?.einMasked ? (
+                <span className="font-mono">
+                  (on file {activeBook.einMasked})
+                </span>
+              ) : null}
+            </span>
+            <input
+              type="text"
+              value={filer.ein}
+              onChange={(e) => setFiler((f) => ({ ...f, ein: e.target.value }))}
+              placeholder={activeBook?.einMasked ?? "12-3456789"}
+              className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-sm">
+            <span className="text-muted-foreground text-xs">Phone</span>
+            <input
+              type="text"
+              value={filer.phone}
+              onChange={(e) =>
+                setFiler((f) => ({ ...f, phone: e.target.value }))
+              }
+              className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-sm sm:col-span-2">
+            <span className="text-muted-foreground text-xs">
+              Street address
+            </span>
+            <input
+              type="text"
+              value={filer.address}
+              onChange={(e) =>
+                setFiler((f) => ({ ...f, address: e.target.value }))
+              }
+              className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-sm">
+            <span className="text-muted-foreground text-xs">City</span>
+            <input
+              type="text"
+              value={filer.city}
+              onChange={(e) =>
+                setFiler((f) => ({ ...f, city: e.target.value }))
+              }
+              className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-sm">
+            <span className="text-muted-foreground text-xs">State</span>
+            <input
+              type="text"
+              value={filer.state}
+              onChange={(e) =>
+                setFiler((f) => ({ ...f, state: e.target.value }))
+              }
+              className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-sm">
+            <span className="text-muted-foreground text-xs">ZIP</span>
+            <input
+              type="text"
+              value={filer.zip}
+              onChange={(e) => setFiler((f) => ({ ...f, zip: e.target.value }))}
+              className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+            />
+          </label>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={saveFiler}
+            disabled={savingFiler || !activeBookId}
+            className="flex items-center gap-2 rounded-md border border-border px-4 py-2 font-medium text-sm disabled:opacity-50"
+          >
+            {savingFiler && <Loader2Icon className="size-4 animate-spin" />}
+            Save filer details
+          </button>
+          <button
+            type="button"
+            onClick={downloadIrisCsv}
+            disabled={downloading || !activeBookId}
+            className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm disabled:opacity-50"
+          >
+            {downloading ? (
+              <Loader2Icon className="size-4 animate-spin" />
+            ) : (
+              <DownloadIcon className="size-4" />
+            )}
+            Download IRIS CSV
+          </button>
+        </div>
+
+        <p className="text-muted-foreground text-xs">
+          Upload the CSV at the IRS IRIS Taxpayer Portal (free, requires your
+          IRIS Transmitter Control Code). Confirm the columns against the
+          current IRIS 1099-NEC template and review each record before
+          submitting; IRIS also validates the file on upload.
+        </p>
       </div>
 
       {/* Error */}
