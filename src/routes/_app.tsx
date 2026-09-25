@@ -1,4 +1,4 @@
-import { accountUrl } from "@omnidotdev/providers/react";
+import { Badge } from "@omnidotdev/thornberry/badge";
 import { openCommandPalette } from "@omnidotdev/thornberry/command-palette";
 import { LogoLockup } from "@omnidotdev/thornberry/logo-lockup";
 import {
@@ -25,7 +25,6 @@ import {
   LandmarkIcon,
   LayoutDashboardIcon,
   LockIcon,
-  LogOutIcon,
   MenuIcon,
   MoonIcon,
   PackageIcon,
@@ -37,7 +36,6 @@ import {
   SearchIcon,
   SettingsIcon,
   SunIcon,
-  UserCogIcon,
   UsersIcon,
   WalletIcon,
   XIcon,
@@ -46,12 +44,11 @@ import { useCallback, useMemo, useState } from "react";
 import { Toaster } from "sonner";
 import { useEventListener } from "usehooks-ts";
 import ErrorBoundary from "@/components/core/ErrorBoundary";
+import AccountMenu from "@/components/layout/AccountMenu";
 import OrganizationSwitcher from "@/components/layout/OrganizationSwitcher";
 import MyfiMark from "@/components/MyfiMark";
 import { isSessionDegraded } from "@/lib/auth/sessionState";
-import signOut from "@/lib/auth/signOut";
 import appConfig from "@/lib/config/app.config";
-import { ACCOUNT_URL } from "@/lib/config/env.config";
 import { OrganizationProvider } from "@/providers/OrganizationProvider";
 import { useTheme } from "@/providers/ThemeProvider";
 
@@ -321,6 +318,9 @@ function AuthLayout() {
             name={appConfig.name}
             nameClassName="font-medium font-serif text-foreground text-xl tracking-tight"
           />
+          <Badge className="border-primary/20 bg-primary/10 text-primary">
+            Early Access
+          </Badge>
           <button
             type="button"
             onClick={() => openCommandPalette()}
@@ -364,31 +364,10 @@ function AuthLayout() {
                 </kbd>
               </button>
 
-              {ACCOUNT_URL && (
-                <a
-                  href={accountUrl(ACCOUNT_URL)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex w-full items-center gap-3 rounded-md px-3 py-2 font-medium text-sidebar-foreground text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                >
-                  <UserCogIcon className="size-4" />
-                  Manage account
-                </a>
-              )}
-
-              <div className="flex items-center justify-between rounded-md px-3 py-2">
-                <span className="truncate text-sidebar-foreground text-sm">
-                  {session?.user?.name || session?.user?.email}
-                </span>
-                <button
-                  type="button"
-                  onClick={signOut}
-                  aria-label="Sign out"
-                  className="text-sidebar-foreground/60 transition-colors hover:text-sidebar-foreground"
-                >
-                  <LogOutIcon className="size-4" />
-                </button>
-              </div>
+              <AccountMenu
+                user={session?.user}
+                onSelect={() => setMobileMenuOpen(false)}
+              />
             </div>
           </div>
         )}
@@ -402,6 +381,9 @@ function AuthLayout() {
               name={appConfig.name}
               nameClassName="font-medium font-serif text-foreground text-xl tracking-tight"
             />
+            <Badge className="ml-auto border-primary/20 bg-primary/10 text-primary">
+              Early Access
+            </Badge>
           </div>
 
           {/* Global search */}
@@ -449,31 +431,7 @@ function AuthLayout() {
               </kbd>
             </button>
 
-            {ACCOUNT_URL && (
-              <a
-                href={accountUrl(ACCOUNT_URL)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex w-full items-center gap-3 rounded-md px-3 py-2 font-medium text-sidebar-foreground text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-              >
-                <UserCogIcon className="size-4" />
-                Manage account
-              </a>
-            )}
-
-            <div className="flex items-center justify-between rounded-md px-3 py-2">
-              <span className="truncate text-sidebar-foreground text-sm">
-                {session?.user?.name || session?.user?.email}
-              </span>
-              <button
-                type="button"
-                onClick={signOut}
-                aria-label="Sign out"
-                className="text-sidebar-foreground/60 transition-colors hover:text-sidebar-foreground"
-              >
-                <LogOutIcon className="size-4" />
-              </button>
-            </div>
+            <AccountMenu user={session?.user} />
           </div>
         </aside>
 
