@@ -12,19 +12,21 @@ export const Route = createFileRoute("/_app/@{$workspaceSlug}/~/reports/1099")({
   component: Report1099Page,
 });
 
+// Matches the API's Form1099NecReport shape. Recipient TINs arrive already
+// masked from GET /api/tax/1099-nec; the full TIN is only in the IRIS CSV export
 type VendorForm = {
   vendorId: string;
-  vendorName: string;
-  businessName: string | null;
-  tinMasked: string;
-  totalPayments: string;
-  threshold: string;
-  qualifies: boolean;
+  recipientName: string;
+  recipientTin: string | null;
+  recipientTinType: string | null;
+  box1NonemployeeCompensation: string;
 };
 
 type Report1099Data = {
   year: number;
   forms: VendorForm[];
+  totalForms: number;
+  totalAmount: string;
 };
 
 function Report1099Page() {
@@ -154,11 +156,9 @@ function Report1099Page() {
     fetchReport();
   }, [fetchReport]);
 
-  const totalFormsCount = data?.forms.filter((f) => f.qualifies).length ?? 0;
-  const totalAmount =
-    data?.forms
-      .filter((f) => f.qualifies)
-      .reduce((sum, f) => sum + Number.parseFloat(f.totalPayments), 0) ?? 0;
+  // The API returns only qualifying vendors, so its totals are authoritative
+  const totalFormsCount = data?.totalForms ?? 0;
+  const totalAmount = Number.parseFloat(data?.totalAmount ?? "0");
 
   const loading = booksLoading || isLoading;
 
@@ -385,16 +385,11 @@ function Report1099Page() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-border border-b text-left text-muted-foreground">
-                    <th className="px-4 py-3 font-medium">Vendor</th>
-                    <th className="px-4 py-3 font-medium">Business Name</th>
+                    <th className="px-4 py-3 font-medium">Recipient</th>
                     <th className="px-4 py-3 font-medium">TIN</th>
                     <th className="px-4 py-3 text-right font-medium">
-                      Total Payments
+                      Box 1 Nonemployee Compensation
                     </th>
-                    <th className="px-4 py-3 text-right font-medium">
-                      Threshold
-                    </th>
-                    <th className="px-4 py-3 font-medium">Status</th>
                   </tr>
                 </thead>
 
@@ -404,29 +399,12 @@ function Report1099Page() {
                       key={form.vendorId}
                       className="border-border border-b transition-colors hover:bg-accent/30"
                     >
-                      <td className="px-4 py-3">{form.vendorName}</td>
-                      <td className="px-4 py-3 text-muted-foreground">
-                        {form.businessName ?? "\u2014"}
-                      </td>
+                      <td className="px-4 py-3">{form.recipientName}</td>
                       <td className="whitespace-nowrap px-4 py-3 font-mono text-muted-foreground">
-                        {form.tinMasked}
+                        {form.recipientTin ?? "\u2014"}
                       </td>
                       <td className="whitespace-nowrap px-4 py-3 text-right font-mono">
-                        {formatCurrency(form.totalPayments)}
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3 text-right font-mono text-muted-foreground">
-                        {formatCurrency(form.threshold)}
-                      </td>
-                      <td className="px-4 py-3">
-                        {form.qualifies ? (
-                          <span className="rounded-full bg-green-500/10 px-2 py-0.5 font-medium text-green-600 text-xs dark:text-green-400">
-                            Qualifies
-                          </span>
-                        ) : (
-                          <span className="rounded-full bg-muted px-2 py-0.5 font-medium text-muted-foreground text-xs">
-                            Below Threshold
-                          </span>
-                        )}
+                        {formatCurrency(form.box1NonemployeeCompensation)}
                       </td>
                     </tr>
                   ))}
