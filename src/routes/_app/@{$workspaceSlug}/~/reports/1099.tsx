@@ -206,10 +206,16 @@ function Report1099Page() {
       {/* Filer details + IRS IRIS e-file */}
       <div className="flex flex-col gap-4 rounded-lg border border-border bg-card p-4">
         <div>
-          <h2 className="font-semibold text-base">Filer details & e-file</h2>
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="font-semibold text-base">Filer details & e-file</h2>
+            <span className="rounded-full bg-muted px-2 py-0.5 font-medium text-muted-foreground text-xs">
+              Direct e-file coming soon
+            </span>
+          </div>
           <p className="text-muted-foreground text-sm">
-            Your company's details as the payer. Used to build a CSV you can
-            upload to the free IRS IRIS portal to e-file these 1099-NECs.
+            Your company's details as the payer. Direct e-filing to the IRS from
+            MyFi is coming soon. For now, download the IRIS CSV below and upload
+            it to the free IRS IRIS portal.
           </p>
         </div>
 
