@@ -186,14 +186,14 @@ function EstimatesPage() {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="min-w-0">
           <h1 className="font-bold text-2xl">Estimates</h1>
           <p className="text-muted-foreground text-sm">
             Quotes you send to customers, ready to convert into invoices
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-3">
           <BookPicker
             books={books}
             selectedBookId={activeBookId}
@@ -204,7 +204,7 @@ function EstimatesPage() {
             onClick={() => setFormOpen(true)}
             disabled={!activeBookId || customers.length === 0 || mantleManaged}
             title={customers.length === 0 ? "Add a customer first" : undefined}
-            className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
+            className="inline-flex items-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
           >
             <PlusIcon className="size-4" />
             New Estimate
@@ -418,7 +418,7 @@ function EstimatesPage() {
                   type="button"
                   onClick={handleConvert}
                   disabled={busyId === converting.id || !convNumber}
-                  className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
+                  className="inline-flex items-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
                 >
                   {busyId === converting.id && (
                     <Loader2Icon className="size-4 animate-spin" />

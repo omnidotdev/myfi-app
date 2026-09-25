@@ -353,7 +353,7 @@ function LoanDetailPage() {
                 type="button"
                 onClick={handlePostNext}
                 disabled={posting}
-                className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
+                className="inline-flex items-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
               >
                 {posting && <Loader2Icon className="size-4 animate-spin" />}
                 Post Next Payment
