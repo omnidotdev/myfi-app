@@ -136,11 +136,19 @@ function LoansPage() {
   );
 
   const openCreateForm = useCallback(() => {
-    // For personal books, pre-select the account payments come from (usually
-    // Checking) so there is one less picker to think about. Always overridable
+    // For personal books, prefill sensible defaults so an informal debt is
+    // quick to enter: 0% interest, starting today, paid from the primary cash
+    // account. The user just adds a name, the debt account, a balance, and how
+    // many months to pay it off. All overridable
     setFormValues({
       ...emptyForm,
-      paymentAccountId: isPersonal ? pickDefaultPaymentAccount(accounts) : "",
+      ...(isPersonal
+        ? {
+            paymentAccountId: pickDefaultPaymentAccount(accounts),
+            annualRate: "0",
+            startDate: new Date().toISOString().slice(0, 10),
+          }
+        : {}),
     });
     setFormOpen(true);
   }, [isPersonal, accounts]);
