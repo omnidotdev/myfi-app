@@ -50,6 +50,8 @@ import WorkspaceBookGuard from "@/components/layout/WorkspaceBookGuard";
 import MyfiMark from "@/components/MyfiMark";
 import { isSessionDegraded } from "@/lib/auth/sessionState";
 import appConfig from "@/lib/config/app.config";
+import useActiveBook from "@/lib/hooks/useActiveBook";
+import { filterNavForBook } from "@/lib/nav/filterNavForBook";
 import { OrganizationProvider } from "@/providers/OrganizationProvider";
 import { useTheme } from "@/providers/ThemeProvider";
 
@@ -82,16 +84,19 @@ const navGroups = [
         label: "Estimates",
         to: "/@{$workspaceSlug}/~/estimates",
         icon: ClipboardListIcon,
+        businessOnly: true,
       },
       {
         label: "Invoices",
         to: "/@{$workspaceSlug}/~/invoices",
         icon: FileTextIcon,
+        businessOnly: true,
       },
       {
         label: "Customers",
         to: "/@{$workspaceSlug}/~/customers",
         icon: UsersIcon,
+        businessOnly: true,
       },
     ],
   },
@@ -102,6 +107,7 @@ const navGroups = [
         label: "Bills",
         to: "/@{$workspaceSlug}/~/bills",
         icon: ReceiptIcon,
+        businessOnly: true,
       },
       {
         label: "Recurring",
@@ -112,6 +118,7 @@ const navGroups = [
         label: appConfig.modules.mileage.label,
         to: "/@{$workspaceSlug}/~/mileage",
         icon: CarIcon,
+        businessOnly: true,
       },
     ],
   },
@@ -122,6 +129,7 @@ const navGroups = [
         label: "Reconciliation",
         to: "/@{$workspaceSlug}/~/reconciliation",
         icon: ScaleIcon,
+        businessOnly: true,
       },
       {
         label: "Spending",
@@ -142,11 +150,13 @@ const navGroups = [
         label: appConfig.modules.ledger.label,
         to: "/@{$workspaceSlug}/~/ledger",
         icon: BookOpenIcon,
+        businessOnly: true,
       },
       {
         label: appConfig.modules.accounts.label,
         to: "/@{$workspaceSlug}/~/accounts",
         icon: LandmarkIcon,
+        businessOnly: true,
       },
       {
         label: appConfig.modules.loans.label,
@@ -157,11 +167,13 @@ const navGroups = [
         label: appConfig.modules.projects.label,
         to: "/@{$workspaceSlug}/~/projects",
         icon: FolderIcon,
+        businessOnly: true,
       },
       {
         label: appConfig.modules.reports.label,
         to: "/@{$workspaceSlug}/~/reports",
         icon: BarChart3Icon,
+        businessOnly: true,
       },
       {
         label: appConfig.modules.documents.label,
@@ -172,6 +184,7 @@ const navGroups = [
         label: appConfig.modules.close.label,
         to: "/@{$workspaceSlug}/~/close",
         icon: LockIcon,
+        businessOnly: true,
       },
     ],
   },
@@ -182,11 +195,13 @@ const navGroups = [
         label: "Inventory",
         to: "/@{$workspaceSlug}/~/items",
         icon: PackageIcon,
+        businessOnly: true,
       },
       {
         label: appConfig.modules.assets.label,
         to: "/@{$workspaceSlug}/~/assets",
         icon: HardDriveIcon,
+        businessOnly: true,
       },
       {
         label: appConfig.modules.crypto.label,
@@ -223,9 +238,13 @@ function NavLinks({
   navSlug: string;
   onNavigate?: () => void;
 }) {
+  // Personal books get a simplified nav; business/unknown books see everything
+  const { activeBook } = useActiveBook();
+  const groups = filterNavForBook(navGroups, activeBook?.type);
+
   return (
     <div className="space-y-4">
-      {navGroups.map((group, index) => (
+      {groups.map((group, index) => (
         <div key={group.label ?? `group-${index}`} className="space-y-1">
           {group.label && (
             <p className="px-3 pb-0.5 font-medium text-[11px] text-sidebar-foreground/50 uppercase tracking-wider">
