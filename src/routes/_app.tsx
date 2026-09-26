@@ -46,6 +46,7 @@ import { useEventListener } from "usehooks-ts";
 import ErrorBoundary from "@/components/core/ErrorBoundary";
 import AccountMenu from "@/components/layout/AccountMenu";
 import OrganizationSwitcher from "@/components/layout/OrganizationSwitcher";
+import WorkspaceBookGuard from "@/components/layout/WorkspaceBookGuard";
 import MyfiMark from "@/components/MyfiMark";
 import { isSessionDegraded } from "@/lib/auth/sessionState";
 import appConfig from "@/lib/config/app.config";
@@ -438,7 +439,9 @@ function AuthLayout() {
         {/* Main content */}
         <main className="flex-1 overflow-y-auto pt-14 md:pt-0">
           <ErrorBoundary>
-            <Outlet />
+            <WorkspaceBookGuard>
+              <Outlet />
+            </WorkspaceBookGuard>
           </ErrorBoundary>
         </main>
       </div>

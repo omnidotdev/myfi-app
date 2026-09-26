@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type Book from "@/features/books/types/book";
 import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBookStore from "@/lib/stores/activeBook";
@@ -11,21 +11,32 @@ const useActiveBook = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (!organizationId) return;
+  const refetch = useCallback(async () => {
+    // No organization means nothing to load; settle loading so book-scoped
+    // surfaces render their empty/guard state instead of spinning forever
+    if (!organizationId) {
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
-    apiFetch(`/api/books?organizationId=${organizationId}`)
-      .then((r) => r.json())
-      .then((data) => {
-        const mapped = (data.books ?? []).map((b: Record<string, unknown>) => ({
-          ...b,
-          rowId: b.id as string,
-        }));
-        setBooks(mapped);
-      })
-      .catch(() => {})
-      .finally(() => setIsLoading(false));
+    try {
+      const r = await apiFetch(`/api/books?organizationId=${organizationId}`);
+      const data = await r.json();
+      const mapped = (data.books ?? []).map((b: Record<string, unknown>) => ({
+        ...b,
+        rowId: b.id as string,
+      }));
+      setBooks(mapped);
+    } catch {
+      // Silently handle fetch errors; loading still settles below
+    } finally {
+      setIsLoading(false);
+    }
   }, [organizationId]);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   // Default the active book to the first one when nothing valid is selected
   // (first run, or the previously-selected book was deleted). Without this a
@@ -46,6 +57,7 @@ const useActiveBook = () => {
     isLoading,
     organizationId,
     setActiveBookId,
+    refetch,
   };
 };
 
