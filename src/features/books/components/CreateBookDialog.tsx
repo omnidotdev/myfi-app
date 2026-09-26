@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { defaultTemplateForType } from "@/features/books/lib/defaultTemplateForType";
 import type { BookType } from "@/features/books/types/book";
 import { BOOK_TYPES } from "@/features/books/types/book";
 
@@ -47,7 +48,9 @@ function CreateBookDialog({ open, onClose, onSubmit }: CreateBookDialogProps) {
   const [type, setType] = useState<BookType>("personal");
   const [currency, setCurrency] = useState("USD");
   const [fiscalYearStartMonth, setFiscalYearStartMonth] = useState(1);
-  const [template, setTemplate] = useState<Template>("none");
+  const [template, setTemplate] = useState<Template>(
+    defaultTemplateForType("personal"),
+  );
 
   if (!open) return null;
 
@@ -62,7 +65,7 @@ function CreateBookDialog({ open, onClose, onSubmit }: CreateBookDialogProps) {
     setType("personal");
     setCurrency("USD");
     setFiscalYearStartMonth(1);
-    setTemplate("none");
+    setTemplate(defaultTemplateForType("personal"));
   };
 
   const handleClose = () => {
@@ -109,7 +112,12 @@ function CreateBookDialog({ open, onClose, onSubmit }: CreateBookDialogProps) {
             <select
               id="book-type"
               value={type}
-              onChange={(e) => setType(e.target.value as BookType)}
+              onChange={(e) => {
+                const nextType = e.target.value as BookType;
+                setType(nextType);
+                // Match the chart of accounts to the type; still overridable below
+                setTemplate(defaultTemplateForType(nextType));
+              }}
               className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             >
               {BOOK_TYPES.map((t) => (
