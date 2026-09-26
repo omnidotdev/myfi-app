@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
+import { pickDefaultPaymentAccount } from "@/features/loans/lib/pickDefaultPaymentAccount";
 import { apiFetch } from "@/lib/api/apiFetch";
 import formatCurrency from "@/lib/format/currency";
 import useActiveBook from "@/lib/hooks/useActiveBook";
@@ -78,11 +79,13 @@ export const Route = createFileRoute("/_app/@{$workspaceSlug}/~/loans/")({
 function LoansPage() {
   const { workspaceSlug } = Route.useParams();
   const {
+    activeBook,
     activeBookId,
     books,
     isLoading: booksLoading,
     setActiveBookId,
   } = useActiveBook();
+  const isPersonal = activeBook?.type === "personal";
 
   const [loans, setLoans] = useState<Loan[]>([]);
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -133,9 +136,14 @@ function LoansPage() {
   );
 
   const openCreateForm = useCallback(() => {
-    setFormValues(emptyForm);
+    // For personal books, pre-select the account payments come from (usually
+    // Checking) so there is one less picker to think about. Always overridable
+    setFormValues({
+      ...emptyForm,
+      paymentAccountId: isPersonal ? pickDefaultPaymentAccount(accounts) : "",
+    });
     setFormOpen(true);
-  }, []);
+  }, [isPersonal, accounts]);
 
   const closeForm = useCallback(() => {
     setFormOpen(false);
@@ -410,7 +418,7 @@ function LoansPage() {
                   htmlFor="loan-liability"
                   className="mb-1 block font-medium text-sm"
                 >
-                  Liability Account *
+                  {isPersonal ? "Debt (what you owe) *" : "Liability Account *"}
                 </label>
                 <select
                   id="loan-liability"
@@ -438,7 +446,9 @@ function LoansPage() {
                   htmlFor="loan-interest"
                   className="mb-1 block font-medium text-sm"
                 >
-                  Interest Expense Account *
+                  {isPersonal
+                    ? "Interest goes to (expense) *"
+                    : "Interest Expense Account *"}
                 </label>
                 <select
                   id="loan-interest"
@@ -466,7 +476,7 @@ function LoansPage() {
                   htmlFor="loan-payment"
                   className="mb-1 block font-medium text-sm"
                 >
-                  Payment (Bank) Account *
+                  {isPersonal ? "Pay from *" : "Payment (Bank) Account *"}
                 </label>
                 <select
                   id="loan-payment"
