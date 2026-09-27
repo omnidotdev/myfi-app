@@ -106,6 +106,14 @@ function LoansPage() {
   const [debtName, setDebtName] = useState("");
   const [debtAmount, setDebtAmount] = useState("");
   const [savingDebt, setSavingDebt] = useState(false);
+  const [payingDebt, setPayingDebt] = useState<{
+    id: string;
+    name: string;
+    balance: number;
+  } | null>(null);
+  const [payAmount, setPayAmount] = useState("");
+  const [payFrom, setPayFrom] = useState("");
+  const [savingPayment, setSavingPayment] = useState(false);
 
   const fetchLoans = useCallback(async () => {
     if (!activeBookId) return;
@@ -186,6 +194,39 @@ function LoansPage() {
       setSavingDebt(false);
     }
   }, [activeBookId, debtName, debtAmount, fetchDebts]);
+
+  const openPayDebt = useCallback(
+    (debt: { id: string; name: string; balance: number }) => {
+      setPayingDebt(debt);
+      setPayAmount(debt.balance > 0 ? String(debt.balance) : "");
+      setPayFrom("");
+    },
+    [],
+  );
+
+  const recordPayment = useCallback(async () => {
+    if (!activeBookId || !payingDebt) return;
+    setSavingPayment(true);
+    try {
+      const res = await apiFetch(`/api/debts/${payingDebt.id}/payment`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: activeBookId,
+          amount: payAmount.trim(),
+          ...(payFrom ? { fromAccountId: payFrom } : {}),
+        }),
+      });
+      if (!res.ok) throw new Error("Payment failed");
+      toast.success("Payment recorded");
+      setPayingDebt(null);
+      await fetchDebts();
+    } catch {
+      toast.error("Could not record the payment");
+    } finally {
+      setSavingPayment(false);
+    }
+  }, [activeBookId, payingDebt, payAmount, payFrom, fetchDebts]);
 
   const liabilityAccounts = accounts.filter((a) => a.type === "liability");
   const expenseAccounts = accounts.filter((a) => a.type === "expense");
@@ -403,12 +444,22 @@ function LoansPage() {
               {debts.map((d) => (
                 <li
                   key={d.id}
-                  className="flex items-center justify-between px-4 py-3"
+                  className="flex items-center justify-between gap-3 px-4 py-3"
                 >
-                  <span>{d.name}</span>
-                  <span className="font-medium font-mono">
-                    {formatCurrency(d.balance)}
-                  </span>
+                  <span className="min-w-0 truncate">{d.name}</span>
+                  <div className="flex shrink-0 items-center gap-3">
+                    <span className="font-medium font-mono">
+                      {formatCurrency(d.balance)}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => openPayDebt(d)}
+                      disabled={d.balance <= 0}
+                      className="rounded-md border border-border px-2.5 py-1 text-xs transition-colors hover:bg-accent disabled:opacity-50"
+                    >
+                      {d.balance <= 0 ? "Paid off" : "Pay"}
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -982,6 +1033,81 @@ function LoansPage() {
                     <Loader2Icon className="size-4 animate-spin" />
                   )}
                   Add debt
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Record a payment against a debt */}
+      {payingDebt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <button
+            type="button"
+            aria-label="Close"
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setPayingDebt(null)}
+          />
+          <div className="relative w-full max-w-sm rounded-lg border border-border bg-card p-6 shadow-lg">
+            <h2 className="mb-1 font-semibold text-lg">Record a payment</h2>
+            <p className="mb-4 text-muted-foreground text-sm">
+              {payingDebt.name} &middot; balance{" "}
+              {formatCurrency(payingDebt.balance)}
+            </p>
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="pay-amount" className="font-medium text-sm">
+                  Amount
+                </label>
+                <input
+                  id="pay-amount"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={payAmount}
+                  onChange={(e) => setPayAmount(e.target.value)}
+                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="pay-from" className="font-medium text-sm">
+                  Paid from (optional)
+                </label>
+                <select
+                  id="pay-from"
+                  value={payFrom}
+                  onChange={(e) => setPayFrom(e.target.value)}
+                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                >
+                  <option value="">Don't track a source</option>
+                  {paymentAccounts.map((a) => (
+                    <option key={a.rowId} value={a.rowId}>
+                      {a.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="mt-2 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setPayingDebt(null)}
+                  className="rounded-md border border-border px-4 py-2 text-sm transition-colors hover:bg-accent"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={recordPayment}
+                  disabled={
+                    savingPayment || !(Number.parseFloat(payAmount) > 0)
+                  }
+                  className="inline-flex items-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
+                >
+                  {savingPayment && (
+                    <Loader2Icon className="size-4 animate-spin" />
+                  )}
+                  Record payment
                 </button>
               </div>
             </div>
