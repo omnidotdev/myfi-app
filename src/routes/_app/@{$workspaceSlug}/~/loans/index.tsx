@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
+import { buildLiabilityAccountPayload } from "@/features/loans/lib/buildLiabilityAccountPayload";
 import { pickDefaultPaymentAccount } from "@/features/loans/lib/pickDefaultPaymentAccount";
 import { apiFetch } from "@/lib/api/apiFetch";
 import formatCurrency from "@/lib/format/currency";
@@ -93,6 +94,9 @@ function LoansPage() {
   const [formOpen, setFormOpen] = useState(false);
   const [formValues, setFormValues] = useState<LoanFormValues>(emptyForm);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [showNewDebt, setShowNewDebt] = useState(false);
+  const [newDebtName, setNewDebtName] = useState("");
+  const [creatingDebt, setCreatingDebt] = useState(false);
 
   const fetchLoans = useCallback(async () => {
     if (!activeBookId) return;
@@ -118,7 +122,14 @@ function LoansPage() {
       const res = await apiFetch(`/api/accounts?bookId=${activeBookId}`);
       const data = await res.json();
 
-      setAccounts(data.accounts ?? []);
+      // The API returns accounts keyed by `id`; the UI (and Account type) use
+      // `rowId`, so map it. Without this the account <select> options carry no
+      // value and a loan cannot be created
+      const mapped = (data.accounts ?? []).map(
+        (a: Record<string, unknown>) => ({ ...a, rowId: a.id as string }),
+      );
+
+      setAccounts(mapped);
     } catch {
       // Silently handle fetch errors
     }
@@ -135,6 +146,43 @@ function LoansPage() {
     (a) => a.type === "asset" && !a.isPlaceholder,
   );
 
+  // Create a liability account for a debt inline, so a personal user can add
+  // "Loan from John" without leaving the loan form (the accounts page is hidden
+  // in the simplified personal nav)
+  const createDebtAccount = useCallback(async () => {
+    const payload = buildLiabilityAccountPayload({
+      bookId: activeBookId ?? "",
+      name: newDebtName,
+    });
+    if (!payload) return;
+
+    setCreatingDebt(true);
+    try {
+      const res = await apiFetch("/api/accounts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error("Create failed");
+
+      const account = await res.json();
+      const newId = (account?.id ?? account?.rowId) as string | undefined;
+
+      await fetchAccounts();
+
+      if (newId) {
+        setFormValues((v) => ({ ...v, liabilityAccountId: newId }));
+      }
+      setNewDebtName("");
+      setShowNewDebt(false);
+      toast.success("Debt account created");
+    } catch {
+      toast.error("Could not create the debt account");
+    } finally {
+      setCreatingDebt(false);
+    }
+  }, [activeBookId, newDebtName, fetchAccounts]);
+
   const openCreateForm = useCallback(() => {
     // For personal books, prefill sensible defaults so an informal debt is
     // quick to enter: 0% interest, starting today, paid from the primary cash
@@ -150,12 +198,16 @@ function LoansPage() {
           }
         : {}),
     });
+    setShowNewDebt(false);
+    setNewDebtName("");
     setFormOpen(true);
   }, [isPersonal, accounts]);
 
   const closeForm = useCallback(() => {
     setFormOpen(false);
     setFormValues(emptyForm);
+    setShowNewDebt(false);
+    setNewDebtName("");
   }, []);
 
   const handleSubmit = useCallback(
@@ -422,31 +474,75 @@ function LoansPage() {
               </div>
 
               <div>
-                <label
-                  htmlFor="loan-liability"
-                  className="mb-1 block font-medium text-sm"
-                >
-                  {isPersonal ? "Debt (what you owe) *" : "Liability Account *"}
-                </label>
-                <select
-                  id="loan-liability"
-                  required
-                  value={formValues.liabilityAccountId}
-                  onChange={(e) =>
-                    setFormValues((v) => ({
-                      ...v,
-                      liabilityAccountId: e.target.value,
-                    }))
-                  }
-                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
-                >
-                  <option value="">Select liability account</option>
-                  {liabilityAccounts.map((a) => (
-                    <option key={a.rowId} value={a.rowId}>
-                      {a.code} - {a.name}
+                <div className="mb-1 flex items-center justify-between gap-2">
+                  <label
+                    htmlFor="loan-liability"
+                    className="block font-medium text-sm"
+                  >
+                    {isPersonal
+                      ? "Debt (what you owe) *"
+                      : "Liability Account *"}
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setShowNewDebt((s) => !s)}
+                    className="text-primary text-xs hover:underline"
+                  >
+                    {showNewDebt ? "Cancel" : "+ New"}
+                  </button>
+                </div>
+
+                {showNewDebt ? (
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={newDebtName}
+                      onChange={(e) => setNewDebtName(e.target.value)}
+                      placeholder={
+                        isPersonal
+                          ? "e.g. Loan from John"
+                          : "New liability name"
+                      }
+                      className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                    />
+                    <button
+                      type="button"
+                      onClick={createDebtAccount}
+                      disabled={creatingDebt || !newDebtName.trim()}
+                      className="inline-flex items-center gap-2 whitespace-nowrap rounded-md bg-primary px-3 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
+                    >
+                      {creatingDebt && (
+                        <Loader2Icon className="size-4 animate-spin" />
+                      )}
+                      Add
+                    </button>
+                  </div>
+                ) : (
+                  <select
+                    id="loan-liability"
+                    required
+                    value={formValues.liabilityAccountId}
+                    onChange={(e) =>
+                      setFormValues((v) => ({
+                        ...v,
+                        liabilityAccountId: e.target.value,
+                      }))
+                    }
+                    className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  >
+                    <option value="">
+                      {isPersonal
+                        ? "Select a debt"
+                        : "Select liability account"}
                     </option>
-                  ))}
-                </select>
+                    {liabilityAccounts.map((a) => (
+                      <option key={a.rowId} value={a.rowId}>
+                        {a.code ? `${a.code} - ` : ""}
+                        {a.name}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
 
               <div>
