@@ -238,8 +238,11 @@ function NavLinks({
   navSlug: string;
   onNavigate?: () => void;
 }) {
-  // Personal books get a simplified nav; business/unknown books see everything
-  const { activeBook } = useActiveBook();
+  // Personal books get a simplified nav; business/unknown books see everything.
+  // Hold rendering until books resolve so the full nav does not flash and then
+  // collapse to the simplified one on a personal book
+  const { activeBook, isLoading } = useActiveBook();
+  if (isLoading) return null;
   const groups = filterNavForBook(navGroups, activeBook?.type);
 
   return (
