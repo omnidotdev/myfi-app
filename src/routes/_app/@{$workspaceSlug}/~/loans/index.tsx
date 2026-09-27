@@ -256,8 +256,12 @@ function LoansPage() {
     }
   }, [activeBookId, removingDebt, fetchDebts]);
 
-  // Only surface debts you actually owe; seeded chart accounts sit at 0
-  const owedDebts = debts.filter((d) => d.balance > 0.005);
+  // Only surface debts you actually owe: a non-zero balance, and not the
+  // liability behind an amortizing loan (those show in the loans list below)
+  const loanLiabilityIds = new Set(loans.map((l) => l.liabilityAccountId));
+  const owedDebts = debts.filter(
+    (d) => d.balance > 0.005 && !loanLiabilityIds.has(d.id),
+  );
 
   const liabilityAccounts = accounts.filter((a) => a.type === "liability");
   const expenseAccounts = accounts.filter((a) => a.type === "expense");
