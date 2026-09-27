@@ -193,6 +193,11 @@ function LoansPage() {
       ...(isPersonal
         ? {
             paymentAccountId: pickDefaultPaymentAccount(accounts),
+            // Interest is hidden for a 0% personal debt but still required by
+            // the API, so default it to any expense account (never posted to
+            // while the rate is 0); the field appears if the rate is raised
+            interestAccountId:
+              accounts.find((a) => a.type === "expense")?.rowId ?? "",
             annualRate: "0",
             startDate: new Date().toISOString().slice(0, 10),
           }
@@ -545,35 +550,43 @@ function LoansPage() {
                 )}
               </div>
 
-              <div>
-                <label
-                  htmlFor="loan-interest"
-                  className="mb-1 block font-medium text-sm"
-                >
-                  {isPersonal
-                    ? "Interest goes to (expense) *"
-                    : "Interest Expense Account *"}
-                </label>
-                <select
-                  id="loan-interest"
-                  required
-                  value={formValues.interestAccountId}
-                  onChange={(e) =>
-                    setFormValues((v) => ({
-                      ...v,
-                      interestAccountId: e.target.value,
-                    }))
-                  }
-                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
-                >
-                  <option value="">Select interest expense account</option>
-                  {expenseAccounts.map((a) => (
-                    <option key={a.rowId} value={a.rowId}>
-                      {a.code} - {a.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              {/* Interest only matters when there is a rate; hide it for a 0%
+                  personal debt (it is prefilled to an unused expense account) */}
+              {!(
+                isPersonal &&
+                Number.parseFloat(formValues.annualRate || "0") === 0
+              ) && (
+                <div>
+                  <label
+                    htmlFor="loan-interest"
+                    className="mb-1 block font-medium text-sm"
+                  >
+                    {isPersonal
+                      ? "Interest goes to (expense) *"
+                      : "Interest Expense Account *"}
+                  </label>
+                  <select
+                    id="loan-interest"
+                    required
+                    value={formValues.interestAccountId}
+                    onChange={(e) =>
+                      setFormValues((v) => ({
+                        ...v,
+                        interestAccountId: e.target.value,
+                      }))
+                    }
+                    className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  >
+                    <option value="">Select interest expense account</option>
+                    {expenseAccounts.map((a) => (
+                      <option key={a.rowId} value={a.rowId}>
+                        {a.code ? `${a.code} - ` : ""}
+                        {a.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
               <div>
                 <label
