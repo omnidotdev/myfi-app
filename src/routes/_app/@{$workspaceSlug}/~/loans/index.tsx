@@ -98,6 +98,15 @@ function LoansPage() {
   const [newDebtName, setNewDebtName] = useState("");
   const [creatingDebt, setCreatingDebt] = useState(false);
 
+  // Simple debts (a liability tracked as a balance) for personal books
+  const [debts, setDebts] = useState<
+    { id: string; name: string; balance: number }[]
+  >([]);
+  const [showAddDebt, setShowAddDebt] = useState(false);
+  const [debtName, setDebtName] = useState("");
+  const [debtAmount, setDebtAmount] = useState("");
+  const [savingDebt, setSavingDebt] = useState(false);
+
   const fetchLoans = useCallback(async () => {
     if (!activeBookId) return;
 
@@ -135,10 +144,48 @@ function LoansPage() {
     }
   }, [activeBookId]);
 
+  const fetchDebts = useCallback(async () => {
+    if (!activeBookId) return;
+    try {
+      const res = await apiFetch(`/api/debts?bookId=${activeBookId}`);
+      const data = await res.json();
+      setDebts(data.debts ?? []);
+    } catch {
+      // Silently handle fetch errors
+    }
+  }, [activeBookId]);
+
   useEffect(() => {
     fetchLoans();
     fetchAccounts();
-  }, [fetchLoans, fetchAccounts]);
+    fetchDebts();
+  }, [fetchLoans, fetchAccounts, fetchDebts]);
+
+  const addDebt = useCallback(async () => {
+    if (!activeBookId || !debtName.trim()) return;
+    setSavingDebt(true);
+    try {
+      const res = await apiFetch("/api/debts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: activeBookId,
+          name: debtName.trim(),
+          amount: debtAmount.trim() || "0",
+        }),
+      });
+      if (!res.ok) throw new Error("Create failed");
+      toast.success("Debt added");
+      setShowAddDebt(false);
+      setDebtName("");
+      setDebtAmount("");
+      await fetchDebts();
+    } catch {
+      toast.error("Could not add the debt");
+    } finally {
+      setSavingDebt(false);
+    }
+  }, [activeBookId, debtName, debtAmount, fetchDebts]);
 
   const liabilityAccounts = accounts.filter((a) => a.type === "liability");
   const expenseAccounts = accounts.filter((a) => a.type === "expense");
@@ -298,9 +345,13 @@ function LoansPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-1">
-          <h1 className="font-bold text-2xl">Loans</h1>
+          <h1 className="font-bold text-2xl">
+            {isPersonal ? "Debts & Loans" : "Loans"}
+          </h1>
           <p className="text-muted-foreground text-sm">
-            Track loans, amortization schedules, and payments
+            {isPersonal
+              ? "Track what you owe, from informal IOUs to amortizing loans"
+              : "Track loans, amortization schedules, and payments"}
           </p>
         </div>
 
@@ -321,6 +372,49 @@ function LoansPage() {
           </button>
         </div>
       </div>
+
+      {/* Simple debts (personal): a balance you owe, no schedule needed */}
+      {isPersonal && (
+        <div className="rounded-lg border border-border bg-card">
+          <div className="flex items-center justify-between border-border border-b p-4">
+            <div>
+              <h2 className="font-semibold">What you owe</h2>
+              <p className="text-muted-foreground text-sm">
+                Simple debts, like money you owe a person. Just a name and a
+                balance
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowAddDebt(true)}
+              className="inline-flex items-center gap-2 whitespace-nowrap rounded-md border border-border px-3 py-2 font-medium text-sm transition-colors hover:bg-accent"
+            >
+              <PlusIcon className="size-4" />
+              Add a debt
+            </button>
+          </div>
+
+          {debts.length === 0 ? (
+            <p className="p-4 text-muted-foreground text-sm">
+              No debts yet. Add one to start tracking what you owe.
+            </p>
+          ) : (
+            <ul className="divide-y divide-border">
+              {debts.map((d) => (
+                <li
+                  key={d.id}
+                  className="flex items-center justify-between px-4 py-3"
+                >
+                  <span>{d.name}</span>
+                  <span className="font-medium font-mono">
+                    {formatCurrency(d.balance)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
 
       {/* Loading state */}
       {loading && (
@@ -822,6 +916,75 @@ function LoansPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add a debt (simple): name + balance, no schedule */}
+      {showAddDebt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <button
+            type="button"
+            aria-label="Close"
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setShowAddDebt(false)}
+          />
+          <div className="relative w-full max-w-sm rounded-lg border border-border bg-card p-6 shadow-lg">
+            <h2 className="mb-1 font-semibold text-lg">Add a debt</h2>
+            <p className="mb-4 text-muted-foreground text-sm">
+              What you owe, tracked as a balance. No payment account or schedule
+              needed.
+            </p>
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="debt-name" className="font-medium text-sm">
+                  Who / what
+                </label>
+                <input
+                  id="debt-name"
+                  type="text"
+                  value={debtName}
+                  onChange={(e) => setDebtName(e.target.value)}
+                  placeholder="e.g. Loan from John"
+                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="debt-amount" className="font-medium text-sm">
+                  Amount owed
+                </label>
+                <input
+                  id="debt-amount"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={debtAmount}
+                  onChange={(e) => setDebtAmount(e.target.value)}
+                  placeholder="500.00"
+                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="mt-2 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowAddDebt(false)}
+                  className="rounded-md border border-border px-4 py-2 text-sm transition-colors hover:bg-accent"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={addDebt}
+                  disabled={savingDebt || !debtName.trim()}
+                  className="inline-flex items-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
+                >
+                  {savingDebt && (
+                    <Loader2Icon className="size-4 animate-spin" />
+                  )}
+                  Add debt
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
