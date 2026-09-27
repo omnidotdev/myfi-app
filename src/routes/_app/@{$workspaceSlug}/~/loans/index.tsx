@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon, TrashIcon, XIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
 import { buildLiabilityAccountPayload } from "@/features/loans/lib/buildLiabilityAccountPayload";
@@ -114,6 +115,11 @@ function LoansPage() {
   const [payAmount, setPayAmount] = useState("");
   const [payFrom, setPayFrom] = useState("");
   const [savingPayment, setSavingPayment] = useState(false);
+  const [removingDebt, setRemovingDebt] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const [removingBusy, setRemovingBusy] = useState(false);
 
   const fetchLoans = useCallback(async () => {
     if (!activeBookId) return;
@@ -227,6 +233,31 @@ function LoansPage() {
       setSavingPayment(false);
     }
   }, [activeBookId, payingDebt, payAmount, payFrom, fetchDebts]);
+
+  const removeDebt = useCallback(async () => {
+    if (!activeBookId || !removingDebt) return;
+    setRemovingBusy(true);
+    try {
+      const res = await apiFetch(
+        `/api/debts/${removingDebt.id}?bookId=${activeBookId}`,
+        { method: "DELETE" },
+      );
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error ?? "Remove failed");
+      }
+      toast.success("Debt removed");
+      setRemovingDebt(null);
+      await fetchDebts();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not remove");
+    } finally {
+      setRemovingBusy(false);
+    }
+  }, [activeBookId, removingDebt, fetchDebts]);
+
+  // Only surface debts you actually owe; seeded chart accounts sit at 0
+  const owedDebts = debts.filter((d) => d.balance > 0.005);
 
   const liabilityAccounts = accounts.filter((a) => a.type === "liability");
   const expenseAccounts = accounts.filter((a) => a.type === "expense");
@@ -435,29 +466,38 @@ function LoansPage() {
             </button>
           </div>
 
-          {debts.length === 0 ? (
+          {owedDebts.length === 0 ? (
             <p className="p-4 text-muted-foreground text-sm">
               No debts yet. Add one to start tracking what you owe.
             </p>
           ) : (
             <ul className="divide-y divide-border">
-              {debts.map((d) => (
+              {owedDebts.map((d) => (
                 <li
                   key={d.id}
                   className="flex items-center justify-between gap-3 px-4 py-3"
                 >
                   <span className="min-w-0 truncate">{d.name}</span>
-                  <div className="flex shrink-0 items-center gap-3">
-                    <span className="font-medium font-mono">
+                  <div className="flex shrink-0 items-center gap-2">
+                    <span className="mr-1 font-medium font-mono">
                       {formatCurrency(d.balance)}
                     </span>
                     <button
                       type="button"
                       onClick={() => openPayDebt(d)}
-                      disabled={d.balance <= 0}
-                      className="rounded-md border border-border px-2.5 py-1 text-xs transition-colors hover:bg-accent disabled:opacity-50"
+                      className="rounded-md border border-border px-2.5 py-1 text-xs transition-colors hover:bg-accent"
                     >
-                      {d.balance <= 0 ? "Paid off" : "Pay"}
+                      Pay
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setRemovingDebt({ id: d.id, name: d.name })
+                      }
+                      aria-label={`Remove ${d.name}`}
+                      className="rounded-md border border-border p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                    >
+                      <TrashIcon className="size-3.5" />
                     </button>
                   </div>
                 </li>
@@ -1114,6 +1154,21 @@ function LoansPage() {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={removingDebt !== null}
+        title="Remove this debt?"
+        description={
+          removingDebt
+            ? `"${removingDebt.name}" and its recorded balance and payments will be removed. This cannot be undone.`
+            : undefined
+        }
+        confirmLabel="Remove"
+        destructive
+        loading={removingBusy}
+        onConfirm={removeDebt}
+        onCancel={() => setRemovingDebt(null)}
+      />
     </div>
   );
 }
