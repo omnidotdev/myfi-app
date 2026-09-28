@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import NoWorkspace from "@/components/NoWorkspace";
 import CreateBookDialog from "@/features/books/components/CreateBookDialog";
 import { resolveWorkspaceView } from "@/features/books/lib/resolveWorkspaceView";
 import type { BookType } from "@/features/books/types/book";
@@ -36,6 +37,12 @@ const WorkspaceBookGuard = ({ children }: { children: ReactNode }) => {
         <Loader2Icon className="size-6 animate-spin text-muted-foreground" />
       </div>
     );
+  }
+
+  // User belongs to no organization: show the workspace prompt instead of
+  // letting book-scoped pages spin forever
+  if (view === "no-workspace") {
+    return <NoWorkspace degraded={ctx?.isDegradedMode ?? false} />;
   }
 
   const workspaceName = ctx?.currentOrganization?.name;

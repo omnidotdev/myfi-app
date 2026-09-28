@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { BookOpenIcon, Loader2Icon, PlusIcon, TrashIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
+import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
 import CreateBookDialog from "@/features/books/components/CreateBookDialog";
 import type Book from "@/features/books/types/book";
@@ -36,6 +37,8 @@ function BooksSettingsPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [bookToDelete, setBookToDelete] = useState<Book | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   // Open the create dialog automatically when arriving with ?create=true, then
   // clear the param so a refresh does not reopen it
@@ -97,7 +100,10 @@ function BooksSettingsPage() {
     }
   };
 
-  const handleDelete = async (bookId: string) => {
+  const handleDelete = async () => {
+    if (!bookToDelete) return;
+    const bookId = bookToDelete.rowId;
+    setDeleting(true);
     try {
       await apiFetch(`/api/books/${bookId}`, { method: "DELETE" });
 
@@ -108,8 +114,11 @@ function BooksSettingsPage() {
       }
 
       await fetchBooks();
+      setBookToDelete(null);
     } catch {
       // Silently handle delete errors
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -175,7 +184,7 @@ function BooksSettingsPage() {
 
               <button
                 type="button"
-                onClick={() => handleDelete(book.rowId)}
+                onClick={() => setBookToDelete(book)}
                 className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                 aria-label={`Delete ${book.name}`}
               >
@@ -190,6 +199,21 @@ function BooksSettingsPage() {
         open={showCreateDialog}
         onClose={() => setShowCreateDialog(false)}
         onSubmit={handleCreate}
+      />
+
+      <ConfirmDialog
+        open={bookToDelete !== null}
+        title="Delete this book?"
+        description={
+          bookToDelete
+            ? `"${bookToDelete.name}" and all of its accounts, transactions, and reports will be permanently deleted. This cannot be undone.`
+            : undefined
+        }
+        confirmLabel="Delete book"
+        destructive
+        loading={deleting}
+        onConfirm={handleDelete}
+        onCancel={() => setBookToDelete(null)}
       />
     </div>
   );

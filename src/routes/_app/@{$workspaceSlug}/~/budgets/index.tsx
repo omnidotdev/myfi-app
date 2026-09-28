@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
 import BudgetForm from "@/features/budgets/components/BudgetForm";
@@ -31,6 +32,8 @@ function BudgetsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
   const [editingBudget, setEditingBudget] = useState<Budget | null>(null);
+  const [budgetToDelete, setBudgetToDelete] = useState<Budget | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const fetchBudgets = useCallback(async () => {
     if (!activeBookId) return;
@@ -88,20 +91,22 @@ function BudgetsPage() {
     setFormOpen(true);
   }, []);
 
-  const handleDelete = useCallback(
-    async (budget: Budget) => {
-      try {
-        await apiFetch(`/api/budgets/${budget.rowId}`, {
-          method: "DELETE",
-        });
+  const handleDelete = useCallback(async () => {
+    if (!budgetToDelete) return;
+    setDeleting(true);
+    try {
+      await apiFetch(`/api/budgets/${budgetToDelete.rowId}`, {
+        method: "DELETE",
+      });
 
-        await fetchBudgets();
-      } catch {
-        // Silently handle delete errors
-      }
-    },
-    [fetchBudgets],
-  );
+      await fetchBudgets();
+      setBudgetToDelete(null);
+    } catch {
+      // Silently handle delete errors
+    } finally {
+      setDeleting(false);
+    }
+  }, [budgetToDelete, fetchBudgets]);
 
   const handleSubmit = useCallback(
     async (values: {
@@ -188,9 +193,20 @@ function BudgetsPage() {
           tracking={tracking}
           onNew={handleNew}
           onEdit={handleEdit}
-          onDelete={handleDelete}
+          onDelete={setBudgetToDelete}
         />
       )}
+
+      <ConfirmDialog
+        open={budgetToDelete !== null}
+        title="Delete this budget?"
+        description="This budget will be permanently deleted. This cannot be undone."
+        confirmLabel="Delete budget"
+        destructive
+        loading={deleting}
+        onConfirm={handleDelete}
+        onCancel={() => setBudgetToDelete(null)}
+      />
 
       {/* Budget form dialog */}
       {formOpen && (

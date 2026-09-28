@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { HardDriveIcon, Loader2Icon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
 import { apiFetch } from "@/lib/api/apiFetch";
@@ -54,6 +55,8 @@ function AssetsPage() {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
+  const [assetToDelete, setAssetToDelete] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   // Once depreciation is posted or the asset is disposed the depreciation basis
   // is locked, matching the server, so those inputs are read-only when editing
@@ -228,22 +231,22 @@ function AssetsPage() {
     ],
   );
 
-  const handleDelete = useCallback(
-    async (assetId: string) => {
-      if (!confirm("Are you sure you want to delete this asset?")) return;
+  const handleDelete = useCallback(async () => {
+    if (!assetToDelete) return;
+    setDeleting(true);
+    try {
+      await apiFetch(`/api/fixed-assets/${assetToDelete}`, {
+        method: "DELETE",
+      });
 
-      try {
-        await apiFetch(`/api/fixed-assets/${assetId}`, {
-          method: "DELETE",
-        });
-
-        await fetchAssets();
-      } catch {
-        // Silently handle delete errors
-      }
-    },
-    [fetchAssets],
-  );
+      await fetchAssets();
+      setAssetToDelete(null);
+    } catch {
+      // Silently handle delete errors
+    } finally {
+      setDeleting(false);
+    }
+  }, [assetToDelete, fetchAssets]);
 
   const loading = booksLoading || isLoading;
 
@@ -392,7 +395,7 @@ function AssetsPage() {
                       </Link>
                       <button
                         type="button"
-                        onClick={() => handleDelete(asset.id)}
+                        onClick={() => setAssetToDelete(asset.id)}
                         className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                         aria-label={`Delete ${asset.name}`}
                       >
@@ -685,6 +688,17 @@ function AssetsPage() {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={assetToDelete !== null}
+        title="Delete this asset?"
+        description="The asset will be permanently deleted. This cannot be undone."
+        confirmLabel="Delete asset"
+        destructive
+        loading={deleting}
+        onConfirm={handleDelete}
+        onCancel={() => setAssetToDelete(null)}
+      />
     </div>
   );
 }

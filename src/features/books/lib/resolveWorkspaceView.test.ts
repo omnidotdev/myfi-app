@@ -3,14 +3,23 @@ import { describe, expect, test } from "bun:test";
 import { resolveWorkspaceView } from "./resolveWorkspaceView";
 
 describe("resolveWorkspaceView", () => {
-  test("a non-workspace route is never guarded", () => {
+  test("no workspace resolves to no-workspace, never a perpetual loading", () => {
+    // A user in zero organizations has no active book, so book-scoped pages
+    // would otherwise spin forever
     expect(
       resolveWorkspaceView({
         hasWorkspace: false,
         booksLoading: true,
         bookCount: 0,
       }),
-    ).toBe("ready");
+    ).toBe("no-workspace");
+    expect(
+      resolveWorkspaceView({
+        hasWorkspace: false,
+        booksLoading: false,
+        bookCount: 0,
+      }),
+    ).toBe("no-workspace");
   });
 
   test("shows loading while books are still loading", () => {

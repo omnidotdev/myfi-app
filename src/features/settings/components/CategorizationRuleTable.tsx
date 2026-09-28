@@ -1,6 +1,8 @@
 import { CheckIcon, PencilIcon, TrashIcon, XIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 
+import ConfirmDialog from "@/components/ConfirmDialog";
+
 type CategorizationRuleSplit = {
   id?: string;
   accountId: string;
@@ -61,14 +63,10 @@ function CategorizationRuleTable({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editDebitAccountId, setEditDebitAccountId] = useState("");
   const [editCreditAccountId, setEditCreditAccountId] = useState("");
-
-  const handleDelete = useCallback(
-    (ruleId: string, ruleName: string) => {
-      if (!confirm(`Delete rule "${ruleName}"?`)) return;
-      onDelete(ruleId);
-    },
-    [onDelete],
-  );
+  const [ruleToDelete, setRuleToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const startEdit = useCallback((rule: CategorizationRule) => {
     setEditingId(rule.rowId);
@@ -235,7 +233,9 @@ function CategorizationRuleTable({
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleDelete(rule.rowId, rule.name)}
+                  onClick={() =>
+                    setRuleToDelete({ id: rule.rowId, name: rule.name })
+                  }
                   aria-label={`Delete rule ${rule.name}`}
                   className="inline-flex size-9 items-center justify-center rounded-md text-destructive text-sm transition-colors hover:bg-destructive/10"
                 >
@@ -246,6 +246,20 @@ function CategorizationRuleTable({
           </div>
         );
       })}
+      <ConfirmDialog
+        open={ruleToDelete !== null}
+        title="Delete this rule?"
+        description={
+          ruleToDelete ? `Delete rule "${ruleToDelete.name}"?` : undefined
+        }
+        confirmLabel="Delete rule"
+        destructive
+        onConfirm={() => {
+          if (ruleToDelete) onDelete(ruleToDelete.id);
+          setRuleToDelete(null);
+        }}
+        onCancel={() => setRuleToDelete(null)}
+      />
     </div>
   );
 }

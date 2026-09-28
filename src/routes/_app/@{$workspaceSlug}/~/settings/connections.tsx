@@ -6,6 +6,7 @@ import {
   UploadIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
 import ConnectedAccountsList from "@/features/connections/components/ConnectedAccountsList";
@@ -13,6 +14,7 @@ import FileImportButton from "@/features/connections/components/FileImportButton
 import PlaidLinkButton from "@/features/connections/components/PlaidLinkButton";
 import type { ConnectedAccount } from "@/features/connections/types/connectedAccount";
 import { apiFetch } from "@/lib/api/apiFetch";
+import { withRowId } from "@/lib/api/withRowId";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 const LINKABLE_SUB_TYPES = new Set([
@@ -61,6 +63,10 @@ function ConnectionsSettingsPage() {
     null,
   );
   const [payrollLoading, setPayrollLoading] = useState(false);
+  const [disconnectId, setDisconnectId] = useState<string | null>(null);
+  const [disconnecting, setDisconnecting] = useState(false);
+  const [confirmPayrollDisconnect, setConfirmPayrollDisconnect] =
+    useState(false);
   const [payrollCsvResult, setPayrollCsvResult] = useState<string | null>(null);
   const payrollFileRef = useRef<HTMLInputElement>(null);
 
@@ -95,15 +101,17 @@ function ConnectionsSettingsPage() {
     try {
       const res = await apiFetch(`/api/accounts?bookId=${activeBookId}`);
       const data = await res.json();
-      const filtered = (data.accounts ?? [])
+      // API returns accounts keyed by `id`; map to `rowId` first, else every
+      // built option value below was undefined and linking submitted nothing
+      const filtered = withRowId(data.accounts as (Account & { id: string })[])
         .filter(
-          (a: Account) =>
+          (a) =>
             a.isActive &&
             !a.isPlaceholder &&
             a.subType &&
             LINKABLE_SUB_TYPES.has(a.subType),
         )
-        .map((a: Account) => ({
+        .map((a) => ({
           id: a.rowId,
           name: a.name,
           code: a.code,
@@ -172,20 +180,22 @@ function ConnectionsSettingsPage() {
     [fetchConnections],
   );
 
-  const handleDisconnect = useCallback(
-    async (accountId: string) => {
-      try {
-        await apiFetch(`/api/connections/${accountId}`, {
-          method: "DELETE",
-        });
+  const handleDisconnect = useCallback(async () => {
+    if (!disconnectId) return;
+    setDisconnecting(true);
+    try {
+      await apiFetch(`/api/connections/${disconnectId}`, {
+        method: "DELETE",
+      });
 
-        await fetchConnections();
-      } catch {
-        // Silently handle disconnect errors
-      }
-    },
-    [fetchConnections],
-  );
+      await fetchConnections();
+      setDisconnectId(null);
+    } catch {
+      // Silently handle disconnect errors
+    } finally {
+      setDisconnecting(false);
+    }
+  }, [disconnectId, fetchConnections]);
 
   // Payroll status
   const fetchPayrollStatus = useCallback(async () => {
@@ -362,7 +372,7 @@ function ConnectionsSettingsPage() {
           accounts={accounts}
           chartOfAccounts={chartOfAccounts}
           onSync={handleSync}
-          onDisconnect={handleDisconnect}
+          onDisconnect={setDisconnectId}
           onLinkAccount={handleLinkAccount}
         />
       )}
@@ -414,7 +424,7 @@ function ConnectionsSettingsPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={handlePayrollDisconnect}
+                  onClick={() => setConfirmPayrollDisconnect(true)}
                   disabled={payrollLoading}
                   className="inline-flex items-center gap-2 rounded-md border border-destructive/50 bg-background px-3 py-2 text-destructive text-sm transition-colors hover:bg-destructive/10 disabled:pointer-events-none disabled:opacity-50"
                 >
@@ -458,6 +468,31 @@ function ConnectionsSettingsPage() {
           </div>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={disconnectId !== null}
+        title="Disconnect this account?"
+        description="The bank connection will be disconnected and will stop syncing. Imported transactions are kept."
+        confirmLabel="Disconnect"
+        destructive
+        loading={disconnecting}
+        onConfirm={handleDisconnect}
+        onCancel={() => setDisconnectId(null)}
+      />
+
+      <ConfirmDialog
+        open={confirmPayrollDisconnect}
+        title="Disconnect payroll?"
+        description="The payroll connection will be disconnected and will stop syncing."
+        confirmLabel="Disconnect"
+        destructive
+        loading={payrollLoading}
+        onConfirm={async () => {
+          setConfirmPayrollDisconnect(false);
+          await handlePayrollDisconnect();
+        }}
+        onCancel={() => setConfirmPayrollDisconnect(false)}
+      />
     </div>
   );
 }

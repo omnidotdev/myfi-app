@@ -8,6 +8,7 @@ import {
   XIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
 import { apiFetch } from "@/lib/api/apiFetch";
@@ -58,6 +59,12 @@ function TagsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [newGroupName, setNewGroupName] = useState("");
   const [isCreatingGroup, setIsCreatingGroup] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<{
+    kind: "group" | "tag";
+    id: string;
+    name: string;
+  } | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const [addTagForms, setAddTagForms] = useState<Record<string, AddTagForm>>(
     {},
   );
@@ -115,23 +122,11 @@ function TagsPage() {
   }, [activeBookId, newGroupName, fetchGroups]);
 
   const handleDeleteGroup = useCallback(
-    async (groupId: string, groupName: string) => {
-      if (
-        !confirm(
-          `Delete tag group "${groupName}" and all its tags? This cannot be undone.`,
-        )
-      )
-        return;
-
-      try {
-        await apiFetch(`/api/tags/groups/${groupId}`, {
-          method: "DELETE",
-        });
-
-        await fetchGroups();
-      } catch {
-        // Silently handle errors
-      }
+    async (groupId: string) => {
+      await apiFetch(`/api/tags/groups/${groupId}`, {
+        method: "DELETE",
+      });
+      await fetchGroups();
     },
     [fetchGroups],
   );
@@ -216,21 +211,31 @@ function TagsPage() {
   );
 
   const handleDeleteTag = useCallback(
-    async (tagId: string, tagName: string) => {
-      if (!confirm(`Delete tag "${tagName}"? This cannot be undone.`)) return;
-
-      try {
-        await apiFetch(`/api/tags/${tagId}`, {
-          method: "DELETE",
-        });
-
-        await fetchGroups();
-      } catch {
-        // Silently handle errors
-      }
+    async (tagId: string) => {
+      await apiFetch(`/api/tags/${tagId}`, {
+        method: "DELETE",
+      });
+      await fetchGroups();
     },
     [fetchGroups],
   );
+
+  const confirmDelete = useCallback(async () => {
+    if (!pendingDelete) return;
+    setDeleting(true);
+    try {
+      if (pendingDelete.kind === "group") {
+        await handleDeleteGroup(pendingDelete.id);
+      } else {
+        await handleDeleteTag(pendingDelete.id);
+      }
+      setPendingDelete(null);
+    } catch {
+      // Silently handle errors
+    } finally {
+      setDeleting(false);
+    }
+  }, [pendingDelete, handleDeleteGroup, handleDeleteTag]);
 
   const updateAddTagForm = useCallback(
     (groupId: string, field: keyof AddTagForm, value: string) => {
@@ -332,7 +337,13 @@ function TagsPage() {
 
                 <button
                   type="button"
-                  onClick={() => handleDeleteGroup(group.id, group.name)}
+                  onClick={() =>
+                    setPendingDelete({
+                      kind: "group",
+                      id: group.id,
+                      name: group.name,
+                    })
+                  }
                   className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                   title="Delete group"
                 >
@@ -432,7 +443,13 @@ function TagsPage() {
 
                         <button
                           type="button"
-                          onClick={() => handleDeleteTag(tag.id, tag.name)}
+                          onClick={() =>
+                            setPendingDelete({
+                              kind: "tag",
+                              id: tag.id,
+                              name: tag.name,
+                            })
+                          }
                           className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                           title="Delete tag"
                         >
@@ -487,6 +504,27 @@ function TagsPage() {
             </div>
           );
         })}
+
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        title={
+          pendingDelete?.kind === "group"
+            ? "Delete this tag group?"
+            : "Delete this tag?"
+        }
+        description={
+          pendingDelete
+            ? pendingDelete.kind === "group"
+              ? `Delete tag group "${pendingDelete.name}" and all its tags? This cannot be undone.`
+              : `Delete tag "${pendingDelete.name}"? This cannot be undone.`
+            : undefined
+        }
+        confirmLabel="Delete"
+        destructive
+        loading={deleting}
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDelete(null)}
+      />
     </div>
   );
 }

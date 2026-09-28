@@ -7,6 +7,7 @@ import {
   XIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
 import { apiFetch } from "@/lib/api/apiFetch";
@@ -71,6 +72,10 @@ function TaxJurisdictionsPage() {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [toDelete, setToDelete] = useState<{ id: string; name: string } | null>(
+    null,
+  );
+  const [deleting, setDeleting] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<JurisdictionFormData>({ ...EMPTY_FORM });
   const [isSaving, setIsSaving] = useState(false);
@@ -142,32 +147,27 @@ function TaxJurisdictionsPage() {
     setShowForm(true);
   }, []);
 
-  const handleDelete = useCallback(
-    async (jurisdictionId: string, jurisdictionName: string) => {
-      if (
-        !confirm(
-          `Delete jurisdiction "${jurisdictionName}"? This cannot be undone.`,
-        )
-      )
-        return;
+  const handleDelete = useCallback(async () => {
+    if (!toDelete) return;
+    setDeleting(true);
+    try {
+      const res = await apiFetch(`/api/tax-jurisdictions/${toDelete.id}`, {
+        method: "DELETE",
+      });
 
-      try {
-        const res = await apiFetch(`/api/tax-jurisdictions/${jurisdictionId}`, {
-          method: "DELETE",
-        });
-
-        if (!res.ok) {
-          throw new Error("Delete failed");
-        }
-
-        setError(null);
-        await fetchJurisdictions();
-      } catch {
-        setError("Failed to delete jurisdiction");
+      if (!res.ok) {
+        throw new Error("Delete failed");
       }
-    },
-    [fetchJurisdictions],
-  );
+
+      setError(null);
+      setToDelete(null);
+      await fetchJurisdictions();
+    } catch {
+      setError("Failed to delete jurisdiction");
+    } finally {
+      setDeleting(false);
+    }
+  }, [toDelete, fetchJurisdictions]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -460,7 +460,7 @@ function TaxJurisdictionsPage() {
                       </button>
                       <button
                         type="button"
-                        onClick={() => handleDelete(j.id, j.name)}
+                        onClick={() => setToDelete({ id: j.id, name: j.name })}
                         className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                         title="Delete jurisdiction"
                       >
@@ -474,6 +474,21 @@ function TaxJurisdictionsPage() {
           </table>
         </div>
       )}
+
+      <ConfirmDialog
+        open={toDelete !== null}
+        title="Delete this jurisdiction?"
+        description={
+          toDelete
+            ? `Delete jurisdiction "${toDelete.name}"? This cannot be undone.`
+            : undefined
+        }
+        confirmLabel="Delete jurisdiction"
+        destructive
+        loading={deleting}
+        onConfirm={handleDelete}
+        onCancel={() => setToDelete(null)}
+      />
     </div>
   );
 }

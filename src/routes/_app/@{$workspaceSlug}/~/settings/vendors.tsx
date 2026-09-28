@@ -9,6 +9,7 @@ import {
   XIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
 import RecategorizeVendorDialog from "@/features/vendors/components/RecategorizeVendorDialog";
@@ -90,6 +91,11 @@ function VendorsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingVendorId, setEditingVendorId] = useState<string | null>(null);
+  const [vendorToDelete, setVendorToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const [form, setForm] = useState<VendorFormData>({ ...EMPTY_FORM });
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -197,35 +203,36 @@ function VendorsPage() {
     setShowForm(true);
   }, []);
 
-  const handleDelete = useCallback(
-    async (vendorId: string, vendorName: string) => {
-      if (!confirm(`Delete vendor "${vendorName}"? This cannot be undone.`))
+  const handleDelete = useCallback(async () => {
+    if (!vendorToDelete) return;
+    const { id: vendorId, name: vendorName } = vendorToDelete;
+    setDeleting(true);
+    try {
+      const res = await apiFetch(`/api/vendors/${vendorId}`, {
+        method: "DELETE",
+      });
+
+      if (res.status === 409) {
+        setError(
+          `Cannot delete "${vendorName}" because it is linked to existing journal entries. Remove those references first.`,
+        );
+        setVendorToDelete(null);
         return;
-
-      try {
-        const res = await apiFetch(`/api/vendors/${vendorId}`, {
-          method: "DELETE",
-        });
-
-        if (res.status === 409) {
-          setError(
-            `Cannot delete "${vendorName}" because it is linked to existing journal entries. Remove those references first.`,
-          );
-          return;
-        }
-
-        if (!res.ok) {
-          throw new Error("Delete failed");
-        }
-
-        setError(null);
-        await fetchVendors();
-      } catch {
-        setError("Failed to delete vendor");
       }
-    },
-    [fetchVendors],
-  );
+
+      if (!res.ok) {
+        throw new Error("Delete failed");
+      }
+
+      setError(null);
+      setVendorToDelete(null);
+      await fetchVendors();
+    } catch {
+      setError("Failed to delete vendor");
+    } finally {
+      setDeleting(false);
+    }
+  }, [vendorToDelete, fetchVendors]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -346,6 +353,7 @@ function VendorsPage() {
       {/* Vendor form */}
       {showForm && (
         <form
+          method="post"
           onSubmit={handleSubmit}
           className="flex flex-col gap-4 rounded-lg border border-border bg-card p-6"
         >
@@ -645,7 +653,12 @@ function VendorsPage() {
                       </button>
                       <button
                         type="button"
-                        onClick={() => handleDelete(vendor.id, vendor.name)}
+                        onClick={() =>
+                          setVendorToDelete({
+                            id: vendor.id,
+                            name: vendor.name,
+                          })
+                        }
                         className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                         title="Delete vendor"
                       >
@@ -678,6 +691,21 @@ function VendorsPage() {
           onChanged={fetchW9Status}
         />
       )}
+
+      <ConfirmDialog
+        open={vendorToDelete !== null}
+        title="Delete this vendor?"
+        description={
+          vendorToDelete
+            ? `Delete "${vendorToDelete.name}"? This cannot be undone.`
+            : undefined
+        }
+        confirmLabel="Delete vendor"
+        destructive
+        loading={deleting}
+        onConfirm={handleDelete}
+        onCancel={() => setVendorToDelete(null)}
+      />
     </div>
   );
 }

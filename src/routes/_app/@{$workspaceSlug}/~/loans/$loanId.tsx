@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
 import { apiFetch } from "@/lib/api/apiFetch";
+import { withRowId } from "@/lib/api/withRowId";
 import formatCurrency from "@/lib/format/currency";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
@@ -147,7 +148,8 @@ function LoanDetailPage() {
     try {
       const res = await apiFetch(`/api/accounts?bookId=${activeBookId}`);
       const data = await res.json();
-      setAccounts(data.accounts ?? []);
+      // API returns accounts keyed by `id`; the UI reads `rowId` (option values)
+      setAccounts(withRowId(data.accounts as (Account & { id: string })[]));
     } catch {
       // Silently handle fetch errors
     }

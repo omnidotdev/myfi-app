@@ -7,6 +7,7 @@ import {
   TrendingUpIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
@@ -37,6 +38,8 @@ function SavingsPage() {
   const [netWorth, setNetWorth] = useState<NetWorthSummary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
+  const [goalToDelete, setGoalToDelete] = useState<SavingsGoal | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const fetchData = useCallback(async () => {
     if (!activeBookId) return;
@@ -88,20 +91,22 @@ function SavingsPage() {
     setFormOpen(true);
   }, []);
 
-  const handleDelete = useCallback(
-    async (goal: SavingsGoal) => {
-      try {
-        await apiFetch(`/api/savings-goals/${goal.rowId}`, {
-          method: "DELETE",
-        });
+  const handleDelete = useCallback(async () => {
+    if (!goalToDelete) return;
+    setDeleting(true);
+    try {
+      await apiFetch(`/api/savings-goals/${goalToDelete.rowId}`, {
+        method: "DELETE",
+      });
 
-        await fetchData();
-      } catch {
-        // Silently handle delete errors
-      }
-    },
-    [fetchData],
-  );
+      await fetchData();
+      setGoalToDelete(null);
+    } catch {
+      // Silently handle delete errors
+    } finally {
+      setDeleting(false);
+    }
+  }, [goalToDelete, fetchData]);
 
   const handleSubmit = useCallback(
     async (values: {
@@ -242,11 +247,26 @@ function SavingsPage() {
             <SavingsGoalCard
               key={goal.rowId}
               goal={goal}
-              onDelete={() => handleDelete(goal)}
+              onDelete={() => setGoalToDelete(goal)}
             />
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        open={goalToDelete !== null}
+        title="Delete this savings goal?"
+        description={
+          goalToDelete
+            ? `"${goalToDelete.name}" will be permanently deleted. This cannot be undone.`
+            : undefined
+        }
+        confirmLabel="Delete goal"
+        destructive
+        loading={deleting}
+        onConfirm={handleDelete}
+        onCancel={() => setGoalToDelete(null)}
+      />
 
       {/* Goal form dialog */}
       {formOpen && (

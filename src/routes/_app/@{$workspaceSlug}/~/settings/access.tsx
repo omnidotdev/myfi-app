@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon, ShieldIcon, TrashIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
 import { apiFetch } from "@/lib/api/apiFetch";
@@ -41,6 +42,11 @@ function AccessPage() {
   const [records, setRecords] = useState<BookAccess[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [accessToRemove, setAccessToRemove] = useState<{
+    id: string;
+    userId: string;
+  } | null>(null);
+  const [removing, setRemoving] = useState(false);
 
   // Invite form
   const [newUserId, setNewUserId] = useState("");
@@ -110,23 +116,22 @@ function AccessPage() {
     [fetchRecords],
   );
 
-  const handleRemove = useCallback(
-    async (id: string, userId: string) => {
-      if (!confirm(`Remove access for "${userId}"? This cannot be undone.`))
-        return;
+  const handleRemove = useCallback(async () => {
+    if (!accessToRemove) return;
+    setRemoving(true);
+    try {
+      await apiFetch(`/api/book-access/${accessToRemove.id}`, {
+        method: "DELETE",
+      });
 
-      try {
-        await apiFetch(`/api/book-access/${id}`, {
-          method: "DELETE",
-        });
-
-        await fetchRecords();
-      } catch {
-        // Silently handle errors
-      }
-    },
-    [fetchRecords],
-  );
+      await fetchRecords();
+      setAccessToRemove(null);
+    } catch {
+      // Silently handle errors
+    } finally {
+      setRemoving(false);
+    }
+  }, [accessToRemove, fetchRecords]);
 
   const loading = booksLoading || isLoading;
 
@@ -268,7 +273,12 @@ function AccessPage() {
 
                 <button
                   type="button"
-                  onClick={() => handleRemove(record.id, record.userId)}
+                  onClick={() =>
+                    setAccessToRemove({
+                      id: record.id,
+                      userId: record.userId,
+                    })
+                  }
                   className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                   title="Remove access"
                 >
@@ -279,6 +289,21 @@ function AccessPage() {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={accessToRemove !== null}
+        title="Remove access?"
+        description={
+          accessToRemove
+            ? `Remove access for "${accessToRemove.userId}"? This cannot be undone.`
+            : undefined
+        }
+        confirmLabel="Remove access"
+        destructive
+        loading={removing}
+        onConfirm={handleRemove}
+        onCancel={() => setAccessToRemove(null)}
+      />
     </div>
   );
 }

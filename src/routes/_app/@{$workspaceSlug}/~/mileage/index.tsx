@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CarIcon, Loader2Icon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import BookPicker from "@/features/books/components/BookPicker";
 import { apiFetch } from "@/lib/api/apiFetch";
 import formatCurrency from "@/lib/format/currency";
@@ -60,6 +61,11 @@ function MileagePage() {
   const [logs, setLogs] = useState<MileageLog[]>([]);
   const [summary, setSummary] = useState<MileageSummary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [pendingDelete, setPendingDelete] = useState<{
+    kind: "vehicle" | "log";
+    id: string;
+  } | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   // Vehicle form state
   const [vName, setVName] = useState("");
@@ -167,17 +173,10 @@ function MileagePage() {
 
   const handleDeleteVehicle = useCallback(
     async (id: string) => {
-      if (!confirm("Delete this vehicle?")) return;
-
-      try {
-        await apiFetch(`/api/mileage/vehicles/${id}`, {
-          method: "DELETE",
-        });
-
-        await fetchVehicles();
-      } catch {
-        // Silently handle delete errors
-      }
+      await apiFetch(`/api/mileage/vehicles/${id}`, {
+        method: "DELETE",
+      });
+      await fetchVehicles();
     },
     [fetchVehicles],
   );
@@ -231,21 +230,31 @@ function MileagePage() {
 
   const handleDeleteLog = useCallback(
     async (id: string) => {
-      if (!confirm("Delete this mileage entry?")) return;
-
-      try {
-        await apiFetch(`/api/mileage/${id}`, {
-          method: "DELETE",
-        });
-
-        await fetchLogs();
-        await fetchSummary();
-      } catch {
-        // Silently handle delete errors
-      }
+      await apiFetch(`/api/mileage/${id}`, {
+        method: "DELETE",
+      });
+      await fetchLogs();
+      await fetchSummary();
     },
     [fetchLogs, fetchSummary],
   );
+
+  const confirmDelete = useCallback(async () => {
+    if (!pendingDelete) return;
+    setDeleting(true);
+    try {
+      if (pendingDelete.kind === "vehicle") {
+        await handleDeleteVehicle(pendingDelete.id);
+      } else {
+        await handleDeleteLog(pendingDelete.id);
+      }
+      setPendingDelete(null);
+    } catch {
+      // Silently handle delete errors
+    } finally {
+      setDeleting(false);
+    }
+  }, [pendingDelete, handleDeleteVehicle, handleDeleteLog]);
 
   const loading = booksLoading || isLoading;
   const yearOptions = Array.from({ length: 5 }, (_, i) => currentYear - i);
@@ -395,7 +404,9 @@ function MileagePage() {
                 </span>
                 <button
                   type="button"
-                  onClick={() => handleDeleteVehicle(v.id)}
+                  onClick={() =>
+                    setPendingDelete({ kind: "vehicle", id: v.id })
+                  }
                   className="ml-1 rounded p-0.5 text-muted-foreground transition-colors hover:text-destructive"
                   aria-label={`Delete ${v.name}`}
                 >
@@ -596,7 +607,9 @@ function MileagePage() {
                   <td className="px-4 py-3 text-right">
                     <button
                       type="button"
-                      onClick={() => handleDeleteLog(log.id)}
+                      onClick={() =>
+                        setPendingDelete({ kind: "log", id: log.id })
+                      }
                       className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                       aria-label="Delete entry"
                     >
@@ -609,6 +622,21 @@ function MileagePage() {
           </table>
         </div>
       )}
+
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        title={
+          pendingDelete?.kind === "vehicle"
+            ? "Delete this vehicle?"
+            : "Delete this mileage entry?"
+        }
+        description="This cannot be undone."
+        confirmLabel="Delete"
+        destructive
+        loading={deleting}
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDelete(null)}
+      />
     </div>
   );
 }

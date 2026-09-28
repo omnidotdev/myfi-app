@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeftIcon, Loader2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import AttachmentPanel from "@/features/ledger/components/AttachmentPanel";
 import type { JournalEntry } from "@/features/ledger/types/journalEntry";
 import { apiFetch } from "@/lib/api/apiFetch";
@@ -28,6 +29,8 @@ function JournalEntryDetailPage() {
   const [entry, setEntry] = useState<JournalEntry | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const fetchEntry = useCallback(async () => {
     if (!activeBookId) return;
@@ -75,6 +78,7 @@ function JournalEntryDetailPage() {
   const handleDelete = useCallback(async () => {
     if (!entry) return;
 
+    setDeleting(true);
     try {
       await apiFetch(`/api/journal-entries/${entry.rowId}`, {
         method: "DELETE",
@@ -86,6 +90,8 @@ function JournalEntryDetailPage() {
       });
     } catch {
       // Silently handle delete errors
+    } finally {
+      setDeleting(false);
     }
   }, [entry, navigate, workspaceSlug]);
 
@@ -136,12 +142,23 @@ function JournalEntryDetailPage() {
 
         <button
           type="button"
-          onClick={handleDelete}
+          onClick={() => setConfirmDelete(true)}
           className="rounded-md border border-destructive/30 px-4 py-2 font-medium text-destructive text-sm transition-colors hover:bg-destructive/10"
         >
           Delete Entry
         </button>
       </div>
+
+      <ConfirmDialog
+        open={confirmDelete}
+        title="Delete this journal entry?"
+        description="The entry and its lines will be permanently deleted. This cannot be undone."
+        confirmLabel="Delete Entry"
+        destructive
+        loading={deleting}
+        onConfirm={handleDelete}
+        onCancel={() => setConfirmDelete(false)}
+      />
 
       {/* Entry detail */}
       <div className="rounded-lg border border-border bg-card p-6">
