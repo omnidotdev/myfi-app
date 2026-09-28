@@ -14,6 +14,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Area,
   AreaChart,
+  Bar,
+  BarChart,
   CartesianGrid,
   ResponsiveContainer,
   Tooltip,
@@ -41,6 +43,13 @@ type NetWorthSnapshot = {
 type SpendingMonth = {
   month: string;
   total: string;
+};
+
+type CategorySpending = {
+  accountId: string;
+  accountName: string;
+  totalAmount: string;
+  percentOfTotal: number;
 };
 
 type RunwayData = {
@@ -111,6 +120,9 @@ function DashboardPage() {
   const [netWorth, setNetWorth] = useState<NetWorthSummary | null>(null);
   const [runway, setRunway] = useState<RunwayData | null>(null);
   const [spendingMonths, setSpendingMonths] = useState<SpendingMonth[]>([]);
+  const [spendingCategories, setSpendingCategories] = useState<
+    CategorySpending[]
+  >([]);
   const [recentEntries, setRecentEntries] = useState<RecentEntry[]>([]);
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [closeStatus, setCloseStatus] = useState<CloseStatusResponse | null>(
@@ -220,6 +232,26 @@ function DashboardPage() {
     }
   }, [activeBookId]);
 
+  const fetchSpendingCategories = useCallback(async () => {
+    if (!activeBookId) return;
+
+    try {
+      // Trailing 90 days gives a fuller category breakdown than a single month
+      const endDate = new Date().toISOString().slice(0, 10);
+      const startDate = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .slice(0, 10);
+      const res = await apiFetch(
+        `/api/spending/categories?bookId=${activeBookId}&startDate=${startDate}&endDate=${endDate}`,
+      );
+      const data = await res.json();
+
+      setSpendingCategories(data.categories ?? []);
+    } catch {
+      // Silently handle fetch errors
+    }
+  }, [activeBookId]);
+
   const fetchRunway = useCallback(async () => {
     if (!activeBookId) return;
 
@@ -267,6 +299,7 @@ function DashboardPage() {
       fetchRecentEntries(),
       fetchCloseStatus(),
       fetchRunway(),
+      fetchSpendingCategories(),
     ])
       .catch(() => {
         // Silently handle fetch errors
@@ -282,6 +315,7 @@ function DashboardPage() {
     fetchRecentEntries,
     fetchCloseStatus,
     fetchRunway,
+    fetchSpendingCategories,
   ]);
 
   // Multi-book summary fetch
@@ -317,6 +351,22 @@ function DashboardPage() {
       })),
     [netWorthSnapshots],
   );
+
+  // Top spending categories, with the long tail folded into a single "Other"
+  // bar so the chart stays legible (ranked; the API already sorts descending)
+  const categoryChartData = useMemo(() => {
+    const TOP_N = 8;
+    const rows = spendingCategories.map((c) => ({
+      name: c.accountName,
+      amount: Number.parseFloat(c.totalAmount) || 0,
+    }));
+    if (rows.length <= TOP_N) return rows;
+    const top = rows.slice(0, TOP_N);
+    const otherTotal = rows.slice(TOP_N).reduce((sum, r) => sum + r.amount, 0);
+    return otherTotal > 0
+      ? [...top, { name: "Other", amount: otherTotal }]
+      : top;
+  }, [spendingCategories]);
 
   const loading = booksLoading || isLoading;
   const showAllBooks = !activeBookId && !booksLoading;
@@ -721,6 +771,54 @@ function DashboardPage() {
           ) : (
             <p className="py-8 text-center text-muted-foreground text-sm">
               No spending data available yet
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Single-book: Spending by category (ranked horizontal bars) */}
+      {!loading && !showAllBooks && (
+        <div className="rounded-lg border border-border bg-card p-4">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="font-semibold text-lg">Spending by Category</h2>
+            <span className="text-muted-foreground text-xs">Last 90 days</span>
+          </div>
+
+          {categoryChartData.length > 0 ? (
+            <ResponsiveContainer
+              width="100%"
+              height={Math.max(200, categoryChartData.length * 40)}
+            >
+              <BarChart
+                data={categoryChartData}
+                layout="vertical"
+                margin={{ left: 16, right: 24 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                <XAxis
+                  type="number"
+                  tickFormatter={(value: number) => formatCurrency(value)}
+                />
+                <YAxis
+                  type="category"
+                  dataKey="name"
+                  width={128}
+                  tick={{ fontSize: 12 }}
+                />
+                <Tooltip
+                  formatter={(value: number) => formatCurrency(value)}
+                  cursor={{ fill: "var(--color-muted)", fillOpacity: 0.4 }}
+                />
+                <Bar
+                  dataKey="amount"
+                  fill="var(--color-primary-500)"
+                  radius={[0, 4, 4, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <p className="py-8 text-center text-muted-foreground text-sm">
+              No spending in the last 90 days
             </p>
           )}
         </div>
