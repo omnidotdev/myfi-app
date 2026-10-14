@@ -159,8 +159,8 @@ function Landing() {
 
           <p className="mt-6 max-w-[46ch] text-lg text-muted-foreground">
             Business accounting, personal finance, and crypto, kept in one place
-            and reconciled to the cent. One open-source platform. Your books,
-            your data, your server.
+            and reconciled to the cent. One open-source platform you can
+            self-host for full control of your data.
           </p>
 
           <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">

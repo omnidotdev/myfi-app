@@ -195,6 +195,14 @@ function PublicLayout() {
             <a href={appConfig.url} className="hover:text-primary">
               myfi.omni.dev
             </a>
+            <span aria-hidden="true">&middot;</span>
+            <a href="/privacy" className="hover:text-primary">
+              Privacy
+            </a>
+            <span aria-hidden="true">&middot;</span>
+            <a href="/terms" className="hover:text-primary">
+              Terms
+            </a>
           </div>
         </div>
       </footer>

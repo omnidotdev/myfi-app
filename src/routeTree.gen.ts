@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as PublicTermsRouteImport } from './routes/_public/terms'
+import { Route as PublicPrivacyRouteImport } from './routes/_public/privacy'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AppAtChar123workspaceSlugChar125Char126IndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126SpendingIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/spending/index'
@@ -83,6 +85,16 @@ const AppRoute = AppRouteImport.update({
 const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicTermsRoute = PublicTermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicPrivacyRoute = PublicPrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => PublicRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -459,6 +471,8 @@ const AppAtChar123workspaceSlugChar125Char126AssetsAssetIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
+  '/privacy': typeof PublicPrivacyRoute
+  '/terms': typeof PublicTermsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/@{$workspaceSlug}/~/': typeof AppAtChar123workspaceSlugChar125Char126IndexRoute
   '/@{$workspaceSlug}/~/assets/$assetId': typeof AppAtChar123workspaceSlugChar125Char126AssetsAssetIdRoute
@@ -521,6 +535,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
+  '/privacy': typeof PublicPrivacyRoute
+  '/terms': typeof PublicTermsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/@{$workspaceSlug}/~': typeof AppAtChar123workspaceSlugChar125Char126IndexRoute
   '/@{$workspaceSlug}/~/assets/$assetId': typeof AppAtChar123workspaceSlugChar125Char126AssetsAssetIdRoute
@@ -585,6 +601,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
+  '/_public/privacy': typeof PublicPrivacyRoute
+  '/_public/terms': typeof PublicTermsRoute
   '/_public/': typeof PublicIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_app/@{$workspaceSlug}/~/': typeof AppAtChar123workspaceSlugChar125Char126IndexRoute
@@ -650,6 +668,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/privacy'
+    | '/terms'
     | '/api/auth/$'
     | '/@{$workspaceSlug}/~/'
     | '/@{$workspaceSlug}/~/assets/$assetId'
@@ -712,6 +732,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/privacy'
+    | '/terms'
     | '/api/auth/$'
     | '/@{$workspaceSlug}/~'
     | '/@{$workspaceSlug}/~/assets/$assetId'
@@ -775,6 +797,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_app'
     | '/_public'
+    | '/_public/privacy'
+    | '/_public/terms'
     | '/_public/'
     | '/api/auth/$'
     | '/_app/@{$workspaceSlug}/~/'
@@ -864,6 +888,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/terms': {
+      id: '/_public/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof PublicTermsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/privacy': {
+      id: '/_public/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PublicPrivacyRouteImport
       parentRoute: typeof PublicRoute
     }
     '/api/auth/$': {
@@ -1465,10 +1503,14 @@ const AppRouteChildren: AppRouteChildren = {
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 interface PublicRouteChildren {
+  PublicPrivacyRoute: typeof PublicPrivacyRoute
+  PublicTermsRoute: typeof PublicTermsRoute
   PublicIndexRoute: typeof PublicIndexRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
+  PublicPrivacyRoute: PublicPrivacyRoute,
+  PublicTermsRoute: PublicTermsRoute,
   PublicIndexRoute: PublicIndexRoute,
 }
 
@@ -1483,3 +1525,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
