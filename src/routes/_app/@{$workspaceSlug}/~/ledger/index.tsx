@@ -3,6 +3,7 @@ import { Loader2Icon, PlusIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
+import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
 import BookPicker from "@/features/books/components/BookPicker";
 import JournalEntryTable from "@/features/ledger/components/JournalEntryTable";
@@ -97,20 +98,40 @@ function LedgerPage() {
     return result;
   }, [entries, sourceFilter, dateFrom, dateTo, showReviewed]);
 
-  const handleDelete = useCallback(
-    async (entryId: string) => {
-      try {
-        await apiFetch(`/api/journal-entries/${entryId}`, {
-          method: "DELETE",
-        });
+  // Deleting a posted entry is destructive and not trivially undoable, so it is
+  // gated behind a confirmation naming the entry, and failures are surfaced
+  const [pendingDelete, setPendingDelete] = useState<JournalEntry | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-        await fetchEntries();
-      } catch {
-        // Silently handle delete errors
-      }
+  const requestDelete = useCallback(
+    (entryId: string) => {
+      const entry = entries.find((e) => e.rowId === entryId);
+      if (entry) setPendingDelete(entry);
     },
-    [fetchEntries],
+    [entries],
   );
+
+  const confirmDelete = useCallback(async () => {
+    if (!pendingDelete) return;
+    setIsDeleting(true);
+    try {
+      const res = await apiFetch(
+        `/api/journal-entries/${pendingDelete.rowId}`,
+        { method: "DELETE" },
+      );
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error ?? "Delete failed");
+      }
+      toast.success("Journal entry deleted");
+      setPendingDelete(null);
+      await fetchEntries();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Delete failed");
+    } finally {
+      setIsDeleting(false);
+    }
+  }, [pendingDelete, fetchEntries]);
 
   const handleReverse = useCallback(
     async (entryId: string) => {
@@ -286,10 +307,27 @@ function LedgerPage() {
       {!loading && entries.length > 0 && (
         <JournalEntryTable
           entries={filteredEntries}
-          onDelete={handleDelete}
+          onDelete={requestDelete}
           onReverse={handleReverse}
         />
       )}
+
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        title="Delete journal entry?"
+        description={
+          pendingDelete
+            ? `The entry from ${pendingDelete.date}${
+                pendingDelete.memo ? ` ("${pendingDelete.memo}")` : ""
+              } will be permanently deleted. This cannot be undone.`
+            : ""
+        }
+        confirmLabel="Delete entry"
+        destructive
+        loading={isDeleting}
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDelete(null)}
+      />
     </div>
   );
 }

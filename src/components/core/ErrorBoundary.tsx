@@ -21,8 +21,11 @@ class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 p-6">
           <h2 className="font-semibold text-xl">Something went wrong</h2>
+          {/* Show a fixed, generic message; the raw error (which can contain
+              internal details) is logged to the console in componentDidCatch,
+              never rendered to the user */}
           <p className="text-muted-foreground text-sm">
-            {this.state.error?.message ?? "An unexpected error occurred"}
+            An unexpected error occurred. Reloading the page usually helps.
           </p>
           <button
             type="button"
