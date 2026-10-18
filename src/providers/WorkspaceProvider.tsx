@@ -18,30 +18,28 @@ import {
  * surface (currentOrganization, setCurrentOrganization, ...) matches the shared
  * provider so existing consumers keep working unchanged.
  */
-interface OrganizationContextValue {
+interface WorkspaceContextValue {
   /** All organizations the user is a member of */
-  organizations: OrganizationClaim[];
+  workspaces: OrganizationClaim[];
   /** Currently active organization (URL wins, then last-used, then first) */
-  currentOrganization: OrganizationClaim | null;
+  currentWorkspace: OrganizationClaim | null;
   /** Remember an org as last-used (for handle-less routes); URL still wins */
-  setCurrentOrganization: (orgId: string) => void;
+  setCurrentWorkspace: (orgId: string) => void;
   /** Whether the user belongs to more than one organization */
-  hasMultipleOrgs: boolean;
+  hasMultipleWorkspaces: boolean;
   /** Resolve organization details by ID. Returns undefined if not found */
-  getOrganizationById: (orgId: string) => OrganizationClaim | undefined;
+  getWorkspaceById: (orgId: string) => OrganizationClaim | undefined;
   /** True if organizations couldn't be loaded from IDP (degraded mode) */
   isDegradedMode: boolean;
 }
 
-const OrganizationContext = createContext<OrganizationContextValue | null>(
-  null,
-);
+const WorkspaceContext = createContext<WorkspaceContextValue | null>(null);
 
 const STORAGE_KEY = "myfi:activeOrgId";
 
-interface OrganizationProviderProps {
+interface WorkspaceProviderProps {
   children: ReactNode;
-  organizations: OrganizationClaim[];
+  workspaces: OrganizationClaim[];
   /**
    * Workspace handle (org slug) from the current route, when the URL carries
    * one (e.g. `/@{slug}/~/ledger`). This is the source of truth for the active
@@ -52,12 +50,12 @@ interface OrganizationProviderProps {
   isDegraded?: boolean;
 }
 
-const OrganizationProvider = ({
+const WorkspaceProvider = ({
   children,
-  organizations,
+  workspaces,
   activeSlug,
   isDegraded = false,
-}: OrganizationProviderProps) => {
+}: WorkspaceProviderProps) => {
   // Last-used workspace, remembered for routes whose URL carries no handle.
   // Hydrated from storage after mount so server and first client render agree
   const [storedOrgId, setStoredOrgId] = useState<string | null>(null);
@@ -75,12 +73,12 @@ const OrganizationProvider = ({
   // workspace, then the first org. This keeps a refresh on `/@{slug}/...` pinned
   // to that workspace instead of snapping back to organizations[0]
   const urlOrg = activeSlug
-    ? (organizations.find((o) => o.slug === activeSlug) ?? null)
+    ? (workspaces.find((o) => o.slug === activeSlug) ?? null)
     : null;
-  const currentOrganization =
+  const currentWorkspace =
     urlOrg ??
-    organizations.find((o) => o.id === storedOrgId) ??
-    organizations[0] ??
+    workspaces.find((o) => o.id === storedOrgId) ??
+    workspaces[0] ??
     null;
 
   // Remember the workspace the URL put us in, so leaving a workspace route does
@@ -96,7 +94,7 @@ const OrganizationProvider = ({
     }
   }, [urlOrg, storedOrgId]);
 
-  const setCurrentOrganization = useCallback((orgId: string) => {
+  const setCurrentWorkspace = useCallback((orgId: string) => {
     setStoredOrgId(orgId);
     try {
       localStorage.setItem(STORAGE_KEY, orgId);
@@ -105,24 +103,24 @@ const OrganizationProvider = ({
     }
   }, []);
 
-  const getOrganizationById = useCallback(
-    (orgId: string) => organizations.find((o) => o.id === orgId),
-    [organizations],
+  const getWorkspaceById = useCallback(
+    (orgId: string) => workspaces.find((o) => o.id === orgId),
+    [workspaces],
   );
 
   return (
-    <OrganizationContext.Provider
+    <WorkspaceContext.Provider
       value={{
-        organizations,
-        currentOrganization,
-        setCurrentOrganization,
-        hasMultipleOrgs: organizations.length > 1,
-        getOrganizationById,
+        workspaces,
+        currentWorkspace,
+        setCurrentWorkspace,
+        hasMultipleWorkspaces: workspaces.length > 1,
+        getWorkspaceById,
         isDegradedMode: isDegraded,
       }}
     >
       {children}
-    </OrganizationContext.Provider>
+    </WorkspaceContext.Provider>
   );
 };
 
@@ -130,6 +128,6 @@ const OrganizationProvider = ({
  * Hook to access organization context. Returns null if used outside the
  * provider (matching the shared provider's contract, so callers guard with `?.`)
  */
-const useOrganization = () => useContext(OrganizationContext);
+const useWorkspace = () => useContext(WorkspaceContext);
 
-export { OrganizationProvider, useOrganization };
+export { WorkspaceProvider, useWorkspace };

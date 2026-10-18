@@ -2,11 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 import type Book from "@/features/books/types/book";
 import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBookStore from "@/lib/stores/activeBook";
-import { useOrganization } from "@/providers/OrganizationProvider";
+import { useWorkspace } from "@/providers/WorkspaceProvider";
 
 const useActiveBook = () => {
-  const ctx = useOrganization();
-  const organizationId = ctx?.currentOrganization?.id ?? null;
+  const ctx = useWorkspace();
+  const organizationId = ctx?.currentWorkspace?.id ?? null;
   const { activeBookId, setActiveBookId } = useActiveBookStore();
   const [books, setBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState(true);

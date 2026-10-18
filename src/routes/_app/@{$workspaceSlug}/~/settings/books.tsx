@@ -9,7 +9,7 @@ import type Book from "@/features/books/types/book";
 import type { BookType } from "@/features/books/types/book";
 import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBookStore from "@/lib/stores/activeBook";
-import { useOrganization } from "@/providers/OrganizationProvider";
+import { useWorkspace } from "@/providers/WorkspaceProvider";
 
 type BooksSearch = {
   /** Auto-open the create dialog on arrival (e.g. from the dashboard CTA) */
@@ -26,8 +26,8 @@ export const Route = createFileRoute(
 });
 
 function BooksSettingsPage() {
-  const org = useOrganization();
-  const organizationId = org?.currentOrganization?.id;
+  const org = useWorkspace();
+  const organizationId = org?.currentWorkspace?.id;
   const { activeBookId, setActiveBookId } = useActiveBookStore();
 
   const { create } = Route.useSearch();

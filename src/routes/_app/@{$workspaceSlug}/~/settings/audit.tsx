@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
-import { useOrganization } from "@/providers/OrganizationProvider";
+import { useWorkspace } from "@/providers/WorkspaceProvider";
 
 export const Route = createFileRoute(
   "/_app/@{$workspaceSlug}/~/settings/audit",
@@ -149,8 +149,8 @@ function downloadAuditCsv(events: AuditEvent[]) {
 }
 
 function AuditLogPage() {
-  const org = useOrganization();
-  const organizationId = org?.currentOrganization?.id;
+  const org = useWorkspace();
+  const organizationId = org?.currentWorkspace?.id;
 
   const [events, setEvents] = useState<AuditEvent[]>([]);
   const [isLoading, setIsLoading] = useState(false);

@@ -45,15 +45,15 @@ import { Toaster } from "sonner";
 import { useEventListener } from "usehooks-ts";
 import ErrorBoundary from "@/components/core/ErrorBoundary";
 import AccountMenu from "@/components/layout/AccountMenu";
-import OrganizationSwitcher from "@/components/layout/OrganizationSwitcher";
 import WorkspaceBookGuard from "@/components/layout/WorkspaceBookGuard";
+import WorkspaceSwitcher from "@/components/layout/WorkspaceSwitcher";
 import MyfiMark from "@/components/MyfiMark";
 import { isSessionDegraded } from "@/lib/auth/sessionState";
 import appConfig from "@/lib/config/app.config";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 import { filterNavForBook } from "@/lib/nav/filterNavForBook";
-import { OrganizationProvider } from "@/providers/OrganizationProvider";
 import { useTheme } from "@/providers/ThemeProvider";
+import { WorkspaceProvider } from "@/providers/WorkspaceProvider";
 
 export const Route = createFileRoute("/_app")({
   beforeLoad: ({ context: { session } }) => {
@@ -316,8 +316,8 @@ function AuthLayout() {
     "";
 
   return (
-    <OrganizationProvider
-      organizations={organizations}
+    <WorkspaceProvider
+      workspaces={organizations}
       activeSlug={workspaceSlug}
       isDegraded={isSessionDegraded(session)}
     >
@@ -359,7 +359,7 @@ function AuthLayout() {
           <div className="fixed inset-0 z-30 flex flex-col bg-sidebar pt-14 md:hidden print:hidden">
             {organizations.length > 0 && (
               <div className="shrink-0 border-sidebar-border border-b p-3">
-                <OrganizationSwitcher />
+                <WorkspaceSwitcher />
               </div>
             )}
 
@@ -427,7 +427,7 @@ function AuthLayout() {
           {/* Workspace switcher */}
           {organizations.length > 0 && (
             <div className="shrink-0 border-sidebar-border p-3">
-              <OrganizationSwitcher />
+              <WorkspaceSwitcher />
             </div>
           )}
 
@@ -468,6 +468,6 @@ function AuthLayout() {
         </main>
       </div>
       <Toaster position="bottom-right" richColors />
-    </OrganizationProvider>
+    </WorkspaceProvider>
   );
 }

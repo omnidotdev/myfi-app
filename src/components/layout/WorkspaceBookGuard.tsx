@@ -9,7 +9,7 @@ import { resolveWorkspaceView } from "@/features/books/lib/resolveWorkspaceView"
 import type { BookType } from "@/features/books/types/book";
 import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
-import { useOrganization } from "@/providers/OrganizationProvider";
+import { useWorkspace } from "@/providers/WorkspaceProvider";
 
 /**
  * Gate for book-scoped workspace surfaces. A workspace with no book would
@@ -19,7 +19,7 @@ import { useOrganization } from "@/providers/OrganizationProvider";
  * point. Renders inside OrganizationProvider so it can read the active workspace
  */
 const WorkspaceBookGuard = ({ children }: { children: ReactNode }) => {
-  const ctx = useOrganization();
+  const ctx = useWorkspace();
   const { books, isLoading, organizationId, refetch } = useActiveBook();
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -45,7 +45,7 @@ const WorkspaceBookGuard = ({ children }: { children: ReactNode }) => {
     return <NoWorkspace degraded={ctx?.isDegradedMode ?? false} />;
   }
 
-  const workspaceName = ctx?.currentOrganization?.name;
+  const workspaceName = ctx?.currentWorkspace?.name;
 
   const handleCreate = async (data: {
     name: string;
