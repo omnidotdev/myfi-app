@@ -226,7 +226,7 @@ function AuditLogPage() {
         <div>
           <h1 className="font-bold text-2xl">Audit Log</h1>
           <p className="text-muted-foreground text-sm">
-            Track changes across your organization
+            Track changes across your workspace
           </p>
         </div>
 
@@ -245,7 +245,7 @@ function AuditLogPage() {
       <div>
         <h1 className="font-bold text-2xl">Audit Log</h1>
         <p className="text-muted-foreground text-sm">
-          Track changes across your organization
+          Track changes across your workspace
         </p>
       </div>
 

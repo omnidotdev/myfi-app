@@ -73,7 +73,7 @@ const settingsItems = [
   },
   {
     label: "Audit Log",
-    description: "Track changes across your organization",
+    description: "Track changes across your workspace",
     href: "/@{$workspaceSlug}/~/settings/audit",
     icon: ScrollTextIcon,
   },
