@@ -1,27 +1,20 @@
 import { gatekeeperDashboardUrl } from "@omnidotdev/providers/react";
-import {
-  MenuContent,
-  MenuItem,
-  MenuPositioner,
-  MenuRoot,
-  MenuSeparator,
-  MenuTrigger,
-} from "@omnidotdev/thornberry/menu";
+import { WorkspaceSwitcher as SharedWorkspaceSwitcher } from "@omnidotdev/thornberry/workspace-switcher";
 import { useNavigate } from "@tanstack/react-router";
-import { Building2, Check, ChevronsUpDown, Settings2 } from "lucide-react";
 
 import { AUTH_BASE_URL } from "@/lib/config/env.config";
 import { useWorkspace } from "@/providers/WorkspaceProvider";
 
 /**
- * Workspace switcher for the authed shell
+ * Workspace switcher for the authed shell.
  *
  * Reads the user's Omni organizations from the organization context (sourced
  * from JWT claims, not a DB query) and switches the active workspace by
  * navigating to that workspace's URL (`/@{slug}/~`). The URL is the source of
  * truth, so the switch persists across refresh and deep links; the provider
- * also records it as last-used. This is top-level tenancy, distinct from the
- * per-book picker
+ * also records it as last-used. Presentation is the shared thornberry switcher
+ * (sidebar variant); a single-org user sees their workspace name without a
+ * dropdown. This is top-level tenancy, distinct from the per-book picker.
  */
 const WorkspaceSwitcher = () => {
   const orgContext = useWorkspace();
@@ -30,76 +23,36 @@ const WorkspaceSwitcher = () => {
   const organizations = orgContext?.workspaces ?? [];
   const current = orgContext?.currentWorkspace;
 
-  // Org/workspace lifecycle (create, join, list membership) lives on the
-  // Gatekeeper identity dashboard, not the account console
-  const orgDashboardUrl = AUTH_BASE_URL
-    ? gatekeeperDashboardUrl(AUTH_BASE_URL)
-    : "";
-
   // Nothing to switch between when the user belongs to no organizations
-  if (!organizations.length) return null;
+  if (!current || !organizations.length) return null;
+
+  const handleSelect = (id: string) => {
+    const org = organizations.find((o) => o.id === id);
+    if (!org || org.id === current.id) return;
+
+    // Remember as last-used, then navigate so the URL owns the active
+    // workspace (survives refresh and is shareable)
+    orgContext?.setCurrentWorkspace(org.id);
+    navigate({
+      to: "/@{$workspaceSlug}/~",
+      params: { workspaceSlug: org.slug },
+    });
+  };
 
   return (
-    <MenuRoot
-      onSelect={(details) => {
-        // Anchor items (e.g. manage workspaces) navigate on their own, so only
-        // react to values that map to a known organization
-        const org = organizations.find((o) => o.id === details.value);
-        if (!org) return;
-
-        // Remember as last-used, then navigate so the URL owns the active
-        // workspace (survives refresh and is shareable)
-        orgContext?.setCurrentWorkspace(org.id);
-        navigate({
-          to: "/@{$workspaceSlug}/~",
-          params: { workspaceSlug: org.slug },
-        });
-      }}
-    >
-      <MenuTrigger asChild>
-        <button
-          type="button"
-          className="flex w-full items-center gap-2 rounded-md border border-sidebar-border bg-sidebar-accent/40 px-3 py-2 text-left font-medium text-sidebar-foreground text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-        >
-          <Building2 className="size-4 shrink-0 text-primary" />
-          <span className="flex-1 truncate">
-            {current?.name ?? "Select workspace"}
-          </span>
-          <ChevronsUpDown className="size-4 shrink-0 opacity-60" />
-        </button>
-      </MenuTrigger>
-
-      <MenuPositioner className="w-(--reference-width)!">
-        <MenuContent className="flex max-h-80 min-w-56 flex-col gap-0 overflow-auto rounded-lg">
-          {organizations.map((org) => {
-            const isSelected = org.id === current?.id;
-
-            return (
-              <MenuItem key={org.id} value={org.id} className="gap-2">
-                <Building2 className="size-4 shrink-0 opacity-70" />
-                <span className="flex-1 truncate">{org.name}</span>
-                {isSelected && (
-                  <Check className="size-4 shrink-0 text-primary" />
-                )}
-              </MenuItem>
-            );
-          })}
-
-          {orgDashboardUrl && (
-            <>
-              <MenuSeparator />
-
-              <MenuItem asChild value="manage-workspaces" className="gap-2">
-                <a href={orgDashboardUrl}>
-                  <Settings2 className="size-4 shrink-0 opacity-70" />
-                  Manage workspaces
-                </a>
-              </MenuItem>
-            </>
-          )}
-        </MenuContent>
-      </MenuPositioner>
-    </MenuRoot>
+    <SharedWorkspaceSwitcher
+      variant="sidebar"
+      workspaces={organizations.map((org) => ({
+        id: org.id,
+        name: org.name,
+        logo: org.logo,
+      }))}
+      currentWorkspaceId={current.id}
+      onSelect={handleSelect}
+      {...(AUTH_BASE_URL && {
+        manageUrl: gatekeeperDashboardUrl(AUTH_BASE_URL),
+      })}
+    />
   );
 };
 
