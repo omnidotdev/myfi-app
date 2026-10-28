@@ -3,6 +3,7 @@ import { Loader2Icon, PlusIcon, TrashIcon, XIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import LoadError from "@/components/LoadError";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
 import { buildLiabilityAccountPayload } from "@/features/loans/lib/buildLiabilityAccountPayload";
@@ -92,6 +93,7 @@ function LoansPage() {
   const [loans, setLoans] = useState<Loan[]>([]);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [formValues, setFormValues] = useState<LoanFormValues>(emptyForm);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
@@ -125,14 +127,16 @@ function LoansPage() {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const res = await apiFetch(`/api/loans?bookId=${activeBookId}`);
       const data = await res.json();
 
       setLoans(data.loans ?? []);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load loans", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -518,8 +522,13 @@ function LoansPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="loans" onRetry={fetchLoans} />
+      )}
+
       {/* Empty state */}
-      {!loading && loans.length === 0 && (
+      {!loading && !loadError && loans.length === 0 && (
         <div className="rounded-lg border border-border bg-card p-8 text-center">
           <p className="text-muted-foreground">
             No loans yet. Create your first loan to start tracking amortization
@@ -529,7 +538,7 @@ function LoansPage() {
       )}
 
       {/* Loans table */}
-      {!loading && loans.length > 0 && (
+      {!loading && !loadError && loans.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-border bg-card">
           <table className="w-full text-sm">
             <thead>
@@ -690,6 +699,7 @@ function LoansPage() {
                   <div className="flex items-center gap-2">
                     <input
                       type="text"
+                      aria-label={isPersonal ? "Debt name" : "Liability name"}
                       value={newDebtName}
                       onChange={(e) => setNewDebtName(e.target.value)}
                       placeholder={

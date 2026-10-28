@@ -12,6 +12,7 @@ import { toast } from "sonner";
 
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
+import LoadError from "@/components/LoadError";
 import BookPicker from "@/features/books/components/BookPicker";
 import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
@@ -71,6 +72,7 @@ function DocumentsPage() {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [category, setCategory] = useState<string>("other");
   const [vendorId, setVendorId] = useState<string>("");
@@ -84,15 +86,15 @@ function DocumentsPage() {
   const fetchDocuments = useCallback(async () => {
     if (!activeBookId) return;
     setIsLoading(true);
+    setLoadError(false);
     try {
       const res = await apiFetch(`/api/documents?bookId=${activeBookId}`);
       if (!res.ok) throw new Error(`Failed to load documents (${res.status})`);
       const data = (await res.json()) as { documents: Document[] };
       setDocuments(data.documents ?? []);
     } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : "Failed to load documents",
-      );
+      console.error("Failed to load documents", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -154,7 +156,8 @@ function DocumentsPage() {
       setVendorId("");
       await fetchDocuments();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to upload");
+      console.error("Document upload failed", err);
+      toast.error("Couldn't upload the document. Please try again.");
     } finally {
       setIsUploading(false);
     }
@@ -174,7 +177,8 @@ function DocumentsPage() {
         window.open(url, "_blank", "noopener,noreferrer");
         setTimeout(() => URL.revokeObjectURL(url), 60_000);
       } catch (err) {
-        toast.error(err instanceof Error ? err.message : "Failed to open");
+        console.error("Failed to open document", err);
+        toast.error("Couldn't open the document. Please try again.");
       } finally {
         setViewingId(null);
       }
@@ -195,7 +199,8 @@ function DocumentsPage() {
       setPendingDelete(null);
       await fetchDocuments();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to delete");
+      console.error("Failed to delete document", err);
+      toast.error("Couldn't delete the document. Please try again.");
     } finally {
       setIsDeleting(false);
     }
@@ -309,6 +314,7 @@ function DocumentsPage() {
         <div className="flex flex-wrap items-center gap-3">
           <input
             type="file"
+            aria-label="Choose a document to upload"
             accept={ACCEPTED_TYPES}
             onChange={handleFileChange}
             className="text-sm"
@@ -338,6 +344,8 @@ function DocumentsPage() {
         <div className="flex items-center justify-center p-8">
           <Loader2Icon className="size-5 animate-spin text-muted-foreground" />
         </div>
+      ) : loadError ? (
+        <LoadError resource="documents" onRetry={fetchDocuments} />
       ) : documents.length === 0 ? (
         <EmptyState
           icon={FileTextIcon}

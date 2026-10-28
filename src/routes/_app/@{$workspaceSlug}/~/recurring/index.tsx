@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
+import LoadError from "@/components/LoadError";
 import BookPicker from "@/features/books/components/BookPicker";
 import type { InvoiceAccount } from "@/features/invoicing/types/invoicing";
 import { apiFetch } from "@/lib/api/apiFetch";
@@ -56,6 +57,7 @@ function RecurringPage() {
   const [items, setItems] = useState<RecurringTransaction[]>([]);
   const [accounts, setAccounts] = useState<InvoiceAccount[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
 
   const [createOpen, setCreateOpen] = useState(false);
@@ -84,6 +86,7 @@ function RecurringPage() {
   const fetchData = useCallback(async () => {
     if (!activeBookId) return;
     setIsLoading(true);
+    setLoadError(false);
     try {
       const [recRes, acctRes] = await Promise.all([
         apiFetch(`/api/recurring-transactions?bookId=${activeBookId}`),
@@ -95,8 +98,9 @@ function RecurringPage() {
       ]);
       setItems(recData.recurringTransactions ?? []);
       setAccounts(acctData.accounts ?? []);
-    } catch {
-      toast.error("Could not load recurring transactions");
+    } catch (err) {
+      console.error("Failed to load recurring transactions", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -256,14 +260,18 @@ function RecurringPage() {
         </div>
       )}
 
-      {!loading && items.length === 0 && (
+      {!loading && loadError && (
+        <LoadError resource="recurring transactions" onRetry={fetchData} />
+      )}
+
+      {!loading && !loadError && items.length === 0 && (
         <EmptyState
           title="No recurring transactions yet"
           description="Set up a memorized entry to post rent, subscriptions, or other regular items automatically."
         />
       )}
 
-      {!loading && items.length > 0 && (
+      {!loading && !loadError && items.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-border bg-card">
           <table className="w-full text-sm">
             <thead className="border-border border-b text-left text-muted-foreground">

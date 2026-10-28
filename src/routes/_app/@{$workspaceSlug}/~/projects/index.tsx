@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+import LoadError from "@/components/LoadError";
 import BookPicker from "@/features/books/components/BookPicker";
 import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
@@ -84,6 +85,7 @@ function ProjectsPage() {
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [formValues, setFormValues] = useState<ProjectFormValues>(emptyForm);
@@ -93,14 +95,16 @@ function ProjectsPage() {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const res = await apiFetch(`/api/projects?bookId=${activeBookId}`);
       const data = await res.json();
 
       setProjects(data.projects ?? []);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load projects", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -249,8 +253,13 @@ function ProjectsPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="projects" onRetry={fetchProjects} />
+      )}
+
       {/* Empty state */}
-      {!loading && projects.length === 0 && (
+      {!loading && !loadError && projects.length === 0 && (
         <div className="rounded-lg border border-border bg-card p-8 text-center">
           <p className="text-muted-foreground">
             No projects yet. Create your first project to start tracking budgets
@@ -260,7 +269,7 @@ function ProjectsPage() {
       )}
 
       {/* Projects table */}
-      {!loading && projects.length > 0 && (
+      {!loading && !loadError && projects.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-border bg-card">
           <table className="w-full text-sm">
             <thead>

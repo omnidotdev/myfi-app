@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
+import LoadError from "@/components/LoadError";
 import { useWorkspace } from "@/providers/WorkspaceProvider";
 
 export const Route = createFileRoute(
@@ -154,6 +155,7 @@ function AuditLogPage() {
 
   const [events, setEvents] = useState<AuditEvent[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -168,6 +170,7 @@ function AuditLogPage() {
       if (!organizationId || !CHRONICLE_URL) return;
 
       setIsLoading(true);
+      setLoadError(false);
 
       try {
         const client = new GraphQLClient(CHRONICLE_URL);
@@ -199,8 +202,9 @@ function AuditLogPage() {
 
         setEvents((prev) => (append ? [...prev, ...fetched] : fetched));
         setHasMore(fetched.length === PAGE_SIZE);
-      } catch {
-        // Silently handle fetch errors
+      } catch (err) {
+        console.error("Failed to load audit log", err);
+        setLoadError(true);
       } finally {
         setIsLoading(false);
       }
@@ -323,8 +327,13 @@ function AuditLogPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!isLoading && loadError && events.length === 0 && (
+        <LoadError resource="audit log" onRetry={() => fetchEvents(0, false)} />
+      )}
+
       {/* Empty state */}
-      {!isLoading && events.length === 0 && (
+      {!isLoading && !loadError && events.length === 0 && (
         <div className="flex items-center justify-center rounded-lg border border-border bg-card p-8">
           <p className="text-muted-foreground text-sm">No audit events found</p>
         </div>

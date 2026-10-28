@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import EmptyState from "@/components/EmptyState";
+import LoadError from "@/components/LoadError";
 import type { Account } from "@/features/accounts/types/account";
 import { apiFetch } from "@/lib/api/apiFetch";
 import formatCurrency from "@/lib/format/currency";
@@ -55,6 +56,7 @@ function AssetDetailPage() {
   const [asset, setAsset] = useState<FixedAsset | null>(null);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [disposeFormOpen, setDisposeFormOpen] = useState(false);
 
   // Dispose form state
@@ -65,14 +67,16 @@ function AssetDetailPage() {
 
   const fetchAsset = useCallback(async () => {
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const res = await apiFetch(`/api/fixed-assets/${assetId}`);
       const data = await res.json();
 
       setAsset(data.asset ?? data);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load asset", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -181,6 +185,14 @@ function AssetDetailPage() {
     return (
       <div className="flex items-center justify-center p-12">
         <Loader2Icon className="size-5 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="p-6">
+        <LoadError resource="this asset" onRetry={fetchAsset} />
       </div>
     );
   }

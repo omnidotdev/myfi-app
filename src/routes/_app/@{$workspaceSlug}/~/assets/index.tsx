@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { HardDriveIcon, Loader2Icon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import LoadError from "@/components/LoadError";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
 import { apiFetch } from "@/lib/api/apiFetch";
@@ -54,6 +55,7 @@ function AssetsPage() {
   const [assets, setAssets] = useState<FixedAsset[]>([]);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [assetToDelete, setAssetToDelete] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -81,14 +83,16 @@ function AssetsPage() {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const res = await apiFetch(`/api/fixed-assets?bookId=${activeBookId}`);
       const data = await res.json();
 
       setAssets(data.assets ?? []);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load fixed assets", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -286,8 +290,13 @@ function AssetsPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="fixed assets" onRetry={fetchAssets} />
+      )}
+
       {/* Empty state */}
-      {!loading && assets.length === 0 && (
+      {!loading && !loadError && assets.length === 0 && (
         <div className="rounded-lg border border-border bg-card p-8 text-center">
           <HardDriveIcon className="mx-auto mb-3 size-10 text-muted-foreground" />
           <p className="font-medium">No fixed assets yet</p>
@@ -306,7 +315,7 @@ function AssetsPage() {
       )}
 
       {/* Asset table */}
-      {!loading && assets.length > 0 && (
+      {!loading && !loadError && assets.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-border">
           <table className="w-full text-sm">
             <thead>

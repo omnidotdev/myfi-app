@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import LoadError from "@/components/LoadError";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
 import ConnectedAccountsList from "@/features/connections/components/ConnectedAccountsList";
@@ -50,6 +51,7 @@ function ConnectionsSettingsPage() {
 
   const [accounts, setAccounts] = useState<ConnectedAccount[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [importResult, setImportResult] = useState<{
     addedCount: number;
     format: string;
@@ -76,6 +78,7 @@ function ConnectionsSettingsPage() {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const res = await apiFetch(`/api/connections?bookId=${activeBookId}`);
@@ -88,8 +91,9 @@ function ConnectionsSettingsPage() {
       );
 
       setAccounts(mapped);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load connections", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -366,8 +370,13 @@ function ConnectionsSettingsPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="connections" onRetry={fetchConnections} />
+      )}
+
       {/* Connections list */}
-      {!loading && (
+      {!loading && !loadError && (
         <ConnectedAccountsList
           accounts={accounts}
           chartOfAccounts={chartOfAccounts}

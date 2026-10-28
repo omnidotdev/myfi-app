@@ -85,7 +85,8 @@ function DelawareFranchiseTaxPage() {
       if (!res.ok) throw new Error("Failed to calculate franchise tax");
       setData(await res.json());
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to calculate");
+      console.error("Franchise tax calculation failed", err);
+      setError("Couldn't run this calculation. Please try again.");
     } finally {
       setIsLoading(false);
     }

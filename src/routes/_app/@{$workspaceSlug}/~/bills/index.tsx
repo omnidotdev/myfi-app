@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
+import LoadError from "@/components/LoadError";
 import BillForm, {
   type BillFormPayload,
 } from "@/features/billing/components/BillForm";
@@ -60,6 +61,7 @@ function BillsPage() {
   );
   const [agingTotals, setAgingTotals] = useState<AgingTotals | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -72,6 +74,7 @@ function BillsPage() {
   const fetchData = useCallback(async () => {
     if (!activeBookId) return;
     setIsLoading(true);
+    setLoadError(false);
     const asOf = new Date().toISOString().slice(0, 10);
     try {
       const [billRes, vendRes, acctRes, taxRes, agingRes] = await Promise.all([
@@ -98,8 +101,9 @@ function BillsPage() {
         taxData.taxJurisdictions ?? taxData.jurisdictions ?? [],
       );
       setAgingTotals(agingData?.totals ?? null);
-    } catch {
-      toast.error("Could not load bills");
+    } catch (err) {
+      console.error("Failed to load bills", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -201,32 +205,41 @@ function BillsPage() {
         </div>
       )}
 
-      {!loading && agingTotals && Number(agingTotals.total) > 0 && (
-        <div className="rounded-lg border border-border bg-card p-4">
-          <h2 className="mb-3 font-semibold text-sm">Accounts Payable Aging</h2>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-6">
-            {(
-              [
-                ["Current", agingTotals.current],
-                ["1-30", agingTotals.days1to30],
-                ["31-60", agingTotals.days31to60],
-                ["61-90", agingTotals.days61to90],
-                ["90+", agingTotals.over90],
-                ["Total", agingTotals.total],
-              ] as const
-            ).map(([label, value]) => (
-              <div key={label} className="flex flex-col">
-                <span className="text-muted-foreground text-xs">{label}</span>
-                <span className="font-semibold text-sm">
-                  {formatCurrency(value)}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+      {!loading && loadError && (
+        <LoadError resource="bills" onRetry={fetchData} />
       )}
 
-      {!loading && bills.length === 0 && (
+      {!loading &&
+        !loadError &&
+        agingTotals &&
+        Number(agingTotals.total) > 0 && (
+          <div className="rounded-lg border border-border bg-card p-4">
+            <h2 className="mb-3 font-semibold text-sm">
+              Accounts Payable Aging
+            </h2>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-6">
+              {(
+                [
+                  ["Current", agingTotals.current],
+                  ["1-30", agingTotals.days1to30],
+                  ["31-60", agingTotals.days31to60],
+                  ["61-90", agingTotals.days61to90],
+                  ["90+", agingTotals.over90],
+                  ["Total", agingTotals.total],
+                ] as const
+              ).map(([label, value]) => (
+                <div key={label} className="flex flex-col">
+                  <span className="text-muted-foreground text-xs">{label}</span>
+                  <span className="font-semibold text-sm">
+                    {formatCurrency(value)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+      {!loading && !loadError && bills.length === 0 && (
         <EmptyState
           title="No bills yet"
           description={
@@ -237,7 +250,7 @@ function BillsPage() {
         />
       )}
 
-      {!loading && bills.length > 0 && (
+      {!loading && !loadError && bills.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-border bg-card">
           <table className="w-full text-sm">
             <thead className="border-border border-b text-left text-muted-foreground">

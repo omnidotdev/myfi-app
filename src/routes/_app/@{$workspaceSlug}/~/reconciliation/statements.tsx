@@ -6,6 +6,7 @@ import {
   PlayIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import LoadError from "@/components/LoadError";
 import { apiFetch } from "@/lib/api/apiFetch";
 
 import useActiveBook from "@/lib/hooks/useActiveBook";
@@ -67,6 +68,7 @@ function StatementReconciliationPage() {
 
   // History
   const [history, setHistory] = useState<Reconciliation[]>([]);
+  const [historyError, setHistoryError] = useState(false);
 
   // Fetch accounts filtered to asset subtypes
   const fetchAccounts = useCallback(async () => {
@@ -88,6 +90,8 @@ function StatementReconciliationPage() {
   const fetchHistory = useCallback(async () => {
     if (!activeBookId) return;
 
+    setHistoryError(false);
+
     try {
       const params = new URLSearchParams({
         bookId: activeBookId,
@@ -102,8 +106,9 @@ function StatementReconciliationPage() {
           (r: Reconciliation) => r.status === "completed",
         ),
       );
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load reconciliation history", err);
+      setHistoryError(true);
     }
   }, [activeBookId, selectedAccountId]);
 
@@ -363,6 +368,7 @@ function StatementReconciliationPage() {
                     <td className="px-4 py-3">
                       <input
                         type="checkbox"
+                        aria-label="Mark transaction cleared"
                         checked={line.cleared}
                         onChange={(e) =>
                           handleToggleCleared(line.lineId, e.target.checked)
@@ -420,8 +426,13 @@ function StatementReconciliationPage() {
         </div>
       )}
 
+      {/* History load-error state */}
+      {!activeRecon && historyError && (
+        <LoadError resource="reconciliation history" onRetry={fetchHistory} />
+      )}
+
       {/* History table */}
-      {!activeRecon && history.length > 0 && (
+      {!activeRecon && !historyError && history.length > 0 && (
         <div className="flex flex-col gap-3">
           <h2 className="flex items-center gap-2 font-semibold text-lg">
             <HistoryIcon className="size-5" />

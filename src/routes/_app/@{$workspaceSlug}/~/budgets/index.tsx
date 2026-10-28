@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import LoadError from "@/components/LoadError";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
 import BudgetForm from "@/features/budgets/components/BudgetForm";
@@ -30,6 +31,7 @@ function BudgetsPage() {
   const [tracking, setTracking] = useState<BudgetTracking[]>([]);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [editingBudget, setEditingBudget] = useState<Budget | null>(null);
   const [budgetToDelete, setBudgetToDelete] = useState<Budget | null>(null);
@@ -39,6 +41,7 @@ function BudgetsPage() {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const [budgetsRes, trackingRes, accountsRes] = await Promise.all([
@@ -70,8 +73,9 @@ function BudgetsPage() {
       setBudgets(mappedBudgets);
       setTracking(trackingData.tracking ?? trackingData ?? []);
       setAccounts(mappedAccounts);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load budgets", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -186,8 +190,13 @@ function BudgetsPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="budgets" onRetry={fetchBudgets} />
+      )}
+
       {/* Budget list */}
-      {!loading && (
+      {!loading && !loadError && (
         <BudgetList
           budgets={budgets}
           tracking={tracking}

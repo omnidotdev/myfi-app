@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import LoadError from "@/components/LoadError";
 import AccountForm from "@/features/accounts/components/AccountForm";
 import AccountTree from "@/features/accounts/components/AccountTree";
 import type { Account } from "@/features/accounts/types/account";
@@ -22,6 +23,7 @@ function AccountsPage() {
 
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [showInactive, setShowInactive] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [editingAccount, setEditingAccount] = useState<Account | null>(null);
@@ -31,6 +33,7 @@ function AccountsPage() {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const res = await apiFetch(`/api/accounts?bookId=${activeBookId}`);
@@ -43,8 +46,9 @@ function AccountsPage() {
       );
 
       setAccounts(mapped);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load accounts", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -177,8 +181,13 @@ function AccountsPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="accounts" onRetry={fetchAccounts} />
+      )}
+
       {/* Empty state */}
-      {!loading && accounts.length === 0 && (
+      {!loading && !loadError && accounts.length === 0 && (
         <div className="rounded-lg border border-border bg-card p-8 text-center">
           <p className="text-muted-foreground">
             No accounts yet.{" "}
@@ -195,7 +204,7 @@ function AccountsPage() {
       )}
 
       {/* Account tree */}
-      {!loading && accounts.length > 0 && (
+      {!loading && !loadError && accounts.length > 0 && (
         <AccountTree
           accounts={visibleAccounts}
           onEdit={handleEdit}

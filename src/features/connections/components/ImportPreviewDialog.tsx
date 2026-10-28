@@ -304,6 +304,7 @@ function ImportPreviewDialog({ file, bookId, onConfirm, onCancel }: Props) {
                       <div className="flex flex-col gap-1">
                         <span className="font-medium">{header}</span>
                         <select
+                          aria-label={`Column role for ${header}`}
                           value={getRoleForColumn(i)}
                           onChange={(e) =>
                             handleColumnChange(i, e.target.value)
@@ -386,6 +387,7 @@ function ImportPreviewDialog({ file, bookId, onConfirm, onCancel }: Props) {
           <div className="flex items-center gap-2">
             <input
               type="text"
+              aria-label="Import profile name"
               value={profileName}
               onChange={(e) => setProfileName(e.target.value)}
               placeholder="Save as profile (e.g. Chase Checking)"

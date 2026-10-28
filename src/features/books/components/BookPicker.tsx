@@ -17,6 +17,7 @@ function BookPicker({ books, selectedBookId, onSelect }: BookPickerProps) {
 
   return (
     <select
+      aria-label="Select book"
       value={selectedBookId ?? ALL_BOOKS_VALUE}
       onChange={(e) =>
         onSelect(e.target.value === ALL_BOOKS_VALUE ? null : e.target.value)

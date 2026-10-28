@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
+import LoadError from "@/components/LoadError";
 import BookPicker from "@/features/books/components/BookPicker";
 import JournalEntryTable from "@/features/ledger/components/JournalEntryTable";
 import type {
@@ -31,6 +32,7 @@ function LedgerPage() {
 
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [sourceFilter, setSourceFilter] = useState<JournalEntrySource | "all">(
     "all",
   );
@@ -44,6 +46,7 @@ function LedgerPage() {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const res = await apiFetch(
@@ -63,8 +66,9 @@ function LedgerPage() {
       }));
 
       setEntries(mapped);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load journal entries", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -285,8 +289,13 @@ function LedgerPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="journal entries" onRetry={fetchEntries} />
+      )}
+
       {/* Empty state */}
-      {!loading && entries.length === 0 && (
+      {!loading && !loadError && entries.length === 0 && (
         <EmptyState
           title="No journal entries yet"
           description="Create an entry to start recording transactions."
@@ -304,7 +313,7 @@ function LedgerPage() {
       )}
 
       {/* Journal entry table */}
-      {!loading && entries.length > 0 && (
+      {!loading && !loadError && entries.length > 0 && (
         <JournalEntryTable
           entries={filteredEntries}
           onDelete={requestDelete}

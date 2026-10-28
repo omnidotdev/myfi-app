@@ -11,6 +11,7 @@ import {
   YAxis,
 } from "recharts";
 import { toast } from "sonner";
+import LoadError from "@/components/LoadError";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
 import { apiFetch } from "@/lib/api/apiFetch";
@@ -91,6 +92,7 @@ function LoanDetailPage() {
   const [loading, setLoading] = useState(true);
   const [scheduleLoading, setScheduleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState(false);
   const [posting, setPosting] = useState(false);
   const [payoffOpen, setPayoffOpen] = useState(false);
   const [payoffValues, setPayoffValues] = useState<PayoffFormValues>({
@@ -104,6 +106,7 @@ function LoanDetailPage() {
 
     setLoading(true);
     setError(null);
+    setLoadError(false);
 
     try {
       const res = await apiFetch(`/api/loans?bookId=${activeBookId}`);
@@ -116,8 +119,9 @@ function LoanDetailPage() {
       } else {
         setLoan(found);
       }
-    } catch {
-      setError("Failed to load loan");
+    } catch (err) {
+      console.error("Failed to load loan", err);
+      setLoadError(true);
     } finally {
       setLoading(false);
     }
@@ -288,7 +292,7 @@ function LoanDetailPage() {
     );
   }
 
-  if (error || !loan) {
+  if (loadError || error || !loan) {
     return (
       <div className="flex flex-col gap-6 p-6">
         <Link
@@ -299,9 +303,13 @@ function LoanDetailPage() {
           <ArrowLeftIcon className="size-4" />
           Back to Loans
         </Link>
-        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-destructive text-sm">
-          {error ?? "Loan not found"}
-        </div>
+        {loadError ? (
+          <LoadError resource="this loan" onRetry={fetchLoan} />
+        ) : (
+          <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-destructive text-sm">
+            {error ?? "Loan not found"}
+          </div>
+        )}
       </div>
     );
   }

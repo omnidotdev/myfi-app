@@ -146,6 +146,7 @@ function CategorizationRuleTable({
 
             {isEditing && !isSplit ? (
               <select
+                aria-label="Debit account"
                 value={editDebitAccountId}
                 onChange={(e) => setEditDebitAccountId(e.target.value)}
                 className="rounded-md border border-border bg-background px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
@@ -168,6 +169,7 @@ function CategorizationRuleTable({
 
             {isEditing && !isSplit ? (
               <select
+                aria-label="Credit account"
                 value={editCreditAccountId}
                 onChange={(e) => setEditCreditAccountId(e.target.value)}
                 className="rounded-md border border-border bg-background px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"

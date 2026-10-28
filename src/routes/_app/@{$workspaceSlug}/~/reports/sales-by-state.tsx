@@ -64,7 +64,8 @@ function SalesByStateReportPage() {
       if (!res.ok) throw new Error("Failed to load report");
       setData(await res.json());
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load report");
+      console.error("Report request failed", err);
+      setError("Couldn't load this report. Please try again.");
     } finally {
       setIsLoading(false);
     }

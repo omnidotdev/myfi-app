@@ -76,9 +76,8 @@ function AttachmentPanel({ bookId, journalEntryId }: AttachmentPanelProps) {
       const data = (await res.json()) as { attachments: Attachment[] };
       setAttachments(data.attachments ?? []);
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Failed to load attachments";
-      toast.error(message);
+      console.error("Failed to load attachments", err);
+      toast.error("Couldn't load attachments. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -190,9 +189,8 @@ function AttachmentPanel({ bookId, journalEntryId }: AttachmentPanelProps) {
         // Revoke after a delay so the new tab has time to load the blob
         setTimeout(() => URL.revokeObjectURL(url), 60_000);
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Failed to open attachment";
-        toast.error(message);
+        console.error("Failed to open attachment", err);
+        toast.error("Couldn't open the attachment. Please try again.");
       } finally {
         setViewingId(null);
       }
@@ -215,9 +213,8 @@ function AttachmentPanel({ bookId, journalEntryId }: AttachmentPanelProps) {
         toast.success("Attachment unlinked");
         await fetchAttachments();
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Failed to unlink attachment";
-        toast.error(message);
+        console.error("Failed to unlink attachment", err);
+        toast.error("Couldn't unlink the attachment. Please try again.");
       }
     },
     [bookId, fetchAttachments],
@@ -240,9 +237,8 @@ function AttachmentPanel({ bookId, journalEntryId }: AttachmentPanelProps) {
       setPendingDelete(null);
       await fetchAttachments();
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Failed to delete attachment";
-      toast.error(message);
+      console.error("Failed to delete attachment", err);
+      toast.error("Couldn't delete the attachment. Please try again.");
     } finally {
       setIsDeleting(false);
     }

@@ -10,6 +10,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
+import LoadError from "@/components/LoadError";
 import BookPicker from "@/features/books/components/BookPicker";
 import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
@@ -57,6 +58,7 @@ function TagsPage() {
 
   const [groups, setGroups] = useState<TagGroup[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
   const [isCreatingGroup, setIsCreatingGroup] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<{
@@ -80,14 +82,16 @@ function TagsPage() {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const res = await apiFetch(`/api/tags/groups?bookId=${activeBookId}`);
       const data = await res.json();
 
       setGroups(data.tagGroups ?? []);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load tags", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -312,8 +316,13 @@ function TagsPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="tags" onRetry={fetchGroups} />
+      )}
+
       {/* Empty state */}
-      {!loading && groups.length === 0 && (
+      {!loading && !loadError && groups.length === 0 && (
         <EmptyState
           title="No tag groups yet"
           description="Create one above to get started."
@@ -322,6 +331,7 @@ function TagsPage() {
 
       {/* Tag groups */}
       {!loading &&
+        !loadError &&
         groups.map((group) => {
           const addForm = addTagForms[group.id] ?? INITIAL_ADD_TAG;
           const isSavingTag = savingTagGroupId === group.id;
@@ -368,6 +378,7 @@ function TagsPage() {
                       <>
                         <input
                           type="text"
+                          aria-label="Tag name"
                           value={editForm.name}
                           onChange={(e) =>
                             setEditForm((prev) => ({
@@ -380,6 +391,7 @@ function TagsPage() {
                         />
                         <input
                           type="text"
+                          aria-label="Tag code"
                           value={editForm.code}
                           onChange={(e) =>
                             setEditForm((prev) => ({
@@ -465,6 +477,7 @@ function TagsPage() {
               <div className="flex items-center gap-2 border-border border-t px-4 py-2">
                 <input
                   type="text"
+                  aria-label="New tag name"
                   value={addForm.name}
                   onChange={(e) =>
                     updateAddTagForm(group.id, "name", e.target.value)
@@ -477,6 +490,7 @@ function TagsPage() {
                 />
                 <input
                   type="text"
+                  aria-label="New tag code"
                   value={addForm.code}
                   onChange={(e) =>
                     updateAddTagForm(group.id, "code", e.target.value)

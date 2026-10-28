@@ -9,6 +9,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
+import LoadError from "@/components/LoadError";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
 import SavingsGoalCard from "@/features/savings/components/SavingsGoalCard";
@@ -37,6 +38,7 @@ function SavingsPage() {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [netWorth, setNetWorth] = useState<NetWorthSummary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [goalToDelete, setGoalToDelete] = useState<SavingsGoal | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -45,6 +47,7 @@ function SavingsPage() {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const [goalsRes, accountsRes, netWorthRes] = await Promise.all([
@@ -76,8 +79,9 @@ function SavingsPage() {
       setGoals(mappedGoals);
       setAccounts(mappedAccounts);
       setNetWorth(netWorthData);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load savings goals", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -176,8 +180,13 @@ function SavingsPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="savings goals" onRetry={fetchData} />
+      )}
+
       {/* Net worth summary */}
-      {!loading && netWorth && (
+      {!loading && !loadError && netWorth && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="flex items-center gap-3 rounded-lg border border-border bg-card p-4">
             <div className="flex size-10 items-center justify-center rounded-full bg-green-100 text-green-600">
@@ -224,7 +233,7 @@ function SavingsPage() {
       )}
 
       {/* Goals grid */}
-      {!loading && goals.length === 0 && (
+      {!loading && !loadError && goals.length === 0 && (
         <EmptyState
           title="No savings goals yet"
           description="Create a goal to track progress toward what you are saving for."
@@ -241,7 +250,7 @@ function SavingsPage() {
         />
       )}
 
-      {!loading && goals.length > 0 && (
+      {!loading && !loadError && goals.length > 0 && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {goals.map((goal) => (
             <SavingsGoalCard

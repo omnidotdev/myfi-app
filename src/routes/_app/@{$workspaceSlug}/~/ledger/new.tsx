@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Loader2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import LoadError from "@/components/LoadError";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
 import JournalEntryForm from "@/features/ledger/components/JournalEntryForm";
@@ -26,11 +27,13 @@ function NewJournalEntryPage() {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [vendors, setVendors] = useState<{ rowId: string; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
   const fetchAccounts = useCallback(async () => {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const res = await apiFetch(`/api/accounts?bookId=${activeBookId}`);
@@ -55,8 +58,9 @@ function NewJournalEntryPage() {
       );
 
       setVendors(mappedVendors);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load accounts", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -166,8 +170,13 @@ function NewJournalEntryPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="accounts" onRetry={fetchAccounts} />
+      )}
+
       {/* Form */}
-      {!loading && (
+      {!loading && !loadError && (
         <div className="rounded-lg border border-border bg-card p-6">
           <JournalEntryForm
             accounts={accounts}

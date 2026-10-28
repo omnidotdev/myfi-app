@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon, TrashIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import LoadError from "@/components/LoadError";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
 import type {
@@ -143,6 +144,7 @@ function RulesPage() {
   const [rules, setRules] = useState<CategorizationRule[]>([]);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState<CreateFormState>(INITIAL_FORM);
   const [editingRuleId, setEditingRuleId] = useState<string | null>(null);
@@ -153,6 +155,7 @@ function RulesPage() {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const [rulesRes, accountsRes] = await Promise.all([
@@ -179,8 +182,9 @@ function RulesPage() {
 
       setRules(mappedRules);
       setAccounts(mappedAccounts);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load rules", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -841,8 +845,13 @@ function RulesPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="rules" onRetry={fetchData} />
+      )}
+
       {/* Rules table */}
-      {!loading && (
+      {!loading && !loadError && (
         <CategorizationRuleTable
           rules={rules}
           accounts={activeAccounts.map((a) => ({

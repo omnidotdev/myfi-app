@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import LoadError from "@/components/LoadError";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
 import AccountMappingForm from "@/features/settings/components/AccountMappingForm";
@@ -31,11 +32,13 @@ function MappingsSettingsPage() {
     }[]
   >([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
   const fetchData = useCallback(async () => {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const [accountsRes, mappingsRes] = await Promise.all([
@@ -62,8 +65,9 @@ function MappingsSettingsPage() {
 
       setAccounts(mappedAccounts);
       setMappings(mappedMappings);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load mappings", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -128,8 +132,13 @@ function MappingsSettingsPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="mappings" onRetry={fetchData} />
+      )}
+
       {/* Mapping form */}
-      {!loading && (
+      {!loading && !loadError && (
         <AccountMappingForm
           accounts={accounts}
           mappings={mappings}

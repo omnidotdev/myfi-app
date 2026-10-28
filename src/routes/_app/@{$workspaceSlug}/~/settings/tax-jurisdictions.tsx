@@ -9,6 +9,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
+import LoadError from "@/components/LoadError";
 import BookPicker from "@/features/books/components/BookPicker";
 import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
@@ -80,11 +81,13 @@ function TaxJurisdictionsPage() {
   const [form, setForm] = useState<JurisdictionFormData>({ ...EMPTY_FORM });
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState(false);
 
   const fetchJurisdictions = useCallback(async () => {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const res = await apiFetch(
@@ -93,8 +96,9 @@ function TaxJurisdictionsPage() {
       const data = await res.json();
 
       setJurisdictions(data.jurisdictions ?? []);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load tax jurisdictions", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -406,8 +410,13 @@ function TaxJurisdictionsPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && !showForm && (
+        <LoadError resource="tax jurisdictions" onRetry={fetchJurisdictions} />
+      )}
+
       {/* Empty state */}
-      {!loading && jurisdictions.length === 0 && !showForm && (
+      {!loading && !loadError && jurisdictions.length === 0 && !showForm && (
         <EmptyState
           title="No tax jurisdictions yet"
           description="Add one to start tracking sales tax."
@@ -415,7 +424,7 @@ function TaxJurisdictionsPage() {
       )}
 
       {/* Jurisdiction table */}
-      {!loading && jurisdictions.length > 0 && (
+      {!loading && !loadError && jurisdictions.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-border bg-card">
           <table className="w-full text-sm">
             <thead>

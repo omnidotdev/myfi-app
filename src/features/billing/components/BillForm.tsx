@@ -174,6 +174,7 @@ function BillForm({
             <input
               type="text"
               required
+              aria-label="Line item description"
               value={line.description}
               onChange={(e) =>
                 updateLine(index, { description: e.target.value })

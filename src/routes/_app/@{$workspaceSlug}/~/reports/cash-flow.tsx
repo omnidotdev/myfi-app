@@ -79,7 +79,8 @@ function CashFlowPage() {
       const json = await res.json();
       setData(json);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load report");
+      console.error("Report request failed", err);
+      setError("Couldn't load this report. Please try again.");
     } finally {
       setLoading(false);
     }

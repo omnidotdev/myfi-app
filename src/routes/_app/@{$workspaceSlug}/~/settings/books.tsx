@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
+import LoadError from "@/components/LoadError";
 import CreateBookDialog from "@/features/books/components/CreateBookDialog";
 import type Book from "@/features/books/types/book";
 import type { BookType } from "@/features/books/types/book";
@@ -36,6 +37,7 @@ function BooksSettingsPage() {
 
   const [books, setBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [bookToDelete, setBookToDelete] = useState<Book | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -58,6 +60,7 @@ function BooksSettingsPage() {
     if (!organizationId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const res = await apiFetch(`/api/books?organizationId=${organizationId}`);
@@ -68,8 +71,9 @@ function BooksSettingsPage() {
       }));
 
       setBooks(mapped);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load books", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -145,6 +149,8 @@ function BooksSettingsPage() {
         <div className="flex items-center justify-center rounded-lg border border-border bg-card p-8">
           <Loader2Icon className="size-5 animate-spin text-muted-foreground" />
         </div>
+      ) : loadError ? (
+        <LoadError resource="books" onRetry={fetchBooks} />
       ) : books.length === 0 ? (
         <EmptyState
           icon={BookOpenIcon}

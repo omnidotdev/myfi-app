@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CarIcon, Loader2Icon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import LoadError from "@/components/LoadError";
 import BookPicker from "@/features/books/components/BookPicker";
 import { apiFetch } from "@/lib/api/apiFetch";
 import formatCurrency from "@/lib/format/currency";
@@ -61,6 +62,7 @@ function MileagePage() {
   const [logs, setLogs] = useState<MileageLog[]>([]);
   const [summary, setSummary] = useState<MileageSummary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<{
     kind: "vehicle" | "log";
     id: string;
@@ -101,6 +103,7 @@ function MileagePage() {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const params = new URLSearchParams({
@@ -113,8 +116,9 @@ function MileagePage() {
       const data = await res.json();
 
       setLogs(data.logs ?? []);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load mileage logs", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -272,6 +276,7 @@ function MileagePage() {
 
         <div className="flex items-center gap-3">
           <select
+            aria-label="Filter by year"
             value={yearFilter}
             onChange={(e) => setYearFilter(e.target.value)}
             className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
@@ -545,8 +550,13 @@ function MileagePage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="mileage logs" onRetry={fetchLogs} />
+      )}
+
       {/* Empty state */}
-      {!loading && logs.length === 0 && (
+      {!loading && !loadError && logs.length === 0 && (
         <div className="rounded-lg border border-border bg-card p-8 text-center">
           <CarIcon className="mx-auto mb-3 size-10 text-muted-foreground" />
           <p className="font-medium">No mileage logged yet</p>
@@ -557,7 +567,7 @@ function MileagePage() {
       )}
 
       {/* Mileage log table */}
-      {!loading && logs.length > 0 && (
+      {!loading && !loadError && logs.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-border">
           <table className="w-full text-sm">
             <thead>

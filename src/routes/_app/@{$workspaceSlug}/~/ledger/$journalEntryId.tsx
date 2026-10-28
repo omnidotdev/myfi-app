@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeftIcon, Loader2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import LoadError from "@/components/LoadError";
 import AttachmentPanel from "@/features/ledger/components/AttachmentPanel";
 import type { JournalEntry } from "@/features/ledger/types/journalEntry";
 import { apiFetch } from "@/lib/api/apiFetch";
@@ -29,6 +30,7 @@ function JournalEntryDetailPage() {
   const [entry, setEntry] = useState<JournalEntry | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -37,6 +39,7 @@ function JournalEntryDetailPage() {
 
     setIsLoading(true);
     setNotFound(false);
+    setLoadError(false);
 
     try {
       const res = await apiFetch(
@@ -64,8 +67,9 @@ function JournalEntryDetailPage() {
       };
 
       setEntry(mapped);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load journal entry", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -103,7 +107,7 @@ function JournalEntryDetailPage() {
     );
   }
 
-  if (notFound || !entry) {
+  if (loadError || notFound || !entry) {
     return (
       <div className="flex flex-col gap-4 p-6">
         <Link
@@ -114,9 +118,13 @@ function JournalEntryDetailPage() {
           <ArrowLeftIcon className="size-4" />
           Back to ledger
         </Link>
-        <div className="rounded-lg border border-border bg-card p-8 text-center">
-          <p className="text-muted-foreground">Journal entry not found</p>
-        </div>
+        {loadError ? (
+          <LoadError resource="this journal entry" onRetry={fetchEntry} />
+        ) : (
+          <div className="rounded-lg border border-border bg-card p-8 text-center">
+            <p className="text-muted-foreground">Journal entry not found</p>
+          </div>
+        )}
       </div>
     );
   }

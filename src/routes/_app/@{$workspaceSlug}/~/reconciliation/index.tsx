@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import LoadError from "@/components/LoadError";
 import BookPicker from "@/features/books/components/BookPicker";
 import ReconciliationTable from "@/features/reconciliation/components/ReconciliationTable";
 import type { ReconciliationItem } from "@/features/reconciliation/types/reconciliation";
@@ -65,6 +66,7 @@ function ReconciliationPage() {
   const [items, setItems] = useState<ReconciliationItem[]>([]);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [sourceFilter, setSourceFilter] = useState<SourceFilter>("all");
   const [periodYear, setPeriodYear] = useState<number>(0);
   const [periodMonth, setPeriodMonth] = useState<number>(0);
@@ -73,6 +75,7 @@ function ReconciliationPage() {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const params = new URLSearchParams({ bookId: activeBookId });
@@ -90,8 +93,9 @@ function ReconciliationPage() {
       );
 
       setItems(mapped);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load reconciliation items", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -317,6 +321,7 @@ function ReconciliationPage() {
         {/* Period filters */}
         <div className="flex items-center gap-2">
           <select
+            aria-label="Filter by year"
             value={periodYear}
             onChange={(e) => setPeriodYear(Number(e.target.value))}
             className="rounded-lg border border-border bg-card px-3 py-2 text-sm"
@@ -329,6 +334,7 @@ function ReconciliationPage() {
           </select>
 
           <select
+            aria-label="Filter by month"
             value={periodMonth}
             onChange={(e) => setPeriodMonth(Number(e.target.value))}
             className="rounded-lg border border-border bg-card px-3 py-2 text-sm"
@@ -349,8 +355,13 @@ function ReconciliationPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="reconciliation items" onRetry={fetchItems} />
+      )}
+
       {/* Reconciliation table */}
-      {!loading && (
+      {!loading && !loadError && (
         <ReconciliationTable
           items={filteredItems}
           accounts={accounts}

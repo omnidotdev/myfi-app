@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import EmptyState from "@/components/EmptyState";
+import LoadError from "@/components/LoadError";
 import MantleManagedBanner from "@/components/MantleManagedBanner";
 import BookPicker from "@/features/books/components/BookPicker";
 import type { InventoryItem } from "@/features/inventory/types/inventory";
@@ -34,6 +35,7 @@ function ItemsPage() {
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [accounts, setAccounts] = useState<InvoiceAccount[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
 
   const [createOpen, setCreateOpen] = useState(false);
@@ -66,6 +68,7 @@ function ItemsPage() {
   const fetchData = useCallback(async () => {
     if (!activeBookId) return;
     setIsLoading(true);
+    setLoadError(false);
     try {
       const [itemRes, acctRes] = await Promise.all([
         apiFetch(`/api/inventory-items?bookId=${activeBookId}`),
@@ -77,8 +80,9 @@ function ItemsPage() {
       ]);
       setItems(itemData.items ?? []);
       setAccounts(acctData.accounts ?? []);
-    } catch {
-      toast.error("Could not load items");
+    } catch (err) {
+      console.error("Failed to load items", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -218,14 +222,18 @@ function ItemsPage() {
         </div>
       )}
 
-      {!loading && items.length === 0 && (
+      {!loading && loadError && (
+        <LoadError resource="items" onRetry={fetchData} />
+      )}
+
+      {!loading && !loadError && items.length === 0 && (
         <EmptyState
           title="No inventory items yet"
           description="Add an item to track its stock and cost."
         />
       )}
 
-      {!loading && items.length > 0 && (
+      {!loading && !loadError && items.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-border bg-card">
           <table className="w-full text-sm">
             <thead className="border-border border-b text-left text-muted-foreground">

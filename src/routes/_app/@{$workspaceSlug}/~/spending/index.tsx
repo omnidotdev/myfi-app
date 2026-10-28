@@ -7,6 +7,7 @@ import {
   TrendingUpIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import LoadError from "@/components/LoadError";
 import BookPicker from "@/features/books/components/BookPicker";
 import ReportExportActions from "@/features/reports/components/ReportExportActions";
 import SpendingByCategory from "@/features/spending/components/SpendingByCategory";
@@ -87,6 +88,7 @@ function SpendingPage() {
   const [totalAnnualCost, setTotalAnnualCost] = useState("0");
   const [vendorSpend, setVendorSpend] = useState<VendorSpendData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
   const fetchCategories = useCallback(async () => {
     if (!activeBookId) return;
@@ -105,8 +107,9 @@ function SpendingPage() {
 
       setCategories(data.categories ?? []);
       setCategoriesTotal(data.total ?? "0");
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load spending categories", err);
+      setLoadError(true);
     }
   }, [activeBookId, dateRange]);
 
@@ -120,8 +123,9 @@ function SpendingPage() {
       const data = await res.json();
 
       setTrendsData(data.months ?? []);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load spending trends", err);
+      setLoadError(true);
     }
   }, [activeBookId, trendMonths]);
 
@@ -136,8 +140,9 @@ function SpendingPage() {
 
       setSubscriptions(data.subscriptions ?? []);
       setTotalAnnualCost(data.totalAnnualCost ?? "0");
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load subscriptions", err);
+      setLoadError(true);
     }
   }, [activeBookId]);
 
@@ -155,29 +160,27 @@ function SpendingPage() {
       const data = await res.json();
 
       setVendorSpend(data);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load vendor spend", err);
+      setLoadError(true);
     }
   }, [activeBookId, dateRange]);
 
-  // Fetch all spending data when dependencies change
-  useEffect(() => {
+  // Load every spending panel together, so a single retry refreshes the page
+  const loadAll = useCallback(() => {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     Promise.all([
       fetchCategories(),
       fetchTrends(),
       fetchSubscriptions(),
       fetchVendors(),
-    ])
-      .catch(() => {
-        // Silently handle fetch errors
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    ]).finally(() => {
+      setIsLoading(false);
+    });
   }, [
     activeBookId,
     fetchCategories,
@@ -185,6 +188,11 @@ function SpendingPage() {
     fetchSubscriptions,
     fetchVendors,
   ]);
+
+  // Fetch all spending data when dependencies change
+  useEffect(() => {
+    loadAll();
+  }, [loadAll]);
 
   const loading = booksLoading || isLoading;
 
@@ -244,8 +252,13 @@ function SpendingPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="spending data" onRetry={loadAll} />
+      )}
+
       {/* Tab content */}
-      {!loading && activeTab === "categories" && (
+      {!loading && !loadError && activeTab === "categories" && (
         <div className="flex flex-col gap-4">
           {/* Date range picker */}
           <div className="flex items-center gap-3">
@@ -283,7 +296,7 @@ function SpendingPage() {
         </div>
       )}
 
-      {!loading && activeTab === "trends" && (
+      {!loading && !loadError && activeTab === "trends" && (
         <SpendingTrends
           months={trendsData}
           selectedRange={trendMonths}
@@ -291,7 +304,7 @@ function SpendingPage() {
         />
       )}
 
-      {!loading && activeTab === "vendors" && (
+      {!loading && !loadError && activeTab === "vendors" && (
         <div className="flex flex-col gap-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -341,7 +354,7 @@ function SpendingPage() {
         </div>
       )}
 
-      {!loading && activeTab === "subscriptions" && (
+      {!loading && !loadError && activeTab === "subscriptions" && (
         <SubscriptionList
           subscriptions={subscriptions}
           totalAnnualCost={totalAnnualCost}

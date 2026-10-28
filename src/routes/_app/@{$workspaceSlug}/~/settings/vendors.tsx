@@ -11,6 +11,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
+import LoadError from "@/components/LoadError";
 import BookPicker from "@/features/books/components/BookPicker";
 import RecategorizeVendorDialog from "@/features/vendors/components/RecategorizeVendorDialog";
 import VendorW9Dialog from "@/features/vendors/components/VendorW9Dialog";
@@ -99,19 +100,22 @@ function VendorsPage() {
   const [form, setForm] = useState<VendorFormData>({ ...EMPTY_FORM });
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState(false);
 
   const fetchVendors = useCallback(async () => {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const res = await apiFetch(`/api/vendors?bookId=${activeBookId}`);
       const data = await res.json();
 
       setVendors(data.vendors ?? []);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load vendors", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -557,8 +561,13 @@ function VendorsPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && !showForm && (
+        <LoadError resource="vendors" onRetry={fetchVendors} />
+      )}
+
       {/* Empty state */}
-      {!loading && vendors.length === 0 && !showForm && (
+      {!loading && !loadError && vendors.length === 0 && !showForm && (
         <EmptyState
           title="No vendors yet"
           description="Add a vendor to start tracking 1099 payments."
@@ -575,7 +584,7 @@ function VendorsPage() {
       )}
 
       {/* Vendor table */}
-      {!loading && vendors.length > 0 && (
+      {!loading && !loadError && vendors.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-border bg-card">
           <table className="w-full text-sm">
             <thead>

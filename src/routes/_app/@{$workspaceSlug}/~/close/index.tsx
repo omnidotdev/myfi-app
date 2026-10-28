@@ -101,7 +101,8 @@ function ClosePage() {
       if (!res.ok) throw new Error(`Review failed (${res.status})`);
       setReview(await res.json());
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to run review");
+      console.error("Close review failed", err);
+      toast.error("Couldn't run the review. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -119,14 +120,17 @@ function ClosePage() {
         const body = (await res.json().catch(() => null)) as {
           error?: string;
         } | null;
-        throw new Error(body?.error ?? `Close failed (${res.status})`);
+        console.error("Period close failed", res.status, body);
+        throw new Error(
+          body?.error ?? "Couldn't close the period. Please try again.",
+        );
       }
       toast.success(`Closed ${MONTHS[month - 1]} ${year}`);
       setConfirmOpen(false);
       await runReview();
     } catch (err) {
       toast.error(
-        err instanceof Error ? err.message : "Failed to close period",
+        err instanceof Error ? err.message : "Couldn't close the period",
       );
     } finally {
       setClosing(false);

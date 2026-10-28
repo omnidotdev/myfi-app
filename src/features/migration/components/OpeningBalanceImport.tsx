@@ -182,6 +182,7 @@ function OpeningBalanceImport({ bookId }: Props) {
         <input
           ref={fileInputRef}
           type="file"
+          aria-label="Choose a CSV file to import"
           accept=".csv,text/csv"
           onChange={handleFile}
           className="hidden"
@@ -284,6 +285,7 @@ function OpeningBalanceImport({ bookId }: Props) {
                       {a.type}
                     </span>
                     <select
+                      aria-label={`Map account ${a.name}`}
                       value={mappings[a.name] ?? ""}
                       onChange={(e) =>
                         setMappings((m) => {

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon, WalletIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import EmptyState from "@/components/EmptyState";
+import LoadError from "@/components/LoadError";
 import BookPicker from "@/features/books/components/BookPicker";
 import AddWalletForm from "@/features/crypto/components/AddWalletForm";
 import CryptoAssetCard from "@/features/crypto/components/CryptoAssetCard";
@@ -26,6 +27,7 @@ function CryptoPage() {
   const [assets, setAssets] = useState<CryptoAsset[]>([]);
   const [lots, setLots] = useState<CryptoLot[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [viewingLotsFor, setViewingLotsFor] = useState<CryptoAsset | null>(
     null,
@@ -35,6 +37,7 @@ function CryptoPage() {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const res = await apiFetch(`/api/crypto/wallets?bookId=${activeBookId}`);
@@ -45,8 +48,9 @@ function CryptoPage() {
       }));
 
       setAssets(mapped);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load crypto assets", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -225,8 +229,13 @@ function CryptoPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="crypto assets" onRetry={fetchAssets} />
+      )}
+
       {/* Asset cards grid */}
-      {!loading && assets.length > 0 && (
+      {!loading && !loadError && assets.length > 0 && (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {assets.map((asset) => (
             <CryptoAssetCard
@@ -240,7 +249,7 @@ function CryptoPage() {
       )}
 
       {/* Empty state */}
-      {!loading && assets.length === 0 && (
+      {!loading && !loadError && assets.length === 0 && (
         <EmptyState
           icon={WalletIcon}
           title="No crypto assets yet"

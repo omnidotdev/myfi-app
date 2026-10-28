@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import EmptyState from "@/components/EmptyState";
+import LoadError from "@/components/LoadError";
 import MantleManagedBanner from "@/components/MantleManagedBanner";
 import BookPicker from "@/features/books/components/BookPicker";
 import EstimateForm, {
@@ -56,6 +57,7 @@ function EstimatesPage() {
     [],
   );
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -69,6 +71,7 @@ function EstimatesPage() {
   const fetchData = useCallback(async () => {
     if (!activeBookId) return;
     setIsLoading(true);
+    setLoadError(false);
     try {
       const [estRes, custRes, acctRes, taxRes] = await Promise.all([
         apiFetch(`/api/estimates?bookId=${activeBookId}`),
@@ -88,8 +91,9 @@ function EstimatesPage() {
       setTaxJurisdictions(
         taxData.taxJurisdictions ?? taxData.jurisdictions ?? [],
       );
-    } catch {
-      toast.error("Could not load estimates");
+    } catch (err) {
+      console.error("Failed to load estimates", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -220,7 +224,11 @@ function EstimatesPage() {
         </div>
       )}
 
-      {!loading && estimates.length === 0 && (
+      {!loading && loadError && (
+        <LoadError resource="estimates" onRetry={fetchData} />
+      )}
+
+      {!loading && !loadError && estimates.length === 0 && (
         <EmptyState
           title="No estimates yet"
           description={
@@ -231,7 +239,7 @@ function EstimatesPage() {
         />
       )}
 
-      {!loading && estimates.length > 0 && (
+      {!loading && !loadError && estimates.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-border bg-card">
           <table className="w-full text-sm">
             <thead className="border-border border-b text-left text-muted-foreground">

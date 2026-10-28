@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import EmptyState from "@/components/EmptyState";
+import LoadError from "@/components/LoadError";
 import BookPicker from "@/features/books/components/BookPicker";
 import type { Customer } from "@/features/invoicing/types/invoicing";
 import { apiFetch } from "@/lib/api/apiFetch";
@@ -23,6 +24,7 @@ function CustomersPage() {
 
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [name, setName] = useState("");
@@ -32,12 +34,14 @@ function CustomersPage() {
   const fetchCustomers = useCallback(async () => {
     if (!activeBookId) return;
     setIsLoading(true);
+    setLoadError(false);
     try {
       const res = await apiFetch(`/api/customers?bookId=${activeBookId}`);
       const data = await res.json();
       setCustomers(data.customers ?? []);
-    } catch {
-      toast.error("Could not load customers");
+    } catch (err) {
+      console.error("Failed to load customers", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -117,14 +121,18 @@ function CustomersPage() {
         </div>
       )}
 
-      {!loading && customers.length === 0 && (
+      {!loading && loadError && (
+        <LoadError resource="customers" onRetry={fetchCustomers} />
+      )}
+
+      {!loading && !loadError && customers.length === 0 && (
         <EmptyState
           title="No customers yet"
           description="Add a customer to start invoicing them."
         />
       )}
 
-      {!loading && customers.length > 0 && (
+      {!loading && !loadError && customers.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-border bg-card">
           <table className="w-full text-sm">
             <thead className="border-border border-b text-left text-muted-foreground">

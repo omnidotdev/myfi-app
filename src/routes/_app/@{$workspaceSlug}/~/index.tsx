@@ -23,6 +23,7 @@ import {
   YAxis,
 } from "recharts";
 import EmptyState from "@/components/EmptyState";
+import LoadError from "@/components/LoadError";
 import BookPicker from "@/features/books/components/BookPicker";
 import type { NetWorthSummary } from "@/features/savings/types/savingsGoal";
 import { apiFetch } from "@/lib/api/apiFetch";
@@ -133,6 +134,7 @@ function DashboardPage() {
     NetWorthSnapshot[]
   >([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
   // Fetch multi-book summary when no book is selected
   const fetchSummary = useCallback(async () => {
@@ -145,8 +147,9 @@ function DashboardPage() {
       const data = await res.json();
 
       setSummary(data);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load dashboard summary", err);
+      setLoadError(true);
     }
   }, [organizationId]);
 
@@ -160,8 +163,9 @@ function DashboardPage() {
       const data = await res.json();
 
       setCloseStatus(data);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load close status", err);
+      setLoadError(true);
     }
   }, [organizationId]);
 
@@ -197,8 +201,9 @@ function DashboardPage() {
       const data = await res.json();
 
       setNetWorth(data);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load net worth", err);
+      setLoadError(true);
     }
   }, [activeBookId]);
 
@@ -212,8 +217,9 @@ function DashboardPage() {
       const data = await res.json();
 
       setNetWorthSnapshots(data.snapshots ?? []);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load net worth history", err);
+      setLoadError(true);
     }
   }, [activeBookId]);
 
@@ -227,8 +233,9 @@ function DashboardPage() {
       const data = await res.json();
 
       setSpendingMonths(data.months ?? []);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load spending trends", err);
+      setLoadError(true);
     }
   }, [activeBookId]);
 
@@ -247,8 +254,9 @@ function DashboardPage() {
       const data = await res.json();
 
       setSpendingCategories(data.categories ?? []);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load spending categories", err);
+      setLoadError(true);
     }
   }, [activeBookId]);
 
@@ -262,8 +270,9 @@ function DashboardPage() {
       const data = await res.json();
 
       setRunway(data);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load runway", err);
+      setLoadError(true);
     }
   }, [activeBookId]);
 
@@ -281,8 +290,9 @@ function DashboardPage() {
       }));
 
       setRecentEntries(mapped);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load recent entries", err);
+      setLoadError(true);
     }
   }, [activeBookId]);
 
@@ -291,6 +301,7 @@ function DashboardPage() {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     Promise.all([
       fetchNetWorth(),
@@ -300,13 +311,9 @@ function DashboardPage() {
       fetchCloseStatus(),
       fetchRunway(),
       fetchSpendingCategories(),
-    ])
-      .catch(() => {
-        // Silently handle fetch errors
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    ]).finally(() => {
+      setIsLoading(false);
+    });
   }, [
     activeBookId,
     fetchNetWorth,
@@ -323,15 +330,44 @@ function DashboardPage() {
     if (activeBookId || booksLoading) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
-    Promise.all([fetchSummary(), fetchCloseStatus()])
-      .catch(() => {
-        // Silently handle fetch errors
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    Promise.all([fetchSummary(), fetchCloseStatus()]).finally(() => {
+      setIsLoading(false);
+    });
   }, [activeBookId, booksLoading, fetchSummary, fetchCloseStatus]);
+
+  // Re-run the data load for the current view, for the error-state retry
+  const reload = useCallback(() => {
+    setIsLoading(true);
+    setLoadError(false);
+
+    const tasks = activeBookId
+      ? [
+          fetchNetWorth(),
+          fetchNetWorthHistory(),
+          fetchSpendingTrends(),
+          fetchRecentEntries(),
+          fetchCloseStatus(),
+          fetchRunway(),
+          fetchSpendingCategories(),
+        ]
+      : [fetchSummary(), fetchCloseStatus()];
+
+    Promise.all(tasks).finally(() => {
+      setIsLoading(false);
+    });
+  }, [
+    activeBookId,
+    fetchNetWorth,
+    fetchNetWorthHistory,
+    fetchSpendingTrends,
+    fetchRecentEntries,
+    fetchCloseStatus,
+    fetchRunway,
+    fetchSpendingCategories,
+    fetchSummary,
+  ]);
 
   const chartData = useMemo(
     () =>
@@ -391,104 +427,112 @@ function DashboardPage() {
         </div>
       )}
 
-      {/* Monthly Close status */}
-      {!loading && closeStatus && closeStatus.statuses.length > 0 && (
-        <div className="rounded-lg border border-border bg-card p-4">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-semibold text-lg">Monthly Close</h2>
-            <span className="text-muted-foreground text-sm">
-              {formatPeriodLabel(closeStatus.year, closeStatus.month)}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {closeStatus.statuses.map((status) => {
-              const isClosed = status.periodStatus === "closed";
-              const hasPending = !isClosed && status.pendingReviewCount > 0;
-
-              return (
-                <div
-                  key={status.bookId}
-                  className="flex flex-col gap-2 rounded-md border border-border p-3"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium text-sm">
-                      {status.bookName}
-                    </span>
-
-                    {isClosed && (
-                      <span className="flex items-center gap-1 text-green-600 text-xs">
-                        <CheckCircle2Icon className="size-4" />
-                        Closed
-                      </span>
-                    )}
-
-                    {!isClosed && !hasPending && (
-                      <span className="flex items-center gap-1 text-xs text-yellow-600">
-                        <ClockIcon className="size-4" />
-                        Open
-                      </span>
-                    )}
-
-                    {hasPending && (
-                      <span className="flex items-center gap-1 text-red-500 text-xs">
-                        <AlertCircleIcon className="size-4" />
-                        Open
-                      </span>
-                    )}
-                  </div>
-
-                  <span className="text-muted-foreground text-xs">
-                    {formatPeriodLabel(status.year, status.month)}
-                  </span>
-
-                  {status.pendingReviewCount > 0 && (
-                    <span className="text-muted-foreground text-xs">
-                      {status.pendingReviewCount} item
-                      {status.pendingReviewCount === 1 ? "" : "s"} pending
-                      review
-                    </span>
-                  )}
-
-                  <div className="flex items-center gap-2 pt-1">
-                    {status.pendingReviewCount > 0 && (
-                      <Link
-                        to="/@{$workspaceSlug}/~/reconciliation"
-                        params={{ workspaceSlug }}
-                        className="text-primary text-xs hover:underline"
-                      >
-                        Review Items
-                      </Link>
-                    )}
-
-                    {!isClosed && status.pendingReviewCount === 0 && (
-                      <button
-                        type="button"
-                        disabled={closingBookId === status.bookId}
-                        onClick={() =>
-                          handleClosePeriod(
-                            status.bookId,
-                            status.year,
-                            status.month,
-                          )
-                        }
-                        className="rounded bg-primary px-3 py-1 font-medium text-primary-foreground text-xs transition-colors hover:bg-primary/90 disabled:opacity-50"
-                      >
-                        {closingBookId === status.bookId
-                          ? "Closing..."
-                          : "Close Now"}
-                      </button>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="your dashboard" onRetry={reload} />
       )}
 
+      {/* Monthly Close status */}
+      {!loading &&
+        !loadError &&
+        closeStatus &&
+        closeStatus.statuses.length > 0 && (
+          <div className="rounded-lg border border-border bg-card p-4">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="font-semibold text-lg">Monthly Close</h2>
+              <span className="text-muted-foreground text-sm">
+                {formatPeriodLabel(closeStatus.year, closeStatus.month)}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {closeStatus.statuses.map((status) => {
+                const isClosed = status.periodStatus === "closed";
+                const hasPending = !isClosed && status.pendingReviewCount > 0;
+
+                return (
+                  <div
+                    key={status.bookId}
+                    className="flex flex-col gap-2 rounded-md border border-border p-3"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium text-sm">
+                        {status.bookName}
+                      </span>
+
+                      {isClosed && (
+                        <span className="flex items-center gap-1 text-green-600 text-xs">
+                          <CheckCircle2Icon className="size-4" />
+                          Closed
+                        </span>
+                      )}
+
+                      {!isClosed && !hasPending && (
+                        <span className="flex items-center gap-1 text-xs text-yellow-600">
+                          <ClockIcon className="size-4" />
+                          Open
+                        </span>
+                      )}
+
+                      {hasPending && (
+                        <span className="flex items-center gap-1 text-red-500 text-xs">
+                          <AlertCircleIcon className="size-4" />
+                          Open
+                        </span>
+                      )}
+                    </div>
+
+                    <span className="text-muted-foreground text-xs">
+                      {formatPeriodLabel(status.year, status.month)}
+                    </span>
+
+                    {status.pendingReviewCount > 0 && (
+                      <span className="text-muted-foreground text-xs">
+                        {status.pendingReviewCount} item
+                        {status.pendingReviewCount === 1 ? "" : "s"} pending
+                        review
+                      </span>
+                    )}
+
+                    <div className="flex items-center gap-2 pt-1">
+                      {status.pendingReviewCount > 0 && (
+                        <Link
+                          to="/@{$workspaceSlug}/~/reconciliation"
+                          params={{ workspaceSlug }}
+                          className="text-primary text-xs hover:underline"
+                        >
+                          Review Items
+                        </Link>
+                      )}
+
+                      {!isClosed && status.pendingReviewCount === 0 && (
+                        <button
+                          type="button"
+                          disabled={closingBookId === status.bookId}
+                          onClick={() =>
+                            handleClosePeriod(
+                              status.bookId,
+                              status.year,
+                              status.month,
+                            )
+                          }
+                          className="rounded bg-primary px-3 py-1 font-medium text-primary-foreground text-xs transition-colors hover:bg-primary/90 disabled:opacity-50"
+                        >
+                          {closingBookId === status.bookId
+                            ? "Closing..."
+                            : "Close Now"}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
       {/* Multi-book summary view */}
-      {!loading && showAllBooks && summary && (
+      {!loading && !loadError && showAllBooks && summary && (
         <>
           {/* Total net worth across all books */}
           <div className="flex items-center gap-3 rounded-lg border border-border bg-card p-5">
@@ -580,7 +624,7 @@ function DashboardPage() {
         </>
       )}
 
-      {!loading && showAllBooks && !summary && (
+      {!loading && !loadError && showAllBooks && !summary && (
         <EmptyState
           icon={BookOpenIcon}
           title="No books yet"
@@ -600,7 +644,7 @@ function DashboardPage() {
       )}
 
       {/* Single-book: Net worth hero card */}
-      {!loading && !showAllBooks && netWorth && (
+      {!loading && !loadError && !showAllBooks && netWorth && (
         <div className="rounded-lg border border-border bg-gradient-to-br from-card to-muted/30 p-6">
           <div className="flex flex-col items-center gap-1 text-center">
             <span className="text-muted-foreground text-sm">Net Worth</span>
@@ -650,7 +694,7 @@ function DashboardPage() {
       )}
 
       {/* Single-book: cash runway + burn tiles */}
-      {!loading && !showAllBooks && runway && (
+      {!loading && !loadError && !showAllBooks && runway && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="flex flex-col gap-1 rounded-lg border border-border bg-card p-4">
             <span className="text-muted-foreground text-xs">Cash on Hand</span>
@@ -697,12 +741,12 @@ function DashboardPage() {
         </div>
       )}
 
-      {!loading && !showAllBooks && !netWorth && (
+      {!loading && !loadError && !showAllBooks && !netWorth && (
         <EmptyState title="No financial summary available yet" />
       )}
 
       {/* Single-book: Net worth trend chart */}
-      {!loading && !showAllBooks && (
+      {!loading && !loadError && !showAllBooks && (
         <div className="rounded-lg border border-border bg-card p-4">
           <h2 className="mb-4 font-semibold text-lg">Net Worth Trend</h2>
 
@@ -748,7 +792,7 @@ function DashboardPage() {
       )}
 
       {/* Single-book: Spending trends chart */}
-      {!loading && !showAllBooks && (
+      {!loading && !loadError && !showAllBooks && (
         <div className="rounded-lg border border-border bg-card p-4">
           <h2 className="mb-4 font-semibold text-lg">Spending Trends</h2>
 
@@ -777,7 +821,7 @@ function DashboardPage() {
       )}
 
       {/* Single-book: Spending by category (ranked horizontal bars) */}
-      {!loading && !showAllBooks && (
+      {!loading && !loadError && !showAllBooks && (
         <div className="rounded-lg border border-border bg-card p-4">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-semibold text-lg">Spending by Category</h2>
@@ -825,7 +869,7 @@ function DashboardPage() {
       )}
 
       {/* Single-book: Recent entries */}
-      {!loading && !showAllBooks && (
+      {!loading && !loadError && !showAllBooks && (
         <div className="rounded-lg border border-border bg-card p-4">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-semibold text-lg">Recent Entries</h2>

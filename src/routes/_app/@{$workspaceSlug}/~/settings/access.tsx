@@ -3,6 +3,7 @@ import { Loader2Icon, PlusIcon, ShieldIcon, TrashIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
+import LoadError from "@/components/LoadError";
 import BookPicker from "@/features/books/components/BookPicker";
 import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
@@ -41,6 +42,7 @@ function AccessPage() {
 
   const [records, setRecords] = useState<BookAccess[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [accessToRemove, setAccessToRemove] = useState<{
     id: string;
@@ -56,14 +58,16 @@ function AccessPage() {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const res = await apiFetch(`/api/book-access?bookId=${activeBookId}`);
       const data = await res.json();
 
       setRecords(data.records ?? []);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load team members", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -219,8 +223,13 @@ function AccessPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="team members" onRetry={fetchRecords} />
+      )}
+
       {/* Empty state */}
-      {!loading && records.length === 0 && (
+      {!loading && !loadError && records.length === 0 && (
         <EmptyState
           icon={ShieldIcon}
           title="No access records yet"
@@ -229,7 +238,7 @@ function AccessPage() {
       )}
 
       {/* Access list */}
-      {!loading && records.length > 0 && (
+      {!loading && !loadError && records.length > 0 && (
         <div className="rounded-lg border border-border bg-card">
           <div className="grid grid-cols-[1fr_auto_auto_auto_auto] items-center gap-4 border-border border-b px-4 py-2 font-medium text-muted-foreground text-xs uppercase tracking-wide">
             <span>User</span>
@@ -250,6 +259,7 @@ function AccessPage() {
                 </span>
 
                 <select
+                  aria-label="Member role"
                   value={record.role}
                   onChange={(e) => handleUpdateRole(record.id, e.target.value)}
                   className={`cursor-pointer rounded-full border-0 px-2.5 py-0.5 font-medium text-xs ${roleBadgeClass[record.role] ?? "bg-muted text-muted-foreground"}`}

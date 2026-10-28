@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, RepeatIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import LoadError from "@/components/LoadError";
 import BookPicker from "@/features/books/components/BookPicker";
 import { apiFetch } from "@/lib/api/apiFetch";
 import formatCurrency from "@/lib/format/currency";
@@ -72,9 +73,13 @@ function RecurringTransactionsPage() {
   const [transactions, setTransactions] = useState<RecurringTransaction[]>([]);
   const [totalAnnualCost, setTotalAnnualCost] = useState("0");
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
   const fetchRecurring = useCallback(async () => {
     if (!activeBookId) return;
+
+    setIsLoading(true);
+    setLoadError(false);
 
     try {
       const res = await apiFetch(
@@ -84,24 +89,17 @@ function RecurringTransactionsPage() {
 
       setTransactions(data.subscriptions ?? []);
       setTotalAnnualCost(data.totalAnnualCost ?? "0");
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load recurring transactions", err);
+      setLoadError(true);
+    } finally {
+      setIsLoading(false);
     }
   }, [activeBookId]);
 
   useEffect(() => {
-    if (!activeBookId) return;
-
-    setIsLoading(true);
-
-    fetchRecurring()
-      .catch(() => {
-        // Silently handle fetch errors
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [activeBookId, fetchRecurring]);
+    fetchRecurring();
+  }, [fetchRecurring]);
 
   const sorted = useMemo(
     () =>
@@ -140,8 +138,13 @@ function RecurringTransactionsPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="recurring transactions" onRetry={fetchRecurring} />
+      )}
+
       {/* Summary cards */}
-      {!loading && sorted.length > 0 && (
+      {!loading && !loadError && sorted.length > 0 && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="flex items-center gap-3 rounded-lg border border-border bg-card p-4">
             <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -172,7 +175,7 @@ function RecurringTransactionsPage() {
       )}
 
       {/* Table */}
-      {!loading && sorted.length > 0 && (
+      {!loading && !loadError && sorted.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-border bg-card">
           <table className="w-full text-sm">
             <thead>
@@ -246,7 +249,7 @@ function RecurringTransactionsPage() {
       )}
 
       {/* Empty state */}
-      {!loading && sorted.length === 0 && (
+      {!loading && !loadError && sorted.length === 0 && (
         <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-border border-dashed py-16">
           <RepeatIcon className="size-8 text-muted-foreground" />
           <p className="text-muted-foreground text-sm">

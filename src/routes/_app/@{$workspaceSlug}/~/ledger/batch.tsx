@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon, TrashIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import LoadError from "@/components/LoadError";
 import type { Account } from "@/features/accounts/types/account";
 import BookPicker from "@/features/books/components/BookPicker";
 import { apiFetch } from "@/lib/api/apiFetch";
@@ -96,6 +97,7 @@ function BatchJournalEntryPage() {
 
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [entries, setEntries] = useState<BatchEntry[]>([emptyEntry()]);
 
@@ -104,6 +106,7 @@ function BatchJournalEntryPage() {
     if (!activeBookId) return;
 
     setIsLoading(true);
+    setLoadError(false);
 
     try {
       const res = await apiFetch(`/api/accounts?bookId=${activeBookId}`);
@@ -116,8 +119,9 @@ function BatchJournalEntryPage() {
       );
 
       setAccounts(mapped);
-    } catch {
-      // Silently handle fetch errors
+    } catch (err) {
+      console.error("Failed to load accounts", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -337,8 +341,14 @@ function BatchJournalEntryPage() {
         </div>
       )}
 
+      {/* Load-error state */}
+      {!loading && loadError && (
+        <LoadError resource="accounts" onRetry={fetchAccounts} />
+      )}
+
       {/* Entry groups */}
       {!loading &&
+        !loadError &&
         entries.map((entry, entryIdx) => (
           <EntryCard
             key={entry.id}
@@ -356,7 +366,7 @@ function BatchJournalEntryPage() {
         ))}
 
       {/* Add entry button */}
-      {!loading && (
+      {!loading && !loadError && (
         <button
           type="button"
           onClick={addEntry}
@@ -415,6 +425,7 @@ function EntryCard({
 
         <input
           type="date"
+          aria-label="Entry date"
           value={entry.date}
           onChange={(e) => onUpdate(entry.id, { date: e.target.value })}
           className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
@@ -422,6 +433,7 @@ function EntryCard({
 
         <input
           type="text"
+          aria-label="Entry memo"
           placeholder="Memo (optional)"
           value={entry.memo}
           onChange={(e) => onUpdate(entry.id, { memo: e.target.value })}
@@ -468,6 +480,7 @@ function EntryCard({
               >
                 <td className="px-4 py-2">
                   <select
+                    aria-label="Line account"
                     value={line.accountId}
                     onChange={(e) =>
                       onUpdateLine(entry.id, line.id, {
@@ -489,6 +502,7 @@ function EntryCard({
                     type="number"
                     step="0.01"
                     min="0"
+                    aria-label="Debit amount"
                     placeholder="0.00"
                     value={line.debit}
                     onChange={(e) =>
@@ -504,6 +518,7 @@ function EntryCard({
                     type="number"
                     step="0.01"
                     min="0"
+                    aria-label="Credit amount"
                     placeholder="0.00"
                     value={line.credit}
                     onChange={(e) =>
@@ -517,6 +532,7 @@ function EntryCard({
                 <td className="px-4 py-2">
                   <input
                     type="text"
+                    aria-label="Line memo"
                     placeholder="Line memo"
                     value={line.memo}
                     onChange={(e) =>

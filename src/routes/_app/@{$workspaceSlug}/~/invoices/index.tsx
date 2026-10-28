@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
+import LoadError from "@/components/LoadError";
 import MantleManagedBanner from "@/components/MantleManagedBanner";
 import BookPicker from "@/features/books/components/BookPicker";
 import InvoiceForm, {
@@ -57,6 +58,7 @@ function InvoicesPage() {
     InvoiceInventoryOption[]
   >([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -73,6 +75,7 @@ function InvoicesPage() {
   const fetchData = useCallback(async () => {
     if (!activeBookId) return;
     setIsLoading(true);
+    setLoadError(false);
     const asOf = new Date().toISOString().slice(0, 10);
     try {
       const [invRes, custRes, acctRes, taxRes, agingRes, itemRes] =
@@ -103,8 +106,9 @@ function InvoicesPage() {
       );
       setAging(agingData ?? null);
       setInventoryItems(itemData.items ?? []);
-    } catch {
-      toast.error("Could not load invoices");
+    } catch (err) {
+      console.error("Failed to load invoices", err);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -208,7 +212,11 @@ function InvoicesPage() {
         </div>
       )}
 
-      {!loading && aging && Number(aging.totals.total) > 0 && (
+      {!loading && loadError && (
+        <LoadError resource="invoices" onRetry={fetchData} />
+      )}
+
+      {!loading && !loadError && aging && Number(aging.totals.total) > 0 && (
         <div className="rounded-lg border border-border bg-card p-4">
           <h2 className="mb-3 font-semibold text-sm">
             Accounts Receivable Aging
@@ -235,7 +243,7 @@ function InvoicesPage() {
         </div>
       )}
 
-      {!loading && invoices.length === 0 && (
+      {!loading && !loadError && invoices.length === 0 && (
         <EmptyState
           title="No invoices yet"
           description={
@@ -246,7 +254,7 @@ function InvoicesPage() {
         />
       )}
 
-      {!loading && invoices.length > 0 && (
+      {!loading && !loadError && invoices.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-border bg-card">
           <table className="w-full text-sm">
             <thead className="border-border border-b text-left text-muted-foreground">
