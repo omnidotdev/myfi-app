@@ -130,10 +130,10 @@ function PrivacyPolicy() {
         <section className="space-y-3">
           <h2 className="font-semibold text-xl">Your rights and choices</h2>
           <p>
-            You can request a copy of your data or ask us to delete your account
-            and associated data. You can delete individual books from within the
-            app at any time. To make an access, export, or deletion request,
-            contact us through{" "}
+            You can export a full copy of a book's data, and delete individual
+            books or your workspace's data, yourself from the Data and Privacy
+            page in Settings at any time. For any other access, correction, or
+            deletion request, contact us through{" "}
             <a
               href={appConfig.organization.website}
               target="_blank"
@@ -142,9 +142,10 @@ function PrivacyPolicy() {
             >
               {appConfig.organization.name}
             </a>
-            . When you disconnect or delete a connected account, remove the
-            linked institution from that provider's dashboard as well to fully
-            revoke access.
+            . When you disconnect a connected bank or payroll account, we revoke
+            its access token with the provider and remove it from our systems;
+            you can also remove the linked institution from that provider's
+            dashboard to confirm.
           </p>
         </section>
 
