@@ -8,6 +8,7 @@ import {
   Link2Icon,
   ListPlusIcon,
   MapIcon,
+  PercentIcon,
   ScrollTextIcon,
   ShieldIcon,
   SparklesIcon,
@@ -68,6 +69,12 @@ const settingsItems = [
       "Add your own fields to customers, invoices, vendors, and items",
     href: "/@{$workspaceSlug}/~/settings/custom-fields",
     icon: ListPlusIcon,
+  },
+  {
+    label: "Price Levels",
+    description: "Customer pricing tiers that adjust item prices on invoices",
+    href: "/@{$workspaceSlug}/~/settings/price-levels",
+    icon: PercentIcon,
   },
   {
     label: "Vendors & 1099",

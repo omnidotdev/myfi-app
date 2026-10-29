@@ -10,6 +10,7 @@ export interface Customer {
   state: string | null;
   zip: string | null;
   notes: string | null;
+  priceLevelId: string | null;
   isActive: boolean;
 }
 

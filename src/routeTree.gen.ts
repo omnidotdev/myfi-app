@@ -70,6 +70,7 @@ import { Route as AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRout
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/custom-fields'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsDataRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/data'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsMappingsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/mappings'
+import { Route as AppAtChar123workspaceSlugChar125Char126SettingsPriceLevelsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/price-levels'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/quickbooks'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsRulesRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/rules'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsTagsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/tags'
@@ -455,6 +456,12 @@ const AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute =
     path: '/@{$workspaceSlug}/~/settings/mappings',
     getParentRoute: () => AppRoute,
   } as any)
+const AppAtChar123workspaceSlugChar125Char126SettingsPriceLevelsRoute =
+  AppAtChar123workspaceSlugChar125Char126SettingsPriceLevelsRouteImport.update({
+    id: '/@{$workspaceSlug}/~/settings/price-levels',
+    path: '/@{$workspaceSlug}/~/settings/price-levels',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute =
   AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRouteImport.update({
     id: '/@{$workspaceSlug}/~/settings/quickbooks',
@@ -546,6 +553,7 @@ export interface FileRoutesByFullPath {
   '/@{$workspaceSlug}/~/settings/custom-fields': typeof AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRoute
   '/@{$workspaceSlug}/~/settings/data': typeof AppAtChar123workspaceSlugChar125Char126SettingsDataRoute
   '/@{$workspaceSlug}/~/settings/mappings': typeof AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute
+  '/@{$workspaceSlug}/~/settings/price-levels': typeof AppAtChar123workspaceSlugChar125Char126SettingsPriceLevelsRoute
   '/@{$workspaceSlug}/~/settings/quickbooks': typeof AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute
   '/@{$workspaceSlug}/~/settings/rules': typeof AppAtChar123workspaceSlugChar125Char126SettingsRulesRoute
   '/@{$workspaceSlug}/~/settings/tags': typeof AppAtChar123workspaceSlugChar125Char126SettingsTagsRoute
@@ -615,6 +623,7 @@ export interface FileRoutesByTo {
   '/@{$workspaceSlug}/~/settings/custom-fields': typeof AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRoute
   '/@{$workspaceSlug}/~/settings/data': typeof AppAtChar123workspaceSlugChar125Char126SettingsDataRoute
   '/@{$workspaceSlug}/~/settings/mappings': typeof AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute
+  '/@{$workspaceSlug}/~/settings/price-levels': typeof AppAtChar123workspaceSlugChar125Char126SettingsPriceLevelsRoute
   '/@{$workspaceSlug}/~/settings/quickbooks': typeof AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute
   '/@{$workspaceSlug}/~/settings/rules': typeof AppAtChar123workspaceSlugChar125Char126SettingsRulesRoute
   '/@{$workspaceSlug}/~/settings/tags': typeof AppAtChar123workspaceSlugChar125Char126SettingsTagsRoute
@@ -687,6 +696,7 @@ export interface FileRoutesById {
   '/_app/@{$workspaceSlug}/~/settings/custom-fields': typeof AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRoute
   '/_app/@{$workspaceSlug}/~/settings/data': typeof AppAtChar123workspaceSlugChar125Char126SettingsDataRoute
   '/_app/@{$workspaceSlug}/~/settings/mappings': typeof AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute
+  '/_app/@{$workspaceSlug}/~/settings/price-levels': typeof AppAtChar123workspaceSlugChar125Char126SettingsPriceLevelsRoute
   '/_app/@{$workspaceSlug}/~/settings/quickbooks': typeof AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute
   '/_app/@{$workspaceSlug}/~/settings/rules': typeof AppAtChar123workspaceSlugChar125Char126SettingsRulesRoute
   '/_app/@{$workspaceSlug}/~/settings/tags': typeof AppAtChar123workspaceSlugChar125Char126SettingsTagsRoute
@@ -758,6 +768,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/settings/custom-fields'
     | '/@{$workspaceSlug}/~/settings/data'
     | '/@{$workspaceSlug}/~/settings/mappings'
+    | '/@{$workspaceSlug}/~/settings/price-levels'
     | '/@{$workspaceSlug}/~/settings/quickbooks'
     | '/@{$workspaceSlug}/~/settings/rules'
     | '/@{$workspaceSlug}/~/settings/tags'
@@ -827,6 +838,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/settings/custom-fields'
     | '/@{$workspaceSlug}/~/settings/data'
     | '/@{$workspaceSlug}/~/settings/mappings'
+    | '/@{$workspaceSlug}/~/settings/price-levels'
     | '/@{$workspaceSlug}/~/settings/quickbooks'
     | '/@{$workspaceSlug}/~/settings/rules'
     | '/@{$workspaceSlug}/~/settings/tags'
@@ -898,6 +910,7 @@ export interface FileRouteTypes {
     | '/_app/@{$workspaceSlug}/~/settings/custom-fields'
     | '/_app/@{$workspaceSlug}/~/settings/data'
     | '/_app/@{$workspaceSlug}/~/settings/mappings'
+    | '/_app/@{$workspaceSlug}/~/settings/price-levels'
     | '/_app/@{$workspaceSlug}/~/settings/quickbooks'
     | '/_app/@{$workspaceSlug}/~/settings/rules'
     | '/_app/@{$workspaceSlug}/~/settings/tags'
@@ -1365,6 +1378,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsMappingsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/@{$workspaceSlug}/~/settings/price-levels': {
+      id: '/_app/@{$workspaceSlug}/~/settings/price-levels'
+      path: '/@{$workspaceSlug}/~/settings/price-levels'
+      fullPath: '/@{$workspaceSlug}/~/settings/price-levels'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsPriceLevelsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/@{$workspaceSlug}/~/settings/quickbooks': {
       id: '/_app/@{$workspaceSlug}/~/settings/quickbooks'
       path: '/@{$workspaceSlug}/~/settings/quickbooks'
@@ -1458,6 +1478,7 @@ interface AppRouteChildren {
   AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRoute
   AppAtChar123workspaceSlugChar125Char126SettingsDataRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsDataRoute
   AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute
+  AppAtChar123workspaceSlugChar125Char126SettingsPriceLevelsRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsPriceLevelsRoute
   AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute
   AppAtChar123workspaceSlugChar125Char126SettingsRulesRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsRulesRoute
   AppAtChar123workspaceSlugChar125Char126SettingsTagsRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsTagsRoute
@@ -1557,6 +1578,8 @@ const AppRouteChildren: AppRouteChildren = {
     AppAtChar123workspaceSlugChar125Char126SettingsDataRoute,
   AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute:
     AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute,
+  AppAtChar123workspaceSlugChar125Char126SettingsPriceLevelsRoute:
+    AppAtChar123workspaceSlugChar125Char126SettingsPriceLevelsRoute,
   AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute:
     AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute,
   AppAtChar123workspaceSlugChar125Char126SettingsRulesRoute:

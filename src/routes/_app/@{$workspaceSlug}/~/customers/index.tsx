@@ -31,6 +31,10 @@ function CustomersPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [businessName, setBusinessName] = useState("");
+  const [priceLevelId, setPriceLevelId] = useState("");
+  const [priceLevels, setPriceLevels] = useState<
+    { id: string; name: string }[]
+  >([]);
   const [cfValues, setCfValues] = useState<Record<string, string>>({});
 
   const fetchCustomers = useCallback(async () => {
@@ -38,9 +42,14 @@ function CustomersPage() {
     setIsLoading(true);
     setLoadError(false);
     try {
-      const res = await apiFetch(`/api/customers?bookId=${activeBookId}`);
+      const [res, plRes] = await Promise.all([
+        apiFetch(`/api/customers?bookId=${activeBookId}`),
+        apiFetch(`/api/price-levels?bookId=${activeBookId}`),
+      ]);
       const data = await res.json();
+      const plData = await plRes.json();
       setCustomers(data.customers ?? []);
+      setPriceLevels(plData.priceLevels ?? []);
     } catch (err) {
       console.error("Failed to load customers", err);
       setLoadError(true);
@@ -57,6 +66,7 @@ function CustomersPage() {
     setName("");
     setEmail("");
     setBusinessName("");
+    setPriceLevelId("");
     setCfValues({});
     setFormOpen(false);
   }, []);
@@ -74,6 +84,7 @@ function CustomersPage() {
             name,
             email: email || undefined,
             businessName: businessName || undefined,
+            priceLevelId: priceLevelId || undefined,
           }),
         });
         if (!res.ok) throw new Error("Create failed");
@@ -108,6 +119,7 @@ function CustomersPage() {
       name,
       email,
       businessName,
+      priceLevelId,
       cfValues,
       resetForm,
       fetchCustomers,
@@ -244,6 +256,32 @@ function CustomersPage() {
                   className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                 />
               </div>
+              {priceLevels.length > 0 && (
+                <div className="flex flex-col gap-1.5">
+                  <label
+                    htmlFor="cust-price-level"
+                    className="font-medium text-sm"
+                  >
+                    Price Level
+                    <span className="ml-1 font-normal text-muted-foreground">
+                      (optional)
+                    </span>
+                  </label>
+                  <select
+                    id="cust-price-level"
+                    value={priceLevelId}
+                    onChange={(e) => setPriceLevelId(e.target.value)}
+                    className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  >
+                    <option value="">Standard pricing</option>
+                    {priceLevels.map((pl) => (
+                      <option key={pl.id} value={pl.id}>
+                        {pl.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
               <CustomFieldsEditor
                 bookId={activeBookId}
                 entityType="customer"

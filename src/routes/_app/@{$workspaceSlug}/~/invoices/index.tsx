@@ -57,6 +57,9 @@ function InvoicesPage() {
   const [inventoryItems, setInventoryItems] = useState<
     InvoiceInventoryOption[]
   >([]);
+  const [priceLevels, setPriceLevels] = useState<
+    { id: string; adjustmentPercent: string }[]
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
@@ -81,7 +84,7 @@ function InvoicesPage() {
     setLoadError(false);
     const asOf = new Date().toISOString().slice(0, 10);
     try {
-      const [invRes, custRes, acctRes, taxRes, agingRes, itemRes] =
+      const [invRes, custRes, acctRes, taxRes, agingRes, itemRes, plRes] =
         await Promise.all([
           apiFetch(`/api/invoices?bookId=${activeBookId}`),
           apiFetch(`/api/customers?bookId=${activeBookId}`),
@@ -91,16 +94,25 @@ function InvoicesPage() {
             `/api/reports/ar-aging?bookId=${activeBookId}&asOfDate=${asOf}`,
           ),
           apiFetch(`/api/inventory-items?bookId=${activeBookId}`),
+          apiFetch(`/api/price-levels?bookId=${activeBookId}`),
         ]);
-      const [invData, custData, acctData, taxData, agingData, itemData] =
-        await Promise.all([
-          invRes.json(),
-          custRes.json(),
-          acctRes.json(),
-          taxRes.json(),
-          agingRes.json(),
-          itemRes.json(),
-        ]);
+      const [
+        invData,
+        custData,
+        acctData,
+        taxData,
+        agingData,
+        itemData,
+        plData,
+      ] = await Promise.all([
+        invRes.json(),
+        custRes.json(),
+        acctRes.json(),
+        taxRes.json(),
+        agingRes.json(),
+        itemRes.json(),
+        plRes.json(),
+      ]);
       setInvoices(invData.invoices ?? []);
       setCustomers(custData.customers ?? []);
       setAccounts(acctData.accounts ?? []);
@@ -109,6 +121,7 @@ function InvoicesPage() {
       );
       setAging(agingData ?? null);
       setInventoryItems(itemData.items ?? []);
+      setPriceLevels(plData.priceLevels ?? []);
     } catch (err) {
       console.error("Failed to load invoices", err);
       setLoadError(true);
@@ -356,6 +369,7 @@ function InvoicesPage() {
               incomeAccounts={incomeAccounts}
               taxJurisdictions={taxJurisdictions}
               inventoryItems={inventoryItems}
+              priceLevels={priceLevels}
               homeCurrency={homeCurrency}
               saving={saving}
               onSubmit={handleCreate}

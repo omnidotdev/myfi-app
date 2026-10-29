@@ -38,6 +38,8 @@ interface InvoiceFormProps {
   incomeAccounts: InvoiceAccount[];
   taxJurisdictions: TaxJurisdiction[];
   inventoryItems: InvoiceInventoryOption[];
+  /** price levels, so a customer's level adjusts item prices on selection */
+  priceLevels?: { id: string; adjustmentPercent: string }[];
   /** the book's home currency, used as the invoice currency default */
   homeCurrency: string;
   saving: boolean;
@@ -90,6 +92,7 @@ function InvoiceForm({
   incomeAccounts,
   taxJurisdictions,
   inventoryItems,
+  priceLevels = [],
   homeCurrency,
   saving,
   onSubmit,
@@ -114,18 +117,34 @@ function InvoiceForm({
     );
   };
 
+  // The selected customer's price-level adjustment (signed percent), applied to
+  // item prices when an item is picked
+  const customerAdjustmentPercent = (() => {
+    const customer = customers.find((c) => c.id === customerId);
+    if (!customer?.priceLevelId) return 0;
+    const level = priceLevels.find((p) => p.id === customer.priceLevelId);
+    return level ? Number(level.adjustmentPercent) : 0;
+  })();
+
   // Selecting an inventory item prefills the line's description, price, and
-  // income account from the item (all still editable)
+  // income account from the item (all still editable). The price reflects the
+  // customer's price level when one is set
   const selectItem = (index: number, itemId: string) => {
     const item = inventoryItems.find((it) => it.id === itemId);
     if (!item) {
       updateLine(index, { inventoryItemId: "" });
       return;
     }
+    const base = Number.parseFloat(item.salePrice) || 0;
+    const adjusted =
+      customerAdjustmentPercent !== 0
+        ? Math.max(0, base * (1 + customerAdjustmentPercent / 100))
+        : base;
     updateLine(index, {
       inventoryItemId: item.id,
       description: item.name,
-      unitPrice: item.salePrice,
+      unitPrice:
+        customerAdjustmentPercent !== 0 ? adjusted.toFixed(2) : item.salePrice,
       incomeAccountId: item.incomeAccountId,
     });
   };
