@@ -22,6 +22,12 @@ const today = () => new Date().toISOString().slice(0, 10);
 const inputClass =
   "rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50";
 
+const ITEM_TYPE_LABELS: Record<string, string> = {
+  inventory: "Inventory",
+  service: "Service",
+  non_inventory: "Non-inventory",
+};
+
 function ItemsPage() {
   const {
     activeBook,
@@ -43,7 +49,9 @@ function ItemsPage() {
   const [form, setForm] = useState({
     name: "",
     sku: "",
+    itemType: "inventory",
     salePrice: "0",
+    reorderPoint: "",
     assetAccountId: "",
     cogsAccountId: "",
     incomeAccountId: "",
@@ -98,15 +106,21 @@ function ItemsPage() {
       if (!activeBookId) return;
       setSaving(true);
       try {
+        const isInventory = form.itemType === "inventory";
         const res = await apiFetch("/api/inventory-items", {
           method: "POST",
           body: JSON.stringify({
             bookId: activeBookId,
             name: form.name,
             sku: form.sku || undefined,
+            itemType: form.itemType,
             salePrice: Number.parseFloat(form.salePrice) || 0,
-            assetAccountId: form.assetAccountId,
-            cogsAccountId: form.cogsAccountId,
+            reorderPoint:
+              isInventory && form.reorderPoint !== ""
+                ? Number.parseFloat(form.reorderPoint)
+                : undefined,
+            assetAccountId: isInventory ? form.assetAccountId : undefined,
+            cogsAccountId: isInventory ? form.cogsAccountId : undefined,
             incomeAccountId: form.incomeAccountId,
           }),
         });
@@ -116,7 +130,9 @@ function ItemsPage() {
         setForm({
           name: "",
           sku: "",
+          itemType: "inventory",
           salePrice: "0",
+          reorderPoint: "",
           assetAccountId: "",
           cogsAccountId: "",
           incomeAccountId: "",
@@ -240,6 +256,7 @@ function ItemsPage() {
               <tr>
                 <th className="px-4 py-3 font-medium">Item</th>
                 <th className="px-4 py-3 font-medium">SKU</th>
+                <th className="px-4 py-3 font-medium">Type</th>
                 <th className="px-4 py-3 text-right font-medium">On Hand</th>
                 <th className="px-4 py-3 text-right font-medium">Avg Cost</th>
                 <th className="px-4 py-3 text-right font-medium">Price</th>
@@ -256,11 +273,18 @@ function ItemsPage() {
                   <td className="px-4 py-3 text-muted-foreground">
                     {item.sku ?? "-"}
                   </td>
-                  <td className="px-4 py-3 text-right">
-                    {Number(item.quantityOnHand).toLocaleString()}
+                  <td className="px-4 py-3 text-muted-foreground">
+                    {ITEM_TYPE_LABELS[item.itemType] ?? item.itemType}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    {formatCurrency(item.averageCost)}
+                    {item.itemType === "inventory"
+                      ? Number(item.quantityOnHand).toLocaleString()
+                      : "-"}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    {item.itemType === "inventory"
+                      ? formatCurrency(item.averageCost)
+                      : "-"}
                   </td>
                   <td className="px-4 py-3 text-right">
                     {formatCurrency(item.salePrice)}
@@ -270,22 +294,26 @@ function ItemsPage() {
                       {busyId === item.id && (
                         <Loader2Icon className="size-4 animate-spin text-muted-foreground" />
                       )}
-                      <button
-                        type="button"
-                        disabled={busyId === item.id}
-                        onClick={() => openReceive(item)}
-                        className="rounded-md border border-border px-2.5 py-1 text-xs transition-colors hover:bg-accent disabled:opacity-50"
-                      >
-                        Receive
-                      </button>
-                      <button
-                        type="button"
-                        disabled={busyId === item.id}
-                        onClick={() => openSell(item)}
-                        className="rounded-md border border-border px-2.5 py-1 text-xs transition-colors hover:bg-accent disabled:opacity-50"
-                      >
-                        Sell
-                      </button>
+                      {item.itemType === "inventory" && (
+                        <>
+                          <button
+                            type="button"
+                            disabled={busyId === item.id}
+                            onClick={() => openReceive(item)}
+                            className="rounded-md border border-border px-2.5 py-1 text-xs transition-colors hover:bg-accent disabled:opacity-50"
+                          >
+                            Receive
+                          </button>
+                          <button
+                            type="button"
+                            disabled={busyId === item.id}
+                            onClick={() => openSell(item)}
+                            className="rounded-md border border-border px-2.5 py-1 text-xs transition-colors hover:bg-accent disabled:opacity-50"
+                          >
+                            Sell
+                          </button>
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -319,6 +347,28 @@ function ItemsPage() {
                   className={inputClass}
                 />
               </div>
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="it-type" className="font-medium text-sm">
+                  Type
+                </label>
+                <select
+                  id="it-type"
+                  value={form.itemType}
+                  onChange={(e) =>
+                    setForm({ ...form, itemType: e.target.value })
+                  }
+                  className={inputClass}
+                >
+                  <option value="inventory">Inventory (tracks stock)</option>
+                  <option value="service">Service</option>
+                  <option value="non_inventory">Non-inventory</option>
+                </select>
+                <p className="text-muted-foreground text-xs">
+                  {form.itemType === "inventory"
+                    ? "Tracks quantity on hand and posts cost of goods sold."
+                    : "Sold without tracking stock, so no inventory or COGS accounts."}
+                </p>
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="it-sku" className="font-medium text-sm">
@@ -349,54 +399,75 @@ function ItemsPage() {
                   />
                 </div>
               </div>
-              <div className="flex flex-col gap-1.5">
-                <label htmlFor="it-asset" className="font-medium text-sm">
-                  Inventory Asset Account
-                </label>
-                <select
-                  id="it-asset"
-                  required
-                  value={form.assetAccountId}
-                  onChange={(e) =>
-                    setForm({ ...form, assetAccountId: e.target.value })
-                  }
-                  className={inputClass}
-                >
-                  <option value="" disabled>
-                    Select an account
-                  </option>
-                  {assetAccounts.map((a) => (
-                    <option key={a.id} value={a.id}>
-                      {a.code ? `${a.code} - ` : ""}
-                      {a.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label htmlFor="it-cogs" className="font-medium text-sm">
-                  COGS Account
-                </label>
-                <select
-                  id="it-cogs"
-                  required
-                  value={form.cogsAccountId}
-                  onChange={(e) =>
-                    setForm({ ...form, cogsAccountId: e.target.value })
-                  }
-                  className={inputClass}
-                >
-                  <option value="" disabled>
-                    Select an account
-                  </option>
-                  {expenseAccounts.map((a) => (
-                    <option key={a.id} value={a.id}>
-                      {a.code ? `${a.code} - ` : ""}
-                      {a.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              {form.itemType === "inventory" && (
+                <>
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="it-reorder" className="font-medium text-sm">
+                      Reorder Point
+                    </label>
+                    <input
+                      id="it-reorder"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="Optional low-stock threshold"
+                      value={form.reorderPoint}
+                      onChange={(e) =>
+                        setForm({ ...form, reorderPoint: e.target.value })
+                      }
+                      className={inputClass}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="it-asset" className="font-medium text-sm">
+                      Inventory Asset Account
+                    </label>
+                    <select
+                      id="it-asset"
+                      required
+                      value={form.assetAccountId}
+                      onChange={(e) =>
+                        setForm({ ...form, assetAccountId: e.target.value })
+                      }
+                      className={inputClass}
+                    >
+                      <option value="" disabled>
+                        Select an account
+                      </option>
+                      {assetAccounts.map((a) => (
+                        <option key={a.id} value={a.id}>
+                          {a.code ? `${a.code} - ` : ""}
+                          {a.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="it-cogs" className="font-medium text-sm">
+                      COGS Account
+                    </label>
+                    <select
+                      id="it-cogs"
+                      required
+                      value={form.cogsAccountId}
+                      onChange={(e) =>
+                        setForm({ ...form, cogsAccountId: e.target.value })
+                      }
+                      className={inputClass}
+                    >
+                      <option value="" disabled>
+                        Select an account
+                      </option>
+                      {expenseAccounts.map((a) => (
+                        <option key={a.id} value={a.id}>
+                          {a.code ? `${a.code} - ` : ""}
+                          {a.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </>
+              )}
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="it-income" className="font-medium text-sm">
                   Income Account
