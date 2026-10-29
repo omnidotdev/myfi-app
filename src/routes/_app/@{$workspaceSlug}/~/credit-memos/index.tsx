@@ -19,6 +19,7 @@ import type {
 import type {
   Customer,
   InvoiceAccount,
+  InvoiceInventoryOption,
   InvoiceListItem,
   TaxJurisdiction,
 } from "@/features/invoicing/types/invoicing";
@@ -57,6 +58,9 @@ function CreditMemosPage() {
     [],
   );
   const [invoices, setInvoices] = useState<InvoiceListItem[]>([]);
+  const [inventoryItems, setInventoryItems] = useState<
+    InvoiceInventoryOption[]
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
@@ -81,20 +85,24 @@ function CreditMemosPage() {
     setIsLoading(true);
     setLoadError(false);
     try {
-      const [cmRes, custRes, acctRes, taxRes, invRes] = await Promise.all([
-        apiFetch(`/api/credit-memos?bookId=${activeBookId}`),
-        apiFetch(`/api/customers?bookId=${activeBookId}`),
-        apiFetch(`/api/accounts?bookId=${activeBookId}`),
-        apiFetch(`/api/tax-jurisdictions?bookId=${activeBookId}`),
-        apiFetch(`/api/invoices?bookId=${activeBookId}`),
-      ]);
-      const [cmData, custData, acctData, taxData, invData] = await Promise.all([
-        cmRes.json(),
-        custRes.json(),
-        acctRes.json(),
-        taxRes.json(),
-        invRes.json(),
-      ]);
+      const [cmRes, custRes, acctRes, taxRes, invRes, itemRes] =
+        await Promise.all([
+          apiFetch(`/api/credit-memos?bookId=${activeBookId}`),
+          apiFetch(`/api/customers?bookId=${activeBookId}`),
+          apiFetch(`/api/accounts?bookId=${activeBookId}`),
+          apiFetch(`/api/tax-jurisdictions?bookId=${activeBookId}`),
+          apiFetch(`/api/invoices?bookId=${activeBookId}`),
+          apiFetch(`/api/inventory-items?bookId=${activeBookId}`),
+        ]);
+      const [cmData, custData, acctData, taxData, invData, itemData] =
+        await Promise.all([
+          cmRes.json(),
+          custRes.json(),
+          acctRes.json(),
+          taxRes.json(),
+          invRes.json(),
+          itemRes.json(),
+        ]);
       setCreditMemos(cmData.creditMemos ?? []);
       setCustomers(custData.customers ?? []);
       setAccounts(acctData.accounts ?? []);
@@ -102,6 +110,7 @@ function CreditMemosPage() {
         taxData.taxJurisdictions ?? taxData.jurisdictions ?? [],
       );
       setInvoices(invData.invoices ?? []);
+      setInventoryItems(itemData.items ?? []);
     } catch (err) {
       console.error("Failed to load credit memos", err);
       setLoadError(true);
@@ -345,6 +354,7 @@ function CreditMemosPage() {
             customers={customers}
             incomeAccounts={incomeAccounts}
             taxJurisdictions={taxJurisdictions}
+            inventoryItems={inventoryItems}
             saving={saving}
             onSubmit={handleCreate}
             onCancel={() => setFormOpen(false)}

@@ -5,6 +5,7 @@ import type { DraftCreditMemoLine } from "@/features/credit-memos/types/creditMe
 import type {
   Customer,
   InvoiceAccount,
+  InvoiceInventoryOption,
   TaxJurisdiction,
 } from "@/features/invoicing/types/invoicing";
 import formatCurrency from "@/lib/format/currency";
@@ -22,6 +23,8 @@ interface CreditMemoFormPayload {
     taxJurisdictionId?: string;
     /** discount as a fraction 0..1 (the form collects a 0-100 percent) */
     discountPercent?: number;
+    /** optional inventory item this line returns to stock when posted */
+    inventoryItemId?: string;
   }[];
 }
 
@@ -29,6 +32,7 @@ interface CreditMemoFormProps {
   customers: Customer[];
   incomeAccounts: InvoiceAccount[];
   taxJurisdictions: TaxJurisdiction[];
+  inventoryItems: InvoiceInventoryOption[];
   saving: boolean;
   onSubmit: (payload: CreditMemoFormPayload) => void;
   onCancel: () => void;
@@ -45,6 +49,7 @@ const emptyLine = (): EditableLine => ({
   incomeAccountId: "",
   taxJurisdictionId: "",
   discountPercent: "",
+  inventoryItemId: "",
 });
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -70,6 +75,7 @@ function CreditMemoForm({
   customers,
   incomeAccounts,
   taxJurisdictions,
+  inventoryItems,
   saving,
   onSubmit,
   onCancel,
@@ -104,6 +110,7 @@ function CreditMemoForm({
           incomeAccountId: l.incomeAccountId,
           taxJurisdictionId: l.taxJurisdictionId || undefined,
           discountPercent: fraction > 0 ? fraction : undefined,
+          inventoryItemId: l.inventoryItemId || undefined,
         };
       }),
     });
@@ -242,6 +249,23 @@ function CreditMemoForm({
                 ))}
               </select>
             </div>
+            {inventoryItems.length > 0 && (
+              <select
+                value={line.inventoryItemId}
+                onChange={(e) =>
+                  updateLine(index, { inventoryItemId: e.target.value })
+                }
+                aria-label="Returned inventory item"
+                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              >
+                <option value="">No item returned (price adjustment)</option>
+                {inventoryItems.map((it) => (
+                  <option key={it.id} value={it.id}>
+                    Restock: {it.name}
+                  </option>
+                ))}
+              </select>
+            )}
             <div className="flex items-center justify-between gap-2">
               <label className="flex items-center gap-2 text-muted-foreground text-xs">
                 Discount %

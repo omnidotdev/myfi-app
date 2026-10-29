@@ -24,4 +24,6 @@ export interface DraftCreditMemoLine {
   taxJurisdictionId: string;
   /** optional per-line discount, entered as a percent 0 to 100 */
   discountPercent: string;
+  /** optional inventory item this line returns to stock when posted */
+  inventoryItemId: string;
 }
