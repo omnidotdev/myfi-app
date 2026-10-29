@@ -73,6 +73,7 @@ import { Route as AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsRulesRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/rules'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsTagsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/tags'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsTaxJurisdictionsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/tax-jurisdictions'
+import { Route as AppAtChar123workspaceSlugChar125Char126SettingsTrackingCategoriesRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/tracking-categories'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsVendorsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/vendors'
 import { Route as AppAtChar123workspaceSlugChar125Char126SpendingIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/spending/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126SpendingRecurringRouteImport } from './routes/_app/@{$workspaceSlug}/~/spending/recurring'
@@ -471,6 +472,14 @@ const AppAtChar123workspaceSlugChar125Char126SettingsTaxJurisdictionsRoute =
       getParentRoute: () => AppRoute,
     } as any,
   )
+const AppAtChar123workspaceSlugChar125Char126SettingsTrackingCategoriesRoute =
+  AppAtChar123workspaceSlugChar125Char126SettingsTrackingCategoriesRouteImport.update(
+    {
+      id: '/@{$workspaceSlug}/~/settings/tracking-categories',
+      path: '/@{$workspaceSlug}/~/settings/tracking-categories',
+      getParentRoute: () => AppRoute,
+    } as any,
+  )
 const AppAtChar123workspaceSlugChar125Char126SettingsVendorsRoute =
   AppAtChar123workspaceSlugChar125Char126SettingsVendorsRouteImport.update({
     id: '/@{$workspaceSlug}/~/settings/vendors',
@@ -531,6 +540,7 @@ export interface FileRoutesByFullPath {
   '/@{$workspaceSlug}/~/settings/rules': typeof AppAtChar123workspaceSlugChar125Char126SettingsRulesRoute
   '/@{$workspaceSlug}/~/settings/tags': typeof AppAtChar123workspaceSlugChar125Char126SettingsTagsRoute
   '/@{$workspaceSlug}/~/settings/tax-jurisdictions': typeof AppAtChar123workspaceSlugChar125Char126SettingsTaxJurisdictionsRoute
+  '/@{$workspaceSlug}/~/settings/tracking-categories': typeof AppAtChar123workspaceSlugChar125Char126SettingsTrackingCategoriesRoute
   '/@{$workspaceSlug}/~/settings/vendors': typeof AppAtChar123workspaceSlugChar125Char126SettingsVendorsRoute
   '/@{$workspaceSlug}/~/spending/recurring': typeof AppAtChar123workspaceSlugChar125Char126SpendingRecurringRoute
   '/@{$workspaceSlug}/~/accounts/': typeof AppAtChar123workspaceSlugChar125Char126AccountsIndexRoute
@@ -598,6 +608,7 @@ export interface FileRoutesByTo {
   '/@{$workspaceSlug}/~/settings/rules': typeof AppAtChar123workspaceSlugChar125Char126SettingsRulesRoute
   '/@{$workspaceSlug}/~/settings/tags': typeof AppAtChar123workspaceSlugChar125Char126SettingsTagsRoute
   '/@{$workspaceSlug}/~/settings/tax-jurisdictions': typeof AppAtChar123workspaceSlugChar125Char126SettingsTaxJurisdictionsRoute
+  '/@{$workspaceSlug}/~/settings/tracking-categories': typeof AppAtChar123workspaceSlugChar125Char126SettingsTrackingCategoriesRoute
   '/@{$workspaceSlug}/~/settings/vendors': typeof AppAtChar123workspaceSlugChar125Char126SettingsVendorsRoute
   '/@{$workspaceSlug}/~/spending/recurring': typeof AppAtChar123workspaceSlugChar125Char126SpendingRecurringRoute
   '/@{$workspaceSlug}/~/accounts': typeof AppAtChar123workspaceSlugChar125Char126AccountsIndexRoute
@@ -668,6 +679,7 @@ export interface FileRoutesById {
   '/_app/@{$workspaceSlug}/~/settings/rules': typeof AppAtChar123workspaceSlugChar125Char126SettingsRulesRoute
   '/_app/@{$workspaceSlug}/~/settings/tags': typeof AppAtChar123workspaceSlugChar125Char126SettingsTagsRoute
   '/_app/@{$workspaceSlug}/~/settings/tax-jurisdictions': typeof AppAtChar123workspaceSlugChar125Char126SettingsTaxJurisdictionsRoute
+  '/_app/@{$workspaceSlug}/~/settings/tracking-categories': typeof AppAtChar123workspaceSlugChar125Char126SettingsTrackingCategoriesRoute
   '/_app/@{$workspaceSlug}/~/settings/vendors': typeof AppAtChar123workspaceSlugChar125Char126SettingsVendorsRoute
   '/_app/@{$workspaceSlug}/~/spending/recurring': typeof AppAtChar123workspaceSlugChar125Char126SpendingRecurringRoute
   '/_app/@{$workspaceSlug}/~/accounts/': typeof AppAtChar123workspaceSlugChar125Char126AccountsIndexRoute
@@ -737,6 +749,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/settings/rules'
     | '/@{$workspaceSlug}/~/settings/tags'
     | '/@{$workspaceSlug}/~/settings/tax-jurisdictions'
+    | '/@{$workspaceSlug}/~/settings/tracking-categories'
     | '/@{$workspaceSlug}/~/settings/vendors'
     | '/@{$workspaceSlug}/~/spending/recurring'
     | '/@{$workspaceSlug}/~/accounts/'
@@ -804,6 +817,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/settings/rules'
     | '/@{$workspaceSlug}/~/settings/tags'
     | '/@{$workspaceSlug}/~/settings/tax-jurisdictions'
+    | '/@{$workspaceSlug}/~/settings/tracking-categories'
     | '/@{$workspaceSlug}/~/settings/vendors'
     | '/@{$workspaceSlug}/~/spending/recurring'
     | '/@{$workspaceSlug}/~/accounts'
@@ -873,6 +887,7 @@ export interface FileRouteTypes {
     | '/_app/@{$workspaceSlug}/~/settings/rules'
     | '/_app/@{$workspaceSlug}/~/settings/tags'
     | '/_app/@{$workspaceSlug}/~/settings/tax-jurisdictions'
+    | '/_app/@{$workspaceSlug}/~/settings/tracking-categories'
     | '/_app/@{$workspaceSlug}/~/settings/vendors'
     | '/_app/@{$workspaceSlug}/~/spending/recurring'
     | '/_app/@{$workspaceSlug}/~/accounts/'
@@ -1356,6 +1371,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsTaxJurisdictionsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/@{$workspaceSlug}/~/settings/tracking-categories': {
+      id: '/_app/@{$workspaceSlug}/~/settings/tracking-categories'
+      path: '/@{$workspaceSlug}/~/settings/tracking-categories'
+      fullPath: '/@{$workspaceSlug}/~/settings/tracking-categories'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsTrackingCategoriesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/@{$workspaceSlug}/~/settings/vendors': {
       id: '/_app/@{$workspaceSlug}/~/settings/vendors'
       path: '/@{$workspaceSlug}/~/settings/vendors'
@@ -1417,6 +1439,7 @@ interface AppRouteChildren {
   AppAtChar123workspaceSlugChar125Char126SettingsRulesRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsRulesRoute
   AppAtChar123workspaceSlugChar125Char126SettingsTagsRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsTagsRoute
   AppAtChar123workspaceSlugChar125Char126SettingsTaxJurisdictionsRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsTaxJurisdictionsRoute
+  AppAtChar123workspaceSlugChar125Char126SettingsTrackingCategoriesRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsTrackingCategoriesRoute
   AppAtChar123workspaceSlugChar125Char126SettingsVendorsRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsVendorsRoute
   AppAtChar123workspaceSlugChar125Char126SpendingRecurringRoute: typeof AppAtChar123workspaceSlugChar125Char126SpendingRecurringRoute
   AppAtChar123workspaceSlugChar125Char126AccountsIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126AccountsIndexRoute
@@ -1517,6 +1540,8 @@ const AppRouteChildren: AppRouteChildren = {
     AppAtChar123workspaceSlugChar125Char126SettingsTagsRoute,
   AppAtChar123workspaceSlugChar125Char126SettingsTaxJurisdictionsRoute:
     AppAtChar123workspaceSlugChar125Char126SettingsTaxJurisdictionsRoute,
+  AppAtChar123workspaceSlugChar125Char126SettingsTrackingCategoriesRoute:
+    AppAtChar123workspaceSlugChar125Char126SettingsTrackingCategoriesRoute,
   AppAtChar123workspaceSlugChar125Char126SettingsVendorsRoute:
     AppAtChar123workspaceSlugChar125Char126SettingsVendorsRoute,
   AppAtChar123workspaceSlugChar125Char126SpendingRecurringRoute:

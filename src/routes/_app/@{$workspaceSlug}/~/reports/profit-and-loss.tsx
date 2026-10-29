@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BookPicker from "@/features/books/components/BookPicker";
 import ComparativeReportTable, {
   type ComparativeRow,
@@ -77,6 +77,10 @@ function ProfitAndLossPage() {
   } = useActiveBook();
   const { tagGroups } = useTagGroups(activeBookId);
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
+  const [trackingCategories, setTrackingCategories] = useState<
+    { id: string; kind: string; name: string }[]
+  >([]);
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const [data, setData] = useState<ProfitAndLossData | null>(null);
   const [comparative, setComparative] = useState<ComparativePnlData | null>(
     null,
@@ -88,6 +92,34 @@ function ProfitAndLossPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const lastParams = useRef<{ startDate?: string; endDate?: string }>({});
+
+  // Load the book's tracking categories (classes/locations) to offer as filters
+  useEffect(() => {
+    if (!activeBookId) {
+      setTrackingCategories([]);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await apiFetch(
+          `/api/tracking-categories?bookId=${activeBookId}`,
+        );
+        const json = await res.json();
+        if (!cancelled) setTrackingCategories(json.categories ?? []);
+      } catch {
+        if (!cancelled) setTrackingCategories([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [activeBookId]);
+
+  const toggleCategory = (id: string) =>
+    setSelectedCategoryIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
 
   const handleGenerate = async (params: {
     startDate?: string;
@@ -104,6 +136,8 @@ function ProfitAndLossPage() {
       if (params.endDate) searchParams.set("endDate", params.endDate);
       if (selectedTagIds.length > 0)
         searchParams.set("tagIds", selectedTagIds.join(","));
+      if (selectedCategoryIds.length > 0)
+        searchParams.set("trackingCategoryIds", selectedCategoryIds.join(","));
       if (basis === "cash") searchParams.set("basis", "cash");
 
       const res = await apiFetch(
@@ -183,6 +217,37 @@ function ProfitAndLossPage() {
               selectedTagIds={selectedTagIds}
               onChange={setSelectedTagIds}
             />
+            {["class", "location"].map((kind) => {
+              const items = trackingCategories.filter((c) => c.kind === kind);
+              if (items.length === 0) return null;
+              return (
+                <div key={kind} className="flex flex-col gap-1">
+                  <span className="text-muted-foreground text-xs capitalize">
+                    {kind === "class" ? "Classes" : "Locations"}
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {items.map((c) => {
+                      const on = selectedCategoryIds.includes(c.id);
+                      return (
+                        <button
+                          key={c.id}
+                          type="button"
+                          onClick={() => toggleCategory(c.id)}
+                          aria-pressed={on}
+                          className={`rounded-full border px-2.5 py-1 text-xs transition-colors ${
+                            on
+                              ? "border-primary bg-primary text-primary-foreground"
+                              : "border-border hover:bg-accent"
+                          }`}
+                        >
+                          {c.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
             <label className="flex items-center gap-2 text-sm">
               <input
                 type="checkbox"

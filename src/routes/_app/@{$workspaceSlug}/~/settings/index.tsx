@@ -4,6 +4,7 @@ import {
   DatabaseIcon,
   ImportIcon,
   LandmarkIcon,
+  LayersIcon,
   Link2Icon,
   MapIcon,
   ScrollTextIcon,
@@ -53,6 +54,12 @@ const settingsItems = [
     description: "Organize transactions by department, location, or project",
     href: "/@{$workspaceSlug}/~/settings/tags",
     icon: TagsIcon,
+  },
+  {
+    label: "Classes & Locations",
+    description: "QuickBooks-style tracking categories for segment reporting",
+    href: "/@{$workspaceSlug}/~/settings/tracking-categories",
+    icon: LayersIcon,
   },
   {
     label: "Vendors & 1099",
