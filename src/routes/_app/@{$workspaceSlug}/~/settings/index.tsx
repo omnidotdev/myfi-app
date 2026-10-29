@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   BookOpenIcon,
+  DatabaseIcon,
   ImportIcon,
   LandmarkIcon,
   Link2Icon,
@@ -76,6 +77,12 @@ const settingsItems = [
     description: "Track changes across your workspace",
     href: "/@{$workspaceSlug}/~/settings/audit",
     icon: ScrollTextIcon,
+  },
+  {
+    label: "Data & Privacy",
+    description: "Export a full copy of your workspace data",
+    href: "/@{$workspaceSlug}/~/settings/data",
+    icon: DatabaseIcon,
   },
 ];
 

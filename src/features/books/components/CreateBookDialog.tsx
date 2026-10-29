@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useId, useState } from "react";
+import Dialog from "@/components/Dialog";
 import { defaultTemplateForType } from "@/features/books/lib/defaultTemplateForType";
 import type { BookType } from "@/features/books/types/book";
 import { BOOK_TYPES } from "@/features/books/types/book";
@@ -44,6 +45,7 @@ type CreateBookDialogProps = {
  * Dialog for creating a new book
  */
 function CreateBookDialog({ open, onClose, onSubmit }: CreateBookDialogProps) {
+  const titleId = useId();
   const [name, setName] = useState("");
   const [type, setType] = useState<BookType>("personal");
   const [currency, setCurrency] = useState("USD");
@@ -51,8 +53,6 @@ function CreateBookDialog({ open, onClose, onSubmit }: CreateBookDialogProps) {
   const [template, setTemplate] = useState<Template>(
     defaultTemplateForType("personal"),
   );
-
-  if (!open) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,134 +74,130 @@ function CreateBookDialog({ open, onClose, onSubmit }: CreateBookDialogProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
-      <button
-        type="button"
-        className="absolute inset-0 bg-black/50"
-        onClick={handleClose}
-        aria-label="Close dialog"
-      />
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      labelledBy={titleId}
+      className="max-w-md"
+    >
+      <h2 id={titleId} className="mb-4 font-semibold text-lg">
+        Create Book
+      </h2>
 
-      {/* Dialog */}
-      <div className="relative w-full max-w-md rounded-lg border border-border bg-card p-6 shadow-lg">
-        <h2 className="mb-4 font-semibold text-lg">Create Book</h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {/* Name */}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="book-name" className="font-medium text-sm">
+            Name
+          </label>
+          <input
+            id="book-name"
+            type="text"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="My Finances"
+            className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+          />
+        </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {/* Name */}
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="book-name" className="font-medium text-sm">
-              Name
-            </label>
-            <input
-              id="book-name"
-              type="text"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="My Finances"
-              className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-            />
-          </div>
+        {/* Type */}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="book-type" className="font-medium text-sm">
+            Type
+          </label>
+          <select
+            id="book-type"
+            value={type}
+            onChange={(e) => {
+              const nextType = e.target.value as BookType;
+              setType(nextType);
+              // Match the chart of accounts to the type; still overridable below
+              setTemplate(defaultTemplateForType(nextType));
+            }}
+            className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+          >
+            {BOOK_TYPES.map((t) => (
+              <option key={t} value={t}>
+                {t.charAt(0).toUpperCase() + t.slice(1)}
+              </option>
+            ))}
+          </select>
+        </div>
 
-          {/* Type */}
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="book-type" className="font-medium text-sm">
-              Type
-            </label>
-            <select
-              id="book-type"
-              value={type}
-              onChange={(e) => {
-                const nextType = e.target.value as BookType;
-                setType(nextType);
-                // Match the chart of accounts to the type; still overridable below
-                setTemplate(defaultTemplateForType(nextType));
-              }}
-              className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-            >
-              {BOOK_TYPES.map((t) => (
-                <option key={t} value={t}>
-                  {t.charAt(0).toUpperCase() + t.slice(1)}
-                </option>
-              ))}
-            </select>
-          </div>
+        {/* Currency */}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="book-currency" className="font-medium text-sm">
+            Currency
+          </label>
+          <input
+            id="book-currency"
+            type="text"
+            required
+            value={currency}
+            onChange={(e) => setCurrency(e.target.value.toUpperCase())}
+            maxLength={3}
+            placeholder="USD"
+            className="rounded-md border border-border bg-background px-3 py-2 text-sm uppercase focus:outline-none focus:ring-2 focus:ring-primary/50"
+          />
+        </div>
 
-          {/* Currency */}
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="book-currency" className="font-medium text-sm">
-              Currency
-            </label>
-            <input
-              id="book-currency"
-              type="text"
-              required
-              value={currency}
-              onChange={(e) => setCurrency(e.target.value.toUpperCase())}
-              maxLength={3}
-              placeholder="USD"
-              className="rounded-md border border-border bg-background px-3 py-2 text-sm uppercase focus:outline-none focus:ring-2 focus:ring-primary/50"
-            />
-          </div>
+        {/* Fiscal year start month */}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="book-fiscal-month" className="font-medium text-sm">
+            Fiscal year start
+          </label>
+          <select
+            id="book-fiscal-month"
+            value={fiscalYearStartMonth}
+            onChange={(e) => setFiscalYearStartMonth(Number(e.target.value))}
+            className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+          >
+            {MONTHS.map((month, idx) => (
+              <option key={month} value={idx + 1}>
+                {month}
+              </option>
+            ))}
+          </select>
+        </div>
 
-          {/* Fiscal year start month */}
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="book-fiscal-month" className="font-medium text-sm">
-              Fiscal year start
-            </label>
-            <select
-              id="book-fiscal-month"
-              value={fiscalYearStartMonth}
-              onChange={(e) => setFiscalYearStartMonth(Number(e.target.value))}
-              className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-            >
-              {MONTHS.map((month, idx) => (
-                <option key={month} value={idx + 1}>
-                  {month}
-                </option>
-              ))}
-            </select>
-          </div>
+        {/* Template */}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="book-template" className="font-medium text-sm">
+            Template
+          </label>
+          <select
+            id="book-template"
+            value={template}
+            onChange={(e) => setTemplate(e.target.value as Template)}
+            className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+          >
+            {TEMPLATES.map((t) => (
+              <option key={t} value={t}>
+                {TEMPLATE_LABELS[t]}
+              </option>
+            ))}
+          </select>
+        </div>
 
-          {/* Template */}
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="book-template" className="font-medium text-sm">
-              Template
-            </label>
-            <select
-              id="book-template"
-              value={template}
-              onChange={(e) => setTemplate(e.target.value as Template)}
-              className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-            >
-              {TEMPLATES.map((t) => (
-                <option key={t} value={t}>
-                  {TEMPLATE_LABELS[t]}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Actions */}
-          <div className="mt-2 flex justify-end gap-3">
-            <button
-              type="button"
-              onClick={handleClose}
-              className="rounded-md border border-border px-4 py-2 text-sm transition-colors hover:bg-accent"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
-            >
-              Create
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        {/* Actions */}
+        <div className="mt-2 flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={handleClose}
+            className="rounded-md border border-border px-4 py-2 text-sm transition-colors hover:bg-accent"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
+          >
+            Create
+          </button>
+        </div>
+      </form>
+    </Dialog>
   );
 }
 

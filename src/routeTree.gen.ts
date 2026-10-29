@@ -32,6 +32,7 @@ import { Route as AppAtChar123workspaceSlugChar125Char126EstimatesIndexRouteImpo
 import { Route as AppAtChar123workspaceSlugChar125Char126DocumentsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/documents/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126CustomersIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/customers/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126CryptoIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/crypto/index'
+import { Route as AppAtChar123workspaceSlugChar125Char126CreditMemosIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/credit-memos/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126CloseIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/close/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126BudgetsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/budgets/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126BillsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/bills/index'
@@ -44,6 +45,7 @@ import { Route as AppAtChar123workspaceSlugChar125Char126SettingsTagsRouteImport
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsRulesRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/rules'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/quickbooks'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsMappingsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/mappings'
+import { Route as AppAtChar123workspaceSlugChar125Char126SettingsDataRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/data'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/connections'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsBooksRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/books'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsAuditRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/audit'
@@ -204,6 +206,12 @@ const AppAtChar123workspaceSlugChar125Char126CryptoIndexRoute =
     path: '/@{$workspaceSlug}/~/crypto/',
     getParentRoute: () => AppRoute,
   } as any)
+const AppAtChar123workspaceSlugChar125Char126CreditMemosIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126CreditMemosIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/credit-memos/',
+    path: '/@{$workspaceSlug}/~/credit-memos/',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppAtChar123workspaceSlugChar125Char126CloseIndexRoute =
   AppAtChar123workspaceSlugChar125Char126CloseIndexRouteImport.update({
     id: '/@{$workspaceSlug}/~/close/',
@@ -276,6 +284,12 @@ const AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute =
   AppAtChar123workspaceSlugChar125Char126SettingsMappingsRouteImport.update({
     id: '/@{$workspaceSlug}/~/settings/mappings',
     path: '/@{$workspaceSlug}/~/settings/mappings',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126SettingsDataRoute =
+  AppAtChar123workspaceSlugChar125Char126SettingsDataRouteImport.update({
+    id: '/@{$workspaceSlug}/~/settings/data',
+    path: '/@{$workspaceSlug}/~/settings/data',
     getParentRoute: () => AppRoute,
   } as any)
 const AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute =
@@ -504,6 +518,7 @@ export interface FileRoutesByFullPath {
   '/@{$workspaceSlug}/~/settings/audit': typeof AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute
   '/@{$workspaceSlug}/~/settings/books': typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute
   '/@{$workspaceSlug}/~/settings/connections': typeof AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute
+  '/@{$workspaceSlug}/~/settings/data': typeof AppAtChar123workspaceSlugChar125Char126SettingsDataRoute
   '/@{$workspaceSlug}/~/settings/mappings': typeof AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute
   '/@{$workspaceSlug}/~/settings/quickbooks': typeof AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute
   '/@{$workspaceSlug}/~/settings/rules': typeof AppAtChar123workspaceSlugChar125Char126SettingsRulesRoute
@@ -516,6 +531,7 @@ export interface FileRoutesByFullPath {
   '/@{$workspaceSlug}/~/bills/': typeof AppAtChar123workspaceSlugChar125Char126BillsIndexRoute
   '/@{$workspaceSlug}/~/budgets/': typeof AppAtChar123workspaceSlugChar125Char126BudgetsIndexRoute
   '/@{$workspaceSlug}/~/close/': typeof AppAtChar123workspaceSlugChar125Char126CloseIndexRoute
+  '/@{$workspaceSlug}/~/credit-memos/': typeof AppAtChar123workspaceSlugChar125Char126CreditMemosIndexRoute
   '/@{$workspaceSlug}/~/crypto/': typeof AppAtChar123workspaceSlugChar125Char126CryptoIndexRoute
   '/@{$workspaceSlug}/~/customers/': typeof AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute
   '/@{$workspaceSlug}/~/documents/': typeof AppAtChar123workspaceSlugChar125Char126DocumentsIndexRoute
@@ -568,6 +584,7 @@ export interface FileRoutesByTo {
   '/@{$workspaceSlug}/~/settings/audit': typeof AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute
   '/@{$workspaceSlug}/~/settings/books': typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute
   '/@{$workspaceSlug}/~/settings/connections': typeof AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute
+  '/@{$workspaceSlug}/~/settings/data': typeof AppAtChar123workspaceSlugChar125Char126SettingsDataRoute
   '/@{$workspaceSlug}/~/settings/mappings': typeof AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute
   '/@{$workspaceSlug}/~/settings/quickbooks': typeof AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute
   '/@{$workspaceSlug}/~/settings/rules': typeof AppAtChar123workspaceSlugChar125Char126SettingsRulesRoute
@@ -580,6 +597,7 @@ export interface FileRoutesByTo {
   '/@{$workspaceSlug}/~/bills': typeof AppAtChar123workspaceSlugChar125Char126BillsIndexRoute
   '/@{$workspaceSlug}/~/budgets': typeof AppAtChar123workspaceSlugChar125Char126BudgetsIndexRoute
   '/@{$workspaceSlug}/~/close': typeof AppAtChar123workspaceSlugChar125Char126CloseIndexRoute
+  '/@{$workspaceSlug}/~/credit-memos': typeof AppAtChar123workspaceSlugChar125Char126CreditMemosIndexRoute
   '/@{$workspaceSlug}/~/crypto': typeof AppAtChar123workspaceSlugChar125Char126CryptoIndexRoute
   '/@{$workspaceSlug}/~/customers': typeof AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute
   '/@{$workspaceSlug}/~/documents': typeof AppAtChar123workspaceSlugChar125Char126DocumentsIndexRoute
@@ -635,6 +653,7 @@ export interface FileRoutesById {
   '/_app/@{$workspaceSlug}/~/settings/audit': typeof AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute
   '/_app/@{$workspaceSlug}/~/settings/books': typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute
   '/_app/@{$workspaceSlug}/~/settings/connections': typeof AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute
+  '/_app/@{$workspaceSlug}/~/settings/data': typeof AppAtChar123workspaceSlugChar125Char126SettingsDataRoute
   '/_app/@{$workspaceSlug}/~/settings/mappings': typeof AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute
   '/_app/@{$workspaceSlug}/~/settings/quickbooks': typeof AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute
   '/_app/@{$workspaceSlug}/~/settings/rules': typeof AppAtChar123workspaceSlugChar125Char126SettingsRulesRoute
@@ -647,6 +666,7 @@ export interface FileRoutesById {
   '/_app/@{$workspaceSlug}/~/bills/': typeof AppAtChar123workspaceSlugChar125Char126BillsIndexRoute
   '/_app/@{$workspaceSlug}/~/budgets/': typeof AppAtChar123workspaceSlugChar125Char126BudgetsIndexRoute
   '/_app/@{$workspaceSlug}/~/close/': typeof AppAtChar123workspaceSlugChar125Char126CloseIndexRoute
+  '/_app/@{$workspaceSlug}/~/credit-memos/': typeof AppAtChar123workspaceSlugChar125Char126CreditMemosIndexRoute
   '/_app/@{$workspaceSlug}/~/crypto/': typeof AppAtChar123workspaceSlugChar125Char126CryptoIndexRoute
   '/_app/@{$workspaceSlug}/~/customers/': typeof AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute
   '/_app/@{$workspaceSlug}/~/documents/': typeof AppAtChar123workspaceSlugChar125Char126DocumentsIndexRoute
@@ -701,6 +721,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/settings/audit'
     | '/@{$workspaceSlug}/~/settings/books'
     | '/@{$workspaceSlug}/~/settings/connections'
+    | '/@{$workspaceSlug}/~/settings/data'
     | '/@{$workspaceSlug}/~/settings/mappings'
     | '/@{$workspaceSlug}/~/settings/quickbooks'
     | '/@{$workspaceSlug}/~/settings/rules'
@@ -713,6 +734,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/bills/'
     | '/@{$workspaceSlug}/~/budgets/'
     | '/@{$workspaceSlug}/~/close/'
+    | '/@{$workspaceSlug}/~/credit-memos/'
     | '/@{$workspaceSlug}/~/crypto/'
     | '/@{$workspaceSlug}/~/customers/'
     | '/@{$workspaceSlug}/~/documents/'
@@ -765,6 +787,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/settings/audit'
     | '/@{$workspaceSlug}/~/settings/books'
     | '/@{$workspaceSlug}/~/settings/connections'
+    | '/@{$workspaceSlug}/~/settings/data'
     | '/@{$workspaceSlug}/~/settings/mappings'
     | '/@{$workspaceSlug}/~/settings/quickbooks'
     | '/@{$workspaceSlug}/~/settings/rules'
@@ -777,6 +800,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/bills'
     | '/@{$workspaceSlug}/~/budgets'
     | '/@{$workspaceSlug}/~/close'
+    | '/@{$workspaceSlug}/~/credit-memos'
     | '/@{$workspaceSlug}/~/crypto'
     | '/@{$workspaceSlug}/~/customers'
     | '/@{$workspaceSlug}/~/documents'
@@ -831,6 +855,7 @@ export interface FileRouteTypes {
     | '/_app/@{$workspaceSlug}/~/settings/audit'
     | '/_app/@{$workspaceSlug}/~/settings/books'
     | '/_app/@{$workspaceSlug}/~/settings/connections'
+    | '/_app/@{$workspaceSlug}/~/settings/data'
     | '/_app/@{$workspaceSlug}/~/settings/mappings'
     | '/_app/@{$workspaceSlug}/~/settings/quickbooks'
     | '/_app/@{$workspaceSlug}/~/settings/rules'
@@ -843,6 +868,7 @@ export interface FileRouteTypes {
     | '/_app/@{$workspaceSlug}/~/bills/'
     | '/_app/@{$workspaceSlug}/~/budgets/'
     | '/_app/@{$workspaceSlug}/~/close/'
+    | '/_app/@{$workspaceSlug}/~/credit-memos/'
     | '/_app/@{$workspaceSlug}/~/crypto/'
     | '/_app/@{$workspaceSlug}/~/customers/'
     | '/_app/@{$workspaceSlug}/~/documents/'
@@ -1030,6 +1056,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126CryptoIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/@{$workspaceSlug}/~/credit-memos/': {
+      id: '/_app/@{$workspaceSlug}/~/credit-memos/'
+      path: '/@{$workspaceSlug}/~/credit-memos'
+      fullPath: '/@{$workspaceSlug}/~/credit-memos/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126CreditMemosIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/@{$workspaceSlug}/~/close/': {
       id: '/_app/@{$workspaceSlug}/~/close/'
       path: '/@{$workspaceSlug}/~/close'
@@ -1112,6 +1145,13 @@ declare module '@tanstack/react-router' {
       path: '/@{$workspaceSlug}/~/settings/mappings'
       fullPath: '/@{$workspaceSlug}/~/settings/mappings'
       preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsMappingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/settings/data': {
+      id: '/_app/@{$workspaceSlug}/~/settings/data'
+      path: '/@{$workspaceSlug}/~/settings/data'
+      fullPath: '/@{$workspaceSlug}/~/settings/data'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsDataRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/@{$workspaceSlug}/~/settings/connections': {
@@ -1351,6 +1391,7 @@ interface AppRouteChildren {
   AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute
   AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute
   AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute
+  AppAtChar123workspaceSlugChar125Char126SettingsDataRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsDataRoute
   AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute
   AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute
   AppAtChar123workspaceSlugChar125Char126SettingsRulesRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsRulesRoute
@@ -1363,6 +1404,7 @@ interface AppRouteChildren {
   AppAtChar123workspaceSlugChar125Char126BillsIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126BillsIndexRoute
   AppAtChar123workspaceSlugChar125Char126BudgetsIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126BudgetsIndexRoute
   AppAtChar123workspaceSlugChar125Char126CloseIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126CloseIndexRoute
+  AppAtChar123workspaceSlugChar125Char126CreditMemosIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126CreditMemosIndexRoute
   AppAtChar123workspaceSlugChar125Char126CryptoIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126CryptoIndexRoute
   AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute
   AppAtChar123workspaceSlugChar125Char126DocumentsIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126DocumentsIndexRoute
@@ -1442,6 +1484,8 @@ const AppRouteChildren: AppRouteChildren = {
     AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute,
   AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute:
     AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute,
+  AppAtChar123workspaceSlugChar125Char126SettingsDataRoute:
+    AppAtChar123workspaceSlugChar125Char126SettingsDataRoute,
   AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute:
     AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute,
   AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute:
@@ -1466,6 +1510,8 @@ const AppRouteChildren: AppRouteChildren = {
     AppAtChar123workspaceSlugChar125Char126BudgetsIndexRoute,
   AppAtChar123workspaceSlugChar125Char126CloseIndexRoute:
     AppAtChar123workspaceSlugChar125Char126CloseIndexRoute,
+  AppAtChar123workspaceSlugChar125Char126CreditMemosIndexRoute:
+    AppAtChar123workspaceSlugChar125Char126CreditMemosIndexRoute,
   AppAtChar123workspaceSlugChar125Char126CryptoIndexRoute:
     AppAtChar123workspaceSlugChar125Char126CryptoIndexRoute,
   AppAtChar123workspaceSlugChar125Char126CustomersIndexRoute:

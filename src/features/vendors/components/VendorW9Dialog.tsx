@@ -5,10 +5,11 @@ import {
   UploadIcon,
 } from "lucide-react";
 import type { ChangeEvent } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import ConfirmDialog from "@/components/ConfirmDialog";
+import Dialog from "@/components/Dialog";
 import { validateW9File, W9_ACCEPT_ATTR } from "@/features/vendors/w9File";
 import { apiFetch } from "@/lib/api/apiFetch";
 
@@ -49,6 +50,7 @@ function VendorW9Dialog({
   onClose,
   onChanged,
 }: VendorW9DialogProps) {
+  const titleId = useId();
   const [documents, setDocuments] = useState<W9Document[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
@@ -178,110 +180,109 @@ function VendorW9Dialog({
   }, [pendingDelete, bookId, fetchDocuments, onChanged]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <button
-        type="button"
-        className="absolute inset-0 bg-black/50"
-        onClick={onClose}
-        aria-label="Close dialog"
-      />
-
-      <div className="relative flex max-h-[85vh] w-full max-w-lg flex-col gap-4 overflow-y-auto rounded-lg border border-border bg-card p-6 shadow-lg">
-        <div>
-          <h2 className="font-semibold text-lg">W9 documents</h2>
-          <p className="text-muted-foreground text-sm">
-            Collected W9s for{" "}
-            <span className="font-medium text-foreground">{vendor.name}</span>
-          </p>
-        </div>
-
-        <label
-          htmlFor={`w9-upload-${vendor.id}`}
-          className="inline-flex w-fit cursor-pointer items-center gap-2 rounded-md bg-primary px-3 py-1.5 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
-        >
-          {isUploading ? (
-            <Loader2Icon className="size-4 animate-spin" />
-          ) : (
-            <UploadIcon className="size-4" />
-          )}
-          {isUploading ? "Uploading..." : "Upload W9"}
-          <input
-            ref={fileInputRef}
-            id={`w9-upload-${vendor.id}`}
-            type="file"
-            accept={W9_ACCEPT_ATTR}
-            className="sr-only"
-            disabled={isUploading}
-            onChange={handleFileChange}
-          />
-        </label>
-        <p className="-mt-2 text-muted-foreground text-xs">
-          PDF or image (JPEG, PNG, HEIC) up to 50 MB
+    <Dialog
+      open
+      onClose={onClose}
+      busy={isDeleting}
+      labelledBy={titleId}
+      className="flex max-h-[85vh] max-w-lg flex-col gap-4 overflow-y-auto"
+    >
+      <div>
+        <h2 id={titleId} className="font-semibold text-lg">
+          W9 documents
+        </h2>
+        <p className="text-muted-foreground text-sm">
+          Collected W9s for{" "}
+          <span className="font-medium text-foreground">{vendor.name}</span>
         </p>
+      </div>
 
-        {isLoading ? (
-          <div className="flex items-center justify-center p-4">
-            <Loader2Icon className="size-4 animate-spin text-muted-foreground" />
-          </div>
-        ) : documents.length === 0 ? (
-          <p className="rounded-md border border-border border-dashed p-4 text-center text-muted-foreground text-sm">
-            No W9 on file for this vendor yet.
-          </p>
+      <label
+        htmlFor={`w9-upload-${vendor.id}`}
+        className="inline-flex w-fit cursor-pointer items-center gap-2 rounded-md bg-primary px-3 py-1.5 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
+      >
+        {isUploading ? (
+          <Loader2Icon className="size-4 animate-spin" />
         ) : (
-          <ul className="flex flex-col gap-2">
-            {documents.map((doc) => (
-              <li
-                key={doc.id}
-                className="flex items-center gap-3 rounded-md border border-border bg-background p-3"
-              >
-                <div className="flex min-w-0 flex-1 flex-col">
-                  <span className="truncate font-medium text-sm">
-                    {doc.filename}
-                  </span>
-                  <span className="text-muted-foreground text-xs">
-                    {formatFileSize(doc.sizeBytes)}
-                    {doc.year ? ` · ${doc.year}` : ""}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => handleView(doc)}
-                    disabled={viewingId === doc.id}
-                    className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs transition-colors hover:bg-accent disabled:opacity-50"
-                  >
-                    {viewingId === doc.id ? (
-                      <Loader2Icon className="size-3 animate-spin" />
-                    ) : (
-                      <ExternalLinkIcon className="size-3" />
-                    )}
-                    View
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPendingDelete(doc)}
-                    aria-label={`Delete ${doc.filename}`}
-                    className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-destructive text-xs transition-colors hover:bg-destructive/10"
-                  >
-                    <TrashIcon className="size-3" />
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <UploadIcon className="size-4" />
         )}
+        {isUploading ? "Uploading..." : "Upload W9"}
+        <input
+          ref={fileInputRef}
+          id={`w9-upload-${vendor.id}`}
+          type="file"
+          accept={W9_ACCEPT_ATTR}
+          className="sr-only"
+          disabled={isUploading}
+          onChange={handleFileChange}
+        />
+      </label>
+      <p className="-mt-2 text-muted-foreground text-xs">
+        PDF or image (JPEG, PNG, HEIC) up to 50 MB
+      </p>
 
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-md border border-border px-4 py-2 text-sm transition-colors hover:bg-accent"
-          >
-            Close
-          </button>
+      {isLoading ? (
+        <div className="flex items-center justify-center p-4">
+          <Loader2Icon className="size-4 animate-spin text-muted-foreground" />
         </div>
+      ) : documents.length === 0 ? (
+        <p className="rounded-md border border-border border-dashed p-4 text-center text-muted-foreground text-sm">
+          No W9 on file for this vendor yet.
+        </p>
+      ) : (
+        <ul className="flex flex-col gap-2">
+          {documents.map((doc) => (
+            <li
+              key={doc.id}
+              className="flex items-center gap-3 rounded-md border border-border bg-background p-3"
+            >
+              <div className="flex min-w-0 flex-1 flex-col">
+                <span className="truncate font-medium text-sm">
+                  {doc.filename}
+                </span>
+                <span className="text-muted-foreground text-xs">
+                  {formatFileSize(doc.sizeBytes)}
+                  {doc.year ? ` · ${doc.year}` : ""}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => handleView(doc)}
+                  disabled={viewingId === doc.id}
+                  className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs transition-colors hover:bg-accent disabled:opacity-50"
+                >
+                  {viewingId === doc.id ? (
+                    <Loader2Icon className="size-3 animate-spin" />
+                  ) : (
+                    <ExternalLinkIcon className="size-3" />
+                  )}
+                  View
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPendingDelete(doc)}
+                  aria-label={`Delete ${doc.filename}`}
+                  className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-destructive text-xs transition-colors hover:bg-destructive/10"
+                >
+                  <TrashIcon className="size-3" />
+                  Delete
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded-md border border-border px-4 py-2 text-sm transition-colors hover:bg-accent"
+        >
+          Close
+        </button>
       </div>
 
       <ConfirmDialog
@@ -298,7 +299,7 @@ function VendorW9Dialog({
         onConfirm={handleDelete}
         onCancel={() => setPendingDelete(null)}
       />
-    </div>
+    </Dialog>
   );
 }
 

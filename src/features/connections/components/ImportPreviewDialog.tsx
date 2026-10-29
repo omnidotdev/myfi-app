@@ -1,5 +1,6 @@
 import { Loader2Icon, SaveIcon } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useId, useState } from "react";
+import Dialog from "@/components/Dialog";
 import { apiFetch } from "@/lib/api/apiFetch";
 
 type CsvColumnMap = {
@@ -62,6 +63,7 @@ const COLUMN_ROLES = [
 ] as const;
 
 function ImportPreviewDialog({ file, bookId, onConfirm, onCancel }: Props) {
+  const titleId = useId();
   const [preview, setPreview] = useState<PreviewData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isImporting, setIsImporting] = useState(false);
@@ -236,200 +238,215 @@ function ImportPreviewDialog({ file, bookId, onConfirm, onCancel }: Props) {
 
   if (isLoading) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-        <div className="rounded-lg bg-card p-8">
-          <Loader2Icon className="size-6 animate-spin text-muted-foreground" />
-        </div>
-      </div>
+      <Dialog
+        open
+        onClose={onCancel}
+        busy
+        labelledBy={titleId}
+        className="w-fit"
+      >
+        <h2 id={titleId} className="sr-only">
+          Loading import preview
+        </h2>
+        <Loader2Icon className="size-6 animate-spin text-muted-foreground" />
+      </Dialog>
     );
   }
 
   if (error && !preview) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-        <div className="flex w-full max-w-md flex-col gap-4 rounded-lg bg-card p-6">
-          <p className="text-destructive text-sm">{error}</p>
-          <button
-            type="button"
-            onClick={onCancel}
-            className="rounded-md border border-border px-4 py-2 text-sm hover:bg-accent"
-          >
-            Close
-          </button>
-        </div>
-      </div>
+      <Dialog
+        open
+        onClose={onCancel}
+        labelledBy={titleId}
+        className="flex max-w-md flex-col gap-4"
+      >
+        <h2 id={titleId} className="sr-only">
+          Import error
+        </h2>
+        <p className="text-destructive text-sm">{error}</p>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="rounded-md border border-border px-4 py-2 text-sm hover:bg-accent"
+        >
+          Close
+        </button>
+      </Dialog>
     );
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="flex max-h-[80vh] w-full max-w-4xl flex-col gap-4 rounded-lg bg-card p-6">
-        <div className="flex items-center justify-between">
-          <h2 className="font-bold text-lg">
-            Import Preview ({preview?.format?.toUpperCase()})
-          </h2>
-          <span className="text-muted-foreground text-sm">
-            {preview?.totalRows ?? 0} transactions
-          </span>
+    <Dialog
+      open
+      onClose={onCancel}
+      busy={isImporting}
+      labelledBy={titleId}
+      className="flex max-h-[80vh] max-w-4xl flex-col gap-4"
+    >
+      <div className="flex items-center justify-between">
+        <h2 id={titleId} className="font-bold text-lg">
+          Import Preview ({preview?.format?.toUpperCase()})
+        </h2>
+        <span className="text-muted-foreground text-sm">
+          {preview?.totalRows ?? 0} transactions
+        </span>
+      </div>
+
+      {/* Saved profiles (CSV only) */}
+      {preview?.format === "csv" && profiles.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-muted-foreground text-sm">Profiles:</span>
+          {profiles.map((p) => (
+            <button
+              key={p.id}
+              type="button"
+              onClick={() => handleApplyProfile(p)}
+              className="rounded-md border border-border px-2 py-1 text-xs hover:bg-accent"
+            >
+              {p.name}
+            </button>
+          ))}
         </div>
+      )}
 
-        {/* Saved profiles (CSV only) */}
-        {preview?.format === "csv" && profiles.length > 0 && (
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-muted-foreground text-sm">Profiles:</span>
-            {profiles.map((p) => (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => handleApplyProfile(p)}
-                className="rounded-md border border-border px-2 py-1 text-xs hover:bg-accent"
-              >
-                {p.name}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* CSV preview table */}
-        {preview?.format === "csv" && (
-          <div className="overflow-auto">
-            <table className="w-full border-collapse text-sm">
-              <thead>
-                <tr>
-                  {preview.headers.map((header, i) => (
-                    <th
-                      key={`h-${header}-${i}`}
-                      className="border border-border bg-muted/50 p-2 text-left"
+      {/* CSV preview table */}
+      {preview?.format === "csv" && (
+        <div className="overflow-auto">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr>
+                {preview.headers.map((header, i) => (
+                  <th
+                    key={`h-${header}-${i}`}
+                    className="border border-border bg-muted/50 p-2 text-left"
+                  >
+                    <div className="flex flex-col gap-1">
+                      <span className="font-medium">{header}</span>
+                      <select
+                        aria-label={`Column role for ${header}`}
+                        value={getRoleForColumn(i)}
+                        onChange={(e) => handleColumnChange(i, e.target.value)}
+                        className="rounded border border-border bg-background px-1 py-0.5 text-xs"
+                      >
+                        {COLUMN_ROLES.map((r) => (
+                          <option key={r.value} value={r.value}>
+                            {r.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {preview.sampleRows.map((row, i) => (
+                <tr key={`r-${i}`}>
+                  {row.map((cell, j) => (
+                    <td
+                      key={`c-${i}-${j}`}
+                      className="border border-border p-2"
                     >
-                      <div className="flex flex-col gap-1">
-                        <span className="font-medium">{header}</span>
-                        <select
-                          aria-label={`Column role for ${header}`}
-                          value={getRoleForColumn(i)}
-                          onChange={(e) =>
-                            handleColumnChange(i, e.target.value)
-                          }
-                          className="rounded border border-border bg-background px-1 py-0.5 text-xs"
-                        >
-                          {COLUMN_ROLES.map((r) => (
-                            <option key={r.value} value={r.value}>
-                              {r.label}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </th>
+                      {cell}
+                    </td>
                   ))}
                 </tr>
-              </thead>
-              <tbody>
-                {preview.sampleRows.map((row, i) => (
-                  <tr key={`r-${i}`}>
-                    {row.map((cell, j) => (
-                      <td
-                        key={`c-${i}-${j}`}
-                        className="border border-border p-2"
-                      >
-                        {cell}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-        {/* OFX preview table */}
-        {preview?.format === "ofx" && (
-          <div className="overflow-auto">
-            <table className="w-full border-collapse text-sm">
-              <thead>
-                <tr>
-                  <th className="border border-border bg-muted/50 p-2 text-left">
-                    Date
-                  </th>
-                  <th className="border border-border bg-muted/50 p-2 text-left">
-                    Description
-                  </th>
-                  <th className="border border-border bg-muted/50 p-2 text-right">
-                    Amount
-                  </th>
-                  <th className="border border-border bg-muted/50 p-2 text-left">
-                    Ref
-                  </th>
+      {/* OFX preview table */}
+      {preview?.format === "ofx" && (
+        <div className="overflow-auto">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr>
+                <th className="border border-border bg-muted/50 p-2 text-left">
+                  Date
+                </th>
+                <th className="border border-border bg-muted/50 p-2 text-left">
+                  Description
+                </th>
+                <th className="border border-border bg-muted/50 p-2 text-right">
+                  Amount
+                </th>
+                <th className="border border-border bg-muted/50 p-2 text-left">
+                  Ref
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {preview.transactions.slice(0, 10).map((txn, i) => (
+                <tr key={`t-${i}`}>
+                  <td className="border border-border p-2">
+                    {new Date(txn.date).toLocaleDateString()}
+                  </td>
+                  <td className="border border-border p-2">
+                    {txn.merchantName ?? txn.memo}
+                  </td>
+                  <td className="border border-border p-2 text-right">
+                    ${Math.abs(txn.amount).toFixed(2)}
+                  </td>
+                  <td className="border border-border p-2 text-muted-foreground text-xs">
+                    {txn.referenceId}
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {preview.transactions.slice(0, 10).map((txn, i) => (
-                  <tr key={`t-${i}`}>
-                    <td className="border border-border p-2">
-                      {new Date(txn.date).toLocaleDateString()}
-                    </td>
-                    <td className="border border-border p-2">
-                      {txn.merchantName ?? txn.memo}
-                    </td>
-                    <td className="border border-border p-2 text-right">
-                      ${Math.abs(txn.amount).toFixed(2)}
-                    </td>
-                    <td className="border border-border p-2 text-muted-foreground text-xs">
-                      {txn.referenceId}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-        {/* Save profile (CSV only) */}
-        {preview?.format === "csv" && columnMap && (
-          <div className="flex items-center gap-2">
-            <input
-              type="text"
-              aria-label="Import profile name"
-              value={profileName}
-              onChange={(e) => setProfileName(e.target.value)}
-              placeholder="Save as profile (e.g. Chase Checking)"
-              className="flex-1 rounded-md border border-border bg-background px-3 py-1.5 text-sm"
-            />
-            <button
-              type="button"
-              onClick={handleSaveProfile}
-              disabled={!profileName.trim() || isSavingProfile}
-              className="inline-flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-sm hover:bg-accent disabled:opacity-50"
-            >
-              <SaveIcon className="size-3" />
-              Save
-            </button>
-          </div>
-        )}
-
-        {/* Error */}
-        {error && <p className="text-destructive text-sm">{error}</p>}
-
-        {/* Actions */}
-        <div className="flex items-center justify-end gap-3">
+      {/* Save profile (CSV only) */}
+      {preview?.format === "csv" && columnMap && (
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            aria-label="Import profile name"
+            value={profileName}
+            onChange={(e) => setProfileName(e.target.value)}
+            placeholder="Save as profile (e.g. Chase Checking)"
+            className="flex-1 rounded-md border border-border bg-background px-3 py-1.5 text-sm"
+          />
           <button
             type="button"
-            onClick={onCancel}
-            disabled={isImporting}
-            className="rounded-md border border-border px-4 py-2 text-sm hover:bg-accent disabled:opacity-50"
+            onClick={handleSaveProfile}
+            disabled={!profileName.trim() || isSavingProfile}
+            className="inline-flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-sm hover:bg-accent disabled:opacity-50"
           >
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={handleConfirm}
-            disabled={isImporting || (preview?.format === "csv" && !columnMap)}
-            className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm hover:bg-primary/90 disabled:opacity-50"
-          >
-            {isImporting && <Loader2Icon className="size-4 animate-spin" />}
-            Import {preview?.totalRows ?? 0} Transactions
+            <SaveIcon className="size-3" />
+            Save
           </button>
         </div>
+      )}
+
+      {/* Error */}
+      {error && <p className="text-destructive text-sm">{error}</p>}
+
+      {/* Actions */}
+      <div className="flex items-center justify-end gap-3">
+        <button
+          type="button"
+          onClick={onCancel}
+          disabled={isImporting}
+          className="rounded-md border border-border px-4 py-2 text-sm hover:bg-accent disabled:opacity-50"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          onClick={handleConfirm}
+          disabled={isImporting || (preview?.format === "csv" && !columnMap)}
+          className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm hover:bg-primary/90 disabled:opacity-50"
+        >
+          {isImporting && <Loader2Icon className="size-4 animate-spin" />}
+          Import {preview?.totalRows ?? 0} Transactions
+        </button>
       </div>
-    </div>
+    </Dialog>
   );
 }
 

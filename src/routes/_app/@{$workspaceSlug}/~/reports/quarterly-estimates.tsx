@@ -17,6 +17,7 @@ type QuarterlyEstimatesData = {
   year: number;
   annualProjectedIncome: string;
   selfEmploymentTax: string;
+  qbiDeduction: string;
   estimatedIncomeTax: string;
   totalEstimatedTax: string;
   quarters: QuarterEstimate[];
@@ -197,6 +198,10 @@ function QuarterlyEstimatesPage() {
               <SummaryRow
                 label="Self-employment tax (15.3%)"
                 value={formatCurrency(data.selfEmploymentTax)}
+              />
+              <SummaryRow
+                label="QBI deduction"
+                value={formatCurrency(data.qbiDeduction)}
               />
               <SummaryRow
                 label="Estimated income tax"

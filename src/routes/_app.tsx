@@ -19,6 +19,7 @@ import {
   BookOpenIcon,
   CarIcon,
   ClipboardListIcon,
+  FileMinusIcon,
   FileTextIcon,
   FolderIcon,
   HardDriveIcon,
@@ -90,6 +91,12 @@ const navGroups = [
         label: "Invoices",
         to: "/@{$workspaceSlug}/~/invoices",
         icon: FileTextIcon,
+        businessOnly: true,
+      },
+      {
+        label: "Credit Memos",
+        to: "/@{$workspaceSlug}/~/credit-memos",
+        icon: FileMinusIcon,
         businessOnly: true,
       },
       {

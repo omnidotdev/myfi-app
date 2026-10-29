@@ -23,6 +23,8 @@ interface InvoiceFormPayload {
     incomeAccountId: string;
     taxJurisdictionId?: string;
     inventoryItemId?: string;
+    /** discount as a fraction 0..1 (the form collects a 0-100 percent) */
+    discountPercent?: number;
   }[];
 }
 
@@ -47,7 +49,24 @@ const emptyLine = (): EditableLine => ({
   incomeAccountId: "",
   taxJurisdictionId: "",
   inventoryItemId: "",
+  discountPercent: "",
 });
+
+// Clamp a 0-100 percent string to a 0..1 fraction, mirroring the server's
+// per-line discount clamp so the preview matches what posts
+const discountFraction = (percent: string): number => {
+  const value = Number.parseFloat(percent);
+  if (!Number.isFinite(value) || value <= 0) return 0;
+  return Math.min(value, 100) / 100;
+};
+
+// Net extended amount for a line after its discount
+const lineTotal = (line: EditableLine): number => {
+  const gross =
+    (Number.parseFloat(line.quantity) || 0) *
+    (Number.parseFloat(line.unitPrice) || 0);
+  return gross * (1 - discountFraction(line.discountPercent));
+};
 
 const today = () => new Date().toISOString().slice(0, 10);
 const inDays = (days: number) =>
@@ -92,13 +111,7 @@ function InvoiceForm({
     });
   };
 
-  const subtotal = lines.reduce(
-    (sum, l) =>
-      sum +
-      (Number.parseFloat(l.quantity) || 0) *
-        (Number.parseFloat(l.unitPrice) || 0),
-    0,
-  );
+  const subtotal = lines.reduce((sum, l) => sum + lineTotal(l), 0);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,14 +121,18 @@ function InvoiceForm({
       issueDate,
       dueDate,
       memo: memo || undefined,
-      lines: lines.map((l) => ({
-        description: l.description,
-        quantity: Number.parseFloat(l.quantity) || 0,
-        unitPrice: Number.parseFloat(l.unitPrice) || 0,
-        incomeAccountId: l.incomeAccountId,
-        taxJurisdictionId: l.taxJurisdictionId || undefined,
-        inventoryItemId: l.inventoryItemId || undefined,
-      })),
+      lines: lines.map((l) => {
+        const fraction = discountFraction(l.discountPercent);
+        return {
+          description: l.description,
+          quantity: Number.parseFloat(l.quantity) || 0,
+          unitPrice: Number.parseFloat(l.unitPrice) || 0,
+          incomeAccountId: l.incomeAccountId,
+          taxJurisdictionId: l.taxJurisdictionId || undefined,
+          inventoryItemId: l.inventoryItemId || undefined,
+          discountPercent: fraction > 0 ? fraction : undefined,
+        };
+      }),
     });
   };
 
@@ -279,6 +296,30 @@ function InvoiceForm({
                   </option>
                 ))}
               </select>
+            </div>
+            <div className="flex items-center justify-between gap-2">
+              <label className="flex items-center gap-2 text-muted-foreground text-xs">
+                Discount %
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  value={line.discountPercent}
+                  onChange={(e) =>
+                    updateLine(index, { discountPercent: e.target.value })
+                  }
+                  placeholder="0"
+                  aria-label="Discount percent"
+                  className="w-20 rounded-md border border-border bg-background px-2 py-1 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                />
+              </label>
+              <span className="text-muted-foreground text-xs">
+                Line total{" "}
+                <span className="font-medium text-foreground">
+                  {formatCurrency(lineTotal(line))}
+                </span>
+              </span>
             </div>
             {lines.length > 1 && (
               <button

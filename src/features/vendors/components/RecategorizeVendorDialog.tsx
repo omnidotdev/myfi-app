@@ -1,8 +1,9 @@
 import { Loader2Icon } from "lucide-react";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { toast } from "sonner";
 
 import ConfirmDialog from "@/components/ConfirmDialog";
+import Dialog from "@/components/Dialog";
 import { apiFetch } from "@/lib/api/apiFetch";
 
 type Account = { id: string; name: string; code: string };
@@ -37,6 +38,7 @@ function RecategorizeVendorDialog({
   onClose,
   onDone,
 }: RecategorizeVendorDialogProps) {
+  const titleId = useId();
   const [fromAccountId, setFromAccountId] = useState("");
   const [toAccountId, setToAccountId] = useState("");
   const [preview, setPreview] = useState<RecategorizeResult | null>(null);
@@ -123,111 +125,108 @@ function RecategorizeVendorDialog({
   const toName = accounts.find((a) => a.id === toAccountId);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <button
-        type="button"
-        className="absolute inset-0 bg-black/50"
-        onClick={onClose}
-        aria-label="Close dialog"
-      />
+    <Dialog
+      open
+      onClose={onClose}
+      busy={isRunning}
+      labelledBy={titleId}
+      className="max-w-md"
+    >
+      <h2 id={titleId} className="mb-1 font-semibold text-lg">
+        Recategorize transactions
+      </h2>
+      <p className="mb-4 text-muted-foreground text-sm">
+        Move all of{" "}
+        <span className="font-medium text-foreground">{vendor.name}</span>
+        's transactions from one account to another. Reconciled entries in
+        closed periods are left untouched.
+      </p>
 
-      <div className="relative w-full max-w-md rounded-lg border border-border bg-card p-6 shadow-lg">
-        <h2 className="mb-1 font-semibold text-lg">
-          Recategorize transactions
-        </h2>
-        <p className="mb-4 text-muted-foreground text-sm">
-          Move all of{" "}
-          <span className="font-medium text-foreground">{vendor.name}</span>
-          's transactions from one account to another. Reconciled entries in
-          closed periods are left untouched.
-        </p>
+      <div className="flex flex-col gap-3">
+        <label className="flex flex-col gap-1.5 text-sm">
+          <span className="font-medium">From account</span>
+          <select
+            value={fromAccountId}
+            onChange={(e) => changeFrom(e.target.value)}
+            className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+          >
+            <option value="">Select account</option>
+            {accounts.map((a) => (
+              <option key={a.id} value={a.id}>
+                {accountLabel(a)}
+              </option>
+            ))}
+          </select>
+        </label>
 
-        <div className="flex flex-col gap-3">
-          <label className="flex flex-col gap-1.5 text-sm">
-            <span className="font-medium">From account</span>
-            <select
-              value={fromAccountId}
-              onChange={(e) => changeFrom(e.target.value)}
-              className="rounded-md border border-border bg-background px-3 py-2 text-sm"
-            >
-              <option value="">Select account</option>
-              {accounts.map((a) => (
-                <option key={a.id} value={a.id}>
-                  {accountLabel(a)}
-                </option>
-              ))}
-            </select>
-          </label>
+        <label className="flex flex-col gap-1.5 text-sm">
+          <span className="font-medium">To account</span>
+          <select
+            value={toAccountId}
+            onChange={(e) => changeTo(e.target.value)}
+            className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+          >
+            <option value="">Select account</option>
+            {accounts.map((a) => (
+              <option key={a.id} value={a.id}>
+                {accountLabel(a)}
+              </option>
+            ))}
+          </select>
+        </label>
 
-          <label className="flex flex-col gap-1.5 text-sm">
-            <span className="font-medium">To account</span>
-            <select
-              value={toAccountId}
-              onChange={(e) => changeTo(e.target.value)}
-              className="rounded-md border border-border bg-background px-3 py-2 text-sm"
-            >
-              <option value="">Select account</option>
-              {accounts.map((a) => (
-                <option key={a.id} value={a.id}>
-                  {accountLabel(a)}
-                </option>
-              ))}
-            </select>
-          </label>
+        {preview && (
+          <div className="rounded-md border border-border bg-accent/30 p-3 text-sm">
+            {preview.matched > 0 ? (
+              <span>
+                <span className="font-medium text-foreground">
+                  {preview.matched}
+                </span>{" "}
+                transaction{preview.matched === 1 ? "" : "s"} will move.
+              </span>
+            ) : (
+              <span className="text-muted-foreground">
+                No editable transactions match this account.
+              </span>
+            )}
+            {preview.skippedReconciled > 0 && (
+              <span className="mt-1 block text-muted-foreground text-xs">
+                {preview.skippedReconciled} reconciled transaction
+                {preview.skippedReconciled === 1 ? "" : "s"} will be skipped
+                (closed period).
+              </span>
+            )}
+          </div>
+        )}
+      </div>
 
-          {preview && (
-            <div className="rounded-md border border-border bg-accent/30 p-3 text-sm">
-              {preview.matched > 0 ? (
-                <span>
-                  <span className="font-medium text-foreground">
-                    {preview.matched}
-                  </span>{" "}
-                  transaction{preview.matched === 1 ? "" : "s"} will move.
-                </span>
-              ) : (
-                <span className="text-muted-foreground">
-                  No editable transactions match this account.
-                </span>
-              )}
-              {preview.skippedReconciled > 0 && (
-                <span className="mt-1 block text-muted-foreground text-xs">
-                  {preview.skippedReconciled} reconciled transaction
-                  {preview.skippedReconciled === 1 ? "" : "s"} will be skipped
-                  (closed period).
-                </span>
-              )}
-            </div>
-          )}
-        </div>
-
-        <div className="mt-5 flex justify-end gap-3">
+      <div className="mt-5 flex justify-end gap-3">
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded-md border border-border px-4 py-2 text-sm transition-colors hover:bg-accent"
+        >
+          Cancel
+        </button>
+        {preview && preview.matched > 0 ? (
           <button
             type="button"
-            onClick={onClose}
-            className="rounded-md border border-border px-4 py-2 text-sm transition-colors hover:bg-accent"
+            onClick={() => setConfirmOpen(true)}
+            className="inline-flex items-center gap-2 rounded-md bg-destructive px-4 py-2 font-medium text-destructive-foreground text-sm transition-colors hover:bg-destructive/90"
           >
-            Cancel
+            Recategorize {preview.matched}
           </button>
-          {preview && preview.matched > 0 ? (
-            <button
-              type="button"
-              onClick={() => setConfirmOpen(true)}
-              className="inline-flex items-center gap-2 rounded-md bg-destructive px-4 py-2 font-medium text-destructive-foreground text-sm transition-colors hover:bg-destructive/90"
-            >
-              Recategorize {preview.matched}
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={handlePreview}
-              disabled={!canPreview || isPreviewing}
-              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"
-            >
-              {isPreviewing && <Loader2Icon className="size-4 animate-spin" />}
-              Preview
-            </button>
-          )}
-        </div>
+        ) : (
+          <button
+            type="button"
+            onClick={handlePreview}
+            disabled={!canPreview || isPreviewing}
+            className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"
+          >
+            {isPreviewing && <Loader2Icon className="size-4 animate-spin" />}
+            Preview
+          </button>
+        )}
       </div>
 
       <ConfirmDialog
@@ -240,7 +239,7 @@ function RecategorizeVendorDialog({
         onConfirm={handleConfirm}
         onCancel={() => setConfirmOpen(false)}
       />
-    </div>
+    </Dialog>
   );
 }
 

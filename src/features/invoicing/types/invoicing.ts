@@ -55,6 +55,8 @@ export interface DraftLine {
   taxJurisdictionId: string;
   /** optional inventory item this line sells (drives auto-COGS on posting) */
   inventoryItemId: string;
+  /** optional per-line discount, entered as a percent 0 to 100 */
+  discountPercent: string;
 }
 
 /** An inventory item option for an invoice line (drives auto-COGS) */
