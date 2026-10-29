@@ -11,12 +11,15 @@ import formatCurrency from "@/lib/format/currency";
 interface PaymentDialogProps {
   invoice: InvoiceListItem;
   depositAccounts: InvoiceAccount[];
+  /** the book's home currency, used to decide whether to collect an FX rate */
+  homeCurrency: string;
   saving: boolean;
   onSubmit: (payload: {
     amount: number;
     depositAccountId: string;
     date: string;
     method?: string;
+    exchangeRate?: number;
   }) => void;
   onCancel: () => void;
 }
@@ -27,6 +30,7 @@ const today = () => new Date().toISOString().slice(0, 10);
 function PaymentDialog({
   invoice,
   depositAccounts,
+  homeCurrency,
   saving,
   onSubmit,
   onCancel,
@@ -37,14 +41,23 @@ function PaymentDialog({
   const [depositAccountId, setDepositAccountId] = useState("");
   const [date, setDate] = useState(today());
   const [method, setMethod] = useState("");
+  const [exchangeRate, setExchangeRate] = useState("1");
+
+  // A foreign-currency invoice settles in the home currency at the rate on the
+  // payment date; a change from the invoice's rate books an FX gain or loss
+  const invoiceCurrency = invoice.currency ?? homeCurrency;
+  const isForeign =
+    invoiceCurrency.toUpperCase() !== homeCurrency.toUpperCase();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const rate = Number.parseFloat(exchangeRate);
     onSubmit({
       amount: Number.parseFloat(amount) || 0,
       depositAccountId,
       date,
       method: method || undefined,
+      exchangeRate: isForeign && rate > 0 ? rate : undefined,
     });
   };
 
@@ -115,6 +128,27 @@ function PaymentDialog({
             className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
         </div>
+        {isForeign && (
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="pay-rate" className="font-medium text-sm">
+              Exchange rate
+            </label>
+            <input
+              id="pay-rate"
+              type="number"
+              min="0"
+              step="any"
+              required
+              value={exchangeRate}
+              onChange={(e) => setExchangeRate(e.target.value)}
+              className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+            />
+            <span className="text-muted-foreground text-xs">
+              1 {invoiceCurrency} = {exchangeRate || "1"} {homeCurrency}. A rate
+              change from the invoice books a foreign-exchange gain or loss
+            </span>
+          </div>
+        )}
         <div className="flex flex-col gap-1.5">
           <label htmlFor="pay-method" className="font-medium text-sm">
             Method

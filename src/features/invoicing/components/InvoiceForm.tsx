@@ -16,12 +16,17 @@ interface InvoiceFormPayload {
   issueDate: string;
   dueDate: string;
   memo?: string;
+  /** currency the invoice is billed in; omitted for the home currency */
+  currency?: string;
+  /** home-currency units per 1 unit of currency; omitted for the home currency */
+  exchangeRate?: number;
   lines: {
     description: string;
     quantity: number;
     unitPrice: number;
     incomeAccountId: string;
     taxJurisdictionId?: string;
+    secondaryTaxJurisdictionId?: string;
     inventoryItemId?: string;
     /** discount as a fraction 0..1 (the form collects a 0-100 percent) */
     discountPercent?: number;
@@ -33,10 +38,16 @@ interface InvoiceFormProps {
   incomeAccounts: InvoiceAccount[];
   taxJurisdictions: TaxJurisdiction[];
   inventoryItems: InvoiceInventoryOption[];
+  /** the book's home currency, used as the invoice currency default */
+  homeCurrency: string;
   saving: boolean;
   onSubmit: (payload: InvoiceFormPayload) => void;
   onCancel: () => void;
 }
+
+// Label a jurisdiction option, flagging compound taxes that stack on the primary
+const jurisdictionLabel = (tj: TaxJurisdiction): string =>
+  tj.compound ? `${tj.name} (compound)` : tj.name;
 
 // a stable client-side key for React list rendering, never sent to the server
 type EditableLine = DraftLine & { key: string };
@@ -48,6 +59,7 @@ const emptyLine = (): EditableLine => ({
   unitPrice: "0",
   incomeAccountId: "",
   taxJurisdictionId: "",
+  secondaryTaxJurisdictionId: "",
   inventoryItemId: "",
   discountPercent: "",
 });
@@ -78,6 +90,7 @@ function InvoiceForm({
   incomeAccounts,
   taxJurisdictions,
   inventoryItems,
+  homeCurrency,
   saving,
   onSubmit,
   onCancel,
@@ -87,7 +100,13 @@ function InvoiceForm({
   const [issueDate, setIssueDate] = useState(today());
   const [dueDate, setDueDate] = useState(inDays(30));
   const [memo, setMemo] = useState("");
+  const [currency, setCurrency] = useState(homeCurrency);
+  const [exchangeRate, setExchangeRate] = useState("1");
   const [lines, setLines] = useState<EditableLine[]>([emptyLine()]);
+
+  // A non-home currency posts to the ledger in the home currency at this rate
+  const isForeign =
+    currency.trim().toUpperCase() !== homeCurrency.toUpperCase();
 
   const updateLine = (index: number, patch: Partial<DraftLine>) => {
     setLines((prev) =>
@@ -115,12 +134,17 @@ function InvoiceForm({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // Home-currency invoices send neither currency nor rate, so they post
+    // exactly as before; a foreign invoice carries its code and rate
+    const rate = Number.parseFloat(exchangeRate);
     onSubmit({
       customerId,
       number,
       issueDate,
       dueDate,
       memo: memo || undefined,
+      currency: isForeign ? currency.trim().toUpperCase() : undefined,
+      exchangeRate: isForeign && rate > 0 ? rate : undefined,
       lines: lines.map((l) => {
         const fraction = discountFraction(l.discountPercent);
         return {
@@ -129,6 +153,7 @@ function InvoiceForm({
           unitPrice: Number.parseFloat(l.unitPrice) || 0,
           incomeAccountId: l.incomeAccountId,
           taxJurisdictionId: l.taxJurisdictionId || undefined,
+          secondaryTaxJurisdictionId: l.secondaryTaxJurisdictionId || undefined,
           inventoryItemId: l.inventoryItemId || undefined,
           discountPercent: fraction > 0 ? fraction : undefined,
         };
@@ -200,6 +225,43 @@ function InvoiceForm({
             className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
         </div>
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="inv-currency" className="font-medium text-sm">
+            Currency
+          </label>
+          <input
+            id="inv-currency"
+            type="text"
+            required
+            value={currency}
+            onChange={(e) => setCurrency(e.target.value.toUpperCase())}
+            placeholder={homeCurrency}
+            maxLength={3}
+            className="rounded-md border border-border bg-background px-3 py-2 text-sm uppercase focus:outline-none focus:ring-2 focus:ring-primary/50"
+          />
+        </div>
+        {isForeign && (
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="inv-rate" className="font-medium text-sm">
+              Exchange rate
+            </label>
+            <input
+              id="inv-rate"
+              type="number"
+              min="0"
+              step="any"
+              required
+              value={exchangeRate}
+              onChange={(e) => setExchangeRate(e.target.value)}
+              className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+            />
+            <span className="text-muted-foreground text-xs">
+              1 {currency.trim().toUpperCase() || currency} ={" "}
+              {exchangeRate || "1"} {homeCurrency}. The ledger posts in{" "}
+              {homeCurrency} at this rate
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col gap-2">
@@ -292,7 +354,24 @@ function InvoiceForm({
                 <option value="">No tax</option>
                 {taxJurisdictions.map((tj) => (
                   <option key={tj.id} value={tj.id}>
-                    {tj.name}
+                    {jurisdictionLabel(tj)}
+                  </option>
+                ))}
+              </select>
+              <select
+                value={line.secondaryTaxJurisdictionId}
+                onChange={(e) =>
+                  updateLine(index, {
+                    secondaryTaxJurisdictionId: e.target.value,
+                  })
+                }
+                aria-label="Secondary tax"
+                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              >
+                <option value="">No secondary tax</option>
+                {taxJurisdictions.map((tj) => (
+                  <option key={tj.id} value={tj.id}>
+                    {jurisdictionLabel(tj)}
                   </option>
                 ))}
               </select>

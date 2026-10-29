@@ -71,6 +71,9 @@ function InvoicesPage() {
 
   const incomeAccounts = accounts.filter((a) => a.type === "revenue");
   const depositAccounts = accounts.filter((a) => a.type === "asset");
+  // The book's home currency drives the invoice-currency default and decides
+  // when a foreign-exchange rate field is shown; fall back to USD
+  const homeCurrency = activeBook?.currency ?? "USD";
 
   const fetchData = useCallback(async () => {
     if (!activeBookId) return;
@@ -353,6 +356,7 @@ function InvoicesPage() {
               incomeAccounts={incomeAccounts}
               taxJurisdictions={taxJurisdictions}
               inventoryItems={inventoryItems}
+              homeCurrency={homeCurrency}
               saving={saving}
               onSubmit={handleCreate}
               onCancel={() => setFormOpen(false)}
@@ -365,6 +369,7 @@ function InvoicesPage() {
         <PaymentDialog
           invoice={payingInvoice}
           depositAccounts={depositAccounts}
+          homeCurrency={homeCurrency}
           saving={busyId === payingInvoice.id}
           onCancel={() => setPayingInvoice(null)}
           onSubmit={async (payload) => {
