@@ -43,7 +43,6 @@ import {
 } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { Toaster } from "sonner";
-import { useEventListener } from "usehooks-ts";
 import ErrorBoundary from "@/components/core/ErrorBoundary";
 import AccountMenu from "@/components/layout/AccountMenu";
 import WorkspaceBookGuard from "@/components/layout/WorkspaceBookGuard";
@@ -298,20 +297,6 @@ function AuthLayout() {
     () => setTheme(theme === "dark" ? "light" : "dark"),
     [theme, setTheme],
   );
-
-  useEventListener("keydown", (e) => {
-    if (
-      e.key === "t" &&
-      !e.metaKey &&
-      !e.ctrlKey &&
-      !e.altKey &&
-      !(e.target instanceof HTMLInputElement) &&
-      !(e.target instanceof HTMLTextAreaElement) &&
-      !(e.target instanceof HTMLSelectElement)
-    ) {
-      toggleTheme();
-    }
-  });
 
   const organizations = useMemo(
     () => session?.organizations ?? [],
