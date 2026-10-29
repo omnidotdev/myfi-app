@@ -11,6 +11,7 @@ import {
 } from "@tanstack/react-router";
 import type { LucideIcon } from "lucide-react";
 import {
+  BanknoteIcon,
   BarChart3Icon,
   BitcoinIcon,
   BookOpenIcon,
@@ -101,6 +102,14 @@ const DESTINATIONS: Destination[] = [
     icon: CarIcon,
     group: "Expenses",
     keywords: ["vehicle", "trips", "deduction"],
+  },
+  {
+    id: "deposits",
+    label: "Deposits",
+    to: "/@{$workspaceSlug}/~/deposits",
+    icon: BanknoteIcon,
+    group: "Banking",
+    keywords: ["bank deposit", "undeposited funds", "deposit slip"],
   },
   {
     id: "reconciliation",

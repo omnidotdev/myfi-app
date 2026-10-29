@@ -16,7 +16,8 @@ interface PaymentDialogProps {
   saving: boolean;
   onSubmit: (payload: {
     amount: number;
-    depositAccountId: string;
+    depositAccountId?: string;
+    toUndepositedFunds?: boolean;
     date: string;
     method?: string;
     exchangeRate?: number;
@@ -39,6 +40,7 @@ function PaymentDialog({
   const balance = Number(invoice.balanceDue);
   const [amount, setAmount] = useState(balance.toFixed(2));
   const [depositAccountId, setDepositAccountId] = useState("");
+  const [toUndepositedFunds, setToUndepositedFunds] = useState(false);
   const [date, setDate] = useState(today());
   const [method, setMethod] = useState("");
   const [exchangeRate, setExchangeRate] = useState("1");
@@ -54,7 +56,8 @@ function PaymentDialog({
     const rate = Number.parseFloat(exchangeRate);
     onSubmit({
       amount: Number.parseFloat(amount) || 0,
-      depositAccountId,
+      depositAccountId: toUndepositedFunds ? undefined : depositAccountId,
+      toUndepositedFunds: toUndepositedFunds || undefined,
       date,
       method: method || undefined,
       exchangeRate: isForeign && rate > 0 ? rate : undefined,
@@ -99,10 +102,11 @@ function PaymentDialog({
           </label>
           <select
             id="pay-account"
-            required
+            required={!toUndepositedFunds}
+            disabled={toUndepositedFunds}
             value={depositAccountId}
             onChange={(e) => setDepositAccountId(e.target.value)}
-            className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+            className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-50"
           >
             <option value="" disabled>
               Select an account
@@ -114,6 +118,15 @@ function PaymentDialog({
               </option>
             ))}
           </select>
+          <label className="mt-1 flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={toUndepositedFunds}
+              onChange={(e) => setToUndepositedFunds(e.target.checked)}
+              className="size-4 rounded border-border"
+            />
+            Hold in Undeposited Funds (deposit later)
+          </label>
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="pay-date" className="font-medium text-sm">

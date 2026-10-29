@@ -133,6 +133,12 @@ const navGroups = [
     label: "Banking",
     items: [
       {
+        label: "Deposits",
+        to: "/@{$workspaceSlug}/~/deposits",
+        icon: BanknoteIcon,
+        businessOnly: true,
+      },
+      {
         label: "Reconciliation",
         to: "/@{$workspaceSlug}/~/reconciliation",
         icon: ScaleIcon,
