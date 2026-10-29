@@ -79,6 +79,7 @@ import { Route as AppAtChar123workspaceSlugChar125Char126SettingsTrackingCategor
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsVendorsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/vendors'
 import { Route as AppAtChar123workspaceSlugChar125Char126SpendingIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/spending/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126SpendingRecurringRouteImport } from './routes/_app/@{$workspaceSlug}/~/spending/recurring'
+import { Route as AppAtChar123workspaceSlugChar125Char126TimeIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/time/index'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -514,6 +515,12 @@ const AppAtChar123workspaceSlugChar125Char126SpendingRecurringRoute =
     path: '/@{$workspaceSlug}/~/spending/recurring',
     getParentRoute: () => AppRoute,
   } as any)
+const AppAtChar123workspaceSlugChar125Char126TimeIndexRoute =
+  AppAtChar123workspaceSlugChar125Char126TimeIndexRouteImport.update({
+    id: '/@{$workspaceSlug}/~/time/',
+    path: '/@{$workspaceSlug}/~/time/',
+    getParentRoute: () => AppRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
@@ -584,6 +591,7 @@ export interface FileRoutesByFullPath {
   '/@{$workspaceSlug}/~/savings/': typeof AppAtChar123workspaceSlugChar125Char126SavingsIndexRoute
   '/@{$workspaceSlug}/~/settings/': typeof AppAtChar123workspaceSlugChar125Char126SettingsIndexRoute
   '/@{$workspaceSlug}/~/spending/': typeof AppAtChar123workspaceSlugChar125Char126SpendingIndexRoute
+  '/@{$workspaceSlug}/~/time/': typeof AppAtChar123workspaceSlugChar125Char126TimeIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
@@ -654,6 +662,7 @@ export interface FileRoutesByTo {
   '/@{$workspaceSlug}/~/savings': typeof AppAtChar123workspaceSlugChar125Char126SavingsIndexRoute
   '/@{$workspaceSlug}/~/settings': typeof AppAtChar123workspaceSlugChar125Char126SettingsIndexRoute
   '/@{$workspaceSlug}/~/spending': typeof AppAtChar123workspaceSlugChar125Char126SpendingIndexRoute
+  '/@{$workspaceSlug}/~/time': typeof AppAtChar123workspaceSlugChar125Char126TimeIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -727,6 +736,7 @@ export interface FileRoutesById {
   '/_app/@{$workspaceSlug}/~/savings/': typeof AppAtChar123workspaceSlugChar125Char126SavingsIndexRoute
   '/_app/@{$workspaceSlug}/~/settings/': typeof AppAtChar123workspaceSlugChar125Char126SettingsIndexRoute
   '/_app/@{$workspaceSlug}/~/spending/': typeof AppAtChar123workspaceSlugChar125Char126SpendingIndexRoute
+  '/_app/@{$workspaceSlug}/~/time/': typeof AppAtChar123workspaceSlugChar125Char126TimeIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -799,6 +809,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/savings/'
     | '/@{$workspaceSlug}/~/settings/'
     | '/@{$workspaceSlug}/~/spending/'
+    | '/@{$workspaceSlug}/~/time/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -869,6 +880,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/savings'
     | '/@{$workspaceSlug}/~/settings'
     | '/@{$workspaceSlug}/~/spending'
+    | '/@{$workspaceSlug}/~/time'
   id:
     | '__root__'
     | '/_app'
@@ -941,6 +953,7 @@ export interface FileRouteTypes {
     | '/_app/@{$workspaceSlug}/~/savings/'
     | '/_app/@{$workspaceSlug}/~/settings/'
     | '/_app/@{$workspaceSlug}/~/spending/'
+    | '/_app/@{$workspaceSlug}/~/time/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1441,6 +1454,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SpendingRecurringRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/@{$workspaceSlug}/~/time/': {
+      id: '/_app/@{$workspaceSlug}/~/time/'
+      path: '/@{$workspaceSlug}/~/time'
+      fullPath: '/@{$workspaceSlug}/~/time/'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126TimeIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -1509,6 +1529,7 @@ interface AppRouteChildren {
   AppAtChar123workspaceSlugChar125Char126SavingsIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126SavingsIndexRoute
   AppAtChar123workspaceSlugChar125Char126SettingsIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsIndexRoute
   AppAtChar123workspaceSlugChar125Char126SpendingIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126SpendingIndexRoute
+  AppAtChar123workspaceSlugChar125Char126TimeIndexRoute: typeof AppAtChar123workspaceSlugChar125Char126TimeIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -1640,6 +1661,8 @@ const AppRouteChildren: AppRouteChildren = {
     AppAtChar123workspaceSlugChar125Char126SettingsIndexRoute,
   AppAtChar123workspaceSlugChar125Char126SpendingIndexRoute:
     AppAtChar123workspaceSlugChar125Char126SpendingIndexRoute,
+  AppAtChar123workspaceSlugChar125Char126TimeIndexRoute:
+    AppAtChar123workspaceSlugChar125Char126TimeIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
