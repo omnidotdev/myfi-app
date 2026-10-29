@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import EmptyState from "@/components/EmptyState";
 import LoadError from "@/components/LoadError";
 import BookPicker from "@/features/books/components/BookPicker";
+import CustomFieldsEditor from "@/features/customFields/components/CustomFieldsEditor";
 import type { Customer } from "@/features/invoicing/types/invoicing";
 import { apiFetch } from "@/lib/api/apiFetch";
 import useActiveBook from "@/lib/hooks/useActiveBook";
@@ -30,6 +31,7 @@ function CustomersPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [businessName, setBusinessName] = useState("");
+  const [cfValues, setCfValues] = useState<Record<string, string>>({});
 
   const fetchCustomers = useCallback(async () => {
     if (!activeBookId) return;
@@ -55,6 +57,7 @@ function CustomersPage() {
     setName("");
     setEmail("");
     setBusinessName("");
+    setCfValues({});
     setFormOpen(false);
   }, []);
 
@@ -74,6 +77,23 @@ function CustomersPage() {
           }),
         });
         if (!res.ok) throw new Error("Create failed");
+        const created = await res.json().catch(() => ({}));
+        const newId = created?.customer?.id as string | undefined;
+        // persist any custom-field values against the new customer
+        const cfEntries = Object.entries(cfValues);
+        if (newId && cfEntries.length > 0) {
+          await apiFetch("/api/custom-fields/values", {
+            method: "PUT",
+            body: JSON.stringify({
+              bookId: activeBookId,
+              entityId: newId,
+              values: cfEntries.map(([definitionId, value]) => ({
+                definitionId,
+                value,
+              })),
+            }),
+          }).catch(() => {});
+        }
         toast.success("Customer added");
         resetForm();
         await fetchCustomers();
@@ -83,7 +103,15 @@ function CustomersPage() {
         setSaving(false);
       }
     },
-    [activeBookId, name, email, businessName, resetForm, fetchCustomers],
+    [
+      activeBookId,
+      name,
+      email,
+      businessName,
+      cfValues,
+      resetForm,
+      fetchCustomers,
+    ],
   );
 
   const loading = booksLoading || isLoading;
@@ -216,6 +244,12 @@ function CustomersPage() {
                   className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                 />
               </div>
+              <CustomFieldsEditor
+                bookId={activeBookId}
+                entityType="customer"
+                values={cfValues}
+                onChange={setCfValues}
+              />
               <div className="mt-2 flex justify-end gap-3">
                 <button
                   type="button"

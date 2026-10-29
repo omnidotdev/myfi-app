@@ -67,6 +67,7 @@ import { Route as AppAtChar123workspaceSlugChar125Char126SettingsAccessRouteImpo
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsAuditRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/audit'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsBooksRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/books'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/connections'
+import { Route as AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/custom-fields'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsDataRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/data'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsMappingsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/mappings'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/quickbooks'
@@ -434,6 +435,14 @@ const AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute =
     path: '/@{$workspaceSlug}/~/settings/connections',
     getParentRoute: () => AppRoute,
   } as any)
+const AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRoute =
+  AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRouteImport.update(
+    {
+      id: '/@{$workspaceSlug}/~/settings/custom-fields',
+      path: '/@{$workspaceSlug}/~/settings/custom-fields',
+      getParentRoute: () => AppRoute,
+    } as any,
+  )
 const AppAtChar123workspaceSlugChar125Char126SettingsDataRoute =
   AppAtChar123workspaceSlugChar125Char126SettingsDataRouteImport.update({
     id: '/@{$workspaceSlug}/~/settings/data',
@@ -534,6 +543,7 @@ export interface FileRoutesByFullPath {
   '/@{$workspaceSlug}/~/settings/audit': typeof AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute
   '/@{$workspaceSlug}/~/settings/books': typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute
   '/@{$workspaceSlug}/~/settings/connections': typeof AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute
+  '/@{$workspaceSlug}/~/settings/custom-fields': typeof AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRoute
   '/@{$workspaceSlug}/~/settings/data': typeof AppAtChar123workspaceSlugChar125Char126SettingsDataRoute
   '/@{$workspaceSlug}/~/settings/mappings': typeof AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute
   '/@{$workspaceSlug}/~/settings/quickbooks': typeof AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute
@@ -602,6 +612,7 @@ export interface FileRoutesByTo {
   '/@{$workspaceSlug}/~/settings/audit': typeof AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute
   '/@{$workspaceSlug}/~/settings/books': typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute
   '/@{$workspaceSlug}/~/settings/connections': typeof AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute
+  '/@{$workspaceSlug}/~/settings/custom-fields': typeof AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRoute
   '/@{$workspaceSlug}/~/settings/data': typeof AppAtChar123workspaceSlugChar125Char126SettingsDataRoute
   '/@{$workspaceSlug}/~/settings/mappings': typeof AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute
   '/@{$workspaceSlug}/~/settings/quickbooks': typeof AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute
@@ -673,6 +684,7 @@ export interface FileRoutesById {
   '/_app/@{$workspaceSlug}/~/settings/audit': typeof AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute
   '/_app/@{$workspaceSlug}/~/settings/books': typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute
   '/_app/@{$workspaceSlug}/~/settings/connections': typeof AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute
+  '/_app/@{$workspaceSlug}/~/settings/custom-fields': typeof AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRoute
   '/_app/@{$workspaceSlug}/~/settings/data': typeof AppAtChar123workspaceSlugChar125Char126SettingsDataRoute
   '/_app/@{$workspaceSlug}/~/settings/mappings': typeof AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute
   '/_app/@{$workspaceSlug}/~/settings/quickbooks': typeof AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute
@@ -743,6 +755,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/settings/audit'
     | '/@{$workspaceSlug}/~/settings/books'
     | '/@{$workspaceSlug}/~/settings/connections'
+    | '/@{$workspaceSlug}/~/settings/custom-fields'
     | '/@{$workspaceSlug}/~/settings/data'
     | '/@{$workspaceSlug}/~/settings/mappings'
     | '/@{$workspaceSlug}/~/settings/quickbooks'
@@ -811,6 +824,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/settings/audit'
     | '/@{$workspaceSlug}/~/settings/books'
     | '/@{$workspaceSlug}/~/settings/connections'
+    | '/@{$workspaceSlug}/~/settings/custom-fields'
     | '/@{$workspaceSlug}/~/settings/data'
     | '/@{$workspaceSlug}/~/settings/mappings'
     | '/@{$workspaceSlug}/~/settings/quickbooks'
@@ -881,6 +895,7 @@ export interface FileRouteTypes {
     | '/_app/@{$workspaceSlug}/~/settings/audit'
     | '/_app/@{$workspaceSlug}/~/settings/books'
     | '/_app/@{$workspaceSlug}/~/settings/connections'
+    | '/_app/@{$workspaceSlug}/~/settings/custom-fields'
     | '/_app/@{$workspaceSlug}/~/settings/data'
     | '/_app/@{$workspaceSlug}/~/settings/mappings'
     | '/_app/@{$workspaceSlug}/~/settings/quickbooks'
@@ -1329,6 +1344,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/@{$workspaceSlug}/~/settings/custom-fields': {
+      id: '/_app/@{$workspaceSlug}/~/settings/custom-fields'
+      path: '/@{$workspaceSlug}/~/settings/custom-fields'
+      fullPath: '/@{$workspaceSlug}/~/settings/custom-fields'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/@{$workspaceSlug}/~/settings/data': {
       id: '/_app/@{$workspaceSlug}/~/settings/data'
       path: '/@{$workspaceSlug}/~/settings/data'
@@ -1433,6 +1455,7 @@ interface AppRouteChildren {
   AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute
   AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute
   AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute
+  AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRoute
   AppAtChar123workspaceSlugChar125Char126SettingsDataRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsDataRoute
   AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute
   AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsQuickbooksRoute
@@ -1528,6 +1551,8 @@ const AppRouteChildren: AppRouteChildren = {
     AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute,
   AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute:
     AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute,
+  AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRoute:
+    AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRoute,
   AppAtChar123workspaceSlugChar125Char126SettingsDataRoute:
     AppAtChar123workspaceSlugChar125Char126SettingsDataRoute,
   AppAtChar123workspaceSlugChar125Char126SettingsMappingsRoute:

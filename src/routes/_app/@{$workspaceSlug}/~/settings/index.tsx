@@ -6,6 +6,7 @@ import {
   LandmarkIcon,
   LayersIcon,
   Link2Icon,
+  ListPlusIcon,
   MapIcon,
   ScrollTextIcon,
   ShieldIcon,
@@ -60,6 +61,13 @@ const settingsItems = [
     description: "QuickBooks-style tracking categories for segment reporting",
     href: "/@{$workspaceSlug}/~/settings/tracking-categories",
     icon: LayersIcon,
+  },
+  {
+    label: "Custom Fields",
+    description:
+      "Add your own fields to customers, invoices, vendors, and items",
+    href: "/@{$workspaceSlug}/~/settings/custom-fields",
+    icon: ListPlusIcon,
   },
   {
     label: "Vendors & 1099",
