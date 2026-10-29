@@ -3,6 +3,7 @@ import { CommandPalette as CommandPaletteShell } from "@omnidotdev/thornberry/co
 import {
   GLOBAL_HOTKEYS,
   hotkeyLabel,
+  useHotkeys,
 } from "@omnidotdev/thornberry/use-hotkeys";
 import {
   useNavigate,
@@ -223,9 +224,11 @@ const CommandPalette = () => {
 
   const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
 
-  // The authenticated layout (`_app`) already binds "t" to the theme toggle, so
-  // the hotkey is intentionally not registered here to avoid double-firing. The
-  // palette still surfaces the action and its shortcut label
+  // Bind the theme toggle here so the "t" shortcut matches the hint surfaced on
+  // the palette action. This adapter is mounted once at the app root, so the
+  // binding is global and single-sourced (no per-layout listener)
+  useHotkeys(GLOBAL_HOTKEYS.toggleTheme, toggleTheme);
+
   const commands: CommandAction[] = [
     {
       id: "home",
