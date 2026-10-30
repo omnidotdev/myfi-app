@@ -7,6 +7,7 @@ import EmptyState from "@/components/EmptyState";
 import LoadError from "@/components/LoadError";
 import MantleManagedBanner from "@/components/MantleManagedBanner";
 import BookPicker from "@/features/books/components/BookPicker";
+import CustomFieldsEditor from "@/features/customFields/components/CustomFieldsEditor";
 import type { InventoryItem } from "@/features/inventory/types/inventory";
 import type { InvoiceAccount } from "@/features/invoicing/types/invoicing";
 import { apiFetch } from "@/lib/api/apiFetch";
@@ -46,6 +47,7 @@ function ItemsPage() {
 
   const [createOpen, setCreateOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [cfValues, setCfValues] = useState<Record<string, string>>({});
   const [form, setForm] = useState({
     name: "",
     sku: "",
@@ -125,8 +127,25 @@ function ItemsPage() {
           }),
         });
         if (!res.ok) throw new Error("Create failed");
+        const created = await res.json().catch(() => ({}));
+        const newId = created?.item?.id as string | undefined;
+        const cfEntries = Object.entries(cfValues);
+        if (newId && cfEntries.length > 0) {
+          await apiFetch("/api/custom-fields/values", {
+            method: "PUT",
+            body: JSON.stringify({
+              bookId: activeBookId,
+              entityId: newId,
+              values: cfEntries.map(([definitionId, value]) => ({
+                definitionId,
+                value,
+              })),
+            }),
+          }).catch(() => {});
+        }
         toast.success("Item created");
         setCreateOpen(false);
+        setCfValues({});
         setForm({
           name: "",
           sku: "",
@@ -144,7 +163,7 @@ function ItemsPage() {
         setSaving(false);
       }
     },
-    [activeBookId, form, fetchData],
+    [activeBookId, form, cfValues, fetchData],
   );
 
   const submitMovement = useCallback(
@@ -492,6 +511,12 @@ function ItemsPage() {
                   ))}
                 </select>
               </div>
+              <CustomFieldsEditor
+                bookId={activeBookId}
+                entityType="item"
+                values={cfValues}
+                onChange={setCfValues}
+              />
               <div className="mt-2 flex justify-end gap-3">
                 <button
                   type="button"

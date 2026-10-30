@@ -13,6 +13,7 @@ import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
 import LoadError from "@/components/LoadError";
 import BookPicker from "@/features/books/components/BookPicker";
+import CustomFieldsEditor from "@/features/customFields/components/CustomFieldsEditor";
 import RecategorizeVendorDialog from "@/features/vendors/components/RecategorizeVendorDialog";
 import VendorW9Dialog from "@/features/vendors/components/VendorW9Dialog";
 import { apiFetch } from "@/lib/api/apiFetch";
@@ -98,6 +99,7 @@ function VendorsPage() {
   } | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [form, setForm] = useState<VendorFormData>({ ...EMPTY_FORM });
+  const [cfValues, setCfValues] = useState<Record<string, string>>({});
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loadError, setLoadError] = useState(false);
@@ -176,6 +178,7 @@ function VendorsPage() {
 
   const resetForm = useCallback(() => {
     setForm({ ...EMPTY_FORM });
+    setCfValues({});
     setShowForm(false);
     setEditingVendorId(null);
     setError(null);
@@ -289,6 +292,26 @@ function VendorsPage() {
           throw new Error(errData?.message ?? `Request failed (${res.status})`);
         }
 
+        // Persist custom-field values against the saved vendor
+        const saved = await res.json().catch(() => ({}));
+        const vendorId =
+          editingVendorId ?? (saved?.vendor?.id as string | undefined);
+        const cfEntries = Object.entries(cfValues);
+        if (vendorId && cfEntries.length > 0) {
+          await apiFetch("/api/custom-fields/values", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              bookId: activeBookId,
+              entityId: vendorId,
+              values: cfEntries.map(([definitionId, value]) => ({
+                definitionId,
+                value,
+              })),
+            }),
+          }).catch(() => {});
+        }
+
         resetForm();
         await fetchVendors();
       } catch (err) {
@@ -297,7 +320,7 @@ function VendorsPage() {
         setIsSaving(false);
       }
     },
-    [activeBookId, editingVendorId, form, fetchVendors, resetForm],
+    [activeBookId, editingVendorId, form, cfValues, fetchVendors, resetForm],
   );
 
   const updateField = useCallback(
@@ -532,6 +555,15 @@ function VendorsPage() {
             />
             <span className="font-medium">1099 Eligible</span>
           </label>
+
+          <CustomFieldsEditor
+            key={editingVendorId ?? "new"}
+            bookId={activeBookId}
+            entityType="vendor"
+            entityId={editingVendorId ?? undefined}
+            values={cfValues}
+            onChange={setCfValues}
+          />
 
           {/* Form actions */}
           <div className="flex justify-end gap-3">

@@ -165,13 +165,30 @@ function InvoicesPage() {
       if (!activeBookId) return;
       setSaving(true);
       try {
+        const { customFieldValues, ...invoiceBody } = payload;
         const res = await apiFetch("/api/invoices", {
           method: "POST",
-          body: JSON.stringify({ bookId: activeBookId, ...payload }),
+          body: JSON.stringify({ bookId: activeBookId, ...invoiceBody }),
         });
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
           throw new Error(data.error ?? "Create failed");
+        }
+        const created = await res.json().catch(() => ({}));
+        const newId = created?.invoiceId as string | undefined;
+        const cfEntries = Object.entries(customFieldValues ?? {});
+        if (newId && cfEntries.length > 0) {
+          await apiFetch("/api/custom-fields/values", {
+            method: "PUT",
+            body: JSON.stringify({
+              bookId: activeBookId,
+              entityId: newId,
+              values: cfEntries.map(([definitionId, value]) => ({
+                definitionId,
+                value,
+              })),
+            }),
+          }).catch(() => {});
         }
         toast.success("Draft invoice created");
         setFormOpen(false);
@@ -398,6 +415,7 @@ function InvoicesPage() {
           <div className="relative my-8 w-full max-w-2xl rounded-lg border border-border bg-card p-6 shadow-lg">
             <h2 className="mb-4 font-semibold text-lg">New Invoice</h2>
             <InvoiceForm
+              bookId={activeBookId}
               customers={customers}
               incomeAccounts={incomeAccounts}
               taxJurisdictions={taxJurisdictions}

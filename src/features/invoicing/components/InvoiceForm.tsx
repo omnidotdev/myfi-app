@@ -1,6 +1,6 @@
 import { Loader2Icon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
-
+import CustomFieldsEditor from "@/features/customFields/components/CustomFieldsEditor";
 import type {
   Customer,
   DraftLine,
@@ -31,9 +31,13 @@ interface InvoiceFormPayload {
     /** discount as a fraction 0..1 (the form collects a 0-100 percent) */
     discountPercent?: number;
   }[];
+  /** custom-field values (definitionId -> value) to save against the invoice */
+  customFieldValues?: Record<string, string>;
 }
 
 interface InvoiceFormProps {
+  /** active book, for loading custom fields */
+  bookId?: string | null;
   customers: Customer[];
   incomeAccounts: InvoiceAccount[];
   taxJurisdictions: TaxJurisdiction[];
@@ -100,6 +104,7 @@ const inDays = (days: number) =>
 
 /** Form for drafting an invoice with line items */
 function InvoiceForm({
+  bookId,
   customers,
   incomeAccounts,
   taxJurisdictions,
@@ -116,6 +121,7 @@ function InvoiceForm({
   const [issueDate, setIssueDate] = useState(today());
   const [dueDate, setDueDate] = useState(inDays(30));
   const [memo, setMemo] = useState("");
+  const [cfValues, setCfValues] = useState<Record<string, string>>({});
   const [currency, setCurrency] = useState(homeCurrency);
   const [exchangeRate, setExchangeRate] = useState("1");
   const [lines, setLines] = useState<EditableLine[]>([emptyLine()]);
@@ -219,6 +225,7 @@ function InvoiceForm({
           discountPercent: fraction > 0 ? fraction : undefined,
         };
       }),
+      customFieldValues: cfValues,
     });
   };
 
@@ -520,6 +527,13 @@ function InvoiceForm({
           className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
         />
       </div>
+
+      <CustomFieldsEditor
+        bookId={bookId ?? null}
+        entityType="invoice"
+        values={cfValues}
+        onChange={setCfValues}
+      />
 
       <div className="flex items-center justify-between border-border border-t pt-3">
         <span className="text-muted-foreground text-sm">
