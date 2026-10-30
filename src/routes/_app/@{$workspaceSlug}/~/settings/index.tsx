@@ -9,6 +9,7 @@ import {
   Link2Icon,
   ListPlusIcon,
   MapIcon,
+  PaletteIcon,
   PercentIcon,
   ScrollTextIcon,
   ShieldIcon,
@@ -82,6 +83,12 @@ const settingsItems = [
     description: "Groups of items that expand into their lines on an invoice",
     href: "/@{$workspaceSlug}/~/settings/bundles",
     icon: BoxesIcon,
+  },
+  {
+    label: "Form Templates",
+    description: "Branding for invoices and estimates (color, footer, terms)",
+    href: "/@{$workspaceSlug}/~/settings/form-templates",
+    icon: PaletteIcon,
   },
   {
     label: "Vendors & 1099",
