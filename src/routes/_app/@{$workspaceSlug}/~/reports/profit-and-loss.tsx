@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import BookPicker from "@/features/books/components/BookPicker";
 import ComparativeReportTable, {
   type ComparativeRow,
@@ -92,6 +92,78 @@ function ProfitAndLossPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const lastParams = useRef<{ startDate?: string; endDate?: string }>({});
+
+  const [savedViews, setSavedViews] = useState<
+    { id: string; name: string; params: Record<string, unknown> }[]
+  >([]);
+  const [viewName, setViewName] = useState("");
+
+  const loadSavedViews = useCallback(async () => {
+    if (!activeBookId) {
+      setSavedViews([]);
+      return;
+    }
+    try {
+      const res = await apiFetch(
+        `/api/saved-reports?bookId=${activeBookId}&reportType=profit-and-loss`,
+      );
+      const json = await res.json();
+      setSavedViews(json.savedReports ?? []);
+    } catch {
+      setSavedViews([]);
+    }
+  }, [activeBookId]);
+
+  useEffect(() => {
+    loadSavedViews();
+  }, [loadSavedViews]);
+
+  const saveCurrentView = useCallback(async () => {
+    if (!activeBookId || !viewName.trim()) return;
+    try {
+      const res = await apiFetch("/api/saved-reports", {
+        method: "POST",
+        body: JSON.stringify({
+          bookId: activeBookId,
+          name: viewName.trim(),
+          reportType: "profit-and-loss",
+          params: {
+            basis,
+            compare,
+            tagIds: selectedTagIds,
+            trackingCategoryIds: selectedCategoryIds,
+          },
+        }),
+      });
+      if (!res.ok) throw new Error("Save failed");
+      setViewName("");
+      await loadSavedViews();
+    } catch {
+      setError("Couldn't save this view.");
+    }
+  }, [
+    activeBookId,
+    viewName,
+    basis,
+    compare,
+    selectedTagIds,
+    selectedCategoryIds,
+    loadSavedViews,
+  ]);
+
+  const applySavedView = (id: string) => {
+    const view = savedViews.find((v) => v.id === id);
+    if (!view) return;
+    const p = view.params ?? {};
+    setBasis(p.basis === "cash" ? "cash" : "accrual");
+    setCompare(Boolean(p.compare));
+    setSelectedTagIds(Array.isArray(p.tagIds) ? (p.tagIds as string[]) : []);
+    setSelectedCategoryIds(
+      Array.isArray(p.trackingCategoryIds)
+        ? (p.trackingCategoryIds as string[])
+        : [],
+    );
+  };
 
   // Load the book's tracking categories (classes/locations) to offer as filters
   useEffect(() => {
@@ -270,6 +342,42 @@ function ProfitAndLossPage() {
                 <option value="cash">Cash</option>
               </select>
             </label>
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-muted-foreground">Saved views</span>
+              {savedViews.length > 0 && (
+                <select
+                  value=""
+                  onChange={(e) => {
+                    if (e.target.value) applySavedView(e.target.value);
+                    e.target.value = "";
+                  }}
+                  aria-label="Apply a saved view"
+                  className="rounded-md border border-border bg-card px-2 py-1 text-sm"
+                >
+                  <option value="">Apply...</option>
+                  {savedViews.map((v) => (
+                    <option key={v.id} value={v.id}>
+                      {v.name}
+                    </option>
+                  ))}
+                </select>
+              )}
+              <input
+                type="text"
+                value={viewName}
+                onChange={(e) => setViewName(e.target.value)}
+                placeholder="Name this view"
+                className="w-36 rounded-md border border-border bg-card px-2 py-1 text-sm"
+              />
+              <button
+                type="button"
+                onClick={saveCurrentView}
+                disabled={!viewName.trim()}
+                className="rounded-md border border-border px-2 py-1 text-sm transition-colors hover:bg-accent disabled:opacity-50"
+              >
+                Save
+              </button>
+            </div>
           </>
         }
       />
