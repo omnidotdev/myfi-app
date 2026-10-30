@@ -26,6 +26,9 @@ function NewJournalEntryPage() {
   const { tagGroups } = useTagGroups(activeBookId);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [vendors, setVendors] = useState<{ rowId: string; name: string }[]>([]);
+  const [trackingCategories, setTrackingCategories] = useState<
+    { id: string; kind: string; name: string }[]
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
 
@@ -58,6 +61,12 @@ function NewJournalEntryPage() {
       );
 
       setVendors(mappedVendors);
+
+      const tcRes = await apiFetch(
+        `/api/tracking-categories?bookId=${activeBookId}`,
+      );
+      const tcData = await tcRes.json();
+      setTrackingCategories(tcData.categories ?? []);
     } catch (err) {
       console.error("Failed to load accounts", err);
       setLoadError(true);
@@ -75,6 +84,7 @@ function NewJournalEntryPage() {
       date: string;
       memo: string;
       vendorId?: string;
+      trackingCategoryIds: string[];
       lines: {
         accountId: string;
         debit: string;
@@ -126,6 +136,23 @@ function NewJournalEntryPage() {
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ assignments }),
             });
+          }
+
+          // Assign the entry's class/location to every created line
+          if (entry.trackingCategoryIds.length > 0) {
+            const tcAssignments = createdLines.flatMap((cl) =>
+              entry.trackingCategoryIds.map((trackingCategoryId) => ({
+                journalLineId: cl.id,
+                trackingCategoryId,
+              })),
+            );
+            if (tcAssignments.length > 0) {
+              await apiFetch("/api/tracking-categories/line-assignments", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ assignments: tcAssignments }),
+              });
+            }
           }
         }
 
@@ -182,6 +209,7 @@ function NewJournalEntryPage() {
             accounts={accounts}
             tagGroups={tagGroups}
             vendors={vendors}
+            trackingCategories={trackingCategories}
             onSubmit={handleSubmit}
             onCancel={handleCancel}
           />

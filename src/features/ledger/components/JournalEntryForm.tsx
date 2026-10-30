@@ -18,14 +18,24 @@ type VendorOption = {
   name: string;
 };
 
+type TrackingCategoryOption = {
+  id: string;
+  kind: string;
+  name: string;
+};
+
 type JournalEntryFormProps = {
   accounts: Account[];
   tagGroups?: TagGroup[];
   vendors?: VendorOption[];
+  /** class/location values to optionally tag the whole entry with */
+  trackingCategories?: TrackingCategoryOption[];
   onSubmit: (entry: {
     date: string;
     memo: string;
     vendorId?: string;
+    /** selected class/location ids, applied to every line of the entry */
+    trackingCategoryIds: string[];
     lines: LineInput[];
   }) => void;
   onCancel: () => void;
@@ -57,12 +67,17 @@ function JournalEntryForm({
   accounts,
   tagGroups = [],
   vendors = [],
+  trackingCategories = [],
   onSubmit,
   onCancel,
 }: JournalEntryFormProps) {
   const [date, setDate] = useState("");
   const [memo, setMemo] = useState("");
   const [vendorId, setVendorId] = useState("");
+  const [classId, setClassId] = useState("");
+  const [locationId, setLocationId] = useState("");
+  const classes = trackingCategories.filter((c) => c.kind === "class");
+  const locations = trackingCategories.filter((c) => c.kind === "location");
   const [lines, setLines] = useState<LineInput[]>([createLine(), createLine()]);
 
   const { totalDebits, totalCredits, difference } = useMemo(() => {
@@ -106,7 +121,13 @@ function JournalEntryForm({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSubmit) return;
-    onSubmit({ date, memo, vendorId: vendorId || undefined, lines });
+    onSubmit({
+      date,
+      memo,
+      vendorId: vendorId || undefined,
+      trackingCategoryIds: [classId, locationId].filter(Boolean),
+      lines,
+    });
   };
 
   return (
@@ -163,6 +184,52 @@ function JournalEntryForm({
               </option>
             ))}
           </select>
+        </div>
+      )}
+
+      {/* Class / Location (optional), applied to every line of the entry */}
+      {(classes.length > 0 || locations.length > 0) && (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {classes.length > 0 && (
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="entry-class" className="font-medium text-sm">
+                Class
+              </label>
+              <select
+                id="entry-class"
+                value={classId}
+                onChange={(e) => setClassId(e.target.value)}
+                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              >
+                <option value="">None</option>
+                {classes.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+          {locations.length > 0 && (
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="entry-location" className="font-medium text-sm">
+                Location
+              </label>
+              <select
+                id="entry-location"
+                value={locationId}
+                onChange={(e) => setLocationId(e.target.value)}
+                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              >
+                <option value="">None</option>
+                {locations.map((l) => (
+                  <option key={l.id} value={l.id}>
+                    {l.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
       )}
 
