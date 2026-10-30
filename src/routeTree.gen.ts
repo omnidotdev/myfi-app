@@ -29,6 +29,7 @@ import { Route as AppAtChar123workspaceSlugChar125Char126DepositsIndexRouteImpor
 import { Route as AppAtChar123workspaceSlugChar125Char126DocumentsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/documents/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126EstimatesIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/estimates/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126InvoicesIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/invoices/index'
+import { Route as AppAtChar123workspaceSlugChar125Char126InvoicesInvoiceIdRouteImport } from './routes/_app/@{$workspaceSlug}/~/invoices/$invoiceId'
 import { Route as AppAtChar123workspaceSlugChar125Char126ItemsIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/items/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126LedgerIndexRouteImport } from './routes/_app/@{$workspaceSlug}/~/ledger/index'
 import { Route as AppAtChar123workspaceSlugChar125Char126LedgerJournalEntryIdRouteImport } from './routes/_app/@{$workspaceSlug}/~/ledger/$journalEntryId'
@@ -193,6 +194,12 @@ const AppAtChar123workspaceSlugChar125Char126InvoicesIndexRoute =
   AppAtChar123workspaceSlugChar125Char126InvoicesIndexRouteImport.update({
     id: '/@{$workspaceSlug}/~/invoices/',
     path: '/@{$workspaceSlug}/~/invoices/',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAtChar123workspaceSlugChar125Char126InvoicesInvoiceIdRoute =
+  AppAtChar123workspaceSlugChar125Char126InvoicesInvoiceIdRouteImport.update({
+    id: '/@{$workspaceSlug}/~/invoices/$invoiceId',
+    path: '/@{$workspaceSlug}/~/invoices/$invoiceId',
     getParentRoute: () => AppRoute,
   } as any)
 const AppAtChar123workspaceSlugChar125Char126ItemsIndexRoute =
@@ -545,6 +552,7 @@ export interface FileRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/@{$workspaceSlug}/~/': typeof AppAtChar123workspaceSlugChar125Char126IndexRoute
   '/@{$workspaceSlug}/~/assets/$assetId': typeof AppAtChar123workspaceSlugChar125Char126AssetsAssetIdRoute
+  '/@{$workspaceSlug}/~/invoices/$invoiceId': typeof AppAtChar123workspaceSlugChar125Char126InvoicesInvoiceIdRoute
   '/@{$workspaceSlug}/~/ledger/$journalEntryId': typeof AppAtChar123workspaceSlugChar125Char126LedgerJournalEntryIdRoute
   '/@{$workspaceSlug}/~/ledger/batch': typeof AppAtChar123workspaceSlugChar125Char126LedgerBatchRoute
   '/@{$workspaceSlug}/~/ledger/new': typeof AppAtChar123workspaceSlugChar125Char126LedgerNewRoute
@@ -618,6 +626,7 @@ export interface FileRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/@{$workspaceSlug}/~': typeof AppAtChar123workspaceSlugChar125Char126IndexRoute
   '/@{$workspaceSlug}/~/assets/$assetId': typeof AppAtChar123workspaceSlugChar125Char126AssetsAssetIdRoute
+  '/@{$workspaceSlug}/~/invoices/$invoiceId': typeof AppAtChar123workspaceSlugChar125Char126InvoicesInvoiceIdRoute
   '/@{$workspaceSlug}/~/ledger/$journalEntryId': typeof AppAtChar123workspaceSlugChar125Char126LedgerJournalEntryIdRoute
   '/@{$workspaceSlug}/~/ledger/batch': typeof AppAtChar123workspaceSlugChar125Char126LedgerBatchRoute
   '/@{$workspaceSlug}/~/ledger/new': typeof AppAtChar123workspaceSlugChar125Char126LedgerNewRoute
@@ -694,6 +703,7 @@ export interface FileRoutesById {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_app/@{$workspaceSlug}/~/': typeof AppAtChar123workspaceSlugChar125Char126IndexRoute
   '/_app/@{$workspaceSlug}/~/assets/$assetId': typeof AppAtChar123workspaceSlugChar125Char126AssetsAssetIdRoute
+  '/_app/@{$workspaceSlug}/~/invoices/$invoiceId': typeof AppAtChar123workspaceSlugChar125Char126InvoicesInvoiceIdRoute
   '/_app/@{$workspaceSlug}/~/ledger/$journalEntryId': typeof AppAtChar123workspaceSlugChar125Char126LedgerJournalEntryIdRoute
   '/_app/@{$workspaceSlug}/~/ledger/batch': typeof AppAtChar123workspaceSlugChar125Char126LedgerBatchRoute
   '/_app/@{$workspaceSlug}/~/ledger/new': typeof AppAtChar123workspaceSlugChar125Char126LedgerNewRoute
@@ -769,6 +779,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/@{$workspaceSlug}/~/'
     | '/@{$workspaceSlug}/~/assets/$assetId'
+    | '/@{$workspaceSlug}/~/invoices/$invoiceId'
     | '/@{$workspaceSlug}/~/ledger/$journalEntryId'
     | '/@{$workspaceSlug}/~/ledger/batch'
     | '/@{$workspaceSlug}/~/ledger/new'
@@ -842,6 +853,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/@{$workspaceSlug}/~'
     | '/@{$workspaceSlug}/~/assets/$assetId'
+    | '/@{$workspaceSlug}/~/invoices/$invoiceId'
     | '/@{$workspaceSlug}/~/ledger/$journalEntryId'
     | '/@{$workspaceSlug}/~/ledger/batch'
     | '/@{$workspaceSlug}/~/ledger/new'
@@ -917,6 +929,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/_app/@{$workspaceSlug}/~/'
     | '/_app/@{$workspaceSlug}/~/assets/$assetId'
+    | '/_app/@{$workspaceSlug}/~/invoices/$invoiceId'
     | '/_app/@{$workspaceSlug}/~/ledger/$journalEntryId'
     | '/_app/@{$workspaceSlug}/~/ledger/batch'
     | '/_app/@{$workspaceSlug}/~/ledger/new'
@@ -1130,6 +1143,13 @@ declare module '@tanstack/react-router' {
       path: '/@{$workspaceSlug}/~/invoices'
       fullPath: '/@{$workspaceSlug}/~/invoices/'
       preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126InvoicesIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/@{$workspaceSlug}/~/invoices/$invoiceId': {
+      id: '/_app/@{$workspaceSlug}/~/invoices/$invoiceId'
+      path: '/@{$workspaceSlug}/~/invoices/$invoiceId'
+      fullPath: '/@{$workspaceSlug}/~/invoices/$invoiceId'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126InvoicesInvoiceIdRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/@{$workspaceSlug}/~/items/': {
@@ -1509,6 +1529,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppAtChar123workspaceSlugChar125Char126IndexRoute: typeof AppAtChar123workspaceSlugChar125Char126IndexRoute
   AppAtChar123workspaceSlugChar125Char126AssetsAssetIdRoute: typeof AppAtChar123workspaceSlugChar125Char126AssetsAssetIdRoute
+  AppAtChar123workspaceSlugChar125Char126InvoicesInvoiceIdRoute: typeof AppAtChar123workspaceSlugChar125Char126InvoicesInvoiceIdRoute
   AppAtChar123workspaceSlugChar125Char126LedgerJournalEntryIdRoute: typeof AppAtChar123workspaceSlugChar125Char126LedgerJournalEntryIdRoute
   AppAtChar123workspaceSlugChar125Char126LedgerBatchRoute: typeof AppAtChar123workspaceSlugChar125Char126LedgerBatchRoute
   AppAtChar123workspaceSlugChar125Char126LedgerNewRoute: typeof AppAtChar123workspaceSlugChar125Char126LedgerNewRoute
@@ -1581,6 +1602,8 @@ const AppRouteChildren: AppRouteChildren = {
     AppAtChar123workspaceSlugChar125Char126IndexRoute,
   AppAtChar123workspaceSlugChar125Char126AssetsAssetIdRoute:
     AppAtChar123workspaceSlugChar125Char126AssetsAssetIdRoute,
+  AppAtChar123workspaceSlugChar125Char126InvoicesInvoiceIdRoute:
+    AppAtChar123workspaceSlugChar125Char126InvoicesInvoiceIdRoute,
   AppAtChar123workspaceSlugChar125Char126LedgerJournalEntryIdRoute:
     AppAtChar123workspaceSlugChar125Char126LedgerJournalEntryIdRoute,
   AppAtChar123workspaceSlugChar125Char126LedgerBatchRoute:

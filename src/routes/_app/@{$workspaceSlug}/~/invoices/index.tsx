@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -38,6 +38,7 @@ const STATUS_STYLES: Record<InvoiceStatus, string> = {
 };
 
 function InvoicesPage() {
+  const { workspaceSlug } = Route.useParams();
   const {
     activeBook,
     activeBookId,
@@ -338,6 +339,13 @@ function InvoicesPage() {
                       {busyId === inv.id && (
                         <Loader2Icon className="size-4 animate-spin text-muted-foreground" />
                       )}
+                      <Link
+                        to="/@{$workspaceSlug}/~/invoices/$invoiceId"
+                        params={{ workspaceSlug, invoiceId: inv.id }}
+                        className="rounded-md border border-border px-2.5 py-1 text-xs transition-colors hover:bg-accent"
+                      >
+                        View
+                      </Link>
                       {inv.status === "draft" && (
                         <button
                           type="button"
