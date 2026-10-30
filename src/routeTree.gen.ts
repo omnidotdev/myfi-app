@@ -66,6 +66,7 @@ import { Route as AppAtChar123workspaceSlugChar125Char126SettingsIndexRouteImpor
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsAccessRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/access'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsAuditRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/audit'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsBooksRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/books'
+import { Route as AppAtChar123workspaceSlugChar125Char126SettingsBundlesRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/bundles'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/connections'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/custom-fields'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsDataRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/data'
@@ -431,6 +432,12 @@ const AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute =
     path: '/@{$workspaceSlug}/~/settings/books',
     getParentRoute: () => AppRoute,
   } as any)
+const AppAtChar123workspaceSlugChar125Char126SettingsBundlesRoute =
+  AppAtChar123workspaceSlugChar125Char126SettingsBundlesRouteImport.update({
+    id: '/@{$workspaceSlug}/~/settings/bundles',
+    path: '/@{$workspaceSlug}/~/settings/bundles',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute =
   AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRouteImport.update({
     id: '/@{$workspaceSlug}/~/settings/connections',
@@ -556,6 +563,7 @@ export interface FileRoutesByFullPath {
   '/@{$workspaceSlug}/~/settings/access': typeof AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute
   '/@{$workspaceSlug}/~/settings/audit': typeof AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute
   '/@{$workspaceSlug}/~/settings/books': typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute
+  '/@{$workspaceSlug}/~/settings/bundles': typeof AppAtChar123workspaceSlugChar125Char126SettingsBundlesRoute
   '/@{$workspaceSlug}/~/settings/connections': typeof AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute
   '/@{$workspaceSlug}/~/settings/custom-fields': typeof AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRoute
   '/@{$workspaceSlug}/~/settings/data': typeof AppAtChar123workspaceSlugChar125Char126SettingsDataRoute
@@ -627,6 +635,7 @@ export interface FileRoutesByTo {
   '/@{$workspaceSlug}/~/settings/access': typeof AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute
   '/@{$workspaceSlug}/~/settings/audit': typeof AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute
   '/@{$workspaceSlug}/~/settings/books': typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute
+  '/@{$workspaceSlug}/~/settings/bundles': typeof AppAtChar123workspaceSlugChar125Char126SettingsBundlesRoute
   '/@{$workspaceSlug}/~/settings/connections': typeof AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute
   '/@{$workspaceSlug}/~/settings/custom-fields': typeof AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRoute
   '/@{$workspaceSlug}/~/settings/data': typeof AppAtChar123workspaceSlugChar125Char126SettingsDataRoute
@@ -701,6 +710,7 @@ export interface FileRoutesById {
   '/_app/@{$workspaceSlug}/~/settings/access': typeof AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute
   '/_app/@{$workspaceSlug}/~/settings/audit': typeof AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute
   '/_app/@{$workspaceSlug}/~/settings/books': typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute
+  '/_app/@{$workspaceSlug}/~/settings/bundles': typeof AppAtChar123workspaceSlugChar125Char126SettingsBundlesRoute
   '/_app/@{$workspaceSlug}/~/settings/connections': typeof AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute
   '/_app/@{$workspaceSlug}/~/settings/custom-fields': typeof AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRoute
   '/_app/@{$workspaceSlug}/~/settings/data': typeof AppAtChar123workspaceSlugChar125Char126SettingsDataRoute
@@ -774,6 +784,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/settings/access'
     | '/@{$workspaceSlug}/~/settings/audit'
     | '/@{$workspaceSlug}/~/settings/books'
+    | '/@{$workspaceSlug}/~/settings/bundles'
     | '/@{$workspaceSlug}/~/settings/connections'
     | '/@{$workspaceSlug}/~/settings/custom-fields'
     | '/@{$workspaceSlug}/~/settings/data'
@@ -845,6 +856,7 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/settings/access'
     | '/@{$workspaceSlug}/~/settings/audit'
     | '/@{$workspaceSlug}/~/settings/books'
+    | '/@{$workspaceSlug}/~/settings/bundles'
     | '/@{$workspaceSlug}/~/settings/connections'
     | '/@{$workspaceSlug}/~/settings/custom-fields'
     | '/@{$workspaceSlug}/~/settings/data'
@@ -918,6 +930,7 @@ export interface FileRouteTypes {
     | '/_app/@{$workspaceSlug}/~/settings/access'
     | '/_app/@{$workspaceSlug}/~/settings/audit'
     | '/_app/@{$workspaceSlug}/~/settings/books'
+    | '/_app/@{$workspaceSlug}/~/settings/bundles'
     | '/_app/@{$workspaceSlug}/~/settings/connections'
     | '/_app/@{$workspaceSlug}/~/settings/custom-fields'
     | '/_app/@{$workspaceSlug}/~/settings/data'
@@ -1363,6 +1376,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/@{$workspaceSlug}/~/settings/bundles': {
+      id: '/_app/@{$workspaceSlug}/~/settings/bundles'
+      path: '/@{$workspaceSlug}/~/settings/bundles'
+      fullPath: '/@{$workspaceSlug}/~/settings/bundles'
+      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsBundlesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/@{$workspaceSlug}/~/settings/connections': {
       id: '/_app/@{$workspaceSlug}/~/settings/connections'
       path: '/@{$workspaceSlug}/~/settings/connections'
@@ -1494,6 +1514,7 @@ interface AppRouteChildren {
   AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute
   AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute
   AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute
+  AppAtChar123workspaceSlugChar125Char126SettingsBundlesRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsBundlesRoute
   AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute
   AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRoute
   AppAtChar123workspaceSlugChar125Char126SettingsDataRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsDataRoute
@@ -1591,6 +1612,8 @@ const AppRouteChildren: AppRouteChildren = {
     AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute,
   AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute:
     AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute,
+  AppAtChar123workspaceSlugChar125Char126SettingsBundlesRoute:
+    AppAtChar123workspaceSlugChar125Char126SettingsBundlesRoute,
   AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute:
     AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute,
   AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRoute:

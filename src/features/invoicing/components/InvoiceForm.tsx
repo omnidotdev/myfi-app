@@ -40,6 +40,18 @@ interface InvoiceFormProps {
   inventoryItems: InvoiceInventoryOption[];
   /** price levels, so a customer's level adjusts item prices on selection */
   priceLevels?: { id: string; adjustmentPercent: string }[];
+  /** bundles that expand into component lines when added */
+  bundles?: {
+    id: string;
+    name: string;
+    components: {
+      inventoryItemId: string;
+      itemName: string;
+      salePrice: string;
+      incomeAccountId: string;
+      quantity: string;
+    }[];
+  }[];
   /** the book's home currency, used as the invoice currency default */
   homeCurrency: string;
   saving: boolean;
@@ -93,6 +105,7 @@ function InvoiceForm({
   taxJurisdictions,
   inventoryItems,
   priceLevels = [],
+  bundles = [],
   homeCurrency,
   saving,
   onSubmit,
@@ -146,6 +159,35 @@ function InvoiceForm({
       unitPrice:
         customerAdjustmentPercent !== 0 ? adjusted.toFixed(2) : item.salePrice,
       incomeAccountId: item.incomeAccountId,
+    });
+  };
+
+  // Adding a bundle appends one line per component, pricing each like a picked
+  // item (base price adjusted by the customer's price level)
+  const addBundle = (bundleId: string) => {
+    const bundle = bundles.find((b) => b.id === bundleId);
+    if (!bundle) return;
+    const newLines: EditableLine[] = bundle.components.map((c) => {
+      const base = Number.parseFloat(c.salePrice) || 0;
+      const adjusted =
+        customerAdjustmentPercent !== 0
+          ? Math.max(0, base * (1 + customerAdjustmentPercent / 100))
+          : base;
+      return {
+        ...emptyLine(),
+        inventoryItemId: c.inventoryItemId,
+        description: c.itemName,
+        quantity: String(Number(c.quantity)),
+        unitPrice:
+          customerAdjustmentPercent !== 0 ? adjusted.toFixed(2) : c.salePrice,
+        incomeAccountId: c.incomeAccountId,
+      };
+    });
+    // drop a single empty leading line so a fresh form does not keep a blank row
+    setLines((prev) => {
+      const trimmed =
+        prev.length === 1 && prev[0] && !prev[0].description ? [] : prev;
+      return [...trimmed, ...newLines];
     });
   };
 
@@ -433,14 +475,34 @@ function InvoiceForm({
             )}
           </div>
         ))}
-        <button
-          type="button"
-          onClick={() => setLines((prev) => [...prev, emptyLine()])}
-          className="inline-flex w-fit items-center gap-1 rounded-md border border-border px-3 py-1.5 text-sm transition-colors hover:bg-accent"
-        >
-          <PlusIcon className="size-3.5" />
-          Add line
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setLines((prev) => [...prev, emptyLine()])}
+            className="inline-flex w-fit items-center gap-1 rounded-md border border-border px-3 py-1.5 text-sm transition-colors hover:bg-accent"
+          >
+            <PlusIcon className="size-3.5" />
+            Add line
+          </button>
+          {bundles.length > 0 && (
+            <select
+              value=""
+              onChange={(e) => {
+                if (e.target.value) addBundle(e.target.value);
+                e.target.value = "";
+              }}
+              aria-label="Add a bundle"
+              className="rounded-md border border-border bg-background px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+            >
+              <option value="">Add bundle...</option>
+              {bundles.map((b) => (
+                <option key={b.id} value={b.id}>
+                  {b.name}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-col gap-1.5">

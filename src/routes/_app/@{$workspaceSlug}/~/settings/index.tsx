@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   BookOpenIcon,
+  BoxesIcon,
   DatabaseIcon,
   ImportIcon,
   LandmarkIcon,
@@ -75,6 +76,12 @@ const settingsItems = [
     description: "Customer pricing tiers that adjust item prices on invoices",
     href: "/@{$workspaceSlug}/~/settings/price-levels",
     icon: PercentIcon,
+  },
+  {
+    label: "Bundles",
+    description: "Groups of items that expand into their lines on an invoice",
+    href: "/@{$workspaceSlug}/~/settings/bundles",
+    icon: BoxesIcon,
   },
   {
     label: "Vendors & 1099",

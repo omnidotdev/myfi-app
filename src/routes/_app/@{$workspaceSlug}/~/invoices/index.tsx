@@ -60,6 +60,19 @@ function InvoicesPage() {
   const [priceLevels, setPriceLevels] = useState<
     { id: string; adjustmentPercent: string }[]
   >([]);
+  const [bundles, setBundles] = useState<
+    {
+      id: string;
+      name: string;
+      components: {
+        inventoryItemId: string;
+        itemName: string;
+        salePrice: string;
+        incomeAccountId: string;
+        quantity: string;
+      }[];
+    }[]
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
@@ -84,18 +97,27 @@ function InvoicesPage() {
     setLoadError(false);
     const asOf = new Date().toISOString().slice(0, 10);
     try {
-      const [invRes, custRes, acctRes, taxRes, agingRes, itemRes, plRes] =
-        await Promise.all([
-          apiFetch(`/api/invoices?bookId=${activeBookId}`),
-          apiFetch(`/api/customers?bookId=${activeBookId}`),
-          apiFetch(`/api/accounts?bookId=${activeBookId}`),
-          apiFetch(`/api/tax-jurisdictions?bookId=${activeBookId}`),
-          apiFetch(
-            `/api/reports/ar-aging?bookId=${activeBookId}&asOfDate=${asOf}`,
-          ),
-          apiFetch(`/api/inventory-items?bookId=${activeBookId}`),
-          apiFetch(`/api/price-levels?bookId=${activeBookId}`),
-        ]);
+      const [
+        invRes,
+        custRes,
+        acctRes,
+        taxRes,
+        agingRes,
+        itemRes,
+        plRes,
+        bundleRes,
+      ] = await Promise.all([
+        apiFetch(`/api/invoices?bookId=${activeBookId}`),
+        apiFetch(`/api/customers?bookId=${activeBookId}`),
+        apiFetch(`/api/accounts?bookId=${activeBookId}`),
+        apiFetch(`/api/tax-jurisdictions?bookId=${activeBookId}`),
+        apiFetch(
+          `/api/reports/ar-aging?bookId=${activeBookId}&asOfDate=${asOf}`,
+        ),
+        apiFetch(`/api/inventory-items?bookId=${activeBookId}`),
+        apiFetch(`/api/price-levels?bookId=${activeBookId}`),
+        apiFetch(`/api/bundles?bookId=${activeBookId}`),
+      ]);
       const [
         invData,
         custData,
@@ -104,6 +126,7 @@ function InvoicesPage() {
         agingData,
         itemData,
         plData,
+        bundleData,
       ] = await Promise.all([
         invRes.json(),
         custRes.json(),
@@ -112,6 +135,7 @@ function InvoicesPage() {
         agingRes.json(),
         itemRes.json(),
         plRes.json(),
+        bundleRes.json(),
       ]);
       setInvoices(invData.invoices ?? []);
       setCustomers(custData.customers ?? []);
@@ -122,6 +146,7 @@ function InvoicesPage() {
       setAging(agingData ?? null);
       setInventoryItems(itemData.items ?? []);
       setPriceLevels(plData.priceLevels ?? []);
+      setBundles(bundleData.bundles ?? []);
     } catch (err) {
       console.error("Failed to load invoices", err);
       setLoadError(true);
@@ -370,6 +395,7 @@ function InvoicesPage() {
               taxJurisdictions={taxJurisdictions}
               inventoryItems={inventoryItems}
               priceLevels={priceLevels}
+              bundles={bundles}
               homeCurrency={homeCurrency}
               saving={saving}
               onSubmit={handleCreate}
