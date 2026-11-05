@@ -1,8 +1,8 @@
-import { gatekeeperDashboardUrl } from "@omnidotdev/providers/react";
+import { workspacesUrl } from "@omnidotdev/providers/react";
 import { WorkspaceSwitcher as SharedWorkspaceSwitcher } from "@omnidotdev/thornberry/workspace-switcher";
 import { useNavigate } from "@tanstack/react-router";
 
-import { AUTH_BASE_URL } from "@/lib/config/env.config";
+import { ACCOUNT_URL } from "@/lib/config/env.config";
 import { useWorkspace } from "@/providers/WorkspaceProvider";
 
 /**
@@ -49,8 +49,8 @@ const WorkspaceSwitcher = () => {
       }))}
       currentWorkspaceId={current.id}
       onSelect={handleSelect}
-      {...(AUTH_BASE_URL && {
-        manageUrl: gatekeeperDashboardUrl(AUTH_BASE_URL),
+      {...(ACCOUNT_URL && {
+        manageUrl: workspacesUrl(ACCOUNT_URL),
       })}
     />
   );
