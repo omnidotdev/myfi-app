@@ -1,9 +1,9 @@
-import { gatekeeperDashboardUrl } from "@omnidotdev/providers/react";
+import { workspacesUrl } from "@omnidotdev/providers/react";
 import { ArrowRightIcon, Building2Icon, RefreshCwIcon } from "lucide-react";
 
 import signIn from "@/lib/auth/signIn";
 import signOut from "@/lib/auth/signOut";
-import { AUTH_BASE_URL } from "@/lib/config/env.config";
+import { ACCOUNT_URL } from "@/lib/config/env.config";
 
 type Props = {
   /**
@@ -18,14 +18,12 @@ type Props = {
 /**
  * Shown to an authenticated user who has no workspace to land on: either the
  * session is degraded (prompt a fresh sign-in) or the user genuinely belongs to
- * no organization yet (send them to the identity dashboard to create or join
+ * no organization yet (send them to the account hub to create or join
  * one). Without this they would fall through to the marketing landing page,
  * which reads as if they were signed out
  */
 function NoWorkspace({ degraded }: Props) {
-  const orgDashboardUrl = AUTH_BASE_URL
-    ? gatekeeperDashboardUrl(AUTH_BASE_URL)
-    : "";
+  const createWorkspaceUrl = workspacesUrl(ACCOUNT_URL);
 
   const handleReauth = async () => {
     try {
@@ -85,9 +83,9 @@ function NoWorkspace({ degraded }: Props) {
           </div>
 
           <div className="flex flex-col items-center gap-3 sm:flex-row">
-            {orgDashboardUrl && (
+            {createWorkspaceUrl && (
               <a
-                href={orgDashboardUrl}
+                href={createWorkspaceUrl}
                 className="group inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-primary px-6 font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
               >
                 Create or join a workspace
