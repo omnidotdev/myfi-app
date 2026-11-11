@@ -1,11 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { BookOpenIcon, Loader2Icon, PlusIcon, TrashIcon } from "lucide-react";
+import {
+  BookOpenIcon,
+  Loader2Icon,
+  PencilIcon,
+  PlusIcon,
+  TrashIcon,
+} from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
 import LoadError from "@/components/LoadError";
 import CreateBookDialog from "@/features/books/components/CreateBookDialog";
+import EditBookDetailsDialog, {
+  type BookDetails,
+} from "@/features/books/components/EditBookDetailsDialog";
+import { buildBookDetailsPayload } from "@/features/books/lib/buildBookDetailsPayload";
 import type Book from "@/features/books/types/book";
 import type { BookType } from "@/features/books/types/book";
 import { apiFetch } from "@/lib/api/apiFetch";
@@ -41,6 +52,8 @@ function BooksSettingsPage() {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [bookToDelete, setBookToDelete] = useState<Book | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [bookToEdit, setBookToEdit] = useState<Book | null>(null);
+  const [savingDetails, setSavingDetails] = useState(false);
 
   // Open the create dialog automatically when arriving with ?create=true, then
   // clear the param so a refresh does not reopen it
@@ -100,7 +113,7 @@ function BooksSettingsPage() {
       setShowCreateDialog(false);
       await fetchBooks();
     } catch {
-      // Silently handle create errors
+      toast.error("Could not create the book");
     }
   };
 
@@ -120,9 +133,29 @@ function BooksSettingsPage() {
       await fetchBooks();
       setBookToDelete(null);
     } catch {
-      // Silently handle delete errors
+      toast.error("Could not delete the book");
     } finally {
       setDeleting(false);
+    }
+  };
+
+  const handleEditDetails = async (details: BookDetails) => {
+    if (!bookToEdit) return;
+    setSavingDetails(true);
+    try {
+      const res = await apiFetch(`/api/books/${bookToEdit.rowId}`, {
+        method: "PUT",
+        body: JSON.stringify(buildBookDetailsPayload(details)),
+      });
+      if (!res.ok) throw new Error("Failed to save book details");
+
+      toast.success("Book details saved");
+      setBookToEdit(null);
+      await fetchBooks();
+    } catch {
+      toast.error("Could not save the book details");
+    } finally {
+      setSavingDetails(false);
     }
   };
 
@@ -188,14 +221,24 @@ function BooksSettingsPage() {
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={() => setBookToDelete(book)}
-                className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-                aria-label={`Delete ${book.name}`}
-              >
-                <TrashIcon className="size-4" />
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => setBookToEdit(book)}
+                  className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-sm transition-colors hover:bg-accent"
+                >
+                  <PencilIcon className="size-3.5" />
+                  Edit details
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setBookToDelete(book)}
+                  className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                  aria-label={`Delete ${book.name}`}
+                >
+                  <TrashIcon className="size-4" />
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -205,6 +248,14 @@ function BooksSettingsPage() {
         open={showCreateDialog}
         onClose={() => setShowCreateDialog(false)}
         onSubmit={handleCreate}
+      />
+
+      <EditBookDetailsDialog
+        book={bookToEdit}
+        open={bookToEdit !== null}
+        saving={savingDetails}
+        onClose={() => setBookToEdit(null)}
+        onSubmit={handleEditDetails}
       />
 
       <ConfirmDialog

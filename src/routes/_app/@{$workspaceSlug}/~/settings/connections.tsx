@@ -16,6 +16,7 @@ import PlaidLinkButton from "@/features/connections/components/PlaidLinkButton";
 import type { ConnectedAccount } from "@/features/connections/types/connectedAccount";
 import { apiFetch } from "@/lib/api/apiFetch";
 import { withRowId } from "@/lib/api/withRowId";
+import { PLAID_ENABLED } from "@/lib/config/env.config";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 const LINKABLE_SUB_TYPES = new Set([
@@ -348,11 +349,15 @@ function ConnectionsSettingsPage() {
             onSuccess={handleImportSuccess}
           />
 
-          <PlaidLinkButton
-            bookId={activeBookId ?? ""}
-            userId={userId}
-            onSuccess={handleLinkSuccess}
-          />
+          {/* Bank linking is gated off during the alpha; CSV/file import stays
+              available above. Re-enable with VITE_PLAID_ENABLED */}
+          {PLAID_ENABLED && (
+            <PlaidLinkButton
+              bookId={activeBookId ?? ""}
+              userId={userId}
+              onSuccess={handleLinkSuccess}
+            />
+          )}
         </div>
       </div>
 

@@ -43,7 +43,7 @@ const settingsItems = [
   },
   {
     label: "Mappings",
-    description: "Map Mantle event types to accounts",
+    description: "Map incoming events to accounts",
     href: "/@{$workspaceSlug}/~/settings/mappings",
     icon: MapIcon,
   },

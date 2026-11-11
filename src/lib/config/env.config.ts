@@ -13,6 +13,11 @@ const env =
 export const API_URL = env.VITE_API_URL ?? "https://localhost:4000";
 export const API_GRAPHQL_URL = `${API_URL}/graphql`;
 
+// Bank-linking (Plaid) is gated off by default during the invite-only alpha so
+// the connect flow does not dead-end while Plaid is unprovisioned. CSV/file
+// import stays available regardless. Set VITE_PLAID_ENABLED=true to re-enable
+export const PLAID_ENABLED = env.VITE_PLAID_ENABLED === "true";
+
 // Auth config
 const PORT = env.VITE_PORT ?? 3000;
 export const BASE_URL =

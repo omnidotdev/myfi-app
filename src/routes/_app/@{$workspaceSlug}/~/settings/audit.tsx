@@ -236,8 +236,7 @@ function AuditLogPage() {
 
         <div className="flex items-center justify-center rounded-lg border border-border bg-card p-8">
           <p className="text-muted-foreground text-sm">
-            Audit logging requires Chronicle. Configure
-            VITE_CHRONICLE_GRAPHQL_URL to enable.
+            Audit logging is not enabled for this workspace yet.
           </p>
         </div>
       </div>

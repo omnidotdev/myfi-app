@@ -9,7 +9,6 @@ import CryptoAssetCard from "@/features/crypto/components/CryptoAssetCard";
 import LotTable from "@/features/crypto/components/LotTable";
 import type { CryptoAsset, CryptoLot } from "@/features/crypto/types/crypto";
 import { apiFetch } from "@/lib/api/apiFetch";
-import formatCurrency from "@/lib/format/currency";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 export const Route = createFileRoute("/_app/@{$workspaceSlug}/~/crypto/")({
@@ -77,11 +76,6 @@ function CryptoPage() {
       // Silently handle fetch errors
     }
   }, []);
-
-  // Compute portfolio summary from assets
-  const totalValue = 0;
-  const totalCost = 0;
-  const unrealizedGainLoss = totalValue - totalCost;
 
   const handleAddAsset = useCallback(() => {
     setFormOpen(true);
@@ -189,38 +183,9 @@ function CryptoPage() {
         </div>
       </div>
 
-      {/* Portfolio summary */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="rounded-lg border border-border bg-card p-4">
-          <p className="text-muted-foreground text-sm">Total Value</p>
-          <p className="mt-1 font-semibold text-2xl">
-            {formatCurrency(totalValue)}
-          </p>
-        </div>
-        <div className="rounded-lg border border-border bg-card p-4">
-          <p className="text-muted-foreground text-sm">Total Cost Basis</p>
-          <p className="mt-1 font-semibold text-2xl">
-            {formatCurrency(totalCost)}
-          </p>
-        </div>
-        <div className="rounded-lg border border-border bg-card p-4">
-          <p className="text-muted-foreground text-sm">
-            Unrealized Gain / Loss
-          </p>
-          <p
-            className={`mt-1 font-semibold text-2xl ${
-              unrealizedGainLoss > 0
-                ? "text-green-600 dark:text-green-400"
-                : unrealizedGainLoss < 0
-                  ? "text-red-600 dark:text-red-400"
-                  : ""
-            }`}
-          >
-            {unrealizedGainLoss >= 0 ? "+" : ""}
-            {formatCurrency(unrealizedGainLoss)}
-          </p>
-        </div>
-      </div>
+      {/* Portfolio value, cost basis, and unrealized gain are intentionally not
+          shown: live market pricing is not wired up yet, so totals would read a
+          misleading $0. Per-asset balances remain on the cards below */}
 
       {/* Loading state */}
       {loading && (

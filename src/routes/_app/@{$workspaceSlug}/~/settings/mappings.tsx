@@ -113,8 +113,8 @@ function MappingsSettingsPage() {
         <div>
           <h1 className="font-bold text-2xl">Account Mappings</h1>
           <p className="text-muted-foreground text-sm">
-            Map Mantle event types to debit and credit accounts for automatic
-            journal entry creation
+            Map incoming events (bank, invoicing, and payroll) to debit and
+            credit accounts for automatic journal entry creation
           </p>
         </div>
 
