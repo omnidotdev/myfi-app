@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 
-import { parseSuggestResponse } from "./categorySuggestion";
+import { aiUpgradeUrl, parseSuggestResponse } from "./categorySuggestion";
 
 const okSuggestion = {
   debitAccountId: "a1",
@@ -37,6 +37,17 @@ describe("parseSuggestResponse", () => {
     expect(result.status).toBe("disabled");
   });
 
+  test("maps the typed 402 to allowance_used (included AI used for the period)", async () => {
+    const result = await parseSuggestResponse(
+      jsonResponse(402, {
+        code: "ai_allowance_used",
+        error: "AI categorization used for this period",
+      }),
+    );
+
+    expect(result.status).toBe("allowance_used");
+  });
+
   test("maps 422 to no_suggestion", async () => {
     const result = await parseSuggestResponse(
       jsonResponse(422, {
@@ -59,5 +70,17 @@ describe("parseSuggestResponse", () => {
     const result = await parseSuggestResponse(jsonResponse(200, {}));
 
     expect(result.status).toBe("error");
+  });
+});
+
+describe("aiUpgradeUrl", () => {
+  test("points at billing on the account hub", () => {
+    expect(aiUpgradeUrl("https://account.omni.dev/")).toBe(
+      "https://account.omni.dev/billing",
+    );
+  });
+
+  test("is empty when no account hub is configured", () => {
+    expect(aiUpgradeUrl(undefined)).toBe("");
   });
 });
