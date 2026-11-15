@@ -42,8 +42,9 @@ const modules = [
   },
   {
     name: "Accounts",
-    detail:
-      "A hierarchical chart of accounts on industry-standard templates, with Plaid bank feeds.",
+    // TODO(launch): add bank feeds back to this line when Plaid goes live (see
+    // PLAID_ENABLED in env.config)
+    detail: "A hierarchical chart of accounts on industry-standard templates.",
   },
   {
     name: "Budgets",

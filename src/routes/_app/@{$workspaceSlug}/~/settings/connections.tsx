@@ -16,7 +16,7 @@ import PlaidLinkButton from "@/features/connections/components/PlaidLinkButton";
 import type { ConnectedAccount } from "@/features/connections/types/connectedAccount";
 import { apiFetch } from "@/lib/api/apiFetch";
 import { withRowId } from "@/lib/api/withRowId";
-import { PLAID_ENABLED } from "@/lib/config/env.config";
+import { GUSTO_ENABLED, PLAID_ENABLED } from "@/lib/config/env.config";
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 const LINKABLE_SUB_TYPES = new Set([
@@ -396,7 +396,9 @@ function ConnectionsSettingsPage() {
         <div>
           <h2 className="font-bold text-xl">Payroll</h2>
           <p className="text-muted-foreground text-sm">
-            Connect your payroll provider to sync payroll data
+            {GUSTO_ENABLED
+              ? "Connect your payroll provider to sync payroll data"
+              : "Import payroll data from a CSV export"}
           </p>
         </div>
 
@@ -448,7 +450,8 @@ function ConnectionsSettingsPage() {
               </div>
             </div>
           </div>
-        ) : (
+        ) : GUSTO_ENABLED ? (
+          // TODO(launch): hidden until Gusto is provisioned (see GUSTO_ENABLED)
           <div className="flex items-center justify-center rounded-lg border border-border bg-card p-8">
             <button
               type="button"
@@ -462,7 +465,7 @@ function ConnectionsSettingsPage() {
               Connect Gusto
             </button>
           </div>
-        )}
+        ) : null}
 
         {/* Import Payroll CSV */}
         <div className="flex flex-col gap-2">

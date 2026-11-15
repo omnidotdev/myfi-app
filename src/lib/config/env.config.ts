@@ -13,10 +13,19 @@ const env =
 export const API_URL = env.VITE_API_URL ?? "https://localhost:4000";
 export const API_GRAPHQL_URL = `${API_URL}/graphql`;
 
-// Bank-linking (Plaid) is gated off by default during the invite-only alpha so
-// the connect flow does not dead-end while Plaid is unprovisioned. CSV/file
-// import stays available regardless. Set VITE_PLAID_ENABLED=true to re-enable
+// TODO(launch): bank linking (Plaid) is gated off while Plaid is unprovisioned
+// (sandbox, no credentials in production) so the connect flow does not dead-end.
+// CSV/file import stays available regardless. Before enabling: provision Plaid
+// production credentials in infra, add Plaid to the central sub-processor list
+// (omni.dev/legal), restore the bank-feeds mention on the landing page, then
+// set VITE_PLAID_ENABLED=true
 export const PLAID_ENABLED = env.VITE_PLAID_ENABLED === "true";
+
+// TODO(launch): payroll sync (Gusto) is not provisioned in production yet, so
+// the connect button is hidden and payroll CSV import stays available. Before
+// enabling: provision the Gusto OAuth app in infra, add Gusto to the central
+// sub-processor list (omni.dev/legal), then set VITE_GUSTO_ENABLED=true
+export const GUSTO_ENABLED = env.VITE_GUSTO_ENABLED === "true";
 
 // Auth config
 const PORT = env.VITE_PORT ?? 3000;
