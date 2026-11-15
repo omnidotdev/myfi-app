@@ -1,10 +1,11 @@
+import { LEGAL_FOOTER_LINKS } from "@omnidotdev/providers/legal";
 import {
   createFileRoute,
   Outlet,
   useRouteContext,
 } from "@tanstack/react-router";
 import { GithubIcon, MenuIcon, XIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import MyfiMark from "@/components/MyfiMark";
 import signIn from "@/lib/auth/signIn";
 import signOut from "@/lib/auth/signOut";
@@ -195,14 +196,20 @@ function PublicLayout() {
             <a href={appConfig.url} className="hover:text-primary">
               myfi.omni.dev
             </a>
-            <span aria-hidden="true">&middot;</span>
-            <a href="/privacy" className="hover:text-primary">
-              Privacy
-            </a>
-            <span aria-hidden="true">&middot;</span>
-            <a href="/terms" className="hover:text-primary">
-              Terms
-            </a>
+            {/* Policies are Omni's central legal docs, never local pages */}
+            {LEGAL_FOOTER_LINKS.map((link) => (
+              <Fragment key={link.href}>
+                <span aria-hidden="true">&middot;</span>
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-primary"
+                >
+                  {link.label}
+                </a>
+              </Fragment>
+            ))}
           </div>
         </div>
       </footer>
