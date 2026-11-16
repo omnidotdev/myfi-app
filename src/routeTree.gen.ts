@@ -55,7 +55,6 @@ import { Route as AppAtChar123workspaceSlugChar125Char126SettingsCustomFieldsRou
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/connections'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsBundlesRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/bundles'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsBooksRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/books'
-import { Route as AppAtChar123workspaceSlugChar125Char126SettingsAuditRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/audit'
 import { Route as AppAtChar123workspaceSlugChar125Char126SettingsAccessRouteImport } from './routes/_app/@{$workspaceSlug}/~/settings/access'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/trial-balance'
 import { Route as AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRouteImport } from './routes/_app/@{$workspaceSlug}/~/reports/tax-loss-harvesting'
@@ -361,12 +360,6 @@ const AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute =
     path: '/@{$workspaceSlug}/~/settings/books',
     getParentRoute: () => AppRoute,
   } as any)
-const AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute =
-  AppAtChar123workspaceSlugChar125Char126SettingsAuditRouteImport.update({
-    id: '/@{$workspaceSlug}/~/settings/audit',
-    path: '/@{$workspaceSlug}/~/settings/audit',
-    getParentRoute: () => AppRoute,
-  } as any)
 const AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute =
   AppAtChar123workspaceSlugChar125Char126SettingsAccessRouteImport.update({
     id: '/@{$workspaceSlug}/~/settings/access',
@@ -586,7 +579,6 @@ export interface FileRoutesByFullPath {
   '/@{$workspaceSlug}/~/reports/tax-loss-harvesting': typeof AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRoute
   '/@{$workspaceSlug}/~/reports/trial-balance': typeof AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRoute
   '/@{$workspaceSlug}/~/settings/access': typeof AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute
-  '/@{$workspaceSlug}/~/settings/audit': typeof AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute
   '/@{$workspaceSlug}/~/settings/books': typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute
   '/@{$workspaceSlug}/~/settings/bundles': typeof AppAtChar123workspaceSlugChar125Char126SettingsBundlesRoute
   '/@{$workspaceSlug}/~/settings/connections': typeof AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute
@@ -661,7 +653,6 @@ export interface FileRoutesByTo {
   '/@{$workspaceSlug}/~/reports/tax-loss-harvesting': typeof AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRoute
   '/@{$workspaceSlug}/~/reports/trial-balance': typeof AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRoute
   '/@{$workspaceSlug}/~/settings/access': typeof AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute
-  '/@{$workspaceSlug}/~/settings/audit': typeof AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute
   '/@{$workspaceSlug}/~/settings/books': typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute
   '/@{$workspaceSlug}/~/settings/bundles': typeof AppAtChar123workspaceSlugChar125Char126SettingsBundlesRoute
   '/@{$workspaceSlug}/~/settings/connections': typeof AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute
@@ -739,7 +730,6 @@ export interface FileRoutesById {
   '/_app/@{$workspaceSlug}/~/reports/tax-loss-harvesting': typeof AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRoute
   '/_app/@{$workspaceSlug}/~/reports/trial-balance': typeof AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRoute
   '/_app/@{$workspaceSlug}/~/settings/access': typeof AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute
-  '/_app/@{$workspaceSlug}/~/settings/audit': typeof AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute
   '/_app/@{$workspaceSlug}/~/settings/books': typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute
   '/_app/@{$workspaceSlug}/~/settings/bundles': typeof AppAtChar123workspaceSlugChar125Char126SettingsBundlesRoute
   '/_app/@{$workspaceSlug}/~/settings/connections': typeof AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute
@@ -816,7 +806,6 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/reports/tax-loss-harvesting'
     | '/@{$workspaceSlug}/~/reports/trial-balance'
     | '/@{$workspaceSlug}/~/settings/access'
-    | '/@{$workspaceSlug}/~/settings/audit'
     | '/@{$workspaceSlug}/~/settings/books'
     | '/@{$workspaceSlug}/~/settings/bundles'
     | '/@{$workspaceSlug}/~/settings/connections'
@@ -891,7 +880,6 @@ export interface FileRouteTypes {
     | '/@{$workspaceSlug}/~/reports/tax-loss-harvesting'
     | '/@{$workspaceSlug}/~/reports/trial-balance'
     | '/@{$workspaceSlug}/~/settings/access'
-    | '/@{$workspaceSlug}/~/settings/audit'
     | '/@{$workspaceSlug}/~/settings/books'
     | '/@{$workspaceSlug}/~/settings/bundles'
     | '/@{$workspaceSlug}/~/settings/connections'
@@ -968,7 +956,6 @@ export interface FileRouteTypes {
     | '/_app/@{$workspaceSlug}/~/reports/tax-loss-harvesting'
     | '/_app/@{$workspaceSlug}/~/reports/trial-balance'
     | '/_app/@{$workspaceSlug}/~/settings/access'
-    | '/_app/@{$workspaceSlug}/~/settings/audit'
     | '/_app/@{$workspaceSlug}/~/settings/books'
     | '/_app/@{$workspaceSlug}/~/settings/bundles'
     | '/_app/@{$workspaceSlug}/~/settings/connections'
@@ -1342,13 +1329,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/@{$workspaceSlug}/~/settings/audit': {
-      id: '/_app/@{$workspaceSlug}/~/settings/audit'
-      path: '/@{$workspaceSlug}/~/settings/audit'
-      fullPath: '/@{$workspaceSlug}/~/settings/audit'
-      preLoaderRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsAuditRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/@{$workspaceSlug}/~/settings/access': {
       id: '/_app/@{$workspaceSlug}/~/settings/access'
       path: '/@{$workspaceSlug}/~/settings/access'
@@ -1578,7 +1558,6 @@ interface AppRouteChildren {
   AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsTaxLossHarvestingRoute
   AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRoute: typeof AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRoute
   AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute
-  AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute
   AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute
   AppAtChar123workspaceSlugChar125Char126SettingsBundlesRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsBundlesRoute
   AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute: typeof AppAtChar123workspaceSlugChar125Char126SettingsConnectionsRoute
@@ -1679,8 +1658,6 @@ const AppRouteChildren: AppRouteChildren = {
     AppAtChar123workspaceSlugChar125Char126ReportsTrialBalanceRoute,
   AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute:
     AppAtChar123workspaceSlugChar125Char126SettingsAccessRoute,
-  AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute:
-    AppAtChar123workspaceSlugChar125Char126SettingsAuditRoute,
   AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute:
     AppAtChar123workspaceSlugChar125Char126SettingsBooksRoute,
   AppAtChar123workspaceSlugChar125Char126SettingsBundlesRoute:
@@ -1784,12 +1761,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
