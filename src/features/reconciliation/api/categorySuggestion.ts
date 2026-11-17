@@ -26,13 +26,15 @@ export type SuggestCategoryInput = {
 };
 
 /**
- * Discriminated result. "allowance_used" (402: the workspace's included AI
- * categorization for the period is used), "disabled" (503) and "no_suggestion"
- * (422) are expected, non-error outcomes the UI messages differently from a
- * genuine failure
+ * Discriminated result. "payment_required" (402 with that code: AI uses Omni
+ * credits and the workspace is not paying yet), "allowance_used" (any other
+ * 402: the workspace's included AI categorization for the period is used),
+ * "disabled" (503) and "no_suggestion" (422) are expected, non-error outcomes
+ * the UI messages differently from a genuine failure
  */
 export type SuggestCategoryResult =
   | { status: "ok"; suggestion: CategorySuggestion }
+  | { status: "payment_required" }
   | { status: "allowance_used" }
   | { status: "disabled" }
   | { status: "no_suggestion" }
@@ -42,7 +44,15 @@ export type SuggestCategoryResult =
 export const parseSuggestResponse = async (
   res: Response,
 ): Promise<SuggestCategoryResult> => {
-  if (res.status === 402) return { status: "allowance_used" };
+  if (res.status === 402) {
+    const body = (await res.json().catch(() => null)) as {
+      code?: unknown;
+    } | null;
+
+    return body?.code === "payment_required"
+      ? { status: "payment_required" }
+      : { status: "allowance_used" };
+  }
   if (res.status === 503) return { status: "disabled" };
   if (res.status === 422) return { status: "no_suggestion" };
   if (!res.ok) return { status: "error" };
@@ -56,13 +66,52 @@ export const parseSuggestResponse = async (
   return { status: "ok", suggestion: data.suggestion };
 };
 
+/** Product id the account hub bills myfi under */
+const PRODUCT_ID = "myfi";
+
+/** Paid tier the upgrade prompt points at */
+const UPGRADE_PLAN = "pro";
+
 /**
- * Where to upgrade once the included AI categorization is used: billing on the
- * Omni account hub. Empty when no account hub is configured, so the upsell
- * degrades to plain copy rather than a dead link
- * @param accountBaseUrl - Account hub base URL
+ * Billing link on the Omni account hub for myfi, scoped to the workspace when
+ * it is known. Empty when no account hub is configured, so the prompt degrades
+ * to plain copy rather than a dead link
  */
-export const aiUpgradeUrl = (accountBaseUrl: string | undefined): string => {
+const billingUrl = (
+  accountBaseUrl: string | undefined,
+  params: Record<string, string>,
+  workspaceSlug?: string,
+): string => {
   const base = accountUrl(accountBaseUrl);
-  return base ? `${base}/billing` : "";
+  if (!base) return "";
+
+  const search = new URLSearchParams({ product: PRODUCT_ID, ...params });
+  if (workspaceSlug) search.set("workspace", workspaceSlug);
+
+  return `${base}/billing?${search.toString()}`;
 };
+
+/**
+ * Where to upgrade to Pro for more AI categorization, on the Omni account hub
+ * @param accountBaseUrl - Account hub base URL
+ * @param workspaceSlug - Active workspace slug, when known
+ */
+export const aiUpgradeUrl = (
+  accountBaseUrl: string | undefined,
+  workspaceSlug?: string,
+): string =>
+  billingUrl(
+    accountBaseUrl,
+    { plan: UPGRADE_PLAN, interval: "month" },
+    workspaceSlug,
+  );
+
+/**
+ * Where to buy Omni AI credits for the workspace, on the Omni account hub
+ * @param accountBaseUrl - Account hub base URL
+ * @param workspaceSlug - Active workspace slug, when known
+ */
+export const aiCreditsUrl = (
+  accountBaseUrl: string | undefined,
+  workspaceSlug?: string,
+): string => billingUrl(accountBaseUrl, { tab: "ai" }, workspaceSlug);
