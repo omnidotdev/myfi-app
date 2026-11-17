@@ -1,3 +1,4 @@
+import { useParams } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -5,13 +6,18 @@ import type {
   CategorySuggestion,
   SuggestCategoryInput,
 } from "@/features/reconciliation/api/categorySuggestion";
-import { aiUpgradeUrl } from "@/features/reconciliation/api/categorySuggestion";
+import {
+  aiCreditsUrl,
+  aiUpgradeUrl,
+} from "@/features/reconciliation/api/categorySuggestion";
 import { suggestCategory } from "@/features/reconciliation/api/suggestCategory";
 import { ACCOUNT_URL } from "@/lib/config/env.config";
 
+const openInNewTab = (url: string) => window.open(url, "_blank", "noopener");
+
 /** Upsell shown once the workspace's included AI categorization is used */
-const showAllowanceUsed = () => {
-  const upgradeUrl = aiUpgradeUrl(ACCOUNT_URL);
+const showAllowanceUsed = (workspaceSlug?: string) => {
+  const upgradeUrl = aiUpgradeUrl(ACCOUNT_URL, workspaceSlug);
 
   toast.info("AI categorization used for this period", {
     description:
@@ -19,7 +25,33 @@ const showAllowanceUsed = () => {
     ...(upgradeUrl && {
       action: {
         label: "Upgrade",
-        onClick: () => window.open(upgradeUrl, "_blank", "noopener"),
+        onClick: () => openInNewTab(upgradeUrl),
+      },
+    }),
+  });
+};
+
+/**
+ * Paid-access prompt shown when the workspace is not paying for AI yet: buy
+ * Omni credits or upgrade to Pro, each on the account hub
+ */
+const showPaymentRequired = (workspaceSlug?: string) => {
+  const creditsUrl = aiCreditsUrl(ACCOUNT_URL, workspaceSlug);
+  const upgradeUrl = aiUpgradeUrl(ACCOUNT_URL, workspaceSlug);
+
+  toast.info("AI categorization uses Omni credits", {
+    description:
+      "Buy credits or upgrade to Pro to get AI suggestions. Rules keep categorizing your transactions.",
+    ...(creditsUrl && {
+      action: {
+        label: "Buy credits",
+        onClick: () => openInNewTab(creditsUrl),
+      },
+    }),
+    ...(upgradeUrl && {
+      cancel: {
+        label: "Upgrade",
+        onClick: () => openInNewTab(upgradeUrl),
       },
     }),
   });
@@ -27,13 +59,14 @@ const showAllowanceUsed = () => {
 
 /**
  * Request an AI categorization suggestion and surface the expected non-success
- * outcomes (included AI used for the period, AI disabled, no confident answer,
- * failure) as toasts. Returns the
+ * outcomes (AI needs credits or a paid plan, included AI used for the period,
+ * AI disabled, no confident answer, failure) as toasts. Returns the
  * suggestion on success or null otherwise, so a caller just prefills its inputs.
  * Reusable by both the inline reconciliation row and a future bulk review queue.
  */
 const useCategorySuggestion = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const { workspaceSlug } = useParams({ strict: false });
 
   const suggest = async (
     input: SuggestCategoryInput,
@@ -46,8 +79,11 @@ const useCategorySuggestion = () => {
       switch (result.status) {
         case "ok":
           return result.suggestion;
+        case "payment_required":
+          showPaymentRequired(workspaceSlug);
+          return null;
         case "allowance_used":
-          showAllowanceUsed();
+          showAllowanceUsed(workspaceSlug);
           return null;
         case "disabled":
           toast.error("AI suggestions are unavailable right now");

@@ -1,6 +1,10 @@
 import { describe, expect, test } from "bun:test";
 
-import { aiUpgradeUrl, parseSuggestResponse } from "./categorySuggestion";
+import {
+  aiCreditsUrl,
+  aiUpgradeUrl,
+  parseSuggestResponse,
+} from "./categorySuggestion";
 
 const okSuggestion = {
   debitAccountId: "a1",
@@ -48,6 +52,25 @@ describe("parseSuggestResponse", () => {
     expect(result.status).toBe("allowance_used");
   });
 
+  test("maps a 402 payment_required to the paid-access state", async () => {
+    const result = await parseSuggestResponse(
+      jsonResponse(402, {
+        code: "payment_required",
+        error: "AI categorization uses Omni credits.",
+      }),
+    );
+
+    expect(result.status).toBe("payment_required");
+  });
+
+  test("keeps a 402 without a readable body as allowance_used", async () => {
+    const result = await parseSuggestResponse(
+      new Response("nope", { status: 402 }),
+    );
+
+    expect(result.status).toBe("allowance_used");
+  });
+
   test("maps 422 to no_suggestion", async () => {
     const result = await parseSuggestResponse(
       jsonResponse(422, {
@@ -74,13 +97,37 @@ describe("parseSuggestResponse", () => {
 });
 
 describe("aiUpgradeUrl", () => {
-  test("points at billing on the account hub", () => {
-    expect(aiUpgradeUrl("https://account.omni.dev/")).toBe(
-      "https://account.omni.dev/billing",
+  test("points at the Pro plan for the workspace on the account hub", () => {
+    expect(aiUpgradeUrl("https://account.omni.dev/", "acme")).toBe(
+      "https://account.omni.dev/billing?product=myfi&plan=pro&interval=month&workspace=acme",
+    );
+  });
+
+  test("omits the workspace when it is not known", () => {
+    expect(aiUpgradeUrl("https://account.omni.dev")).toBe(
+      "https://account.omni.dev/billing?product=myfi&plan=pro&interval=month",
     );
   });
 
   test("is empty when no account hub is configured", () => {
-    expect(aiUpgradeUrl(undefined)).toBe("");
+    expect(aiUpgradeUrl(undefined, "acme")).toBe("");
+  });
+});
+
+describe("aiCreditsUrl", () => {
+  test("points at buying AI credits for the workspace on the account hub", () => {
+    expect(aiCreditsUrl("https://account.omni.dev/", "acme")).toBe(
+      "https://account.omni.dev/billing?product=myfi&tab=ai&workspace=acme",
+    );
+  });
+
+  test("omits the workspace when it is not known", () => {
+    expect(aiCreditsUrl("https://account.omni.dev")).toBe(
+      "https://account.omni.dev/billing?product=myfi&tab=ai",
+    );
+  });
+
+  test("is empty when no account hub is configured", () => {
+    expect(aiCreditsUrl(undefined, "acme")).toBe("");
   });
 });
