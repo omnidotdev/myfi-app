@@ -1,8 +1,8 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, StarIcon, Trash2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
 import LoadError from "@/components/LoadError";
@@ -188,17 +188,16 @@ function FormTemplatesPage() {
                 <label htmlFor="ft-type" className="font-medium text-sm">
                   Document
                 </label>
-                <select
+                <NativeSelect
                   id="ft-type"
                   value={draft.documentType}
                   onChange={(e) =>
                     setDraft((d) => ({ ...d, documentType: e.target.value }))
                   }
-                  className={inputClass}
                 >
                   <option value="invoice">Invoice</option>
                   <option value="estimate">Estimate</option>
-                </select>
+                </NativeSelect>
               </div>
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="ft-color" className="font-medium text-sm">

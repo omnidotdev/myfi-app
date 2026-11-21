@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   ExternalLinkIcon,
@@ -9,7 +10,6 @@ import {
 import type { ChangeEvent } from "react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
 import LoadError from "@/components/LoadError";
@@ -242,18 +242,17 @@ function DocumentsPage() {
             >
               Category
             </label>
-            <select
+            <NativeSelect
               id="doc-category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="rounded-md border border-border bg-background px-3 py-2 text-sm"
             >
               {CATEGORIES.map((c) => (
                 <option key={c.value} value={c.value}>
                   {c.label}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </div>
 
           {category === "w9" && (
@@ -264,11 +263,10 @@ function DocumentsPage() {
               >
                 Vendor
               </label>
-              <select
+              <NativeSelect
                 id="doc-vendor"
                 value={vendorId}
                 onChange={(e) => setVendorId(e.target.value)}
-                className="rounded-md border border-border bg-background px-3 py-2 text-sm"
               >
                 <option value="">Unassigned</option>
                 {vendors.map((v) => (
@@ -276,7 +274,7 @@ function DocumentsPage() {
                     {v.name}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
           )}
 

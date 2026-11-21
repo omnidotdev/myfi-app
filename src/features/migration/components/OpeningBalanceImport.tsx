@@ -1,7 +1,7 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { CheckCircle2Icon, Loader2Icon, UploadIcon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { apiFetch } from "@/lib/api/apiFetch";
 
@@ -284,7 +284,7 @@ function OpeningBalanceImport({ bookId }: Props) {
                     <span className="rounded-full bg-muted px-2 py-0.5 text-muted-foreground text-xs capitalize">
                       {a.type}
                     </span>
-                    <select
+                    <NativeSelect
                       aria-label={`Map account ${a.name}`}
                       value={mappings[a.name] ?? ""}
                       onChange={(e) =>
@@ -295,7 +295,7 @@ function OpeningBalanceImport({ bookId }: Props) {
                           return next;
                         })
                       }
-                      className="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                      size="sm"
                     >
                       <option value="">Create new</option>
                       {accounts.map((existing) => (
@@ -304,7 +304,7 @@ function OpeningBalanceImport({ bookId }: Props) {
                           {existing.name}
                         </option>
                       ))}
-                    </select>
+                    </NativeSelect>
                   </div>
                 ))}
               </div>

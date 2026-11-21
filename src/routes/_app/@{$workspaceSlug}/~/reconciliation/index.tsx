@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -320,31 +321,29 @@ function ReconciliationPage() {
 
         {/* Period filters */}
         <div className="flex items-center gap-2">
-          <select
+          <NativeSelect
             aria-label="Filter by year"
             value={periodYear}
             onChange={(e) => setPeriodYear(Number(e.target.value))}
-            className="rounded-lg border border-border bg-card px-3 py-2 text-sm"
           >
             {yearOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}
               </option>
             ))}
-          </select>
+          </NativeSelect>
 
-          <select
+          <NativeSelect
             aria-label="Filter by month"
             value={periodMonth}
             onChange={(e) => setPeriodMonth(Number(e.target.value))}
-            className="rounded-lg border border-border bg-card px-3 py-2 text-sm"
           >
             {MONTHS.map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </div>
       </div>
 

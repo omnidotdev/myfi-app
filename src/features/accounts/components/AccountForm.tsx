@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { useState } from "react";
 import type {
   Account,
@@ -101,18 +102,17 @@ function AccountForm({
         <label htmlFor="account-type" className="font-medium text-sm">
           Type
         </label>
-        <select
+        <NativeSelect
           id="account-type"
           value={type}
           onChange={(e) => handleTypeChange(e.target.value as AccountType)}
-          className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
         >
           {ACCOUNT_TYPES.map((t) => (
             <option key={t} value={t}>
               {formatLabel(t)}
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </div>
 
       {/* Sub-type */}
@@ -120,11 +120,10 @@ function AccountForm({
         <label htmlFor="account-sub-type" className="font-medium text-sm">
           Sub-type
         </label>
-        <select
+        <NativeSelect
           id="account-sub-type"
           value={subType}
           onChange={(e) => setSubType(e.target.value as AccountSubType | "")}
-          className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
         >
           <option value="">None</option>
           {availableSubTypes.map((st) => (
@@ -132,7 +131,7 @@ function AccountForm({
               {formatLabel(st)}
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </div>
 
       {/* Parent account */}
@@ -140,11 +139,10 @@ function AccountForm({
         <label htmlFor="account-parent" className="font-medium text-sm">
           Parent account
         </label>
-        <select
+        <NativeSelect
           id="account-parent"
           value={parentId}
           onChange={(e) => setParentId(e.target.value)}
-          className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
         >
           <option value="">None (top-level)</option>
           {accounts
@@ -154,7 +152,7 @@ function AccountForm({
                 {a.code} - {a.name}
               </option>
             ))}
-        </select>
+        </NativeSelect>
       </div>
 
       {/* Is placeholder */}

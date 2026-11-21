@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { HardDriveIcon, Loader2Icon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -563,21 +564,20 @@ function AssetsPage() {
                 <label htmlFor="asset-method" className="font-medium text-sm">
                   Depreciation Method
                 </label>
-                <select
+                <NativeSelect
                   id="asset-method"
                   disabled={basisLocked}
                   value={formMethod}
                   onChange={(e) =>
                     setFormMethod(e.target.value as "straight_line" | "macrs")
                   }
-                  className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                 >
                   {DEPRECIATION_METHODS.map((m) => (
                     <option key={m.value} value={m.value}>
                       {m.label}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </div>
 
               {/* MACRS Class (conditional) */}
@@ -589,13 +589,12 @@ function AssetsPage() {
                   >
                     MACRS Class
                   </label>
-                  <select
+                  <NativeSelect
                     id="asset-macrs-class"
                     disabled={basisLocked}
                     required
                     value={formMacrsClass}
                     onChange={(e) => setFormMacrsClass(e.target.value)}
-                    className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                   >
                     <option value="">Select class</option>
                     {MACRS_CLASSES.map((c) => (
@@ -603,7 +602,7 @@ function AssetsPage() {
                         {c}-year
                       </option>
                     ))}
-                  </select>
+                  </NativeSelect>
                 </div>
               )}
 
@@ -612,13 +611,12 @@ function AssetsPage() {
                 <label htmlFor="asset-acct" className="font-medium text-sm">
                   Asset Account
                 </label>
-                <select
+                <NativeSelect
                   id="asset-acct"
                   disabled={basisLocked}
                   required
                   value={formAssetAccountId}
                   onChange={(e) => setFormAssetAccountId(e.target.value)}
-                  className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                 >
                   <option value="">Select account</option>
                   {accounts.map((a) => (
@@ -626,7 +624,7 @@ function AssetsPage() {
                       {a.code} - {a.name}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </div>
 
               <div className="flex flex-col gap-1.5">
@@ -636,13 +634,12 @@ function AssetsPage() {
                 >
                   Depreciation Expense Account
                 </label>
-                <select
+                <NativeSelect
                   id="asset-expense-acct"
                   disabled={basisLocked}
                   required
                   value={formExpenseAccountId}
                   onChange={(e) => setFormExpenseAccountId(e.target.value)}
-                  className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                 >
                   <option value="">Select account</option>
                   {accounts.map((a) => (
@@ -650,7 +647,7 @@ function AssetsPage() {
                       {a.code} - {a.name}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </div>
 
               <div className="flex flex-col gap-1.5">
@@ -660,13 +657,12 @@ function AssetsPage() {
                 >
                   Accumulated Depreciation Account
                 </label>
-                <select
+                <NativeSelect
                   id="asset-accum-acct"
                   disabled={basisLocked}
                   required
                   value={formAccumAccountId}
                   onChange={(e) => setFormAccumAccountId(e.target.value)}
-                  className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                 >
                   <option value="">Select account</option>
                   {accounts.map((a) => (
@@ -674,7 +670,7 @@ function AssetsPage() {
                       {a.code} - {a.name}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </div>
 
               {/* Actions */}

@@ -1,6 +1,6 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { Loader2Icon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
-
 import type { DraftEstimateLine } from "@/features/estimates/types/estimates";
 import type {
   Customer,
@@ -103,12 +103,11 @@ function EstimateForm({
           <label htmlFor="est-customer" className="font-medium text-sm">
             Customer
           </label>
-          <select
+          <NativeSelect
             id="est-customer"
             required
             value={customerId}
             onChange={(e) => setCustomerId(e.target.value)}
-            className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
           >
             <option value="" disabled>
               Select a customer
@@ -118,7 +117,7 @@ function EstimateForm({
                 {c.name}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="est-number" className="font-medium text-sm">
@@ -209,14 +208,13 @@ function EstimateForm({
                 aria-label="Unit price"
                 className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
-              <select
+              <NativeSelect
                 required
                 value={line.incomeAccountId}
                 onChange={(e) =>
                   updateLine(index, { incomeAccountId: e.target.value })
                 }
                 aria-label="Income account"
-                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value="" disabled>
                   Income account
@@ -227,14 +225,13 @@ function EstimateForm({
                     {a.name}
                   </option>
                 ))}
-              </select>
-              <select
+              </NativeSelect>
+              <NativeSelect
                 value={line.taxJurisdictionId}
                 onChange={(e) =>
                   updateLine(index, { taxJurisdictionId: e.target.value })
                 }
                 aria-label="Tax"
-                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value="">No tax</option>
                 {taxJurisdictions.map((tj) => (
@@ -242,7 +239,7 @@ function EstimateForm({
                     {tj.name}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
             {lines.length > 1 && (
               <button

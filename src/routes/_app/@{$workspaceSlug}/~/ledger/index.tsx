@@ -1,8 +1,8 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
 import LoadError from "@/components/LoadError";
@@ -206,13 +206,12 @@ function LedgerPage() {
           >
             Source
           </label>
-          <select
+          <NativeSelect
             id="filter-source"
             value={sourceFilter}
             onChange={(e) =>
               setSourceFilter(e.target.value as JournalEntrySource | "all")
             }
-            className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
           >
             <option value="all">All Sources</option>
             {JOURNAL_ENTRY_SOURCES.map((source) => (
@@ -220,7 +219,7 @@ function LedgerPage() {
                 {formatLabel(source)}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </div>
 
         {/* Date from */}
@@ -265,7 +264,7 @@ function LedgerPage() {
           >
             Status
           </label>
-          <select
+          <NativeSelect
             id="filter-reviewed"
             value={showReviewed}
             onChange={(e) =>
@@ -273,12 +272,11 @@ function LedgerPage() {
                 e.target.value as "all" | "reviewed" | "unreviewed",
               )
             }
-            className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
           >
             <option value="all">All</option>
             <option value="reviewed">Reviewed</option>
             <option value="unreviewed">Unreviewed</option>
-          </select>
+          </NativeSelect>
         </div>
       </div>
 

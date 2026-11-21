@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon, ShieldIcon, TrashIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -186,18 +187,17 @@ function AccessPage() {
             >
               Role
             </label>
-            <select
+            <NativeSelect
               id="invite-role"
               value={newRole}
               onChange={(e) => setNewRole(e.target.value)}
-              className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             >
               {ROLES.map((r) => (
                 <option key={r} value={r}>
                   {r.charAt(0).toUpperCase() + r.slice(1)}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </div>
 
           <button
@@ -258,18 +258,19 @@ function AccessPage() {
                   {record.userId}
                 </span>
 
-                <select
+                <NativeSelect
                   aria-label="Member role"
                   value={record.role}
                   onChange={(e) => handleUpdateRole(record.id, e.target.value)}
-                  className={`cursor-pointer rounded-full border-0 px-2.5 py-0.5 font-medium text-xs ${roleBadgeClass[record.role] ?? "bg-muted text-muted-foreground"}`}
+                  size="sm"
+                  selectClassName={`rounded-full border-0 font-medium text-xs shadow-none md:text-xs ${roleBadgeClass[record.role] ?? "bg-muted text-muted-foreground"}`}
                 >
                   {ROLES.map((r) => (
                     <option key={r} value={r}>
                       {r.charAt(0).toUpperCase() + r.slice(1)}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
 
                 <span className="text-muted-foreground text-sm">
                   {record.invitedBy ?? "-"}

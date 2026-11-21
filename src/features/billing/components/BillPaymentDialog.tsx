@@ -1,6 +1,6 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { Loader2Icon } from "lucide-react";
 import { useId, useState } from "react";
-
 import Dialog from "@/components/Dialog";
 import type { BillListItem } from "@/features/billing/types/billing";
 import type { InvoiceAccount } from "@/features/invoicing/types/invoicing";
@@ -82,12 +82,11 @@ function BillPaymentDialog({
           <label htmlFor="billpay-account" className="font-medium text-sm">
             Pay From
           </label>
-          <select
+          <NativeSelect
             id="billpay-account"
             required
             value={paymentAccountId}
             onChange={(e) => setPaymentAccountId(e.target.value)}
-            className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
           >
             <option value="" disabled>
               Select an account
@@ -98,7 +97,7 @@ function BillPaymentDialog({
                 {a.name}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="billpay-date" className="font-medium text-sm">

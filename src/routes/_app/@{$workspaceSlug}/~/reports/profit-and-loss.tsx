@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import BookPicker from "@/features/books/components/BookPicker";
@@ -10,7 +11,6 @@ import ReportFilters from "@/features/reports/components/ReportFilters";
 import VarianceThresholdControls from "@/features/reports/components/VarianceThresholdControls";
 import TagFilter from "@/features/tags/components/TagFilter";
 import { apiFetch } from "@/lib/api/apiFetch";
-
 import useActiveBook from "@/lib/hooks/useActiveBook";
 import useTagGroups from "@/lib/hooks/useTagGroups";
 
@@ -331,28 +331,28 @@ function ProfitAndLossPage() {
             </label>
             <label className="flex items-center gap-2 text-sm">
               <span className="text-muted-foreground">Basis</span>
-              <select
+              <NativeSelect
                 value={basis}
                 onChange={(e) =>
                   setBasis(e.target.value === "cash" ? "cash" : "accrual")
                 }
-                className="rounded-md border border-border bg-card px-2 py-1 text-sm"
+                size="sm"
               >
                 <option value="accrual">Accrual</option>
                 <option value="cash">Cash</option>
-              </select>
+              </NativeSelect>
             </label>
             <div className="flex items-center gap-2 text-sm">
               <span className="text-muted-foreground">Saved views</span>
               {savedViews.length > 0 && (
-                <select
+                <NativeSelect
                   value=""
                   onChange={(e) => {
                     if (e.target.value) applySavedView(e.target.value);
                     e.target.value = "";
                   }}
                   aria-label="Apply a saved view"
-                  className="rounded-md border border-border bg-card px-2 py-1 text-sm"
+                  size="sm"
                 >
                   <option value="">Apply...</option>
                   {savedViews.map((v) => (
@@ -360,7 +360,7 @@ function ProfitAndLossPage() {
                       {v.name}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               )}
               <input
                 type="text"

@@ -1,8 +1,8 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon, Trash2Icon, XIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
 import LoadError from "@/components/LoadError";
@@ -216,10 +216,10 @@ function BundlesPage() {
             )}
 
             <div className="flex flex-wrap gap-2">
-              <select
+              <NativeSelect
                 value={pickItemId}
                 onChange={(e) => setPickItemId(e.target.value)}
-                className={`${inputClass} flex-1`}
+                className="flex-1"
                 aria-label="Add item to bundle"
               >
                 <option value="">Add an item...</option>
@@ -228,7 +228,7 @@ function BundlesPage() {
                     {it.name}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
               <input
                 type="number"
                 min="0"

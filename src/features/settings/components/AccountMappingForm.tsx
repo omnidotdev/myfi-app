@@ -1,6 +1,6 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { SaveIcon } from "lucide-react";
 import { useCallback, useState } from "react";
-
 import type { Account } from "@/features/accounts/types/account";
 
 type EventGroup = "Plaid" | "Mantle" | "Payroll";
@@ -206,13 +206,12 @@ function AccountMappingForm({
               </span>
 
               {/* Debit account picker */}
-              <select
+              <NativeSelect
                 value={row.debitAccountId}
                 onChange={(e) =>
                   handleChange(type, "debitAccountId", e.target.value)
                 }
                 aria-label={`Debit account for ${type}`}
-                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value="">Select account</option>
                 {activeAccounts.map((a) => (
@@ -220,16 +219,15 @@ function AccountMappingForm({
                     {a.code} - {a.name}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
 
               {/* Credit account picker */}
-              <select
+              <NativeSelect
                 value={row.creditAccountId}
                 onChange={(e) =>
                   handleChange(type, "creditAccountId", e.target.value)
                 }
                 aria-label={`Credit account for ${type}`}
-                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value="">Select account</option>
                 {activeAccounts.map((a) => (
@@ -237,7 +235,7 @@ function AccountMappingForm({
                     {a.code} - {a.name}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
 
               {/* Save button */}
               <button

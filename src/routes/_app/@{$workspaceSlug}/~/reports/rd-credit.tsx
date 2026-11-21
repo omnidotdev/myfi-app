@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -233,17 +234,16 @@ function RdCreditPage() {
         <div className="flex flex-wrap items-end gap-3 rounded-lg border border-border bg-card p-4">
           <label className="flex flex-col gap-1 text-sm">
             <span className="text-muted-foreground">Category</span>
-            <select
+            <NativeSelect
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className={inputClass}
             >
               {CATEGORIES.map((c) => (
                 <option key={c.value} value={c.value}>
                   {c.label}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </label>
           <label className="flex flex-1 flex-col gap-1 text-sm">
             <span className="text-muted-foreground">Description</span>

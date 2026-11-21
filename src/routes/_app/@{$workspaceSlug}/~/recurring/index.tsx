@@ -1,8 +1,8 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlayIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
 import LoadError from "@/components/LoadError";
@@ -405,34 +405,32 @@ function RecurringPage() {
                   <label htmlFor="rec-freq" className="font-medium text-sm">
                     Frequency
                   </label>
-                  <select
+                  <NativeSelect
                     id="rec-freq"
                     value={form.frequency}
                     onChange={(e) =>
                       setForm({ ...form, frequency: e.target.value })
                     }
-                    className={inputClass}
                   >
                     {FREQUENCIES.map((f) => (
                       <option key={f.value} value={f.value}>
                         {f.label}
                       </option>
                     ))}
-                  </select>
+                  </NativeSelect>
                 </div>
               </div>
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="rec-account" className="font-medium text-sm">
                   Debit Account
                 </label>
-                <select
+                <NativeSelect
                   id="rec-account"
                   required
                   value={form.accountId}
                   onChange={(e) =>
                     setForm({ ...form, accountId: e.target.value })
                   }
-                  className={inputClass}
                 >
                   <option value="" disabled>
                     Select an account
@@ -443,20 +441,19 @@ function RecurringPage() {
                       {a.name}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </div>
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="rec-counter" className="font-medium text-sm">
                   Credit Account
                 </label>
-                <select
+                <NativeSelect
                   id="rec-counter"
                   required
                   value={form.counterAccountId}
                   onChange={(e) =>
                     setForm({ ...form, counterAccountId: e.target.value })
                   }
-                  className={inputClass}
                 >
                   <option value="" disabled>
                     Select an account
@@ -467,7 +464,7 @@ function RecurringPage() {
                       {a.name}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </div>
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="rec-next" className="font-medium text-sm">

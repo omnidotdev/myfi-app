@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import BookPicker from "@/features/books/components/BookPicker";
@@ -5,9 +6,7 @@ import ReportExportActions from "@/features/reports/components/ReportExportActio
 import ReportFilters from "@/features/reports/components/ReportFilters";
 import TagFilter from "@/features/tags/components/TagFilter";
 import { apiFetch } from "@/lib/api/apiFetch";
-
 import formatCurrency from "@/lib/format/currency";
-
 import useActiveBook from "@/lib/hooks/useActiveBook";
 import useTagGroups from "@/lib/hooks/useTagGroups";
 
@@ -140,11 +139,11 @@ function GeneralLedgerPage() {
         >
           Account
         </label>
-        <select
+        <NativeSelect
           id="gl-account-select"
           value={selectedAccountId}
           onChange={(e) => setSelectedAccountId(e.target.value)}
-          className="max-w-sm rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+          className="max-w-sm"
         >
           <option value="">Select an account</option>
           {accounts.map((account) => (
@@ -153,7 +152,7 @@ function GeneralLedgerPage() {
               {account.name} ({account.type})
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </div>
 
       <ReportFilters

@@ -1,8 +1,8 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, Trash2Icon } from "lucide-react";
 import { useCallback, useEffect, useId, useState } from "react";
 import { toast } from "sonner";
-
 import ConfirmDialog from "@/components/ConfirmDialog";
 import Dialog from "@/components/Dialog";
 import EmptyState from "@/components/EmptyState";
@@ -252,13 +252,12 @@ function TimeTrackingPage() {
               <label htmlFor="te-customer" className="font-medium text-sm">
                 Customer
               </label>
-              <select
+              <NativeSelect
                 id="te-customer"
                 value={form.customerId}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, customerId: e.target.value }))
                 }
-                className={inputClass}
               >
                 <option value="">None</option>
                 {customers.map((c) => (
@@ -266,7 +265,7 @@ function TimeTrackingPage() {
                     {c.name}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
             <div className="flex flex-col gap-1.5">
               <label htmlFor="te-hours" className="font-medium text-sm">
@@ -501,7 +500,7 @@ function TimeTrackingPage() {
               <label htmlFor="bill-account" className="font-medium text-sm">
                 Income account
               </label>
-              <select
+              <NativeSelect
                 id="bill-account"
                 value={billForm.incomeAccountId}
                 onChange={(e) =>
@@ -510,7 +509,6 @@ function TimeTrackingPage() {
                     incomeAccountId: e.target.value,
                   }))
                 }
-                className={inputClass}
               >
                 <option value="" disabled>
                   Select an account
@@ -521,7 +519,7 @@ function TimeTrackingPage() {
                     {a.name}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
             <div className="mt-2 flex justify-end gap-3">
               <button

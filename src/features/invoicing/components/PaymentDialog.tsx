@@ -1,6 +1,6 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { Loader2Icon } from "lucide-react";
 import { useId, useState } from "react";
-
 import Dialog from "@/components/Dialog";
 import type {
   InvoiceAccount,
@@ -100,13 +100,12 @@ function PaymentDialog({
           <label htmlFor="pay-account" className="font-medium text-sm">
             Deposit To
           </label>
-          <select
+          <NativeSelect
             id="pay-account"
             required={!toUndepositedFunds}
             disabled={toUndepositedFunds}
             value={depositAccountId}
             onChange={(e) => setDepositAccountId(e.target.value)}
-            className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-50"
           >
             <option value="" disabled>
               Select an account
@@ -117,7 +116,7 @@ function PaymentDialog({
                 {a.name}
               </option>
             ))}
-          </select>
+          </NativeSelect>
           <label className="mt-1 flex items-center gap-2 text-sm">
             <input
               type="checkbox"

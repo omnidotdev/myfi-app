@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon, TrashIcon, XIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -150,7 +151,7 @@ function LoansPage() {
       const data = await res.json();
 
       // The API returns accounts keyed by `id`; the UI (and Account type) use
-      // `rowId`, so map it. Without this the account <select> options carry no
+      // `rowId`, so map it. Without this the account <NativeSelect> options carry no
       // value and a loan cannot be created
       const mapped = (data.accounts ?? []).map(
         (a: Record<string, unknown>) => ({ ...a, rowId: a.id as string }),
@@ -722,7 +723,7 @@ function LoansPage() {
                     </button>
                   </div>
                 ) : (
-                  <select
+                  <NativeSelect
                     id="loan-liability"
                     required
                     value={formValues.liabilityAccountId}
@@ -732,7 +733,7 @@ function LoansPage() {
                         liabilityAccountId: e.target.value,
                       }))
                     }
-                    className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                    className="w-full"
                   >
                     <option value="">
                       {isPersonal
@@ -745,7 +746,7 @@ function LoansPage() {
                         {a.name}
                       </option>
                     ))}
-                  </select>
+                  </NativeSelect>
                 )}
               </div>
 
@@ -764,7 +765,7 @@ function LoansPage() {
                       ? "Interest goes to (expense) *"
                       : "Interest Expense Account *"}
                   </label>
-                  <select
+                  <NativeSelect
                     id="loan-interest"
                     required
                     value={formValues.interestAccountId}
@@ -774,7 +775,7 @@ function LoansPage() {
                         interestAccountId: e.target.value,
                       }))
                     }
-                    className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                    className="w-full"
                   >
                     <option value="">Select interest expense account</option>
                     {expenseAccounts.map((a) => (
@@ -783,7 +784,7 @@ function LoansPage() {
                         {a.name}
                       </option>
                     ))}
-                  </select>
+                  </NativeSelect>
                 </div>
               )}
 
@@ -794,7 +795,7 @@ function LoansPage() {
                 >
                   {isPersonal ? "Pay from *" : "Payment (Bank) Account *"}
                 </label>
-                <select
+                <NativeSelect
                   id="loan-payment"
                   required
                   value={formValues.paymentAccountId}
@@ -804,7 +805,7 @@ function LoansPage() {
                       paymentAccountId: e.target.value,
                     }))
                   }
-                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  className="w-full"
                 >
                   <option value="">Select payment account</option>
                   {paymentAccounts.map((a) => (
@@ -812,7 +813,7 @@ function LoansPage() {
                       {a.code} - {a.name}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -1128,11 +1129,11 @@ function LoansPage() {
                 <label htmlFor="pay-from" className="font-medium text-sm">
                   Paid from (optional)
                 </label>
-                <select
+                <NativeSelect
                   id="pay-from"
                   value={payFrom}
                   onChange={(e) => setPayFrom(e.target.value)}
-                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  className="w-full"
                 >
                   <option value="">Don't track a source</option>
                   {paymentAccounts.map((a) => (
@@ -1140,7 +1141,7 @@ function LoansPage() {
                       {a.name}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </div>
               <div className="mt-2 flex justify-end gap-3">
                 <button

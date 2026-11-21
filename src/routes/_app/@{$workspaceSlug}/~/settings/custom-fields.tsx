@@ -1,8 +1,8 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, Trash2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
 import LoadError from "@/components/LoadError";
@@ -186,7 +186,7 @@ function CustomFieldsPage() {
                   className={`${inputClass} flex-1`}
                   disabled={!activeBookId}
                 />
-                <select
+                <NativeSelect
                   value={draft.fieldType}
                   onChange={(e) =>
                     setDrafts((d) => ({
@@ -194,7 +194,6 @@ function CustomFieldsPage() {
                       [entityType]: { ...draft, fieldType: e.target.value },
                     }))
                   }
-                  className={inputClass}
                   aria-label={`${label} field type`}
                 >
                   {FIELD_TYPES.map((ft) => (
@@ -202,7 +201,7 @@ function CustomFieldsPage() {
                       {ft}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
                 <button
                   type="button"
                   onClick={() => handleCreate(entityType)}

@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { useState } from "react";
 import type {
   CostBasisMethod,
@@ -86,11 +87,10 @@ function AddWalletForm({ onSubmit, onCancel }: AddWalletFormProps) {
         <label htmlFor="crypto-network" className="font-medium text-sm">
           Network
         </label>
-        <select
+        <NativeSelect
           id="crypto-network"
           value={network}
           onChange={(e) => setNetwork(e.target.value as CryptoNetwork | "")}
-          className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
         >
           <option value="">Select network</option>
           {CRYPTO_NETWORKS.map((n) => (
@@ -98,7 +98,7 @@ function AddWalletForm({ onSubmit, onCancel }: AddWalletFormProps) {
               {formatLabel(n)}
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </div>
 
       {/* Wallet address */}
@@ -141,20 +141,19 @@ function AddWalletForm({ onSubmit, onCancel }: AddWalletFormProps) {
         <label htmlFor="crypto-method" className="font-medium text-sm">
           Cost basis method
         </label>
-        <select
+        <NativeSelect
           id="crypto-method"
           value={costBasisMethod}
           onChange={(e) =>
             setCostBasisMethod(e.target.value as CostBasisMethod)
           }
-          className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
         >
           {COST_BASIS_METHODS.map((m) => (
             <option key={m} value={m}>
               {m.toUpperCase()}
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </div>
 
       {/* Actions */}

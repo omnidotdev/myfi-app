@@ -1,6 +1,6 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { Loader2Icon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
-
 import type {
   BillVendor,
   DraftBillLine,
@@ -105,12 +105,11 @@ function BillForm({
           <label htmlFor="bill-vendor" className="font-medium text-sm">
             Vendor
           </label>
-          <select
+          <NativeSelect
             id="bill-vendor"
             required
             value={vendorId}
             onChange={(e) => setVendorId(e.target.value)}
-            className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
           >
             <option value="" disabled>
               Select a vendor
@@ -120,7 +119,7 @@ function BillForm({
                 {v.name}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="bill-number" className="font-medium text-sm">
@@ -209,14 +208,13 @@ function BillForm({
                 aria-label="Unit price"
                 className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
-              <select
+              <NativeSelect
                 required
                 value={line.expenseAccountId}
                 onChange={(e) =>
                   updateLine(index, { expenseAccountId: e.target.value })
                 }
                 aria-label="Expense account"
-                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value="" disabled>
                   Expense account
@@ -227,14 +225,13 @@ function BillForm({
                     {a.name}
                   </option>
                 ))}
-              </select>
-              <select
+              </NativeSelect>
+              <NativeSelect
                 value={line.taxJurisdictionId}
                 onChange={(e) =>
                   updateLine(index, { taxJurisdictionId: e.target.value })
                 }
                 aria-label="Tax"
-                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value="">No tax</option>
                 {taxJurisdictions.map((tj) => (
@@ -242,7 +239,7 @@ function BillForm({
                     {tj.name}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
             {lines.length > 1 && (
               <button

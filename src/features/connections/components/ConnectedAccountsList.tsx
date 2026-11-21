@@ -1,5 +1,5 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { Link2Icon, Link2OffIcon, RefreshCwIcon } from "lucide-react";
-
 import EmptyState from "@/components/EmptyState";
 import type {
   ConnectedAccount,
@@ -104,13 +104,12 @@ function ConnectedAccountsList({
           {chartOfAccounts && onLinkAccount && (
             <div className="flex items-center gap-2">
               <Link2Icon className="size-4 text-muted-foreground" />
-              <select
+              <NativeSelect
                 value={account.accountId ?? ""}
                 onChange={(e) =>
                   onLinkAccount(account.rowId, e.target.value || null)
                 }
                 aria-label={`Link ${account.institutionName ?? "account"} to COA account`}
-                className="rounded-md border border-border bg-background px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value="">Unlinked</option>
                 {chartOfAccounts.map((a) => (
@@ -119,7 +118,7 @@ function ConnectedAccountsList({
                     {a.name}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
           )}
 
