@@ -33,6 +33,9 @@ const config: KnipConfig = {
     "@tanstack/react-query-devtools",
     "@tanstack/react-router-devtools",
     "tw-animate-css",
+    // Types only: Thornberry's published declarations import `VariantProps`
+    // from it, so without it component props resolve to `any`
+    "class-variance-authority",
   ],
 };
 
