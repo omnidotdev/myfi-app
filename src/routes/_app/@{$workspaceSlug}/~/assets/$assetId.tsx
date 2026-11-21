@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowLeftIcon,
@@ -411,11 +412,10 @@ function AssetDetailPage() {
                 >
                   Proceeds Account
                 </label>
-                <select
+                <NativeSelect
                   id="dispose-proceeds-acct"
                   value={disposeProceedsAccountId}
                   onChange={(e) => setDisposeProceedsAccountId(e.target.value)}
-                  className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                 >
                   <option value="">Select account</option>
                   {accounts.map((a) => (
@@ -423,7 +423,7 @@ function AssetDetailPage() {
                       {a.code} - {a.name}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </div>
 
               <div className="flex flex-col gap-1.5">
@@ -433,11 +433,10 @@ function AssetDetailPage() {
                 >
                   Gain/Loss Account
                 </label>
-                <select
+                <NativeSelect
                   id="dispose-gainloss-acct"
                   value={disposeGainLossAccountId}
                   onChange={(e) => setDisposeGainLossAccountId(e.target.value)}
-                  className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                 >
                   <option value="">Select account</option>
                   {accounts.map((a) => (
@@ -445,7 +444,7 @@ function AssetDetailPage() {
                       {a.code} - {a.name}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </div>
 
               <div className="flex justify-end gap-3 pt-2">

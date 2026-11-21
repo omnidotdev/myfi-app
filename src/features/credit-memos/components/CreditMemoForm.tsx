@@ -1,6 +1,6 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { Loader2Icon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
-
 import type { DraftCreditMemoLine } from "@/features/credit-memos/types/creditMemo";
 import type {
   Customer,
@@ -123,12 +123,11 @@ function CreditMemoForm({
           <label htmlFor="cm-customer" className="font-medium text-sm">
             Customer
           </label>
-          <select
+          <NativeSelect
             id="cm-customer"
             required
             value={customerId}
             onChange={(e) => setCustomerId(e.target.value)}
-            className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
           >
             <option value="" disabled>
               Select a customer
@@ -138,7 +137,7 @@ function CreditMemoForm({
                 {c.name}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="cm-number" className="font-medium text-sm">
@@ -214,14 +213,13 @@ function CreditMemoForm({
                 aria-label="Unit price"
                 className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
-              <select
+              <NativeSelect
                 required
                 value={line.incomeAccountId}
                 onChange={(e) =>
                   updateLine(index, { incomeAccountId: e.target.value })
                 }
                 aria-label="Income account"
-                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value="" disabled>
                   Income account
@@ -232,14 +230,13 @@ function CreditMemoForm({
                     {a.name}
                   </option>
                 ))}
-              </select>
-              <select
+              </NativeSelect>
+              <NativeSelect
                 value={line.taxJurisdictionId}
                 onChange={(e) =>
                   updateLine(index, { taxJurisdictionId: e.target.value })
                 }
                 aria-label="Tax"
-                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value="">No tax</option>
                 {taxJurisdictions.map((tj) => (
@@ -247,16 +244,15 @@ function CreditMemoForm({
                     {tj.name}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
             {inventoryItems.length > 0 && (
-              <select
+              <NativeSelect
                 value={line.inventoryItemId}
                 onChange={(e) =>
                   updateLine(index, { inventoryItemId: e.target.value })
                 }
                 aria-label="Returned inventory item"
-                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value="">No item returned (price adjustment)</option>
                 {inventoryItems.map((it) => (
@@ -264,7 +260,7 @@ function CreditMemoForm({
                     Restock: {it.name}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             )}
             <div className="flex items-center justify-between gap-2">
               <label className="flex items-center gap-2 text-muted-foreground text-xs">

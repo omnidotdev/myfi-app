@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   CheckCircle2Icon,
@@ -8,7 +9,6 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import LoadError from "@/components/LoadError";
 import { apiFetch } from "@/lib/api/apiFetch";
-
 import useActiveBook from "@/lib/hooks/useActiveBook";
 
 type Account = {
@@ -229,11 +229,10 @@ function StatementReconciliationPage() {
               <label htmlFor="recon-account" className="font-medium text-sm">
                 Account
               </label>
-              <select
+              <NativeSelect
                 id="recon-account"
                 value={selectedAccountId}
                 onChange={(e) => setSelectedAccountId(e.target.value)}
-                className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
               >
                 <option value="">Select account</option>
                 {accounts.map((a) => (
@@ -242,7 +241,7 @@ function StatementReconciliationPage() {
                     {a.name}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
 
             <div className="flex flex-col gap-1">

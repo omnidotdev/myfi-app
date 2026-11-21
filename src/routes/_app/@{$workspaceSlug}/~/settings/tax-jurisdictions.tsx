@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Loader2Icon,
@@ -339,7 +340,7 @@ function TaxJurisdictionsPage() {
               >
                 Filing Frequency
               </label>
-              <select
+              <NativeSelect
                 id="jurisdiction-frequency"
                 value={form.filingFrequency}
                 onChange={(e) =>
@@ -348,12 +349,11 @@ function TaxJurisdictionsPage() {
                     e.target.value as "monthly" | "quarterly" | "annually",
                   )
                 }
-                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value="monthly">Monthly</option>
                 <option value="quarterly">Quarterly</option>
                 <option value="annually">Annually</option>
-              </select>
+              </NativeSelect>
             </div>
 
             {/* Tax payable account */}
@@ -364,13 +364,12 @@ function TaxJurisdictionsPage() {
               >
                 Tax Payable Account
               </label>
-              <select
+              <NativeSelect
                 id="jurisdiction-account"
                 value={form.taxPayableAccountId}
                 onChange={(e) =>
                   updateField("taxPayableAccountId", e.target.value)
                 }
-                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value="">None</option>
                 {accounts.map((account) => (
@@ -378,7 +377,7 @@ function TaxJurisdictionsPage() {
                     {account.name}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
           </div>
 

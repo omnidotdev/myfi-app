@@ -1,7 +1,7 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { apiFetch } from "@/lib/api/apiFetch";
-
 import { formatCurrency, formatSignedCurrency } from "@/lib/format/currency";
 
 type ScheduleCCategory = {
@@ -78,18 +78,17 @@ function ScheduleCPage() {
           >
             Tax Year
           </label>
-          <select
+          <NativeSelect
             id="schedule-c-year"
             value={year}
             onChange={(e) => setYear(Number.parseInt(e.target.value, 10))}
-            className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
           >
             {Array.from({ length: 5 }, (_, i) => currentYear - i).map((y) => (
               <option key={y} value={y}>
                 {y}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </div>
 
         <button

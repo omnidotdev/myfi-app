@@ -1,8 +1,8 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import EmptyState from "@/components/EmptyState";
 import LoadError from "@/components/LoadError";
 import BookPicker from "@/features/books/components/BookPicker";
@@ -267,11 +267,10 @@ function CustomersPage() {
                       (optional)
                     </span>
                   </label>
-                  <select
+                  <NativeSelect
                     id="cust-price-level"
                     value={priceLevelId}
                     onChange={(e) => setPriceLevelId(e.target.value)}
-                    className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                   >
                     <option value="">Standard pricing</option>
                     {priceLevels.map((pl) => (
@@ -279,7 +278,7 @@ function CustomersPage() {
                         {pl.name}
                       </option>
                     ))}
-                  </select>
+                  </NativeSelect>
                 </div>
               )}
               <CustomFieldsEditor

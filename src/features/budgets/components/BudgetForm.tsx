@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { useState } from "react";
 import type { Account } from "@/features/accounts/types/account";
 import type { Budget, BudgetPeriod } from "@/features/budgets/types/budget";
@@ -47,12 +48,11 @@ function BudgetForm({
         <label htmlFor="budget-account" className="font-medium text-sm">
           Expense Account
         </label>
-        <select
+        <NativeSelect
           id="budget-account"
           required
           value={accountId}
           onChange={(e) => setAccountId(e.target.value)}
-          className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
         >
           <option value="" disabled>
             Select an account
@@ -63,7 +63,7 @@ function BudgetForm({
               {a.name}
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </div>
 
       {/* Amount */}
@@ -89,18 +89,17 @@ function BudgetForm({
         <label htmlFor="budget-period" className="font-medium text-sm">
           Period
         </label>
-        <select
+        <NativeSelect
           id="budget-period"
           value={period}
           onChange={(e) => setPeriod(e.target.value as BudgetPeriod)}
-          className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
         >
           {BUDGET_PERIODS.map((p) => (
             <option key={p} value={p}>
               {formatLabel(p)}
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </div>
 
       {/* Rollover */}

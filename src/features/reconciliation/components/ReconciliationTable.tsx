@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import {
   CheckIcon,
   LightbulbIcon,
@@ -6,13 +7,13 @@ import {
   XIcon,
 } from "lucide-react";
 import { useState } from "react";
-
 import type { CategorySuggestion } from "@/features/reconciliation/api/categorySuggestion";
 import useCategorySuggestion from "@/features/reconciliation/hooks/useCategorySuggestion";
 import type {
   CategorizationSource,
   ReconciliationItem,
 } from "@/features/reconciliation/types/reconciliation";
+import TagMultiSelect from "@/features/tags/components/TagMultiSelect";
 import type { TagGroup } from "@/features/tags/types/tag";
 
 type Account = {
@@ -313,10 +314,10 @@ function ReconciliationRow({
           <div className="flex flex-col gap-1.5">
             <label className="flex items-center gap-1.5 text-xs">
               <span className="font-medium text-foreground">DR</span>
-              <select
+              <NativeSelect
                 value={debitAccountId}
                 onChange={(e) => setDebitAccountId(e.target.value)}
-                className="rounded border border-border bg-background px-1.5 py-0.5 text-xs"
+                size="sm"
               >
                 <option value="">Select account</option>
                 {accounts.map((account) => (
@@ -324,14 +325,14 @@ function ReconciliationRow({
                     {account.code} - {account.name}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </label>
             <label className="flex items-center gap-1.5 text-xs">
               <span className="font-medium text-foreground">CR</span>
-              <select
+              <NativeSelect
                 value={creditAccountId}
                 onChange={(e) => setCreditAccountId(e.target.value)}
-                className="rounded border border-border bg-background px-1.5 py-0.5 text-xs"
+                size="sm"
               >
                 <option value="">Select account</option>
                 {accounts.map((account) => (
@@ -339,39 +340,19 @@ function ReconciliationRow({
                     {account.code} - {account.name}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </label>
             {tagGroups.length > 0 && (
-              <label className="flex items-center gap-1.5 text-xs">
+              <div className="flex items-center gap-1.5 text-xs">
                 <span className="font-medium text-foreground">Tags</span>
-                <select
-                  multiple
-                  value={selectedTagIds}
-                  onChange={(e) =>
-                    setSelectedTagIds(
-                      Array.from(e.target.selectedOptions, (o) => o.value),
-                    )
-                  }
-                  className="min-h-[2rem] rounded border border-border bg-background px-1.5 py-0.5 text-xs"
-                >
-                  {tagGroups.map((group) => {
-                    const active = group.tags.filter((t) => t.isActive);
-
-                    if (active.length === 0) return null;
-
-                    return (
-                      <optgroup key={group.id} label={group.name}>
-                        {active.map((tag) => (
-                          <option key={tag.id} value={tag.id}>
-                            {tag.code ? `${tag.code} - ` : ""}
-                            {tag.name}
-                          </option>
-                        ))}
-                      </optgroup>
-                    );
-                  })}
-                </select>
-              </label>
+                <TagMultiSelect
+                  tagGroups={tagGroups}
+                  selectedTagIds={selectedTagIds}
+                  onChange={setSelectedTagIds}
+                  aria-label="Tags"
+                  size="sm"
+                />
+              </div>
             )}
             {bookId && (
               <div className="flex flex-col gap-1">

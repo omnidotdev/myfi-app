@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { Loader2Icon, SaveIcon } from "lucide-react";
 import { useCallback, useEffect, useId, useState } from "react";
 import Dialog from "@/components/Dialog";
@@ -323,18 +324,18 @@ function ImportPreviewDialog({ file, bookId, onConfirm, onCancel }: Props) {
                   >
                     <div className="flex flex-col gap-1">
                       <span className="font-medium">{header}</span>
-                      <select
+                      <NativeSelect
                         aria-label={`Column role for ${header}`}
                         value={getRoleForColumn(i)}
                         onChange={(e) => handleColumnChange(i, e.target.value)}
-                        className="rounded border border-border bg-background px-1 py-0.5 text-xs"
+                        size="sm"
                       >
                         {COLUMN_ROLES.map((r) => (
                           <option key={r.value} value={r.value}>
                             {r.label}
                           </option>
                         ))}
-                      </select>
+                      </NativeSelect>
                     </div>
                   </th>
                 ))}

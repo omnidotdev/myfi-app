@@ -1,7 +1,7 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { Loader2Icon } from "lucide-react";
 import { useId, useState } from "react";
 import { toast } from "sonner";
-
 import ConfirmDialog from "@/components/ConfirmDialog";
 import Dialog from "@/components/Dialog";
 import { apiFetch } from "@/lib/api/apiFetch";
@@ -145,10 +145,9 @@ function RecategorizeVendorDialog({
       <div className="flex flex-col gap-3">
         <label className="flex flex-col gap-1.5 text-sm">
           <span className="font-medium">From account</span>
-          <select
+          <NativeSelect
             value={fromAccountId}
             onChange={(e) => changeFrom(e.target.value)}
-            className="rounded-md border border-border bg-background px-3 py-2 text-sm"
           >
             <option value="">Select account</option>
             {accounts.map((a) => (
@@ -156,15 +155,14 @@ function RecategorizeVendorDialog({
                 {accountLabel(a)}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </label>
 
         <label className="flex flex-col gap-1.5 text-sm">
           <span className="font-medium">To account</span>
-          <select
+          <NativeSelect
             value={toAccountId}
             onChange={(e) => changeTo(e.target.value)}
-            className="rounded-md border border-border bg-background px-3 py-2 text-sm"
           >
             <option value="">Select account</option>
             {accounts.map((a) => (
@@ -172,7 +170,7 @@ function RecategorizeVendorDialog({
                 {accountLabel(a)}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </label>
 
         {preview && (

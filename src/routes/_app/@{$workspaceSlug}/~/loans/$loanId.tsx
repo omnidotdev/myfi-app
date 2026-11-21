@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeftIcon, Loader2Icon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -589,7 +590,7 @@ function LoanDetailPage() {
                 >
                   Payment Account
                 </label>
-                <select
+                <NativeSelect
                   id="payoff-account"
                   value={payoffValues.paymentAccountId}
                   onChange={(e) =>
@@ -598,7 +599,7 @@ function LoanDetailPage() {
                       paymentAccountId: e.target.value,
                     }))
                   }
-                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  className="w-full"
                 >
                   <option value="">Use loan default</option>
                   {paymentAccounts.map((a) => (
@@ -606,7 +607,7 @@ function LoanDetailPage() {
                       {a.code} - {a.name}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </div>
 
               <div className="flex justify-end gap-2 pt-2">

@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon, TrashIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -479,7 +480,7 @@ function EntryCard({
                 className="border-border border-b last:border-0"
               >
                 <td className="px-4 py-2">
-                  <select
+                  <NativeSelect
                     aria-label="Line account"
                     value={line.accountId}
                     onChange={(e) =>
@@ -487,7 +488,7 @@ function EntryCard({
                         accountId: e.target.value,
                       })
                     }
-                    className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    className="w-full"
                   >
                     <option value="">Select account</option>
                     {accounts.map((a) => (
@@ -495,7 +496,7 @@ function EntryCard({
                         {a.code} - {a.name}
                       </option>
                     ))}
-                  </select>
+                  </NativeSelect>
                 </td>
                 <td className="px-4 py-2">
                   <input

@@ -1,8 +1,8 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import ConfirmDialog from "@/components/ConfirmDialog";
 import EmptyState from "@/components/EmptyState";
 import LoadError from "@/components/LoadError";
@@ -272,11 +272,10 @@ function DepositsPage() {
                     <label htmlFor="dep-bank" className="font-medium text-sm">
                       Deposit To
                     </label>
-                    <select
+                    <NativeSelect
                       id="dep-bank"
                       value={bankAccountId}
                       onChange={(e) => setBankAccountId(e.target.value)}
-                      className={inputClass}
                     >
                       <option value="" disabled>
                         Select a bank account
@@ -287,7 +286,7 @@ function DepositsPage() {
                           {a.name}
                         </option>
                       ))}
-                    </select>
+                    </NativeSelect>
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <label htmlFor="dep-date" className="font-medium text-sm">

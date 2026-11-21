@@ -1,6 +1,6 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { PlusIcon, TrashIcon } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
-
 import type { Account } from "@/features/accounts/types/account";
 import LineTagPicker from "@/features/tags/components/LineTagPicker";
 import type { TagGroup } from "@/features/tags/types/tag";
@@ -171,11 +171,10 @@ function JournalEntryForm({
           <label htmlFor="entry-vendor" className="font-medium text-sm">
             Vendor
           </label>
-          <select
+          <NativeSelect
             id="entry-vendor"
             value={vendorId}
             onChange={(e) => setVendorId(e.target.value)}
-            className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
           >
             <option value="">None</option>
             {vendors.map((v) => (
@@ -183,7 +182,7 @@ function JournalEntryForm({
                 {v.name}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </div>
       )}
 
@@ -195,11 +194,10 @@ function JournalEntryForm({
               <label htmlFor="entry-class" className="font-medium text-sm">
                 Class
               </label>
-              <select
+              <NativeSelect
                 id="entry-class"
                 value={classId}
                 onChange={(e) => setClassId(e.target.value)}
-                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value="">None</option>
                 {classes.map((c) => (
@@ -207,7 +205,7 @@ function JournalEntryForm({
                     {c.name}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
           )}
           {locations.length > 0 && (
@@ -215,11 +213,10 @@ function JournalEntryForm({
               <label htmlFor="entry-location" className="font-medium text-sm">
                 Location
               </label>
-              <select
+              <NativeSelect
                 id="entry-location"
                 value={locationId}
                 onChange={(e) => setLocationId(e.target.value)}
-                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value="">None</option>
                 {locations.map((l) => (
@@ -227,7 +224,7 @@ function JournalEntryForm({
                     {l.name}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
           )}
         </div>
@@ -268,11 +265,10 @@ function JournalEntryForm({
             className={`grid grid-cols-1 gap-2 rounded-md border border-border p-3 sm:border-0 sm:p-0 ${tagGroups.length > 0 ? "sm:grid-cols-[1fr_6rem_6rem_1fr_8rem_2.5rem]" : "sm:grid-cols-[1fr_6rem_6rem_1fr_2.5rem]"}`}
           >
             {/* Account picker */}
-            <select
+            <NativeSelect
               value={line.accountId}
               onChange={(e) => updateLine(index, "accountId", e.target.value)}
               aria-label={`Line ${index + 1} account`}
-              className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             >
               <option value="">Select account</option>
               {accounts
@@ -282,7 +278,7 @@ function JournalEntryForm({
                     {a.code} - {a.name}
                   </option>
                 ))}
-            </select>
+            </NativeSelect>
 
             {/* Debit */}
             <input

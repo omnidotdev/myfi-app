@@ -1,8 +1,8 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import EmptyState from "@/components/EmptyState";
 import LoadError from "@/components/LoadError";
 import MantleManagedBanner from "@/components/MantleManagedBanner";
@@ -370,18 +370,17 @@ function ItemsPage() {
                 <label htmlFor="it-type" className="font-medium text-sm">
                   Type
                 </label>
-                <select
+                <NativeSelect
                   id="it-type"
                   value={form.itemType}
                   onChange={(e) =>
                     setForm({ ...form, itemType: e.target.value })
                   }
-                  className={inputClass}
                 >
                   <option value="inventory">Inventory (tracks stock)</option>
                   <option value="service">Service</option>
                   <option value="non_inventory">Non-inventory</option>
-                </select>
+                </NativeSelect>
                 <p className="text-muted-foreground text-xs">
                   {form.itemType === "inventory"
                     ? "Tracks quantity on hand and posts cost of goods sold."
@@ -441,14 +440,13 @@ function ItemsPage() {
                     <label htmlFor="it-asset" className="font-medium text-sm">
                       Inventory Asset Account
                     </label>
-                    <select
+                    <NativeSelect
                       id="it-asset"
                       required
                       value={form.assetAccountId}
                       onChange={(e) =>
                         setForm({ ...form, assetAccountId: e.target.value })
                       }
-                      className={inputClass}
                     >
                       <option value="" disabled>
                         Select an account
@@ -459,20 +457,19 @@ function ItemsPage() {
                           {a.name}
                         </option>
                       ))}
-                    </select>
+                    </NativeSelect>
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <label htmlFor="it-cogs" className="font-medium text-sm">
                       COGS Account
                     </label>
-                    <select
+                    <NativeSelect
                       id="it-cogs"
                       required
                       value={form.cogsAccountId}
                       onChange={(e) =>
                         setForm({ ...form, cogsAccountId: e.target.value })
                       }
-                      className={inputClass}
                     >
                       <option value="" disabled>
                         Select an account
@@ -483,7 +480,7 @@ function ItemsPage() {
                           {a.name}
                         </option>
                       ))}
-                    </select>
+                    </NativeSelect>
                   </div>
                 </>
               )}
@@ -491,14 +488,13 @@ function ItemsPage() {
                 <label htmlFor="it-income" className="font-medium text-sm">
                   Income Account
                 </label>
-                <select
+                <NativeSelect
                   id="it-income"
                   required
                   value={form.incomeAccountId}
                   onChange={(e) =>
                     setForm({ ...form, incomeAccountId: e.target.value })
                   }
-                  className={inputClass}
                 >
                   <option value="" disabled>
                     Select an account
@@ -509,7 +505,7 @@ function ItemsPage() {
                       {a.name}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </div>
               <CustomFieldsEditor
                 bookId={activeBookId}
@@ -599,7 +595,7 @@ function ItemsPage() {
                   <label htmlFor="mv-source" className="font-medium text-sm">
                     Paid From
                   </label>
-                  <select
+                  <NativeSelect
                     id="mv-source"
                     required
                     value={movement.sourceAccountId}
@@ -609,7 +605,6 @@ function ItemsPage() {
                         sourceAccountId: e.target.value,
                       })
                     }
-                    className={inputClass}
                   >
                     <option value="" disabled>
                       Select an account
@@ -620,7 +615,7 @@ function ItemsPage() {
                         {a.name}
                       </option>
                     ))}
-                  </select>
+                  </NativeSelect>
                 </div>
               )}
               <div className="flex flex-col gap-1.5">

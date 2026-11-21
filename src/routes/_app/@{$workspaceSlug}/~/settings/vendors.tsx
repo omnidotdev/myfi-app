@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   ArrowLeftRightIcon,
@@ -426,17 +427,16 @@ function VendorsPage() {
               <label htmlFor="vendor-tin-type" className="font-medium text-sm">
                 TIN Type
               </label>
-              <select
+              <NativeSelect
                 id="vendor-tin-type"
                 value={form.tinType}
                 onChange={(e) =>
                   updateField("tinType", e.target.value as "ssn" | "ein")
                 }
-                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value="ein">EIN</option>
                 <option value="ssn">SSN</option>
-              </select>
+              </NativeSelect>
             </div>
 
             {/* TIN */}

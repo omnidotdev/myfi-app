@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader2Icon, PlusIcon, TrashIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -479,18 +480,17 @@ function RulesPage() {
               >
                 Match Field
               </label>
-              <select
+              <NativeSelect
                 id="rule-match-field"
                 value={form.matchField}
                 onChange={(e) => updateField("matchField", e.target.value)}
-                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 {MATCH_FIELDS.map((f) => (
                   <option key={f.value} value={f.value}>
                     {f.label}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
 
             {/* Match Type */}
@@ -501,18 +501,17 @@ function RulesPage() {
               >
                 Match Type
               </label>
-              <select
+              <NativeSelect
                 id="rule-match-type"
                 value={form.matchType}
                 onChange={(e) => updateField("matchType", e.target.value)}
-                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 {MATCH_TYPES.map((t) => (
                   <option key={t.value} value={t.value}>
                     {t.label}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
 
             {/* Match Value */}
@@ -543,13 +542,12 @@ function RulesPage() {
                   >
                     Debit Account
                   </label>
-                  <select
+                  <NativeSelect
                     id="rule-debit"
                     value={form.debitAccountId}
                     onChange={(e) =>
                       updateField("debitAccountId", e.target.value)
                     }
-                    className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                   >
                     <option value="">Select account</option>
                     {activeAccounts.map((a) => (
@@ -557,7 +555,7 @@ function RulesPage() {
                         {a.code} - {a.name}
                       </option>
                     ))}
-                  </select>
+                  </NativeSelect>
                 </div>
 
                 <div className="flex flex-col gap-1">
@@ -567,13 +565,12 @@ function RulesPage() {
                   >
                     Credit Account
                   </label>
-                  <select
+                  <NativeSelect
                     id="rule-credit"
                     value={form.creditAccountId}
                     onChange={(e) =>
                       updateField("creditAccountId", e.target.value)
                     }
-                    className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                   >
                     <option value="">Select account</option>
                     {activeAccounts.map((a) => (
@@ -581,7 +578,7 @@ function RulesPage() {
                         {a.code} - {a.name}
                       </option>
                     ))}
-                  </select>
+                  </NativeSelect>
                 </div>
               </>
             )}
@@ -651,13 +648,13 @@ function RulesPage() {
                     >
                       Account
                     </label>
-                    <select
+                    <NativeSelect
                       id={`split-${index}-account`}
                       value={line.accountId}
                       onChange={(e) =>
                         updateSplitLine(index, "accountId", e.target.value)
                       }
-                      className="rounded-md border border-border bg-background px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      size="sm"
                     >
                       <option value="">Select account</option>
                       {activeAccounts.map((a) => (
@@ -665,7 +662,7 @@ function RulesPage() {
                           {a.code} - {a.name}
                         </option>
                       ))}
-                    </select>
+                    </NativeSelect>
                   </div>
 
                   <div className="flex flex-col gap-1">
@@ -675,7 +672,7 @@ function RulesPage() {
                     >
                       Side
                     </label>
-                    <select
+                    <NativeSelect
                       id={`split-${index}-side`}
                       value={line.side}
                       onChange={(e) =>
@@ -685,11 +682,11 @@ function RulesPage() {
                           e.target.value as "debit" | "credit",
                         )
                       }
-                      className="rounded-md border border-border bg-background px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      size="sm"
                     >
                       <option value="debit">Debit</option>
                       <option value="credit">Credit</option>
-                    </select>
+                    </NativeSelect>
                   </div>
 
                   <div className="flex flex-col gap-1">
@@ -699,7 +696,7 @@ function RulesPage() {
                     >
                       Type
                     </label>
-                    <select
+                    <NativeSelect
                       id={`split-${index}-amount-type`}
                       value={line.amountType}
                       onChange={(e) =>
@@ -709,11 +706,11 @@ function RulesPage() {
                           e.target.value as "percentage" | "fixed",
                         )
                       }
-                      className="rounded-md border border-border bg-background px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      size="sm"
                     >
                       <option value="percentage">Percentage</option>
                       <option value="fixed">Fixed</option>
-                    </select>
+                    </NativeSelect>
                   </div>
 
                   <div className="flex flex-col gap-1">
@@ -765,13 +762,13 @@ function RulesPage() {
                     >
                       Tag
                     </label>
-                    <select
+                    <NativeSelect
                       id={`split-${index}-tag`}
                       value={line.tagId}
                       onChange={(e) =>
                         updateSplitLine(index, "tagId", e.target.value)
                       }
-                      className="rounded-md border border-border bg-background px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      size="sm"
                     >
                       <option value="">None</option>
                       {tagGroups.map((group) => {
@@ -788,7 +785,7 @@ function RulesPage() {
                           </optgroup>
                         );
                       })}
-                    </select>
+                    </NativeSelect>
                   </div>
 
                   <button

@@ -1,6 +1,6 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { CheckIcon, PencilIcon, TrashIcon, XIcon } from "lucide-react";
 import { useCallback, useState } from "react";
-
 import ConfirmDialog from "@/components/ConfirmDialog";
 
 type CategorizationRuleSplit = {
@@ -145,18 +145,18 @@ function CategorizationRuleTable({
             </span>
 
             {isEditing && !isSplit ? (
-              <select
+              <NativeSelect
                 aria-label="Debit account"
                 value={editDebitAccountId}
                 onChange={(e) => setEditDebitAccountId(e.target.value)}
-                className="rounded-md border border-border bg-background px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                size="sm"
               >
                 {accounts.map((a) => (
                   <option key={a.rowId} value={a.rowId}>
                     {a.code} - {a.name}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             ) : (
               <span className="truncate text-sm">
                 {isSplit
@@ -168,18 +168,18 @@ function CategorizationRuleTable({
             )}
 
             {isEditing && !isSplit ? (
-              <select
+              <NativeSelect
                 aria-label="Credit account"
                 value={editCreditAccountId}
                 onChange={(e) => setEditCreditAccountId(e.target.value)}
-                className="rounded-md border border-border bg-background px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                size="sm"
               >
                 {accounts.map((a) => (
                   <option key={a.rowId} value={a.rowId}>
                     {a.code} - {a.name}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             ) : (
               <span className="truncate text-sm">
                 {isSplit

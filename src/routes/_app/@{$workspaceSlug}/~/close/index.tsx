@@ -1,3 +1,4 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   AlertTriangleIcon,
@@ -9,7 +10,6 @@ import {
 } from "lucide-react";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
-
 import ConfirmDialog from "@/components/ConfirmDialog";
 import BookPicker from "@/features/books/components/BookPicker";
 import { apiFetch } from "@/lib/api/apiFetch";
@@ -162,18 +162,17 @@ function ClosePage() {
           >
             Month
           </label>
-          <select
+          <NativeSelect
             id="close-month"
             value={month}
             onChange={(e) => setMonth(Number(e.target.value))}
-            className="rounded-md border border-border bg-background px-3 py-2 text-sm"
           >
             {MONTHS.map((m, i) => (
               <option key={m} value={i + 1}>
                 {m}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="close-year" className="text-muted-foreground text-xs">

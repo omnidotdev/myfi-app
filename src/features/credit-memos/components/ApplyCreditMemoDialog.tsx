@@ -1,6 +1,6 @@
+import { NativeSelect } from "@omnidotdev/thornberry/native-select";
 import { Loader2Icon } from "lucide-react";
 import { useId, useState } from "react";
-
 import Dialog from "@/components/Dialog";
 import type { CreditMemoListItem } from "@/features/credit-memos/types/creditMemo";
 import type { InvoiceListItem } from "@/features/invoicing/types/invoicing";
@@ -86,12 +86,11 @@ function ApplyCreditMemoDialog({
             <label htmlFor="apply-invoice" className="font-medium text-sm">
               Invoice
             </label>
-            <select
+            <NativeSelect
               id="apply-invoice"
               required
               value={invoiceId}
               onChange={(e) => setInvoiceId(e.target.value)}
-              className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             >
               <option value="" disabled>
                 Select an invoice
@@ -101,7 +100,7 @@ function ApplyCreditMemoDialog({
                   {inv.number} - balance {formatCurrency(inv.balanceDue)}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </div>
           <div className="flex flex-col gap-1.5">
             <label htmlFor="apply-amount" className="font-medium text-sm">
