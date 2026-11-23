@@ -4,6 +4,7 @@ import { LogoLockup } from "@omnidotdev/thornberry/logo-lockup";
 import {
   GLOBAL_HOTKEYS,
   hotkeyLabel,
+  useHotkeys,
 } from "@omnidotdev/thornberry/use-hotkeys";
 import {
   createFileRoute,
@@ -298,7 +299,17 @@ function NavLinks({
 function AuthLayout() {
   const { session } = Route.useRouteContext();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { theme, setTheme } = useTheme();
+
+  // `b` collapses the desktop sidebar, or opens and closes the mobile menu
+  useHotkeys(GLOBAL_HOTKEYS.toggleSidebar, () => {
+    if (window.matchMedia("(min-width: 768px)").matches) {
+      setSidebarCollapsed((collapsed) => !collapsed);
+    } else {
+      setMobileMenuOpen((open) => !open);
+    }
+  });
 
   const toggleTheme = useCallback(
     () => setTheme(theme === "dark" ? "light" : "dark"),
@@ -401,7 +412,9 @@ function AuthLayout() {
         )}
 
         {/* Sidebar */}
-        <aside className="hidden w-64 shrink-0 flex-col border-sidebar-border border-r bg-sidebar md:flex print:hidden">
+        <aside
+          className={`hidden w-64 shrink-0 flex-col border-sidebar-border border-r bg-sidebar print:hidden ${sidebarCollapsed ? "" : "md:flex"}`}
+        >
           {/* Brand */}
           <div className="flex h-16 shrink-0 items-center gap-2 border-sidebar-border border-b px-4">
             <LogoLockup

@@ -1,5 +1,6 @@
 import type { CommandAction } from "@omnidotdev/thornberry/command-palette";
 import { CommandPalette as CommandPaletteShell } from "@omnidotdev/thornberry/command-palette";
+import { ShortcutsDialog } from "@omnidotdev/thornberry/shortcuts-dialog";
 import {
   GLOBAL_HOTKEYS,
   hotkeyLabel,
@@ -21,6 +22,7 @@ import {
   FileTextIcon,
   HardDriveIcon,
   HomeIcon,
+  KeyboardIcon,
   LandmarkIcon,
   LayoutDashboardIcon,
   MoonStar,
@@ -34,6 +36,7 @@ import {
   UsersIcon,
   WalletIcon,
 } from "lucide-react";
+import { useState } from "react";
 import { useTheme } from "@/providers/ThemeProvider";
 
 // Workspace-scoped destinations, grouped to match the sidebar. `to` is a
@@ -221,6 +224,7 @@ const CommandPalette = () => {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
   const { session } = useRouteContext({ from: "__root__" });
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
 
   // The active workspace is carried in the URL; when the palette is opened off a
   // workspace route (e.g. the landing page) fall back to the user's own org so
@@ -274,13 +278,35 @@ const CommandPalette = () => {
       shortcut: hotkeyLabel(GLOBAL_HOTKEYS.toggleTheme),
       onSelect: toggleTheme,
     },
+    {
+      id: "keyboard-shortcuts",
+      label: "Keyboard shortcuts",
+      group: "Preferences",
+      icon: KeyboardIcon,
+      keywords: ["hotkeys", "keys", "help"],
+      shortcut: hotkeyLabel(GLOBAL_HOTKEYS.showShortcuts),
+      onSelect: () => setShortcutsOpen(true),
+    },
   ];
 
   return (
-    <CommandPaletteShell
-      commands={commands}
-      placeholder="Search pages and actions..."
-    />
+    <>
+      <CommandPaletteShell
+        commands={commands}
+        placeholder="Search pages and actions..."
+      />
+      {/* `?` opens it anywhere; the palette entry opens it too */}
+      <ShortcutsDialog
+        globals={[
+          "commandPalette",
+          "showShortcuts",
+          "toggleSidebar",
+          "toggleTheme",
+        ]}
+        open={shortcutsOpen}
+        onOpenChange={setShortcutsOpen}
+      />
+    </>
   );
 };
 
