@@ -28,31 +28,3 @@ query AllAccounts($bookId: UUID!) {
     }
   }
 }
-
-mutation CreateAccount($input: CreateAccountInput!) {
-  createAccount(input: $input) {
-    account {
-      rowId
-      name
-      code
-      type
-    }
-  }
-}
-
-mutation UpdateAccount($input: UpdateAccountInput!) {
-  updateAccount(input: $input) {
-    account {
-      rowId
-      name
-      code
-      type
-    }
-  }
-}
-
-mutation DeleteAccount($input: DeleteAccountInput!) {
-  deleteAccount(input: $input) {
-    deletedAccountNodeId: deletedAccountId
-  }
-}

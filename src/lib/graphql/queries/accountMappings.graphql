@@ -19,12 +19,3 @@ query AccountMappings($bookId: UUID!) {
     }
   }
 }
-
-mutation UpsertAccountMapping($input: CreateAccountMappingInput!) {
-  createAccountMapping(input: $input) {
-    accountMapping {
-      rowId
-      eventType
-    }
-  }
-}

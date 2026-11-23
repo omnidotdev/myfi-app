@@ -4,7 +4,7 @@ type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** Internal type. DO NOT USE DIRECTLY. */
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
-import { useQuery, useSuspenseQuery, useInfiniteQuery, useSuspenseInfiniteQuery, useMutation, UseQueryOptions, UseSuspenseQueryOptions, UseInfiniteQueryOptions, InfiniteData, UseSuspenseInfiniteQueryOptions, UseMutationOptions } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery, useInfiniteQuery, useSuspenseInfiniteQuery, UseQueryOptions, UseSuspenseQueryOptions, UseInfiniteQueryOptions, InfiniteData, UseSuspenseInfiniteQueryOptions } from '@tanstack/react-query';
 import { graphqlFetch } from '@/lib/graphql/graphqlFetch';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -190,21 +190,6 @@ export type AccountFilter = {
   type?: InputMaybe<AccountTypeFilter>;
 };
 
-/** An input for mutations affecting `Account` */
-export type AccountInput = {
-  bookId: Scalars['UUID']['input'];
-  code?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  isPlaceholder?: InputMaybe<Scalars['Boolean']['input']>;
-  name: Scalars['String']['input'];
-  parentId?: InputMaybe<Scalars['UUID']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  subType?: InputMaybe<AccountSubType>;
-  type: AccountType;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
 export type AccountMapping = Node & {
   __typename?: 'AccountMapping';
   /** Reads a single `Book` that is related to this `AccountMapping`. */
@@ -281,17 +266,6 @@ export type AccountMappingFilter = {
   rowId?: InputMaybe<UuidFilter>;
 };
 
-/** An input for mutations affecting `AccountMapping` */
-export type AccountMappingInput = {
-  bookId: Scalars['UUID']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  creditAccountId: Scalars['UUID']['input'];
-  debitAccountId: Scalars['UUID']['input'];
-  eventType: Scalars['String']['input'];
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
 /** Methods to use when ordering `AccountMapping`. */
 export enum AccountMappingOrderBy {
   BookIdAsc = 'BOOK_ID_ASC',
@@ -304,17 +278,6 @@ export enum AccountMappingOrderBy {
   RowIdAsc = 'ROW_ID_ASC',
   RowIdDesc = 'ROW_ID_DESC'
 }
-
-/** Represents an update to a `AccountMapping`. Fields that are set will be updated. */
-export type AccountMappingPatch = {
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  creditAccountId?: InputMaybe<Scalars['UUID']['input']>;
-  debitAccountId?: InputMaybe<Scalars['UUID']['input']>;
-  eventType?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
 
 /** Methods to use when ordering `Account`. */
 export enum AccountOrderBy {
@@ -329,21 +292,6 @@ export enum AccountOrderBy {
   RowIdDesc = 'ROW_ID_DESC'
 }
 
-/** Represents an update to a `Account`. Fields that are set will be updated. */
-export type AccountPatch = {
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  code?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  isPlaceholder?: InputMaybe<Scalars['Boolean']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  parentId?: InputMaybe<Scalars['UUID']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  subType?: InputMaybe<AccountSubType>;
-  type?: InputMaybe<AccountType>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
 export enum AccountSubType {
   AccountsPayable = 'accounts_payable',
   AccountsReceivable = 'accounts_receivable',
@@ -354,7 +302,9 @@ export enum AccountSubType {
   CryptoGains = 'crypto_gains',
   CryptoLosses = 'crypto_losses',
   CryptoWallet = 'crypto_wallet',
+  CustomerCredit = 'customer_credit',
   FixedAsset = 'fixed_asset',
+  FxGainLoss = 'fx_gain_loss',
   InterestIncome = 'interest_income',
   Inventory = 'inventory',
   Investment = 'investment',
@@ -371,7 +321,8 @@ export enum AccountSubType {
   RetainedEarnings = 'retained_earnings',
   Sales = 'sales',
   ServiceRevenue = 'service_revenue',
-  TaxExpense = 'tax_expense'
+  TaxExpense = 'tax_expense',
+  UndepositedFunds = 'undeposited_funds'
 }
 
 /** A filter to be used against many `Account` object types. All fields are combined with a logical ‘and.’ */
@@ -527,20 +478,6 @@ export type AccountingPeriodFilter = {
   year?: InputMaybe<IntFilter>;
 };
 
-/** An input for mutations affecting `AccountingPeriod` */
-export type AccountingPeriodInput = {
-  blockers?: InputMaybe<Scalars['JSON']['input']>;
-  bookId: Scalars['UUID']['input'];
-  closedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  closedBy?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  month: Scalars['Int']['input'];
-  reopenedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-  year: Scalars['Int']['input'];
-};
-
 /** Methods to use when ordering `AccountingPeriod`. */
 export enum AccountingPeriodOrderBy {
   BookIdAsc = 'BOOK_ID_ASC',
@@ -558,18 +495,666 @@ export enum AccountingPeriodOrderBy {
   YearDesc = 'YEAR_DESC'
 }
 
-/** Represents an update to a `AccountingPeriod`. Fields that are set will be updated. */
-export type AccountingPeriodPatch = {
-  blockers?: InputMaybe<Scalars['JSON']['input']>;
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  closedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  closedBy?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  month?: InputMaybe<Scalars['Int']['input']>;
-  reopenedAt?: InputMaybe<Scalars['Datetime']['input']>;
+export type AmortizationEntry = Node & {
+  __typename?: 'AmortizationEntry';
+  balanceAfter: Scalars['BigFloat']['output'];
+  dueDate: Scalars['String']['output'];
+  extraPrincipal: Scalars['BigFloat']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  interestAmount: Scalars['BigFloat']['output'];
+  /** Reads a single `JournalEntry` that is related to this `AmortizationEntry`. */
+  journalEntry?: Maybe<JournalEntry>;
+  journalEntryId?: Maybe<Scalars['UUID']['output']>;
+  /** Reads a single `Loan` that is related to this `AmortizationEntry`. */
+  loan?: Maybe<Loan>;
+  loanId: Scalars['UUID']['output'];
+  paymentAmount: Scalars['BigFloat']['output'];
+  principalAmount: Scalars['BigFloat']['output'];
+  rowId: Scalars['UUID']['output'];
+  sequenceNumber: Scalars['Int']['output'];
+  status: Scalars['String']['output'];
+};
+
+/**
+ * A condition to be used against `AmortizationEntry` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type AmortizationEntryCondition = {
+  /** Checks for equality with the object’s `dueDate` field. */
+  dueDate?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `loanId` field. */
+  loanId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `status` field. */
   status?: InputMaybe<Scalars['String']['input']>;
-  year?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** A connection to a list of `AmortizationEntry` values. */
+export type AmortizationEntryConnection = {
+  __typename?: 'AmortizationEntryConnection';
+  /** A list of edges which contains the `AmortizationEntry` and cursor to aid in pagination. */
+  edges: Array<Maybe<AmortizationEntryEdge>>;
+  /** A list of `AmortizationEntry` objects. */
+  nodes: Array<Maybe<AmortizationEntry>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AmortizationEntry` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AmortizationEntry` edge in the connection. */
+export type AmortizationEntryEdge = {
+  __typename?: 'AmortizationEntryEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AmortizationEntry` at the end of the edge. */
+  node?: Maybe<AmortizationEntry>;
+};
+
+/** A filter to be used against `AmortizationEntry` object types. All fields are combined with a logical ‘and.’ */
+export type AmortizationEntryFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<AmortizationEntryFilter>>;
+  /** Filter by the object’s `dueDate` field. */
+  dueDate?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `journalEntry` relation. */
+  journalEntry?: InputMaybe<JournalEntryFilter>;
+  /** A related `journalEntry` exists. */
+  journalEntryExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `loan` relation. */
+  loan?: InputMaybe<LoanFilter>;
+  /** Filter by the object’s `loanId` field. */
+  loanId?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<AmortizationEntryFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<AmortizationEntryFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: InputMaybe<StringFilter>;
+};
+
+/** Methods to use when ordering `AmortizationEntry`. */
+export enum AmortizationEntryOrderBy {
+  DueDateAsc = 'DUE_DATE_ASC',
+  DueDateDesc = 'DUE_DATE_DESC',
+  LoanIdAsc = 'LOAN_ID_ASC',
+  LoanIdDesc = 'LOAN_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC'
+}
+
+export type Attachment = Node & {
+  __typename?: 'Attachment';
+  /** Reads a single `Book` that is related to this `Attachment`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  contentType: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  createdBy: Scalars['String']['output'];
+  filename: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `JournalEntry` that is related to this `Attachment`. */
+  journalEntry?: Maybe<JournalEntry>;
+  journalEntryId?: Maybe<Scalars['UUID']['output']>;
+  rowId: Scalars['UUID']['output'];
+  sizeBytes: Scalars['Int']['output'];
+  storageKey: Scalars['String']['output'];
+  uploadStatus: Scalars['String']['output'];
+};
+
+/**
+ * A condition to be used against `Attachment` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type AttachmentCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `journalEntryId` field. */
+  journalEntryId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `uploadStatus` field. */
+  uploadStatus?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A connection to a list of `Attachment` values. */
+export type AttachmentConnection = {
+  __typename?: 'AttachmentConnection';
+  /** A list of edges which contains the `Attachment` and cursor to aid in pagination. */
+  edges: Array<Maybe<AttachmentEdge>>;
+  /** A list of `Attachment` objects. */
+  nodes: Array<Maybe<Attachment>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Attachment` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Attachment` edge in the connection. */
+export type AttachmentEdge = {
+  __typename?: 'AttachmentEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `Attachment` at the end of the edge. */
+  node?: Maybe<Attachment>;
+};
+
+/** A filter to be used against `Attachment` object types. All fields are combined with a logical ‘and.’ */
+export type AttachmentFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<AttachmentFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `journalEntry` relation. */
+  journalEntry?: InputMaybe<JournalEntryFilter>;
+  /** A related `journalEntry` exists. */
+  journalEntryExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `journalEntryId` field. */
+  journalEntryId?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<AttachmentFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<AttachmentFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `uploadStatus` field. */
+  uploadStatus?: InputMaybe<StringFilter>;
+};
+
+/** Methods to use when ordering `Attachment`. */
+export enum AttachmentOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  JournalEntryIdAsc = 'JOURNAL_ENTRY_ID_ASC',
+  JournalEntryIdDesc = 'JOURNAL_ENTRY_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  UploadStatusAsc = 'UPLOAD_STATUS_ASC',
+  UploadStatusDesc = 'UPLOAD_STATUS_DESC'
+}
+
+export type BankDeposit = Node & {
+  __typename?: 'BankDeposit';
+  /** Reads a single `Account` that is related to this `BankDeposit`. */
+  bankAccount?: Maybe<Account>;
+  bankAccountId: Scalars['UUID']['output'];
+  /** Reads a single `Book` that is related to this `BankDeposit`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  date: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `JournalEntry` that is related to this `BankDeposit`. */
+  journalEntry?: Maybe<JournalEntry>;
+  journalEntryId?: Maybe<Scalars['UUID']['output']>;
+  memo?: Maybe<Scalars['String']['output']>;
+  rowId: Scalars['UUID']['output'];
+  status: Scalars['String']['output'];
+  total: Scalars['BigFloat']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+};
+
+/**
+ * A condition to be used against `BankDeposit` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type BankDepositCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `BankDeposit` values. */
+export type BankDepositConnection = {
+  __typename?: 'BankDepositConnection';
+  /** A list of edges which contains the `BankDeposit` and cursor to aid in pagination. */
+  edges: Array<Maybe<BankDepositEdge>>;
+  /** A list of `BankDeposit` objects. */
+  nodes: Array<Maybe<BankDeposit>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `BankDeposit` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `BankDeposit` edge in the connection. */
+export type BankDepositEdge = {
+  __typename?: 'BankDepositEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `BankDeposit` at the end of the edge. */
+  node?: Maybe<BankDeposit>;
+};
+
+/** A filter to be used against `BankDeposit` object types. All fields are combined with a logical ‘and.’ */
+export type BankDepositFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<BankDepositFilter>>;
+  /** Filter by the object’s `bankAccount` relation. */
+  bankAccount?: InputMaybe<AccountFilter>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `journalEntry` relation. */
+  journalEntry?: InputMaybe<JournalEntryFilter>;
+  /** A related `journalEntry` exists. */
+  journalEntryExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Negates the expression. */
+  not?: InputMaybe<BankDepositFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<BankDepositFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+};
+
+/** Methods to use when ordering `BankDeposit`. */
+export enum BankDepositOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+export type Bill = Node & {
+  __typename?: 'Bill';
+  amountPaid: Scalars['BigFloat']['output'];
+  billDate: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `BillLine`. */
+  billLines: BillLineConnection;
+  /** Reads and enables pagination through a set of `BillPayment`. */
+  billPayments: BillPaymentConnection;
+  /** Reads a single `Book` that is related to this `Bill`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  currency: Scalars['String']['output'];
+  dueDate: Scalars['String']['output'];
+  exchangeRate: Scalars['BigFloat']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `JournalEntry` that is related to this `Bill`. */
+  journalEntry?: Maybe<JournalEntry>;
+  journalEntryId?: Maybe<Scalars['UUID']['output']>;
+  memo?: Maybe<Scalars['String']['output']>;
+  number: Scalars['String']['output'];
+  rowId: Scalars['UUID']['output'];
+  status: Scalars['String']['output'];
+  subtotal: Scalars['BigFloat']['output'];
+  taxAmount: Scalars['BigFloat']['output'];
+  total: Scalars['BigFloat']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads a single `Vendor` that is related to this `Bill`. */
+  vendor?: Maybe<Vendor>;
+  /** Reads and enables pagination through a set of `VendorCreditApplication`. */
+  vendorCreditApplications: VendorCreditApplicationConnection;
+  vendorId: Scalars['UUID']['output'];
+};
+
+
+export type BillBillLinesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<BillLineCondition>;
+  filter?: InputMaybe<BillLineFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<BillLineOrderBy>>;
+};
+
+
+export type BillBillPaymentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<BillPaymentCondition>;
+  filter?: InputMaybe<BillPaymentFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<BillPaymentOrderBy>>;
+};
+
+
+export type BillVendorCreditApplicationsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<VendorCreditApplicationCondition>;
+  filter?: InputMaybe<VendorCreditApplicationFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<VendorCreditApplicationOrderBy>>;
+};
+
+/** A condition to be used against `Bill` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type BillCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `number` field. */
+  number?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `vendorId` field. */
+  vendorId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `Bill` values. */
+export type BillConnection = {
+  __typename?: 'BillConnection';
+  /** A list of edges which contains the `Bill` and cursor to aid in pagination. */
+  edges: Array<Maybe<BillEdge>>;
+  /** A list of `Bill` objects. */
+  nodes: Array<Maybe<Bill>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Bill` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Bill` edge in the connection. */
+export type BillEdge = {
+  __typename?: 'BillEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `Bill` at the end of the edge. */
+  node?: Maybe<Bill>;
+};
+
+/** A filter to be used against `Bill` object types. All fields are combined with a logical ‘and.’ */
+export type BillFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<BillFilter>>;
+  /** Filter by the object’s `billLines` relation. */
+  billLines?: InputMaybe<BillToManyBillLineFilter>;
+  /** Some related `billLines` exist. */
+  billLinesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `billPayments` relation. */
+  billPayments?: InputMaybe<BillToManyBillPaymentFilter>;
+  /** Some related `billPayments` exist. */
+  billPaymentsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `journalEntry` relation. */
+  journalEntry?: InputMaybe<JournalEntryFilter>;
+  /** A related `journalEntry` exists. */
+  journalEntryExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Negates the expression. */
+  not?: InputMaybe<BillFilter>;
+  /** Filter by the object’s `number` field. */
+  number?: InputMaybe<StringFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<BillFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `vendor` relation. */
+  vendor?: InputMaybe<VendorFilter>;
+  /** Filter by the object’s `vendorCreditApplications` relation. */
+  vendorCreditApplications?: InputMaybe<BillToManyVendorCreditApplicationFilter>;
+  /** Some related `vendorCreditApplications` exist. */
+  vendorCreditApplicationsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `vendorId` field. */
+  vendorId?: InputMaybe<UuidFilter>;
+};
+
+export type BillLine = Node & {
+  __typename?: 'BillLine';
+  amount: Scalars['BigFloat']['output'];
+  /** Reads a single `Bill` that is related to this `BillLine`. */
+  bill?: Maybe<Bill>;
+  billId: Scalars['UUID']['output'];
+  description: Scalars['String']['output'];
+  discountPercent?: Maybe<Scalars['BigFloat']['output']>;
+  /** Reads a single `Account` that is related to this `BillLine`. */
+  expenseAccount?: Maybe<Account>;
+  expenseAccountId: Scalars['UUID']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  quantity: Scalars['BigFloat']['output'];
+  rowId: Scalars['UUID']['output'];
+  sortOrder: Scalars['Int']['output'];
+  /** Reads a single `TaxJurisdiction` that is related to this `BillLine`. */
+  taxJurisdiction?: Maybe<TaxJurisdiction>;
+  taxJurisdictionId?: Maybe<Scalars['UUID']['output']>;
+  unitPrice: Scalars['BigFloat']['output'];
+};
+
+/**
+ * A condition to be used against `BillLine` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type BillLineCondition = {
+  /** Checks for equality with the object’s `billId` field. */
+  billId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `BillLine` values. */
+export type BillLineConnection = {
+  __typename?: 'BillLineConnection';
+  /** A list of edges which contains the `BillLine` and cursor to aid in pagination. */
+  edges: Array<Maybe<BillLineEdge>>;
+  /** A list of `BillLine` objects. */
+  nodes: Array<Maybe<BillLine>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `BillLine` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `BillLine` edge in the connection. */
+export type BillLineEdge = {
+  __typename?: 'BillLineEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `BillLine` at the end of the edge. */
+  node?: Maybe<BillLine>;
+};
+
+/** A filter to be used against `BillLine` object types. All fields are combined with a logical ‘and.’ */
+export type BillLineFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<BillLineFilter>>;
+  /** Filter by the object’s `bill` relation. */
+  bill?: InputMaybe<BillFilter>;
+  /** Filter by the object’s `billId` field. */
+  billId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `expenseAccount` relation. */
+  expenseAccount?: InputMaybe<AccountFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<BillLineFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<BillLineFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `taxJurisdiction` relation. */
+  taxJurisdiction?: InputMaybe<TaxJurisdictionFilter>;
+  /** A related `taxJurisdiction` exists. */
+  taxJurisdictionExists?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Methods to use when ordering `BillLine`. */
+export enum BillLineOrderBy {
+  BillIdAsc = 'BILL_ID_ASC',
+  BillIdDesc = 'BILL_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+/** Methods to use when ordering `Bill`. */
+export enum BillOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  Natural = 'NATURAL',
+  NumberAsc = 'NUMBER_ASC',
+  NumberDesc = 'NUMBER_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  VendorIdAsc = 'VENDOR_ID_ASC',
+  VendorIdDesc = 'VENDOR_ID_DESC'
+}
+
+export type BillPayment = Node & {
+  __typename?: 'BillPayment';
+  amount: Scalars['BigFloat']['output'];
+  /** Reads a single `Bill` that is related to this `BillPayment`. */
+  bill?: Maybe<Bill>;
+  billId: Scalars['UUID']['output'];
+  /** Reads a single `Book` that is related to this `BillPayment`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  date: Scalars['String']['output'];
+  exchangeRate: Scalars['BigFloat']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `JournalEntry` that is related to this `BillPayment`. */
+  journalEntry?: Maybe<JournalEntry>;
+  journalEntryId?: Maybe<Scalars['UUID']['output']>;
+  method?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Account` that is related to this `BillPayment`. */
+  paymentAccount?: Maybe<Account>;
+  paymentAccountId: Scalars['UUID']['output'];
+  reference?: Maybe<Scalars['String']['output']>;
+  rowId: Scalars['UUID']['output'];
+};
+
+/**
+ * A condition to be used against `BillPayment` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type BillPaymentCondition = {
+  /** Checks for equality with the object’s `billId` field. */
+  billId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `BillPayment` values. */
+export type BillPaymentConnection = {
+  __typename?: 'BillPaymentConnection';
+  /** A list of edges which contains the `BillPayment` and cursor to aid in pagination. */
+  edges: Array<Maybe<BillPaymentEdge>>;
+  /** A list of `BillPayment` objects. */
+  nodes: Array<Maybe<BillPayment>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `BillPayment` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `BillPayment` edge in the connection. */
+export type BillPaymentEdge = {
+  __typename?: 'BillPaymentEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `BillPayment` at the end of the edge. */
+  node?: Maybe<BillPayment>;
+};
+
+/** A filter to be used against `BillPayment` object types. All fields are combined with a logical ‘and.’ */
+export type BillPaymentFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<BillPaymentFilter>>;
+  /** Filter by the object’s `bill` relation. */
+  bill?: InputMaybe<BillFilter>;
+  /** Filter by the object’s `billId` field. */
+  billId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `journalEntry` relation. */
+  journalEntry?: InputMaybe<JournalEntryFilter>;
+  /** A related `journalEntry` exists. */
+  journalEntryExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Negates the expression. */
+  not?: InputMaybe<BillPaymentFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<BillPaymentFilter>>;
+  /** Filter by the object’s `paymentAccount` relation. */
+  paymentAccount?: InputMaybe<AccountFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+};
+
+/** Methods to use when ordering `BillPayment`. */
+export enum BillPaymentOrderBy {
+  BillIdAsc = 'BILL_ID_ASC',
+  BillIdDesc = 'BILL_ID_DESC',
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+/** A filter to be used against many `BillLine` object types. All fields are combined with a logical ‘and.’ */
+export type BillToManyBillLineFilter = {
+  /** Every related `BillLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<BillLineFilter>;
+  /** No related `BillLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<BillLineFilter>;
+  /** Some related `BillLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<BillLineFilter>;
+};
+
+/** A filter to be used against many `BillPayment` object types. All fields are combined with a logical ‘and.’ */
+export type BillToManyBillPaymentFilter = {
+  /** Every related `BillPayment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<BillPaymentFilter>;
+  /** No related `BillPayment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<BillPaymentFilter>;
+  /** Some related `BillPayment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<BillPaymentFilter>;
+};
+
+/** A filter to be used against many `VendorCreditApplication` object types. All fields are combined with a logical ‘and.’ */
+export type BillToManyVendorCreditApplicationFilter = {
+  /** Every related `VendorCreditApplication` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<VendorCreditApplicationFilter>;
+  /** No related `VendorCreditApplication` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<VendorCreditApplicationFilter>;
+  /** Some related `VendorCreditApplication` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<VendorCreditApplicationFilter>;
 };
 
 export type Book = Node & {
@@ -580,25 +1165,64 @@ export type Book = Node & {
   accountingPeriods: AccountingPeriodConnection;
   /** Reads and enables pagination through a set of `Account`. */
   accounts: AccountConnection;
+  address?: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `Attachment`. */
+  attachments: AttachmentConnection;
+  /** Reads and enables pagination through a set of `BankDeposit`. */
+  bankDeposits: BankDepositConnection;
+  /** Reads and enables pagination through a set of `BillPayment`. */
+  billPayments: BillPaymentConnection;
+  /** Reads and enables pagination through a set of `Bill`. */
+  bills: BillConnection;
   /** Reads and enables pagination through a set of `BookAccess`. */
   bookAccesses: BookAccessConnection;
   /** Reads and enables pagination through a set of `Budget`. */
   budgets: BudgetConnection;
   /** Reads and enables pagination through a set of `CategorizationRule`. */
   categorizationRules: CategorizationRuleConnection;
+  city?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `ConnectedAccount`. */
   connectedAccounts: ConnectedAccountConnection;
   createdAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads and enables pagination through a set of `CreditMemo`. */
+  creditMemos: CreditMemoConnection;
   /** Reads and enables pagination through a set of `CryptoAsset`. */
   cryptoAssets: CryptoAssetConnection;
   currency: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `CustomFieldDefinition`. */
+  customFieldDefinitions: CustomFieldDefinitionConnection;
+  /** Reads and enables pagination through a set of `CustomFieldValue`. */
+  customFieldValues: CustomFieldValueConnection;
+  /** Reads and enables pagination through a set of `Customer`. */
+  customers: CustomerConnection;
+  /** Reads and enables pagination through a set of `Document`. */
+  documents: DocumentConnection;
+  ein?: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `Estimate`. */
+  estimates: EstimateConnection;
   fiscalYearStartMonth: Scalars['Int']['output'];
   /** Reads and enables pagination through a set of `FixedAsset`. */
   fixedAssets: FixedAssetConnection;
+  /** Reads and enables pagination through a set of `FormTemplate`. */
+  formTemplates: FormTemplateConnection;
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   id: Scalars['ID']['output'];
+  /** Reads and enables pagination through a set of `InventoryItem`. */
+  inventoryItems: InventoryItemConnection;
+  /** Reads and enables pagination through a set of `InventoryTransaction`. */
+  inventoryTransactions: InventoryTransactionConnection;
+  /** Reads and enables pagination through a set of `InvoicePayment`. */
+  invoicePayments: InvoicePaymentConnection;
+  invoiceSource: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `Invoice`. */
+  invoices: InvoiceConnection;
+  /** Reads and enables pagination through a set of `ItemBundle`. */
+  itemBundles: ItemBundleConnection;
   /** Reads and enables pagination through a set of `JournalEntry`. */
   journalEntries: JournalEntryConnection;
+  legalName?: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `Loan`. */
+  loans: LoanConnection;
   /** Reads and enables pagination through a set of `MileageLog`. */
   mileageLogs: MileageLogConnection;
   name: Scalars['String']['output'];
@@ -607,25 +1231,46 @@ export type Book = Node & {
   organizationId: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `PayrollConnection`. */
   payrollConnections: PayrollConnectionConnection;
+  phone?: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `PriceLevel`. */
+  priceLevels: PriceLevelConnection;
+  /** Reads and enables pagination through a set of `Project`. */
+  projects: ProjectConnection;
+  /** Reads and enables pagination through a set of `PurchaseOrder`. */
+  purchaseOrders: PurchaseOrderConnection;
+  /** Reads and enables pagination through a set of `RdExpense`. */
+  rdExpenses: RdExpenseConnection;
   /** Reads and enables pagination through a set of `ReconciliationQueue`. */
   reconciliationQueues: ReconciliationQueueConnection;
   /** Reads and enables pagination through a set of `ReconciliationStatement`. */
   reconciliationStatements: ReconciliationStatementConnection;
+  /** Reads and enables pagination through a set of `RecurringInvoice`. */
+  recurringInvoices: RecurringInvoiceConnection;
   /** Reads and enables pagination through a set of `RecurringTransaction`. */
   recurringTransactions: RecurringTransactionConnection;
   rowId: Scalars['UUID']['output'];
+  /** Reads and enables pagination through a set of `SavedReport`. */
+  savedReports: SavedReportConnection;
   /** Reads and enables pagination through a set of `SavingsGoal`. */
   savingsGoals: SavingsGoalConnection;
+  state?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `TagGroup`. */
   tagGroups: TagGroupConnection;
   /** Reads and enables pagination through a set of `TaxJurisdiction`. */
   taxJurisdictions: TaxJurisdictionConnection;
+  /** Reads and enables pagination through a set of `TimeEntry`. */
+  timeEntries: TimeEntryConnection;
+  /** Reads and enables pagination through a set of `TrackingCategory`. */
+  trackingCategories: TrackingCategoryConnection;
   type: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['Datetime']['output']>;
   /** Reads and enables pagination through a set of `Vehicle`. */
   vehicles: VehicleConnection;
+  /** Reads and enables pagination through a set of `VendorCredit`. */
+  vendorCredits: VendorCreditConnection;
   /** Reads and enables pagination through a set of `Vendor`. */
   vendors: VendorConnection;
+  zip?: Maybe<Scalars['String']['output']>;
 };
 
 
@@ -662,6 +1307,54 @@ export type BookAccountsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AccountOrderBy>>;
+};
+
+
+export type BookAttachmentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AttachmentCondition>;
+  filter?: InputMaybe<AttachmentFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AttachmentOrderBy>>;
+};
+
+
+export type BookBankDepositsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<BankDepositCondition>;
+  filter?: InputMaybe<BankDepositFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<BankDepositOrderBy>>;
+};
+
+
+export type BookBillPaymentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<BillPaymentCondition>;
+  filter?: InputMaybe<BillPaymentFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<BillPaymentOrderBy>>;
+};
+
+
+export type BookBillsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<BillCondition>;
+  filter?: InputMaybe<BillFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<BillOrderBy>>;
 };
 
 
@@ -713,6 +1406,18 @@ export type BookConnectedAccountsArgs = {
 };
 
 
+export type BookCreditMemosArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CreditMemoCondition>;
+  filter?: InputMaybe<CreditMemoFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CreditMemoOrderBy>>;
+};
+
+
 export type BookCryptoAssetsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -722,6 +1427,66 @@ export type BookCryptoAssetsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CryptoAssetOrderBy>>;
+};
+
+
+export type BookCustomFieldDefinitionsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CustomFieldDefinitionCondition>;
+  filter?: InputMaybe<CustomFieldDefinitionFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CustomFieldDefinitionOrderBy>>;
+};
+
+
+export type BookCustomFieldValuesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CustomFieldValueCondition>;
+  filter?: InputMaybe<CustomFieldValueFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CustomFieldValueOrderBy>>;
+};
+
+
+export type BookCustomersArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CustomerCondition>;
+  filter?: InputMaybe<CustomerFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CustomerOrderBy>>;
+};
+
+
+export type BookDocumentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DocumentCondition>;
+  filter?: InputMaybe<DocumentFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DocumentOrderBy>>;
+};
+
+
+export type BookEstimatesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<EstimateCondition>;
+  filter?: InputMaybe<EstimateFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EstimateOrderBy>>;
 };
 
 
@@ -737,6 +1502,78 @@ export type BookFixedAssetsArgs = {
 };
 
 
+export type BookFormTemplatesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<FormTemplateCondition>;
+  filter?: InputMaybe<FormTemplateFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<FormTemplateOrderBy>>;
+};
+
+
+export type BookInventoryItemsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<InventoryItemCondition>;
+  filter?: InputMaybe<InventoryItemFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<InventoryItemOrderBy>>;
+};
+
+
+export type BookInventoryTransactionsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<InventoryTransactionCondition>;
+  filter?: InputMaybe<InventoryTransactionFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<InventoryTransactionOrderBy>>;
+};
+
+
+export type BookInvoicePaymentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<InvoicePaymentCondition>;
+  filter?: InputMaybe<InvoicePaymentFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<InvoicePaymentOrderBy>>;
+};
+
+
+export type BookInvoicesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<InvoiceCondition>;
+  filter?: InputMaybe<InvoiceFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<InvoiceOrderBy>>;
+};
+
+
+export type BookItemBundlesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<ItemBundleCondition>;
+  filter?: InputMaybe<ItemBundleFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ItemBundleOrderBy>>;
+};
+
+
 export type BookJournalEntriesArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -746,6 +1583,18 @@ export type BookJournalEntriesArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<JournalEntryOrderBy>>;
+};
+
+
+export type BookLoansArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<LoanCondition>;
+  filter?: InputMaybe<LoanFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<LoanOrderBy>>;
 };
 
 
@@ -785,6 +1634,54 @@ export type BookPayrollConnectionsArgs = {
 };
 
 
+export type BookPriceLevelsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PriceLevelCondition>;
+  filter?: InputMaybe<PriceLevelFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PriceLevelOrderBy>>;
+};
+
+
+export type BookProjectsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<ProjectCondition>;
+  filter?: InputMaybe<ProjectFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ProjectOrderBy>>;
+};
+
+
+export type BookPurchaseOrdersArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PurchaseOrderCondition>;
+  filter?: InputMaybe<PurchaseOrderFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PurchaseOrderOrderBy>>;
+};
+
+
+export type BookRdExpensesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<RdExpenseCondition>;
+  filter?: InputMaybe<RdExpenseFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RdExpenseOrderBy>>;
+};
+
+
 export type BookReconciliationQueuesArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -809,6 +1706,18 @@ export type BookReconciliationStatementsArgs = {
 };
 
 
+export type BookRecurringInvoicesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<RecurringInvoiceCondition>;
+  filter?: InputMaybe<RecurringInvoiceFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RecurringInvoiceOrderBy>>;
+};
+
+
 export type BookRecurringTransactionsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -818,6 +1727,18 @@ export type BookRecurringTransactionsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<RecurringTransactionOrderBy>>;
+};
+
+
+export type BookSavedReportsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<SavedReportCondition>;
+  filter?: InputMaybe<SavedReportFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SavedReportOrderBy>>;
 };
 
 
@@ -857,6 +1778,30 @@ export type BookTaxJurisdictionsArgs = {
 };
 
 
+export type BookTimeEntriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<TimeEntryCondition>;
+  filter?: InputMaybe<TimeEntryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TimeEntryOrderBy>>;
+};
+
+
+export type BookTrackingCategoriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<TrackingCategoryCondition>;
+  filter?: InputMaybe<TrackingCategoryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TrackingCategoryOrderBy>>;
+};
+
+
 export type BookVehiclesArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -866,6 +1811,18 @@ export type BookVehiclesArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<VehicleOrderBy>>;
+};
+
+
+export type BookVendorCreditsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<VendorCreditCondition>;
+  filter?: InputMaybe<VendorCreditFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<VendorCreditOrderBy>>;
 };
 
 
@@ -948,17 +1905,6 @@ export type BookAccessFilter = {
   userId?: InputMaybe<StringFilter>;
 };
 
-/** An input for mutations affecting `BookAccess` */
-export type BookAccessInput = {
-  bookId: Scalars['UUID']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  invitedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  invitedBy?: InputMaybe<Scalars['String']['input']>;
-  role: Scalars['String']['input'];
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  userId: Scalars['String']['input'];
-};
-
 /** Methods to use when ordering `BookAccess`. */
 export enum BookAccessOrderBy {
   BookIdAsc = 'BOOK_ID_ASC',
@@ -971,17 +1917,6 @@ export enum BookAccessOrderBy {
   UserIdAsc = 'USER_ID_ASC',
   UserIdDesc = 'USER_ID_DESC'
 }
-
-/** Represents an update to a `BookAccess`. Fields that are set will be updated. */
-export type BookAccessPatch = {
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  invitedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  invitedBy?: InputMaybe<Scalars['String']['input']>;
-  role?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  userId?: InputMaybe<Scalars['String']['input']>;
-};
 
 /** A condition to be used against `Book` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type BookCondition = {
@@ -1029,6 +1964,22 @@ export type BookFilter = {
   accountsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<BookFilter>>;
+  /** Filter by the object’s `attachments` relation. */
+  attachments?: InputMaybe<BookToManyAttachmentFilter>;
+  /** Some related `attachments` exist. */
+  attachmentsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `bankDeposits` relation. */
+  bankDeposits?: InputMaybe<BookToManyBankDepositFilter>;
+  /** Some related `bankDeposits` exist. */
+  bankDepositsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `billPayments` relation. */
+  billPayments?: InputMaybe<BookToManyBillPaymentFilter>;
+  /** Some related `billPayments` exist. */
+  billPaymentsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `bills` relation. */
+  bills?: InputMaybe<BookToManyBillFilter>;
+  /** Some related `bills` exist. */
+  billsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `bookAccesses` relation. */
   bookAccesses?: InputMaybe<BookToManyBookAccessFilter>;
   /** Some related `bookAccesses` exist. */
@@ -1045,18 +1996,70 @@ export type BookFilter = {
   connectedAccounts?: InputMaybe<BookToManyConnectedAccountFilter>;
   /** Some related `connectedAccounts` exist. */
   connectedAccountsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `creditMemos` relation. */
+  creditMemos?: InputMaybe<BookToManyCreditMemoFilter>;
+  /** Some related `creditMemos` exist. */
+  creditMemosExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `cryptoAssets` relation. */
   cryptoAssets?: InputMaybe<BookToManyCryptoAssetFilter>;
   /** Some related `cryptoAssets` exist. */
   cryptoAssetsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `customFieldDefinitions` relation. */
+  customFieldDefinitions?: InputMaybe<BookToManyCustomFieldDefinitionFilter>;
+  /** Some related `customFieldDefinitions` exist. */
+  customFieldDefinitionsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `customFieldValues` relation. */
+  customFieldValues?: InputMaybe<BookToManyCustomFieldValueFilter>;
+  /** Some related `customFieldValues` exist. */
+  customFieldValuesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `customers` relation. */
+  customers?: InputMaybe<BookToManyCustomerFilter>;
+  /** Some related `customers` exist. */
+  customersExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `documents` relation. */
+  documents?: InputMaybe<BookToManyDocumentFilter>;
+  /** Some related `documents` exist. */
+  documentsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `estimates` relation. */
+  estimates?: InputMaybe<BookToManyEstimateFilter>;
+  /** Some related `estimates` exist. */
+  estimatesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `fixedAssets` relation. */
   fixedAssets?: InputMaybe<BookToManyFixedAssetFilter>;
   /** Some related `fixedAssets` exist. */
   fixedAssetsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `formTemplates` relation. */
+  formTemplates?: InputMaybe<BookToManyFormTemplateFilter>;
+  /** Some related `formTemplates` exist. */
+  formTemplatesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `inventoryItems` relation. */
+  inventoryItems?: InputMaybe<BookToManyInventoryItemFilter>;
+  /** Some related `inventoryItems` exist. */
+  inventoryItemsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `inventoryTransactions` relation. */
+  inventoryTransactions?: InputMaybe<BookToManyInventoryTransactionFilter>;
+  /** Some related `inventoryTransactions` exist. */
+  inventoryTransactionsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `invoicePayments` relation. */
+  invoicePayments?: InputMaybe<BookToManyInvoicePaymentFilter>;
+  /** Some related `invoicePayments` exist. */
+  invoicePaymentsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `invoices` relation. */
+  invoices?: InputMaybe<BookToManyInvoiceFilter>;
+  /** Some related `invoices` exist. */
+  invoicesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `itemBundles` relation. */
+  itemBundles?: InputMaybe<BookToManyItemBundleFilter>;
+  /** Some related `itemBundles` exist. */
+  itemBundlesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `journalEntries` relation. */
   journalEntries?: InputMaybe<BookToManyJournalEntryFilter>;
   /** Some related `journalEntries` exist. */
   journalEntriesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `loans` relation. */
+  loans?: InputMaybe<BookToManyLoanFilter>;
+  /** Some related `loans` exist. */
+  loansExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `mileageLogs` relation. */
   mileageLogs?: InputMaybe<BookToManyMileageLogFilter>;
   /** Some related `mileageLogs` exist. */
@@ -1075,6 +2078,22 @@ export type BookFilter = {
   payrollConnections?: InputMaybe<BookToManyPayrollConnectionFilter>;
   /** Some related `payrollConnections` exist. */
   payrollConnectionsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `priceLevels` relation. */
+  priceLevels?: InputMaybe<BookToManyPriceLevelFilter>;
+  /** Some related `priceLevels` exist. */
+  priceLevelsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `projects` relation. */
+  projects?: InputMaybe<BookToManyProjectFilter>;
+  /** Some related `projects` exist. */
+  projectsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `purchaseOrders` relation. */
+  purchaseOrders?: InputMaybe<BookToManyPurchaseOrderFilter>;
+  /** Some related `purchaseOrders` exist. */
+  purchaseOrdersExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `rdExpenses` relation. */
+  rdExpenses?: InputMaybe<BookToManyRdExpenseFilter>;
+  /** Some related `rdExpenses` exist. */
+  rdExpensesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `reconciliationQueues` relation. */
   reconciliationQueues?: InputMaybe<BookToManyReconciliationQueueFilter>;
   /** Some related `reconciliationQueues` exist. */
@@ -1083,12 +2102,20 @@ export type BookFilter = {
   reconciliationStatements?: InputMaybe<BookToManyReconciliationStatementFilter>;
   /** Some related `reconciliationStatements` exist. */
   reconciliationStatementsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `recurringInvoices` relation. */
+  recurringInvoices?: InputMaybe<BookToManyRecurringInvoiceFilter>;
+  /** Some related `recurringInvoices` exist. */
+  recurringInvoicesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `recurringTransactions` relation. */
   recurringTransactions?: InputMaybe<BookToManyRecurringTransactionFilter>;
   /** Some related `recurringTransactions` exist. */
   recurringTransactionsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `rowId` field. */
   rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `savedReports` relation. */
+  savedReports?: InputMaybe<BookToManySavedReportFilter>;
+  /** Some related `savedReports` exist. */
+  savedReportsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `savingsGoals` relation. */
   savingsGoals?: InputMaybe<BookToManySavingsGoalFilter>;
   /** Some related `savingsGoals` exist. */
@@ -1101,26 +2128,26 @@ export type BookFilter = {
   taxJurisdictions?: InputMaybe<BookToManyTaxJurisdictionFilter>;
   /** Some related `taxJurisdictions` exist. */
   taxJurisdictionsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `timeEntries` relation. */
+  timeEntries?: InputMaybe<BookToManyTimeEntryFilter>;
+  /** Some related `timeEntries` exist. */
+  timeEntriesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `trackingCategories` relation. */
+  trackingCategories?: InputMaybe<BookToManyTrackingCategoryFilter>;
+  /** Some related `trackingCategories` exist. */
+  trackingCategoriesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `vehicles` relation. */
   vehicles?: InputMaybe<BookToManyVehicleFilter>;
   /** Some related `vehicles` exist. */
   vehiclesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `vendorCredits` relation. */
+  vendorCredits?: InputMaybe<BookToManyVendorCreditFilter>;
+  /** Some related `vendorCredits` exist. */
+  vendorCreditsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `vendors` relation. */
   vendors?: InputMaybe<BookToManyVendorFilter>;
   /** Some related `vendors` exist. */
   vendorsExist?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-/** An input for mutations affecting `Book` */
-export type BookInput = {
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  currency?: InputMaybe<Scalars['String']['input']>;
-  fiscalYearStartMonth?: InputMaybe<Scalars['Int']['input']>;
-  name: Scalars['String']['input'];
-  organizationId: Scalars['String']['input'];
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  type: Scalars['String']['input'];
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** Methods to use when ordering `Book`. */
@@ -1133,18 +2160,6 @@ export enum BookOrderBy {
   RowIdAsc = 'ROW_ID_ASC',
   RowIdDesc = 'ROW_ID_DESC'
 }
-
-/** Represents an update to a `Book`. Fields that are set will be updated. */
-export type BookPatch = {
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  currency?: InputMaybe<Scalars['String']['input']>;
-  fiscalYearStartMonth?: InputMaybe<Scalars['Int']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  organizationId?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  type?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
 
 /** A filter to be used against many `Account` object types. All fields are combined with a logical ‘and.’ */
 export type BookToManyAccountFilter = {
@@ -1174,6 +2189,46 @@ export type BookToManyAccountingPeriodFilter = {
   none?: InputMaybe<AccountingPeriodFilter>;
   /** Some related `AccountingPeriod` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<AccountingPeriodFilter>;
+};
+
+/** A filter to be used against many `Attachment` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyAttachmentFilter = {
+  /** Every related `Attachment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<AttachmentFilter>;
+  /** No related `Attachment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<AttachmentFilter>;
+  /** Some related `Attachment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<AttachmentFilter>;
+};
+
+/** A filter to be used against many `BankDeposit` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyBankDepositFilter = {
+  /** Every related `BankDeposit` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<BankDepositFilter>;
+  /** No related `BankDeposit` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<BankDepositFilter>;
+  /** Some related `BankDeposit` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<BankDepositFilter>;
+};
+
+/** A filter to be used against many `Bill` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyBillFilter = {
+  /** Every related `Bill` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<BillFilter>;
+  /** No related `Bill` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<BillFilter>;
+  /** Some related `Bill` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<BillFilter>;
+};
+
+/** A filter to be used against many `BillPayment` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyBillPaymentFilter = {
+  /** Every related `BillPayment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<BillPaymentFilter>;
+  /** No related `BillPayment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<BillPaymentFilter>;
+  /** Some related `BillPayment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<BillPaymentFilter>;
 };
 
 /** A filter to be used against many `BookAccess` object types. All fields are combined with a logical ‘and.’ */
@@ -1216,6 +2271,16 @@ export type BookToManyConnectedAccountFilter = {
   some?: InputMaybe<ConnectedAccountFilter>;
 };
 
+/** A filter to be used against many `CreditMemo` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyCreditMemoFilter = {
+  /** Every related `CreditMemo` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CreditMemoFilter>;
+  /** No related `CreditMemo` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CreditMemoFilter>;
+  /** Some related `CreditMemo` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CreditMemoFilter>;
+};
+
 /** A filter to be used against many `CryptoAsset` object types. All fields are combined with a logical ‘and.’ */
 export type BookToManyCryptoAssetFilter = {
   /** Every related `CryptoAsset` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -1224,6 +2289,56 @@ export type BookToManyCryptoAssetFilter = {
   none?: InputMaybe<CryptoAssetFilter>;
   /** Some related `CryptoAsset` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<CryptoAssetFilter>;
+};
+
+/** A filter to be used against many `CustomFieldDefinition` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyCustomFieldDefinitionFilter = {
+  /** Every related `CustomFieldDefinition` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CustomFieldDefinitionFilter>;
+  /** No related `CustomFieldDefinition` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CustomFieldDefinitionFilter>;
+  /** Some related `CustomFieldDefinition` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CustomFieldDefinitionFilter>;
+};
+
+/** A filter to be used against many `CustomFieldValue` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyCustomFieldValueFilter = {
+  /** Every related `CustomFieldValue` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CustomFieldValueFilter>;
+  /** No related `CustomFieldValue` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CustomFieldValueFilter>;
+  /** Some related `CustomFieldValue` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CustomFieldValueFilter>;
+};
+
+/** A filter to be used against many `Customer` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyCustomerFilter = {
+  /** Every related `Customer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CustomerFilter>;
+  /** No related `Customer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CustomerFilter>;
+  /** Some related `Customer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CustomerFilter>;
+};
+
+/** A filter to be used against many `Document` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyDocumentFilter = {
+  /** Every related `Document` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<DocumentFilter>;
+  /** No related `Document` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<DocumentFilter>;
+  /** Some related `Document` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<DocumentFilter>;
+};
+
+/** A filter to be used against many `Estimate` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyEstimateFilter = {
+  /** Every related `Estimate` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EstimateFilter>;
+  /** No related `Estimate` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EstimateFilter>;
+  /** Some related `Estimate` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EstimateFilter>;
 };
 
 /** A filter to be used against many `FixedAsset` object types. All fields are combined with a logical ‘and.’ */
@@ -1236,6 +2351,66 @@ export type BookToManyFixedAssetFilter = {
   some?: InputMaybe<FixedAssetFilter>;
 };
 
+/** A filter to be used against many `FormTemplate` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyFormTemplateFilter = {
+  /** Every related `FormTemplate` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<FormTemplateFilter>;
+  /** No related `FormTemplate` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<FormTemplateFilter>;
+  /** Some related `FormTemplate` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<FormTemplateFilter>;
+};
+
+/** A filter to be used against many `InventoryItem` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyInventoryItemFilter = {
+  /** Every related `InventoryItem` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<InventoryItemFilter>;
+  /** No related `InventoryItem` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<InventoryItemFilter>;
+  /** Some related `InventoryItem` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<InventoryItemFilter>;
+};
+
+/** A filter to be used against many `InventoryTransaction` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyInventoryTransactionFilter = {
+  /** Every related `InventoryTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<InventoryTransactionFilter>;
+  /** No related `InventoryTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<InventoryTransactionFilter>;
+  /** Some related `InventoryTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<InventoryTransactionFilter>;
+};
+
+/** A filter to be used against many `Invoice` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyInvoiceFilter = {
+  /** Every related `Invoice` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<InvoiceFilter>;
+  /** No related `Invoice` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<InvoiceFilter>;
+  /** Some related `Invoice` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<InvoiceFilter>;
+};
+
+/** A filter to be used against many `InvoicePayment` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyInvoicePaymentFilter = {
+  /** Every related `InvoicePayment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<InvoicePaymentFilter>;
+  /** No related `InvoicePayment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<InvoicePaymentFilter>;
+  /** Some related `InvoicePayment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<InvoicePaymentFilter>;
+};
+
+/** A filter to be used against many `ItemBundle` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyItemBundleFilter = {
+  /** Every related `ItemBundle` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<ItemBundleFilter>;
+  /** No related `ItemBundle` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<ItemBundleFilter>;
+  /** Some related `ItemBundle` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<ItemBundleFilter>;
+};
+
 /** A filter to be used against many `JournalEntry` object types. All fields are combined with a logical ‘and.’ */
 export type BookToManyJournalEntryFilter = {
   /** Every related `JournalEntry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -1244,6 +2419,16 @@ export type BookToManyJournalEntryFilter = {
   none?: InputMaybe<JournalEntryFilter>;
   /** Some related `JournalEntry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<JournalEntryFilter>;
+};
+
+/** A filter to be used against many `Loan` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyLoanFilter = {
+  /** Every related `Loan` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<LoanFilter>;
+  /** No related `Loan` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<LoanFilter>;
+  /** Some related `Loan` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<LoanFilter>;
 };
 
 /** A filter to be used against many `MileageLog` object types. All fields are combined with a logical ‘and.’ */
@@ -1276,6 +2461,46 @@ export type BookToManyPayrollConnectionFilter = {
   some?: InputMaybe<PayrollConnectionFilter>;
 };
 
+/** A filter to be used against many `PriceLevel` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyPriceLevelFilter = {
+  /** Every related `PriceLevel` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<PriceLevelFilter>;
+  /** No related `PriceLevel` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<PriceLevelFilter>;
+  /** Some related `PriceLevel` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<PriceLevelFilter>;
+};
+
+/** A filter to be used against many `Project` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyProjectFilter = {
+  /** Every related `Project` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<ProjectFilter>;
+  /** No related `Project` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<ProjectFilter>;
+  /** Some related `Project` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<ProjectFilter>;
+};
+
+/** A filter to be used against many `PurchaseOrder` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyPurchaseOrderFilter = {
+  /** Every related `PurchaseOrder` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<PurchaseOrderFilter>;
+  /** No related `PurchaseOrder` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<PurchaseOrderFilter>;
+  /** Some related `PurchaseOrder` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<PurchaseOrderFilter>;
+};
+
+/** A filter to be used against many `RdExpense` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyRdExpenseFilter = {
+  /** Every related `RdExpense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<RdExpenseFilter>;
+  /** No related `RdExpense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<RdExpenseFilter>;
+  /** Some related `RdExpense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<RdExpenseFilter>;
+};
+
 /** A filter to be used against many `ReconciliationQueue` object types. All fields are combined with a logical ‘and.’ */
 export type BookToManyReconciliationQueueFilter = {
   /** Every related `ReconciliationQueue` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -1296,6 +2521,16 @@ export type BookToManyReconciliationStatementFilter = {
   some?: InputMaybe<ReconciliationStatementFilter>;
 };
 
+/** A filter to be used against many `RecurringInvoice` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyRecurringInvoiceFilter = {
+  /** Every related `RecurringInvoice` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<RecurringInvoiceFilter>;
+  /** No related `RecurringInvoice` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<RecurringInvoiceFilter>;
+  /** Some related `RecurringInvoice` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<RecurringInvoiceFilter>;
+};
+
 /** A filter to be used against many `RecurringTransaction` object types. All fields are combined with a logical ‘and.’ */
 export type BookToManyRecurringTransactionFilter = {
   /** Every related `RecurringTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -1304,6 +2539,16 @@ export type BookToManyRecurringTransactionFilter = {
   none?: InputMaybe<RecurringTransactionFilter>;
   /** Some related `RecurringTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<RecurringTransactionFilter>;
+};
+
+/** A filter to be used against many `SavedReport` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManySavedReportFilter = {
+  /** Every related `SavedReport` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SavedReportFilter>;
+  /** No related `SavedReport` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SavedReportFilter>;
+  /** Some related `SavedReport` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SavedReportFilter>;
 };
 
 /** A filter to be used against many `SavingsGoal` object types. All fields are combined with a logical ‘and.’ */
@@ -1336,6 +2581,26 @@ export type BookToManyTaxJurisdictionFilter = {
   some?: InputMaybe<TaxJurisdictionFilter>;
 };
 
+/** A filter to be used against many `TimeEntry` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyTimeEntryFilter = {
+  /** Every related `TimeEntry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TimeEntryFilter>;
+  /** No related `TimeEntry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TimeEntryFilter>;
+  /** Some related `TimeEntry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TimeEntryFilter>;
+};
+
+/** A filter to be used against many `TrackingCategory` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyTrackingCategoryFilter = {
+  /** Every related `TrackingCategory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TrackingCategoryFilter>;
+  /** No related `TrackingCategory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TrackingCategoryFilter>;
+  /** Some related `TrackingCategory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TrackingCategoryFilter>;
+};
+
 /** A filter to be used against many `Vehicle` object types. All fields are combined with a logical ‘and.’ */
 export type BookToManyVehicleFilter = {
   /** Every related `Vehicle` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -1344,6 +2609,16 @@ export type BookToManyVehicleFilter = {
   none?: InputMaybe<VehicleFilter>;
   /** Some related `Vehicle` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<VehicleFilter>;
+};
+
+/** A filter to be used against many `VendorCredit` object types. All fields are combined with a logical ‘and.’ */
+export type BookToManyVendorCreditFilter = {
+  /** Every related `VendorCredit` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<VendorCreditFilter>;
+  /** No related `VendorCredit` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<VendorCreditFilter>;
+  /** Some related `VendorCredit` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<VendorCreditFilter>;
 };
 
 /** A filter to be used against many `Vendor` object types. All fields are combined with a logical ‘and.’ */
@@ -1426,18 +2701,6 @@ export type BudgetFilter = {
   rowId?: InputMaybe<UuidFilter>;
 };
 
-/** An input for mutations affecting `Budget` */
-export type BudgetInput = {
-  accountId: Scalars['UUID']['input'];
-  amount: Scalars['BigFloat']['input'];
-  bookId: Scalars['UUID']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  period?: InputMaybe<BudgetPeriod>;
-  rollover?: InputMaybe<Scalars['Boolean']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
 /** Methods to use when ordering `Budget`. */
 export enum BudgetOrderBy {
   AccountIdAsc = 'ACCOUNT_ID_ASC',
@@ -1451,22 +2714,86 @@ export enum BudgetOrderBy {
   RowIdDesc = 'ROW_ID_DESC'
 }
 
-/** Represents an update to a `Budget`. Fields that are set will be updated. */
-export type BudgetPatch = {
-  accountId?: InputMaybe<Scalars['UUID']['input']>;
-  amount?: InputMaybe<Scalars['BigFloat']['input']>;
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  period?: InputMaybe<BudgetPeriod>;
-  rollover?: InputMaybe<Scalars['Boolean']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
 export enum BudgetPeriod {
   Monthly = 'monthly',
   Quarterly = 'quarterly',
   Yearly = 'yearly'
+}
+
+export type BundleComponent = Node & {
+  __typename?: 'BundleComponent';
+  /** Reads a single `ItemBundle` that is related to this `BundleComponent`. */
+  bundle?: Maybe<ItemBundle>;
+  bundleId: Scalars['UUID']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `InventoryItem` that is related to this `BundleComponent`. */
+  inventoryItem?: Maybe<InventoryItem>;
+  inventoryItemId: Scalars['UUID']['output'];
+  quantity: Scalars['BigFloat']['output'];
+  rowId: Scalars['UUID']['output'];
+};
+
+/**
+ * A condition to be used against `BundleComponent` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type BundleComponentCondition = {
+  /** Checks for equality with the object’s `bundleId` field. */
+  bundleId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `BundleComponent` values. */
+export type BundleComponentConnection = {
+  __typename?: 'BundleComponentConnection';
+  /** A list of edges which contains the `BundleComponent` and cursor to aid in pagination. */
+  edges: Array<Maybe<BundleComponentEdge>>;
+  /** A list of `BundleComponent` objects. */
+  nodes: Array<Maybe<BundleComponent>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `BundleComponent` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `BundleComponent` edge in the connection. */
+export type BundleComponentEdge = {
+  __typename?: 'BundleComponentEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `BundleComponent` at the end of the edge. */
+  node?: Maybe<BundleComponent>;
+};
+
+/** A filter to be used against `BundleComponent` object types. All fields are combined with a logical ‘and.’ */
+export type BundleComponentFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<BundleComponentFilter>>;
+  /** Filter by the object’s `bundle` relation. */
+  bundle?: InputMaybe<ItemBundleFilter>;
+  /** Filter by the object’s `bundleId` field. */
+  bundleId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `inventoryItem` relation. */
+  inventoryItem?: InputMaybe<InventoryItemFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<BundleComponentFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<BundleComponentFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+};
+
+/** Methods to use when ordering `BundleComponent`. */
+export enum BundleComponentOrderBy {
+  BundleIdAsc = 'BUNDLE_ID_ASC',
+  BundleIdDesc = 'BUNDLE_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
 }
 
 export type CategorizationRule = Node & {
@@ -1476,6 +2803,8 @@ export type CategorizationRule = Node & {
   /** Reads a single `Book` that is related to this `CategorizationRule`. */
   book?: Maybe<Book>;
   bookId: Scalars['UUID']['output'];
+  /** Reads and enables pagination through a set of `CategorizationRuleSplit`. */
+  categorizationRuleSplitsByRuleId: CategorizationRuleSplitConnection;
   confidence: Scalars['BigFloat']['output'];
   createdAt?: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `Account` that is related to this `CategorizationRule`. */
@@ -1493,10 +2822,25 @@ export type CategorizationRule = Node & {
   matchValue: Scalars['String']['output'];
   name: Scalars['String']['output'];
   priority: Scalars['Int']['output'];
+  /** Reads a single `Project` that is related to this `CategorizationRule`. */
+  project?: Maybe<Project>;
+  projectId?: Maybe<Scalars['UUID']['output']>;
   rowId: Scalars['UUID']['output'];
   /** Reads a single `Tag` that is related to this `CategorizationRule`. */
   tag?: Maybe<Tag>;
   tagId?: Maybe<Scalars['UUID']['output']>;
+};
+
+
+export type CategorizationRuleCategorizationRuleSplitsByRuleIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CategorizationRuleSplitCondition>;
+  filter?: InputMaybe<CategorizationRuleSplitFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CategorizationRuleSplitOrderBy>>;
 };
 
 /**
@@ -1542,6 +2886,10 @@ export type CategorizationRuleFilter = {
   book?: InputMaybe<BookFilter>;
   /** Filter by the object’s `bookId` field. */
   bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `categorizationRuleSplitsByRuleId` relation. */
+  categorizationRuleSplitsByRuleId?: InputMaybe<CategorizationRuleToManyCategorizationRuleSplitFilter>;
+  /** Some related `categorizationRuleSplitsByRuleId` exist. */
+  categorizationRuleSplitsByRuleIdExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `creditAccount` relation. */
   creditAccount?: InputMaybe<AccountFilter>;
   /** Filter by the object’s `debitAccount` relation. */
@@ -1552,32 +2900,16 @@ export type CategorizationRuleFilter = {
   not?: InputMaybe<CategorizationRuleFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<CategorizationRuleFilter>>;
+  /** Filter by the object’s `project` relation. */
+  project?: InputMaybe<ProjectFilter>;
+  /** A related `project` exists. */
+  projectExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `rowId` field. */
   rowId?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `tag` relation. */
   tag?: InputMaybe<TagFilter>;
   /** A related `tag` exists. */
   tagExists?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-/** An input for mutations affecting `CategorizationRule` */
-export type CategorizationRuleInput = {
-  amountMax?: InputMaybe<Scalars['BigFloat']['input']>;
-  amountMin?: InputMaybe<Scalars['BigFloat']['input']>;
-  bookId: Scalars['UUID']['input'];
-  confidence?: InputMaybe<Scalars['BigFloat']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  creditAccountId: Scalars['UUID']['input'];
-  debitAccountId: Scalars['UUID']['input'];
-  hitCount?: InputMaybe<Scalars['Int']['input']>;
-  lastHitAt?: InputMaybe<Scalars['Datetime']['input']>;
-  matchField: Scalars['String']['input'];
-  matchType: Scalars['String']['input'];
-  matchValue: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-  priority?: InputMaybe<Scalars['Int']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  tagId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** Methods to use when ordering `CategorizationRule`. */
@@ -1593,24 +2925,108 @@ export enum CategorizationRuleOrderBy {
   RowIdDesc = 'ROW_ID_DESC'
 }
 
-/** Represents an update to a `CategorizationRule`. Fields that are set will be updated. */
-export type CategorizationRulePatch = {
-  amountMax?: InputMaybe<Scalars['BigFloat']['input']>;
-  amountMin?: InputMaybe<Scalars['BigFloat']['input']>;
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  confidence?: InputMaybe<Scalars['BigFloat']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  creditAccountId?: InputMaybe<Scalars['UUID']['input']>;
-  debitAccountId?: InputMaybe<Scalars['UUID']['input']>;
-  hitCount?: InputMaybe<Scalars['Int']['input']>;
-  lastHitAt?: InputMaybe<Scalars['Datetime']['input']>;
-  matchField?: InputMaybe<Scalars['String']['input']>;
-  matchType?: InputMaybe<Scalars['String']['input']>;
-  matchValue?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  priority?: InputMaybe<Scalars['Int']['input']>;
+export type CategorizationRuleSplit = Node & {
+  __typename?: 'CategorizationRuleSplit';
+  /** Reads a single `Account` that is related to this `CategorizationRuleSplit`. */
+  account?: Maybe<Account>;
+  accountId: Scalars['UUID']['output'];
+  fixedAmount?: Maybe<Scalars['BigFloat']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  memo?: Maybe<Scalars['String']['output']>;
+  percentage?: Maybe<Scalars['BigFloat']['output']>;
+  /** Reads a single `Project` that is related to this `CategorizationRuleSplit`. */
+  project?: Maybe<Project>;
+  projectId?: Maybe<Scalars['UUID']['output']>;
+  rowId: Scalars['UUID']['output'];
+  /** Reads a single `CategorizationRule` that is related to this `CategorizationRuleSplit`. */
+  rule?: Maybe<CategorizationRule>;
+  ruleId: Scalars['UUID']['output'];
+  side: Scalars['String']['output'];
+  sortOrder: Scalars['Int']['output'];
+  /** Reads a single `Tag` that is related to this `CategorizationRuleSplit`. */
+  tag?: Maybe<Tag>;
+  tagId?: Maybe<Scalars['UUID']['output']>;
+};
+
+/**
+ * A condition to be used against `CategorizationRuleSplit` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
+ */
+export type CategorizationRuleSplitCondition = {
+  /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['UUID']['input']>;
-  tagId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `ruleId` field. */
+  ruleId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `CategorizationRuleSplit` values. */
+export type CategorizationRuleSplitConnection = {
+  __typename?: 'CategorizationRuleSplitConnection';
+  /** A list of edges which contains the `CategorizationRuleSplit` and cursor to aid in pagination. */
+  edges: Array<Maybe<CategorizationRuleSplitEdge>>;
+  /** A list of `CategorizationRuleSplit` objects. */
+  nodes: Array<Maybe<CategorizationRuleSplit>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CategorizationRuleSplit` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `CategorizationRuleSplit` edge in the connection. */
+export type CategorizationRuleSplitEdge = {
+  __typename?: 'CategorizationRuleSplitEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `CategorizationRuleSplit` at the end of the edge. */
+  node?: Maybe<CategorizationRuleSplit>;
+};
+
+/** A filter to be used against `CategorizationRuleSplit` object types. All fields are combined with a logical ‘and.’ */
+export type CategorizationRuleSplitFilter = {
+  /** Filter by the object’s `account` relation. */
+  account?: InputMaybe<AccountFilter>;
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<CategorizationRuleSplitFilter>>;
+  /** Negates the expression. */
+  not?: InputMaybe<CategorizationRuleSplitFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<CategorizationRuleSplitFilter>>;
+  /** Filter by the object’s `project` relation. */
+  project?: InputMaybe<ProjectFilter>;
+  /** A related `project` exists. */
+  projectExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `rule` relation. */
+  rule?: InputMaybe<CategorizationRuleFilter>;
+  /** Filter by the object’s `ruleId` field. */
+  ruleId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `tag` relation. */
+  tag?: InputMaybe<TagFilter>;
+  /** A related `tag` exists. */
+  tagExists?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Methods to use when ordering `CategorizationRuleSplit`. */
+export enum CategorizationRuleSplitOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  RuleIdAsc = 'RULE_ID_ASC',
+  RuleIdDesc = 'RULE_ID_DESC'
+}
+
+/** A filter to be used against many `CategorizationRuleSplit` object types. All fields are combined with a logical ‘and.’ */
+export type CategorizationRuleToManyCategorizationRuleSplitFilter = {
+  /** Every related `CategorizationRuleSplit` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CategorizationRuleSplitFilter>;
+  /** No related `CategorizationRuleSplit` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CategorizationRuleSplitFilter>;
+  /** Some related `CategorizationRuleSplit` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CategorizationRuleSplitFilter>;
 };
 
 export type ConnectedAccount = Node & {
@@ -1692,22 +3108,6 @@ export type ConnectedAccountFilter = {
   rowId?: InputMaybe<UuidFilter>;
 };
 
-/** An input for mutations affecting `ConnectedAccount` */
-export type ConnectedAccountInput = {
-  accessToken?: InputMaybe<Scalars['String']['input']>;
-  accountId?: InputMaybe<Scalars['UUID']['input']>;
-  bookId: Scalars['UUID']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  institutionName?: InputMaybe<Scalars['String']['input']>;
-  lastSyncedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  mask?: InputMaybe<Scalars['String']['input']>;
-  provider: Scalars['String']['input'];
-  providerAccountId?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-  syncCursor?: InputMaybe<Scalars['String']['input']>;
-};
-
 /** Methods to use when ordering `ConnectedAccount`. */
 export enum ConnectedAccountOrderBy {
   BookIdAsc = 'BOOK_ID_ASC',
@@ -1721,22 +3121,6 @@ export enum ConnectedAccountOrderBy {
   RowIdDesc = 'ROW_ID_DESC'
 }
 
-/** Represents an update to a `ConnectedAccount`. Fields that are set will be updated. */
-export type ConnectedAccountPatch = {
-  accessToken?: InputMaybe<Scalars['String']['input']>;
-  accountId?: InputMaybe<Scalars['UUID']['input']>;
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  institutionName?: InputMaybe<Scalars['String']['input']>;
-  lastSyncedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  mask?: InputMaybe<Scalars['String']['input']>;
-  provider?: InputMaybe<Scalars['String']['input']>;
-  providerAccountId?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-  syncCursor?: InputMaybe<Scalars['String']['input']>;
-};
-
 export enum CostBasisMethod {
   Acb = 'acb',
   Fifo = 'fifo',
@@ -1744,928 +3128,356 @@ export enum CostBasisMethod {
   Lifo = 'lifo'
 }
 
-/** All input for the create `Account` mutation. */
-export type CreateAccountInput = {
-  /** The `Account` to be created by this mutation. */
-  account: AccountInput;
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** All input for the create `AccountMapping` mutation. */
-export type CreateAccountMappingInput = {
-  /** The `AccountMapping` to be created by this mutation. */
-  accountMapping: AccountMappingInput;
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** The output of our create `AccountMapping` mutation. */
-export type CreateAccountMappingPayload = {
-  __typename?: 'CreateAccountMappingPayload';
-  /** The `AccountMapping` that was created by this mutation. */
-  accountMapping?: Maybe<AccountMapping>;
-  /** An edge for our `AccountMapping`. May be used by Relay 1. */
-  accountMappingEdge?: Maybe<AccountMappingEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our create `AccountMapping` mutation. */
-export type CreateAccountMappingPayloadAccountMappingEdgeArgs = {
-  orderBy?: Array<AccountMappingOrderBy>;
-};
-
-/** The output of our create `Account` mutation. */
-export type CreateAccountPayload = {
-  __typename?: 'CreateAccountPayload';
-  /** The `Account` that was created by this mutation. */
-  account?: Maybe<Account>;
-  /** An edge for our `Account`. May be used by Relay 1. */
-  accountEdge?: Maybe<AccountEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our create `Account` mutation. */
-export type CreateAccountPayloadAccountEdgeArgs = {
-  orderBy?: Array<AccountOrderBy>;
-};
-
-/** All input for the create `AccountingPeriod` mutation. */
-export type CreateAccountingPeriodInput = {
-  /** The `AccountingPeriod` to be created by this mutation. */
-  accountingPeriod: AccountingPeriodInput;
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** The output of our create `AccountingPeriod` mutation. */
-export type CreateAccountingPeriodPayload = {
-  __typename?: 'CreateAccountingPeriodPayload';
-  /** The `AccountingPeriod` that was created by this mutation. */
-  accountingPeriod?: Maybe<AccountingPeriod>;
-  /** An edge for our `AccountingPeriod`. May be used by Relay 1. */
-  accountingPeriodEdge?: Maybe<AccountingPeriodEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our create `AccountingPeriod` mutation. */
-export type CreateAccountingPeriodPayloadAccountingPeriodEdgeArgs = {
-  orderBy?: Array<AccountingPeriodOrderBy>;
-};
-
-/** All input for the create `BookAccess` mutation. */
-export type CreateBookAccessInput = {
-  /** The `BookAccess` to be created by this mutation. */
-  bookAccess: BookAccessInput;
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** The output of our create `BookAccess` mutation. */
-export type CreateBookAccessPayload = {
-  __typename?: 'CreateBookAccessPayload';
-  /** The `BookAccess` that was created by this mutation. */
-  bookAccess?: Maybe<BookAccess>;
-  /** An edge for our `BookAccess`. May be used by Relay 1. */
-  bookAccessEdge?: Maybe<BookAccessEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our create `BookAccess` mutation. */
-export type CreateBookAccessPayloadBookAccessEdgeArgs = {
-  orderBy?: Array<BookAccessOrderBy>;
-};
-
-/** All input for the create `Book` mutation. */
-export type CreateBookInput = {
-  /** The `Book` to be created by this mutation. */
-  book: BookInput;
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** The output of our create `Book` mutation. */
-export type CreateBookPayload = {
-  __typename?: 'CreateBookPayload';
-  /** The `Book` that was created by this mutation. */
+export type CreditMemo = Node & {
+  __typename?: 'CreditMemo';
+  amountApplied: Scalars['BigFloat']['output'];
+  /** Reads a single `Book` that is related to this `CreditMemo`. */
   book?: Maybe<Book>;
-  /** An edge for our `Book`. May be used by Relay 1. */
-  bookEdge?: Maybe<BookEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our create `Book` mutation. */
-export type CreateBookPayloadBookEdgeArgs = {
-  orderBy?: Array<BookOrderBy>;
-};
-
-/** All input for the create `Budget` mutation. */
-export type CreateBudgetInput = {
-  /** The `Budget` to be created by this mutation. */
-  budget: BudgetInput;
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** The output of our create `Budget` mutation. */
-export type CreateBudgetPayload = {
-  __typename?: 'CreateBudgetPayload';
-  /** The `Budget` that was created by this mutation. */
-  budget?: Maybe<Budget>;
-  /** An edge for our `Budget`. May be used by Relay 1. */
-  budgetEdge?: Maybe<BudgetEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our create `Budget` mutation. */
-export type CreateBudgetPayloadBudgetEdgeArgs = {
-  orderBy?: Array<BudgetOrderBy>;
-};
-
-/** All input for the create `CategorizationRule` mutation. */
-export type CreateCategorizationRuleInput = {
-  /** The `CategorizationRule` to be created by this mutation. */
-  categorizationRule: CategorizationRuleInput;
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** The output of our create `CategorizationRule` mutation. */
-export type CreateCategorizationRulePayload = {
-  __typename?: 'CreateCategorizationRulePayload';
-  /** The `CategorizationRule` that was created by this mutation. */
-  categorizationRule?: Maybe<CategorizationRule>;
-  /** An edge for our `CategorizationRule`. May be used by Relay 1. */
-  categorizationRuleEdge?: Maybe<CategorizationRuleEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our create `CategorizationRule` mutation. */
-export type CreateCategorizationRulePayloadCategorizationRuleEdgeArgs = {
-  orderBy?: Array<CategorizationRuleOrderBy>;
-};
-
-/** All input for the create `ConnectedAccount` mutation. */
-export type CreateConnectedAccountInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `ConnectedAccount` to be created by this mutation. */
-  connectedAccount: ConnectedAccountInput;
-};
-
-/** The output of our create `ConnectedAccount` mutation. */
-export type CreateConnectedAccountPayload = {
-  __typename?: 'CreateConnectedAccountPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `ConnectedAccount` that was created by this mutation. */
-  connectedAccount?: Maybe<ConnectedAccount>;
-  /** An edge for our `ConnectedAccount`. May be used by Relay 1. */
-  connectedAccountEdge?: Maybe<ConnectedAccountEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our create `ConnectedAccount` mutation. */
-export type CreateConnectedAccountPayloadConnectedAccountEdgeArgs = {
-  orderBy?: Array<ConnectedAccountOrderBy>;
-};
-
-/** All input for the create `CryptoAsset` mutation. */
-export type CreateCryptoAssetInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `CryptoAsset` to be created by this mutation. */
-  cryptoAsset: CryptoAssetInput;
-};
-
-/** The output of our create `CryptoAsset` mutation. */
-export type CreateCryptoAssetPayload = {
-  __typename?: 'CreateCryptoAssetPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `CryptoAsset` that was created by this mutation. */
-  cryptoAsset?: Maybe<CryptoAsset>;
-  /** An edge for our `CryptoAsset`. May be used by Relay 1. */
-  cryptoAssetEdge?: Maybe<CryptoAssetEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our create `CryptoAsset` mutation. */
-export type CreateCryptoAssetPayloadCryptoAssetEdgeArgs = {
-  orderBy?: Array<CryptoAssetOrderBy>;
-};
-
-/** All input for the create `CryptoLot` mutation. */
-export type CreateCryptoLotInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `CryptoLot` to be created by this mutation. */
-  cryptoLot: CryptoLotInput;
-};
-
-/** The output of our create `CryptoLot` mutation. */
-export type CreateCryptoLotPayload = {
-  __typename?: 'CreateCryptoLotPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `CryptoLot` that was created by this mutation. */
-  cryptoLot?: Maybe<CryptoLot>;
-  /** An edge for our `CryptoLot`. May be used by Relay 1. */
-  cryptoLotEdge?: Maybe<CryptoLotEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our create `CryptoLot` mutation. */
-export type CreateCryptoLotPayloadCryptoLotEdgeArgs = {
-  orderBy?: Array<CryptoLotOrderBy>;
-};
-
-/** All input for the create `_DrizzleMigration` mutation. */
-export type CreateDrizzleMigrationInput = {
-  /** The `_DrizzleMigration` to be created by this mutation. */
-  _drizzleMigration: _DrizzleMigrationInput;
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** The output of our create `_DrizzleMigration` mutation. */
-export type CreateDrizzleMigrationPayload = {
-  __typename?: 'CreateDrizzleMigrationPayload';
-  /** The `_DrizzleMigration` that was created by this mutation. */
-  _drizzleMigration?: Maybe<_DrizzleMigration>;
-  /** An edge for our `_DrizzleMigration`. May be used by Relay 1. */
-  _drizzleMigrationEdge?: Maybe<_DrizzleMigrationEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our create `_DrizzleMigration` mutation. */
-export type CreateDrizzleMigrationPayload_DrizzleMigrationEdgeArgs = {
-  orderBy?: Array<_DrizzleMigrationOrderBy>;
-};
-
-/** All input for the create `FixedAsset` mutation. */
-export type CreateFixedAssetInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `FixedAsset` to be created by this mutation. */
-  fixedAsset: FixedAssetInput;
-};
-
-/** The output of our create `FixedAsset` mutation. */
-export type CreateFixedAssetPayload = {
-  __typename?: 'CreateFixedAssetPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `FixedAsset` that was created by this mutation. */
-  fixedAsset?: Maybe<FixedAsset>;
-  /** An edge for our `FixedAsset`. May be used by Relay 1. */
-  fixedAssetEdge?: Maybe<FixedAssetEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our create `FixedAsset` mutation. */
-export type CreateFixedAssetPayloadFixedAssetEdgeArgs = {
-  orderBy?: Array<FixedAssetOrderBy>;
-};
-
-/** All input for the create `ImportProfile` mutation. */
-export type CreateImportProfileInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `ImportProfile` to be created by this mutation. */
-  importProfile: ImportProfileInput;
-};
-
-/** The output of our create `ImportProfile` mutation. */
-export type CreateImportProfilePayload = {
-  __typename?: 'CreateImportProfilePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `ImportProfile` that was created by this mutation. */
-  importProfile?: Maybe<ImportProfile>;
-  /** An edge for our `ImportProfile`. May be used by Relay 1. */
-  importProfileEdge?: Maybe<ImportProfileEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our create `ImportProfile` mutation. */
-export type CreateImportProfilePayloadImportProfileEdgeArgs = {
-  orderBy?: Array<ImportProfileOrderBy>;
-};
-
-/** All input for the create `JournalEntry` mutation. */
-export type CreateJournalEntryInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `JournalEntry` to be created by this mutation. */
-  journalEntry: JournalEntryInput;
-};
-
-/** The output of our create `JournalEntry` mutation. */
-export type CreateJournalEntryPayload = {
-  __typename?: 'CreateJournalEntryPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `JournalEntry` that was created by this mutation. */
+  bookId: Scalars['UUID']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads and enables pagination through a set of `CreditMemoApplication`. */
+  creditMemoApplications: CreditMemoApplicationConnection;
+  /** Reads and enables pagination through a set of `CreditMemoLine`. */
+  creditMemoLines: CreditMemoLineConnection;
+  currency: Scalars['String']['output'];
+  /** Reads a single `Customer` that is related to this `CreditMemo`. */
+  customer?: Maybe<Customer>;
+  customerId: Scalars['UUID']['output'];
+  date: Scalars['String']['output'];
+  exchangeRate: Scalars['BigFloat']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `JournalEntry` that is related to this `CreditMemo`. */
   journalEntry?: Maybe<JournalEntry>;
-  /** An edge for our `JournalEntry`. May be used by Relay 1. */
-  journalEntryEdge?: Maybe<JournalEntryEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
+  journalEntryId?: Maybe<Scalars['UUID']['output']>;
+  memo?: Maybe<Scalars['String']['output']>;
+  number: Scalars['String']['output'];
+  rowId: Scalars['UUID']['output'];
+  status: Scalars['String']['output'];
+  subtotal: Scalars['BigFloat']['output'];
+  taxAmount: Scalars['BigFloat']['output'];
+  total: Scalars['BigFloat']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
 };
 
 
-/** The output of our create `JournalEntry` mutation. */
-export type CreateJournalEntryPayloadJournalEntryEdgeArgs = {
-  orderBy?: Array<JournalEntryOrderBy>;
-};
-
-/** All input for the create `JournalLine` mutation. */
-export type CreateJournalLineInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `JournalLine` to be created by this mutation. */
-  journalLine: JournalLineInput;
-};
-
-/** The output of our create `JournalLine` mutation. */
-export type CreateJournalLinePayload = {
-  __typename?: 'CreateJournalLinePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `JournalLine` that was created by this mutation. */
-  journalLine?: Maybe<JournalLine>;
-  /** An edge for our `JournalLine`. May be used by Relay 1. */
-  journalLineEdge?: Maybe<JournalLineEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
+export type CreditMemoCreditMemoApplicationsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CreditMemoApplicationCondition>;
+  filter?: InputMaybe<CreditMemoApplicationFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CreditMemoApplicationOrderBy>>;
 };
 
 
-/** The output of our create `JournalLine` mutation. */
-export type CreateJournalLinePayloadJournalLineEdgeArgs = {
-  orderBy?: Array<JournalLineOrderBy>;
+export type CreditMemoCreditMemoLinesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CreditMemoLineCondition>;
+  filter?: InputMaybe<CreditMemoLineFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CreditMemoLineOrderBy>>;
 };
 
-/** All input for the create `JournalLineTag` mutation. */
-export type CreateJournalLineTagInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `JournalLineTag` to be created by this mutation. */
-  journalLineTag: JournalLineTagInput;
+export type CreditMemoApplication = Node & {
+  __typename?: 'CreditMemoApplication';
+  amount: Scalars['BigFloat']['output'];
+  /** Reads a single `Book` that is related to this `CreditMemoApplication`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads a single `CreditMemo` that is related to this `CreditMemoApplication`. */
+  creditMemo?: Maybe<CreditMemo>;
+  creditMemoId: Scalars['UUID']['output'];
+  date: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `Invoice` that is related to this `CreditMemoApplication`. */
+  invoice?: Maybe<Invoice>;
+  invoiceId: Scalars['UUID']['output'];
+  rowId: Scalars['UUID']['output'];
 };
 
-/** The output of our create `JournalLineTag` mutation. */
-export type CreateJournalLineTagPayload = {
-  __typename?: 'CreateJournalLineTagPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `JournalLineTag` that was created by this mutation. */
-  journalLineTag?: Maybe<JournalLineTag>;
-  /** An edge for our `JournalLineTag`. May be used by Relay 1. */
-  journalLineTagEdge?: Maybe<JournalLineTagEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
+/**
+ * A condition to be used against `CreditMemoApplication` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type CreditMemoApplicationCondition = {
+  /** Checks for equality with the object’s `creditMemoId` field. */
+  creditMemoId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `invoiceId` field. */
+  invoiceId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
-
-/** The output of our create `JournalLineTag` mutation. */
-export type CreateJournalLineTagPayloadJournalLineTagEdgeArgs = {
-  orderBy?: Array<JournalLineTagOrderBy>;
+/** A connection to a list of `CreditMemoApplication` values. */
+export type CreditMemoApplicationConnection = {
+  __typename?: 'CreditMemoApplicationConnection';
+  /** A list of edges which contains the `CreditMemoApplication` and cursor to aid in pagination. */
+  edges: Array<Maybe<CreditMemoApplicationEdge>>;
+  /** A list of `CreditMemoApplication` objects. */
+  nodes: Array<Maybe<CreditMemoApplication>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CreditMemoApplication` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
 };
 
-/** All input for the create `MileageLog` mutation. */
-export type CreateMileageLogInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `MileageLog` to be created by this mutation. */
-  mileageLog: MileageLogInput;
+/** A `CreditMemoApplication` edge in the connection. */
+export type CreditMemoApplicationEdge = {
+  __typename?: 'CreditMemoApplicationEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `CreditMemoApplication` at the end of the edge. */
+  node?: Maybe<CreditMemoApplication>;
 };
 
-/** The output of our create `MileageLog` mutation. */
-export type CreateMileageLogPayload = {
-  __typename?: 'CreateMileageLogPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `MileageLog` that was created by this mutation. */
-  mileageLog?: Maybe<MileageLog>;
-  /** An edge for our `MileageLog`. May be used by Relay 1. */
-  mileageLogEdge?: Maybe<MileageLogEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
+/** A filter to be used against `CreditMemoApplication` object types. All fields are combined with a logical ‘and.’ */
+export type CreditMemoApplicationFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<CreditMemoApplicationFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `creditMemo` relation. */
+  creditMemo?: InputMaybe<CreditMemoFilter>;
+  /** Filter by the object’s `creditMemoId` field. */
+  creditMemoId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `invoice` relation. */
+  invoice?: InputMaybe<InvoiceFilter>;
+  /** Filter by the object’s `invoiceId` field. */
+  invoiceId?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<CreditMemoApplicationFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<CreditMemoApplicationFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
 };
 
+/** Methods to use when ordering `CreditMemoApplication`. */
+export enum CreditMemoApplicationOrderBy {
+  CreditMemoIdAsc = 'CREDIT_MEMO_ID_ASC',
+  CreditMemoIdDesc = 'CREDIT_MEMO_ID_DESC',
+  InvoiceIdAsc = 'INVOICE_ID_ASC',
+  InvoiceIdDesc = 'INVOICE_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
 
-/** The output of our create `MileageLog` mutation. */
-export type CreateMileageLogPayloadMileageLogEdgeArgs = {
-  orderBy?: Array<MileageLogOrderBy>;
+/**
+ * A condition to be used against `CreditMemo` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type CreditMemoCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `customerId` field. */
+  customerId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `number` field. */
+  number?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** All input for the create `NetWorthSnapshot` mutation. */
-export type CreateNetWorthSnapshotInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `NetWorthSnapshot` to be created by this mutation. */
-  netWorthSnapshot: NetWorthSnapshotInput;
+/** A connection to a list of `CreditMemo` values. */
+export type CreditMemoConnection = {
+  __typename?: 'CreditMemoConnection';
+  /** A list of edges which contains the `CreditMemo` and cursor to aid in pagination. */
+  edges: Array<Maybe<CreditMemoEdge>>;
+  /** A list of `CreditMemo` objects. */
+  nodes: Array<Maybe<CreditMemo>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CreditMemo` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
 };
 
-/** The output of our create `NetWorthSnapshot` mutation. */
-export type CreateNetWorthSnapshotPayload = {
-  __typename?: 'CreateNetWorthSnapshotPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `NetWorthSnapshot` that was created by this mutation. */
-  netWorthSnapshot?: Maybe<NetWorthSnapshot>;
-  /** An edge for our `NetWorthSnapshot`. May be used by Relay 1. */
-  netWorthSnapshotEdge?: Maybe<NetWorthSnapshotEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
+/** A `CreditMemo` edge in the connection. */
+export type CreditMemoEdge = {
+  __typename?: 'CreditMemoEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `CreditMemo` at the end of the edge. */
+  node?: Maybe<CreditMemo>;
 };
 
-
-/** The output of our create `NetWorthSnapshot` mutation. */
-export type CreateNetWorthSnapshotPayloadNetWorthSnapshotEdgeArgs = {
-  orderBy?: Array<NetWorthSnapshotOrderBy>;
+/** A filter to be used against `CreditMemo` object types. All fields are combined with a logical ‘and.’ */
+export type CreditMemoFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<CreditMemoFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `creditMemoApplications` relation. */
+  creditMemoApplications?: InputMaybe<CreditMemoToManyCreditMemoApplicationFilter>;
+  /** Some related `creditMemoApplications` exist. */
+  creditMemoApplicationsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `creditMemoLines` relation. */
+  creditMemoLines?: InputMaybe<CreditMemoToManyCreditMemoLineFilter>;
+  /** Some related `creditMemoLines` exist. */
+  creditMemoLinesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `customer` relation. */
+  customer?: InputMaybe<CustomerFilter>;
+  /** Filter by the object’s `customerId` field. */
+  customerId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `journalEntry` relation. */
+  journalEntry?: InputMaybe<JournalEntryFilter>;
+  /** A related `journalEntry` exists. */
+  journalEntryExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Negates the expression. */
+  not?: InputMaybe<CreditMemoFilter>;
+  /** Filter by the object’s `number` field. */
+  number?: InputMaybe<StringFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<CreditMemoFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: InputMaybe<StringFilter>;
 };
 
-/** All input for the create `PayrollConnection` mutation. */
-export type CreatePayrollConnectionInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `PayrollConnection` to be created by this mutation. */
-  payrollConnection: PayrollConnectionInput;
-};
-
-/** The output of our create `PayrollConnection` mutation. */
-export type CreatePayrollConnectionPayload = {
-  __typename?: 'CreatePayrollConnectionPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `PayrollConnection` that was created by this mutation. */
-  payrollConnection?: Maybe<PayrollConnection>;
-  /** An edge for our `PayrollConnection`. May be used by Relay 1. */
-  payrollConnectionEdge?: Maybe<PayrollConnectionEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our create `PayrollConnection` mutation. */
-export type CreatePayrollConnectionPayloadPayrollConnectionEdgeArgs = {
-  orderBy?: Array<PayrollConnectionOrderBy>;
-};
-
-/** All input for the create `ReconciliationQueue` mutation. */
-export type CreateReconciliationQueueInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `ReconciliationQueue` to be created by this mutation. */
-  reconciliationQueue: ReconciliationQueueInput;
-};
-
-/** The output of our create `ReconciliationQueue` mutation. */
-export type CreateReconciliationQueuePayload = {
-  __typename?: 'CreateReconciliationQueuePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `ReconciliationQueue` that was created by this mutation. */
-  reconciliationQueue?: Maybe<ReconciliationQueue>;
-  /** An edge for our `ReconciliationQueue`. May be used by Relay 1. */
-  reconciliationQueueEdge?: Maybe<ReconciliationQueueEdge>;
-};
-
-
-/** The output of our create `ReconciliationQueue` mutation. */
-export type CreateReconciliationQueuePayloadReconciliationQueueEdgeArgs = {
-  orderBy?: Array<ReconciliationQueueOrderBy>;
-};
-
-/** All input for the create `ReconciliationStatement` mutation. */
-export type CreateReconciliationStatementInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `ReconciliationStatement` to be created by this mutation. */
-  reconciliationStatement: ReconciliationStatementInput;
-};
-
-/** The output of our create `ReconciliationStatement` mutation. */
-export type CreateReconciliationStatementPayload = {
-  __typename?: 'CreateReconciliationStatementPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `ReconciliationStatement` that was created by this mutation. */
-  reconciliationStatement?: Maybe<ReconciliationStatement>;
-  /** An edge for our `ReconciliationStatement`. May be used by Relay 1. */
-  reconciliationStatementEdge?: Maybe<ReconciliationStatementEdge>;
-};
-
-
-/** The output of our create `ReconciliationStatement` mutation. */
-export type CreateReconciliationStatementPayloadReconciliationStatementEdgeArgs = {
-  orderBy?: Array<ReconciliationStatementOrderBy>;
-};
-
-/** All input for the create `RecurringTransaction` mutation. */
-export type CreateRecurringTransactionInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `RecurringTransaction` to be created by this mutation. */
-  recurringTransaction: RecurringTransactionInput;
-};
-
-/** The output of our create `RecurringTransaction` mutation. */
-export type CreateRecurringTransactionPayload = {
-  __typename?: 'CreateRecurringTransactionPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `RecurringTransaction` that was created by this mutation. */
-  recurringTransaction?: Maybe<RecurringTransaction>;
-  /** An edge for our `RecurringTransaction`. May be used by Relay 1. */
-  recurringTransactionEdge?: Maybe<RecurringTransactionEdge>;
-};
-
-
-/** The output of our create `RecurringTransaction` mutation. */
-export type CreateRecurringTransactionPayloadRecurringTransactionEdgeArgs = {
-  orderBy?: Array<RecurringTransactionOrderBy>;
-};
-
-/** All input for the create `SavingsGoal` mutation. */
-export type CreateSavingsGoalInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `SavingsGoal` to be created by this mutation. */
-  savingsGoal: SavingsGoalInput;
-};
-
-/** The output of our create `SavingsGoal` mutation. */
-export type CreateSavingsGoalPayload = {
-  __typename?: 'CreateSavingsGoalPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `SavingsGoal` that was created by this mutation. */
-  savingsGoal?: Maybe<SavingsGoal>;
-  /** An edge for our `SavingsGoal`. May be used by Relay 1. */
-  savingsGoalEdge?: Maybe<SavingsGoalEdge>;
-};
-
-
-/** The output of our create `SavingsGoal` mutation. */
-export type CreateSavingsGoalPayloadSavingsGoalEdgeArgs = {
-  orderBy?: Array<SavingsGoalOrderBy>;
-};
-
-/** All input for the create `TagGroup` mutation. */
-export type CreateTagGroupInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `TagGroup` to be created by this mutation. */
-  tagGroup: TagGroupInput;
-};
-
-/** The output of our create `TagGroup` mutation. */
-export type CreateTagGroupPayload = {
-  __typename?: 'CreateTagGroupPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `TagGroup` that was created by this mutation. */
-  tagGroup?: Maybe<TagGroup>;
-  /** An edge for our `TagGroup`. May be used by Relay 1. */
-  tagGroupEdge?: Maybe<TagGroupEdge>;
-};
-
-
-/** The output of our create `TagGroup` mutation. */
-export type CreateTagGroupPayloadTagGroupEdgeArgs = {
-  orderBy?: Array<TagGroupOrderBy>;
-};
-
-/** All input for the create `Tag` mutation. */
-export type CreateTagInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `Tag` to be created by this mutation. */
-  tag: TagInput;
-};
-
-/** The output of our create `Tag` mutation. */
-export type CreateTagPayload = {
-  __typename?: 'CreateTagPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `Tag` that was created by this mutation. */
-  tag?: Maybe<Tag>;
-  /** An edge for our `Tag`. May be used by Relay 1. */
-  tagEdge?: Maybe<TagEdge>;
-};
-
-
-/** The output of our create `Tag` mutation. */
-export type CreateTagPayloadTagEdgeArgs = {
-  orderBy?: Array<TagOrderBy>;
-};
-
-/** All input for the create `TaxJurisdiction` mutation. */
-export type CreateTaxJurisdictionInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `TaxJurisdiction` to be created by this mutation. */
-  taxJurisdiction: TaxJurisdictionInput;
-};
-
-/** The output of our create `TaxJurisdiction` mutation. */
-export type CreateTaxJurisdictionPayload = {
-  __typename?: 'CreateTaxJurisdictionPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `TaxJurisdiction` that was created by this mutation. */
+export type CreditMemoLine = Node & {
+  __typename?: 'CreditMemoLine';
+  amount: Scalars['BigFloat']['output'];
+  /** Reads a single `CreditMemo` that is related to this `CreditMemoLine`. */
+  creditMemo?: Maybe<CreditMemo>;
+  creditMemoId: Scalars['UUID']['output'];
+  description: Scalars['String']['output'];
+  discountPercent?: Maybe<Scalars['BigFloat']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `Account` that is related to this `CreditMemoLine`. */
+  incomeAccount?: Maybe<Account>;
+  incomeAccountId: Scalars['UUID']['output'];
+  /** Reads a single `InventoryItem` that is related to this `CreditMemoLine`. */
+  inventoryItem?: Maybe<InventoryItem>;
+  inventoryItemId?: Maybe<Scalars['UUID']['output']>;
+  quantity: Scalars['BigFloat']['output'];
+  rowId: Scalars['UUID']['output'];
+  sortOrder: Scalars['Int']['output'];
+  /** Reads a single `TaxJurisdiction` that is related to this `CreditMemoLine`. */
   taxJurisdiction?: Maybe<TaxJurisdiction>;
-  /** An edge for our `TaxJurisdiction`. May be used by Relay 1. */
-  taxJurisdictionEdge?: Maybe<TaxJurisdictionEdge>;
+  taxJurisdictionId?: Maybe<Scalars['UUID']['output']>;
+  unitPrice: Scalars['BigFloat']['output'];
 };
 
-
-/** The output of our create `TaxJurisdiction` mutation. */
-export type CreateTaxJurisdictionPayloadTaxJurisdictionEdgeArgs = {
-  orderBy?: Array<TaxJurisdictionOrderBy>;
+/**
+ * A condition to be used against `CreditMemoLine` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type CreditMemoLineCondition = {
+  /** Checks for equality with the object’s `creditMemoId` field. */
+  creditMemoId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
-/** All input for the create `Vehicle` mutation. */
-export type CreateVehicleInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `Vehicle` to be created by this mutation. */
-  vehicle: VehicleInput;
+/** A connection to a list of `CreditMemoLine` values. */
+export type CreditMemoLineConnection = {
+  __typename?: 'CreditMemoLineConnection';
+  /** A list of edges which contains the `CreditMemoLine` and cursor to aid in pagination. */
+  edges: Array<Maybe<CreditMemoLineEdge>>;
+  /** A list of `CreditMemoLine` objects. */
+  nodes: Array<Maybe<CreditMemoLine>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CreditMemoLine` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
 };
 
-/** The output of our create `Vehicle` mutation. */
-export type CreateVehiclePayload = {
-  __typename?: 'CreateVehiclePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `Vehicle` that was created by this mutation. */
-  vehicle?: Maybe<Vehicle>;
-  /** An edge for our `Vehicle`. May be used by Relay 1. */
-  vehicleEdge?: Maybe<VehicleEdge>;
+/** A `CreditMemoLine` edge in the connection. */
+export type CreditMemoLineEdge = {
+  __typename?: 'CreditMemoLineEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `CreditMemoLine` at the end of the edge. */
+  node?: Maybe<CreditMemoLine>;
 };
 
-
-/** The output of our create `Vehicle` mutation. */
-export type CreateVehiclePayloadVehicleEdgeArgs = {
-  orderBy?: Array<VehicleOrderBy>;
+/** A filter to be used against `CreditMemoLine` object types. All fields are combined with a logical ‘and.’ */
+export type CreditMemoLineFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<CreditMemoLineFilter>>;
+  /** Filter by the object’s `creditMemo` relation. */
+  creditMemo?: InputMaybe<CreditMemoFilter>;
+  /** Filter by the object’s `creditMemoId` field. */
+  creditMemoId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `incomeAccount` relation. */
+  incomeAccount?: InputMaybe<AccountFilter>;
+  /** Filter by the object’s `inventoryItem` relation. */
+  inventoryItem?: InputMaybe<InventoryItemFilter>;
+  /** A related `inventoryItem` exists. */
+  inventoryItemExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Negates the expression. */
+  not?: InputMaybe<CreditMemoLineFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<CreditMemoLineFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `taxJurisdiction` relation. */
+  taxJurisdiction?: InputMaybe<TaxJurisdictionFilter>;
+  /** A related `taxJurisdiction` exists. */
+  taxJurisdictionExists?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/** All input for the create `Vendor` mutation. */
-export type CreateVendorInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `Vendor` to be created by this mutation. */
-  vendor: VendorInput;
+/** Methods to use when ordering `CreditMemoLine`. */
+export enum CreditMemoLineOrderBy {
+  CreditMemoIdAsc = 'CREDIT_MEMO_ID_ASC',
+  CreditMemoIdDesc = 'CREDIT_MEMO_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+/** Methods to use when ordering `CreditMemo`. */
+export enum CreditMemoOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  CustomerIdAsc = 'CUSTOMER_ID_ASC',
+  CustomerIdDesc = 'CUSTOMER_ID_DESC',
+  Natural = 'NATURAL',
+  NumberAsc = 'NUMBER_ASC',
+  NumberDesc = 'NUMBER_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC'
+}
+
+/** A filter to be used against many `CreditMemoApplication` object types. All fields are combined with a logical ‘and.’ */
+export type CreditMemoToManyCreditMemoApplicationFilter = {
+  /** Every related `CreditMemoApplication` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CreditMemoApplicationFilter>;
+  /** No related `CreditMemoApplication` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CreditMemoApplicationFilter>;
+  /** Some related `CreditMemoApplication` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CreditMemoApplicationFilter>;
 };
 
-/** The output of our create `Vendor` mutation. */
-export type CreateVendorPayload = {
-  __typename?: 'CreateVendorPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `Vendor` that was created by this mutation. */
-  vendor?: Maybe<Vendor>;
-  /** An edge for our `Vendor`. May be used by Relay 1. */
-  vendorEdge?: Maybe<VendorEdge>;
-};
-
-
-/** The output of our create `Vendor` mutation. */
-export type CreateVendorPayloadVendorEdgeArgs = {
-  orderBy?: Array<VendorOrderBy>;
+/** A filter to be used against many `CreditMemoLine` object types. All fields are combined with a logical ‘and.’ */
+export type CreditMemoToManyCreditMemoLineFilter = {
+  /** Every related `CreditMemoLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CreditMemoLineFilter>;
+  /** No related `CreditMemoLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CreditMemoLineFilter>;
+  /** Some related `CreditMemoLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CreditMemoLineFilter>;
 };
 
 export type CryptoAsset = Node & {
@@ -2758,21 +3570,6 @@ export type CryptoAssetFilter = {
   symbol?: InputMaybe<StringFilter>;
 };
 
-/** An input for mutations affecting `CryptoAsset` */
-export type CryptoAssetInput = {
-  balance?: InputMaybe<Scalars['BigFloat']['input']>;
-  bookId: Scalars['UUID']['input'];
-  costBasisMethod?: InputMaybe<CostBasisMethod>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  lastSyncedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  name: Scalars['String']['input'];
-  network?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  symbol: Scalars['String']['input'];
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  walletAddress?: InputMaybe<Scalars['String']['input']>;
-};
-
 /** Methods to use when ordering `CryptoAsset`. */
 export enum CryptoAssetOrderBy {
   BookIdAsc = 'BOOK_ID_ASC',
@@ -2785,21 +3582,6 @@ export enum CryptoAssetOrderBy {
   SymbolAsc = 'SYMBOL_ASC',
   SymbolDesc = 'SYMBOL_DESC'
 }
-
-/** Represents an update to a `CryptoAsset`. Fields that are set will be updated. */
-export type CryptoAssetPatch = {
-  balance?: InputMaybe<Scalars['BigFloat']['input']>;
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  costBasisMethod?: InputMaybe<CostBasisMethod>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  lastSyncedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  network?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  symbol?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  walletAddress?: InputMaybe<Scalars['String']['input']>;
-};
 
 /** A filter to be used against many `CryptoLot` object types. All fields are combined with a logical ‘and.’ */
 export type CryptoAssetToManyCryptoLotFilter = {
@@ -2884,20 +3666,6 @@ export type CryptoLotFilter = {
   rowId?: InputMaybe<UuidFilter>;
 };
 
-/** An input for mutations affecting `CryptoLot` */
-export type CryptoLotInput = {
-  acquiredAt: Scalars['Datetime']['input'];
-  costPerUnit: Scalars['BigFloat']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  cryptoAssetId: Scalars['UUID']['input'];
-  disposedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  journalEntryId?: InputMaybe<Scalars['UUID']['input']>;
-  proceedsPerUnit?: InputMaybe<Scalars['BigFloat']['input']>;
-  quantity: Scalars['BigFloat']['input'];
-  remainingQuantity: Scalars['BigFloat']['input'];
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
 /** Methods to use when ordering `CryptoLot`. */
 export enum CryptoLotOrderBy {
   CryptoAssetIdAsc = 'CRYPTO_ASSET_ID_ASC',
@@ -2909,18 +3677,435 @@ export enum CryptoLotOrderBy {
   RowIdDesc = 'ROW_ID_DESC'
 }
 
-/** Represents an update to a `CryptoLot`. Fields that are set will be updated. */
-export type CryptoLotPatch = {
-  acquiredAt?: InputMaybe<Scalars['Datetime']['input']>;
-  costPerUnit?: InputMaybe<Scalars['BigFloat']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  cryptoAssetId?: InputMaybe<Scalars['UUID']['input']>;
-  disposedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  journalEntryId?: InputMaybe<Scalars['UUID']['input']>;
-  proceedsPerUnit?: InputMaybe<Scalars['BigFloat']['input']>;
-  quantity?: InputMaybe<Scalars['BigFloat']['input']>;
-  remainingQuantity?: InputMaybe<Scalars['BigFloat']['input']>;
+export type CustomFieldDefinition = Node & {
+  __typename?: 'CustomFieldDefinition';
+  /** Reads a single `Book` that is related to this `CustomFieldDefinition`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads and enables pagination through a set of `CustomFieldValue`. */
+  customFieldValuesByDefinitionId: CustomFieldValueConnection;
+  entityType: Scalars['String']['output'];
+  fieldType: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  isActive: Scalars['Boolean']['output'];
+  label: Scalars['String']['output'];
+  position: Scalars['Int']['output'];
+  rowId: Scalars['UUID']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+};
+
+
+export type CustomFieldDefinitionCustomFieldValuesByDefinitionIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CustomFieldValueCondition>;
+  filter?: InputMaybe<CustomFieldValueFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CustomFieldValueOrderBy>>;
+};
+
+/**
+ * A condition to be used against `CustomFieldDefinition` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type CustomFieldDefinitionCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `entityType` field. */
+  entityType?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `CustomFieldDefinition` values. */
+export type CustomFieldDefinitionConnection = {
+  __typename?: 'CustomFieldDefinitionConnection';
+  /** A list of edges which contains the `CustomFieldDefinition` and cursor to aid in pagination. */
+  edges: Array<Maybe<CustomFieldDefinitionEdge>>;
+  /** A list of `CustomFieldDefinition` objects. */
+  nodes: Array<Maybe<CustomFieldDefinition>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CustomFieldDefinition` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `CustomFieldDefinition` edge in the connection. */
+export type CustomFieldDefinitionEdge = {
+  __typename?: 'CustomFieldDefinitionEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `CustomFieldDefinition` at the end of the edge. */
+  node?: Maybe<CustomFieldDefinition>;
+};
+
+/** A filter to be used against `CustomFieldDefinition` object types. All fields are combined with a logical ‘and.’ */
+export type CustomFieldDefinitionFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<CustomFieldDefinitionFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `customFieldValuesByDefinitionId` relation. */
+  customFieldValuesByDefinitionId?: InputMaybe<CustomFieldDefinitionToManyCustomFieldValueFilter>;
+  /** Some related `customFieldValuesByDefinitionId` exist. */
+  customFieldValuesByDefinitionIdExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `entityType` field. */
+  entityType?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<CustomFieldDefinitionFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<CustomFieldDefinitionFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+};
+
+/** Methods to use when ordering `CustomFieldDefinition`. */
+export enum CustomFieldDefinitionOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  EntityTypeAsc = 'ENTITY_TYPE_ASC',
+  EntityTypeDesc = 'ENTITY_TYPE_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+/** A filter to be used against many `CustomFieldValue` object types. All fields are combined with a logical ‘and.’ */
+export type CustomFieldDefinitionToManyCustomFieldValueFilter = {
+  /** Every related `CustomFieldValue` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CustomFieldValueFilter>;
+  /** No related `CustomFieldValue` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CustomFieldValueFilter>;
+  /** Some related `CustomFieldValue` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CustomFieldValueFilter>;
+};
+
+export type CustomFieldValue = Node & {
+  __typename?: 'CustomFieldValue';
+  /** Reads a single `Book` that is related to this `CustomFieldValue`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads a single `CustomFieldDefinition` that is related to this `CustomFieldValue`. */
+  definition?: Maybe<CustomFieldDefinition>;
+  definitionId: Scalars['UUID']['output'];
+  entityId: Scalars['UUID']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  rowId: Scalars['UUID']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * A condition to be used against `CustomFieldValue` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type CustomFieldValueCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `definitionId` field. */
+  definitionId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `entityId` field. */
+  entityId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `CustomFieldValue` values. */
+export type CustomFieldValueConnection = {
+  __typename?: 'CustomFieldValueConnection';
+  /** A list of edges which contains the `CustomFieldValue` and cursor to aid in pagination. */
+  edges: Array<Maybe<CustomFieldValueEdge>>;
+  /** A list of `CustomFieldValue` objects. */
+  nodes: Array<Maybe<CustomFieldValue>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CustomFieldValue` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `CustomFieldValue` edge in the connection. */
+export type CustomFieldValueEdge = {
+  __typename?: 'CustomFieldValueEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `CustomFieldValue` at the end of the edge. */
+  node?: Maybe<CustomFieldValue>;
+};
+
+/** A filter to be used against `CustomFieldValue` object types. All fields are combined with a logical ‘and.’ */
+export type CustomFieldValueFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<CustomFieldValueFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `definition` relation. */
+  definition?: InputMaybe<CustomFieldDefinitionFilter>;
+  /** Filter by the object’s `definitionId` field. */
+  definitionId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `entityId` field. */
+  entityId?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<CustomFieldValueFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<CustomFieldValueFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+};
+
+/** Methods to use when ordering `CustomFieldValue`. */
+export enum CustomFieldValueOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  DefinitionIdAsc = 'DEFINITION_ID_ASC',
+  DefinitionIdDesc = 'DEFINITION_ID_DESC',
+  EntityIdAsc = 'ENTITY_ID_ASC',
+  EntityIdDesc = 'ENTITY_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+export type Customer = Node & {
+  __typename?: 'Customer';
+  address?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Book` that is related to this `Customer`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  businessName?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads and enables pagination through a set of `CreditMemo`. */
+  creditMemos: CreditMemoConnection;
+  email?: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `Estimate`. */
+  estimates: EstimateConnection;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads and enables pagination through a set of `Invoice`. */
+  invoices: InvoiceConnection;
+  isActive: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  phone?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `PriceLevel` that is related to this `Customer`. */
+  priceLevel?: Maybe<PriceLevel>;
+  priceLevelId?: Maybe<Scalars['UUID']['output']>;
+  /** Reads and enables pagination through a set of `RecurringInvoice`. */
+  recurringInvoices: RecurringInvoiceConnection;
+  rowId: Scalars['UUID']['output'];
+  state?: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `TimeEntry`. */
+  timeEntries: TimeEntryConnection;
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+  zip?: Maybe<Scalars['String']['output']>;
+};
+
+
+export type CustomerCreditMemosArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CreditMemoCondition>;
+  filter?: InputMaybe<CreditMemoFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CreditMemoOrderBy>>;
+};
+
+
+export type CustomerEstimatesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<EstimateCondition>;
+  filter?: InputMaybe<EstimateFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EstimateOrderBy>>;
+};
+
+
+export type CustomerInvoicesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<InvoiceCondition>;
+  filter?: InputMaybe<InvoiceFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<InvoiceOrderBy>>;
+};
+
+
+export type CustomerRecurringInvoicesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<RecurringInvoiceCondition>;
+  filter?: InputMaybe<RecurringInvoiceFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RecurringInvoiceOrderBy>>;
+};
+
+
+export type CustomerTimeEntriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<TimeEntryCondition>;
+  filter?: InputMaybe<TimeEntryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TimeEntryOrderBy>>;
+};
+
+/**
+ * A condition to be used against `Customer` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type CustomerCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `Customer` values. */
+export type CustomerConnection = {
+  __typename?: 'CustomerConnection';
+  /** A list of edges which contains the `Customer` and cursor to aid in pagination. */
+  edges: Array<Maybe<CustomerEdge>>;
+  /** A list of `Customer` objects. */
+  nodes: Array<Maybe<Customer>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Customer` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Customer` edge in the connection. */
+export type CustomerEdge = {
+  __typename?: 'CustomerEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `Customer` at the end of the edge. */
+  node?: Maybe<Customer>;
+};
+
+/** A filter to be used against `Customer` object types. All fields are combined with a logical ‘and.’ */
+export type CustomerFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<CustomerFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `creditMemos` relation. */
+  creditMemos?: InputMaybe<CustomerToManyCreditMemoFilter>;
+  /** Some related `creditMemos` exist. */
+  creditMemosExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `estimates` relation. */
+  estimates?: InputMaybe<CustomerToManyEstimateFilter>;
+  /** Some related `estimates` exist. */
+  estimatesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `invoices` relation. */
+  invoices?: InputMaybe<CustomerToManyInvoiceFilter>;
+  /** Some related `invoices` exist. */
+  invoicesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Negates the expression. */
+  not?: InputMaybe<CustomerFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<CustomerFilter>>;
+  /** Filter by the object’s `priceLevel` relation. */
+  priceLevel?: InputMaybe<PriceLevelFilter>;
+  /** A related `priceLevel` exists. */
+  priceLevelExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `recurringInvoices` relation. */
+  recurringInvoices?: InputMaybe<CustomerToManyRecurringInvoiceFilter>;
+  /** Some related `recurringInvoices` exist. */
+  recurringInvoicesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `timeEntries` relation. */
+  timeEntries?: InputMaybe<CustomerToManyTimeEntryFilter>;
+  /** Some related `timeEntries` exist. */
+  timeEntriesExist?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Methods to use when ordering `Customer`. */
+export enum CustomerOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+/** A filter to be used against many `CreditMemo` object types. All fields are combined with a logical ‘and.’ */
+export type CustomerToManyCreditMemoFilter = {
+  /** Every related `CreditMemo` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CreditMemoFilter>;
+  /** No related `CreditMemo` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CreditMemoFilter>;
+  /** Some related `CreditMemo` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CreditMemoFilter>;
+};
+
+/** A filter to be used against many `Estimate` object types. All fields are combined with a logical ‘and.’ */
+export type CustomerToManyEstimateFilter = {
+  /** Every related `Estimate` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EstimateFilter>;
+  /** No related `Estimate` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EstimateFilter>;
+  /** Some related `Estimate` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EstimateFilter>;
+};
+
+/** A filter to be used against many `Invoice` object types. All fields are combined with a logical ‘and.’ */
+export type CustomerToManyInvoiceFilter = {
+  /** Every related `Invoice` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<InvoiceFilter>;
+  /** No related `Invoice` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<InvoiceFilter>;
+  /** Some related `Invoice` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<InvoiceFilter>;
+};
+
+/** A filter to be used against many `RecurringInvoice` object types. All fields are combined with a logical ‘and.’ */
+export type CustomerToManyRecurringInvoiceFilter = {
+  /** Every related `RecurringInvoice` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<RecurringInvoiceFilter>;
+  /** No related `RecurringInvoice` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<RecurringInvoiceFilter>;
+  /** Some related `RecurringInvoice` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<RecurringInvoiceFilter>;
+};
+
+/** A filter to be used against many `TimeEntry` object types. All fields are combined with a logical ‘and.’ */
+export type CustomerToManyTimeEntryFilter = {
+  /** Every related `TimeEntry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TimeEntryFilter>;
+  /** No related `TimeEntry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TimeEntryFilter>;
+  /** Some related `TimeEntry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TimeEntryFilter>;
 };
 
 /** A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’ */
@@ -2949,1236 +4134,329 @@ export type DatetimeFilter = {
   notIn?: InputMaybe<Array<Scalars['Datetime']['input']>>;
 };
 
-/** All input for the `deleteAccountById` mutation. */
-export type DeleteAccountByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Account` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteAccount` mutation. */
-export type DeleteAccountInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** All input for the `deleteAccountMappingById` mutation. */
-export type DeleteAccountMappingByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `AccountMapping` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteAccountMapping` mutation. */
-export type DeleteAccountMappingInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `AccountMapping` mutation. */
-export type DeleteAccountMappingPayload = {
-  __typename?: 'DeleteAccountMappingPayload';
-  /** The `AccountMapping` that was deleted by this mutation. */
-  accountMapping?: Maybe<AccountMapping>;
-  /** An edge for our `AccountMapping`. May be used by Relay 1. */
-  accountMappingEdge?: Maybe<AccountMappingEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedAccountMappingId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `AccountMapping` mutation. */
-export type DeleteAccountMappingPayloadAccountMappingEdgeArgs = {
-  orderBy?: Array<AccountMappingOrderBy>;
-};
-
-/** The output of our delete `Account` mutation. */
-export type DeleteAccountPayload = {
-  __typename?: 'DeleteAccountPayload';
-  /** The `Account` that was deleted by this mutation. */
-  account?: Maybe<Account>;
-  /** An edge for our `Account`. May be used by Relay 1. */
-  accountEdge?: Maybe<AccountEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedAccountId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `Account` mutation. */
-export type DeleteAccountPayloadAccountEdgeArgs = {
-  orderBy?: Array<AccountOrderBy>;
-};
-
-/** All input for the `deleteAccountingPeriodById` mutation. */
-export type DeleteAccountingPeriodByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `AccountingPeriod` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteAccountingPeriod` mutation. */
-export type DeleteAccountingPeriodInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `AccountingPeriod` mutation. */
-export type DeleteAccountingPeriodPayload = {
-  __typename?: 'DeleteAccountingPeriodPayload';
-  /** The `AccountingPeriod` that was deleted by this mutation. */
-  accountingPeriod?: Maybe<AccountingPeriod>;
-  /** An edge for our `AccountingPeriod`. May be used by Relay 1. */
-  accountingPeriodEdge?: Maybe<AccountingPeriodEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedAccountingPeriodId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `AccountingPeriod` mutation. */
-export type DeleteAccountingPeriodPayloadAccountingPeriodEdgeArgs = {
-  orderBy?: Array<AccountingPeriodOrderBy>;
-};
-
-/** All input for the `deleteBookAccessById` mutation. */
-export type DeleteBookAccessByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `BookAccess` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteBookAccess` mutation. */
-export type DeleteBookAccessInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `BookAccess` mutation. */
-export type DeleteBookAccessPayload = {
-  __typename?: 'DeleteBookAccessPayload';
-  /** The `BookAccess` that was deleted by this mutation. */
-  bookAccess?: Maybe<BookAccess>;
-  /** An edge for our `BookAccess`. May be used by Relay 1. */
-  bookAccessEdge?: Maybe<BookAccessEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedBookAccessId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `BookAccess` mutation. */
-export type DeleteBookAccessPayloadBookAccessEdgeArgs = {
-  orderBy?: Array<BookAccessOrderBy>;
-};
-
-/** All input for the `deleteBookById` mutation. */
-export type DeleteBookByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Book` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteBook` mutation. */
-export type DeleteBookInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `Book` mutation. */
-export type DeleteBookPayload = {
-  __typename?: 'DeleteBookPayload';
-  /** The `Book` that was deleted by this mutation. */
+export type Document = Node & {
+  __typename?: 'Document';
+  /** Reads a single `Book` that is related to this `Document`. */
   book?: Maybe<Book>;
-  /** An edge for our `Book`. May be used by Relay 1. */
-  bookEdge?: Maybe<BookEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedBookId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `Book` mutation. */
-export type DeleteBookPayloadBookEdgeArgs = {
-  orderBy?: Array<BookOrderBy>;
-};
-
-/** All input for the `deleteBudgetById` mutation. */
-export type DeleteBudgetByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Budget` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteBudget` mutation. */
-export type DeleteBudgetInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `Budget` mutation. */
-export type DeleteBudgetPayload = {
-  __typename?: 'DeleteBudgetPayload';
-  /** The `Budget` that was deleted by this mutation. */
-  budget?: Maybe<Budget>;
-  /** An edge for our `Budget`. May be used by Relay 1. */
-  budgetEdge?: Maybe<BudgetEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedBudgetId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `Budget` mutation. */
-export type DeleteBudgetPayloadBudgetEdgeArgs = {
-  orderBy?: Array<BudgetOrderBy>;
-};
-
-/** All input for the `deleteCategorizationRuleById` mutation. */
-export type DeleteCategorizationRuleByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `CategorizationRule` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteCategorizationRule` mutation. */
-export type DeleteCategorizationRuleInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `CategorizationRule` mutation. */
-export type DeleteCategorizationRulePayload = {
-  __typename?: 'DeleteCategorizationRulePayload';
-  /** The `CategorizationRule` that was deleted by this mutation. */
-  categorizationRule?: Maybe<CategorizationRule>;
-  /** An edge for our `CategorizationRule`. May be used by Relay 1. */
-  categorizationRuleEdge?: Maybe<CategorizationRuleEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedCategorizationRuleId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `CategorizationRule` mutation. */
-export type DeleteCategorizationRulePayloadCategorizationRuleEdgeArgs = {
-  orderBy?: Array<CategorizationRuleOrderBy>;
-};
-
-/** All input for the `deleteConnectedAccountById` mutation. */
-export type DeleteConnectedAccountByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `ConnectedAccount` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteConnectedAccount` mutation. */
-export type DeleteConnectedAccountInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `ConnectedAccount` mutation. */
-export type DeleteConnectedAccountPayload = {
-  __typename?: 'DeleteConnectedAccountPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `ConnectedAccount` that was deleted by this mutation. */
-  connectedAccount?: Maybe<ConnectedAccount>;
-  /** An edge for our `ConnectedAccount`. May be used by Relay 1. */
-  connectedAccountEdge?: Maybe<ConnectedAccountEdge>;
-  deletedConnectedAccountId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `ConnectedAccount` mutation. */
-export type DeleteConnectedAccountPayloadConnectedAccountEdgeArgs = {
-  orderBy?: Array<ConnectedAccountOrderBy>;
-};
-
-/** All input for the `deleteCryptoAssetById` mutation. */
-export type DeleteCryptoAssetByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `CryptoAsset` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteCryptoAsset` mutation. */
-export type DeleteCryptoAssetInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `CryptoAsset` mutation. */
-export type DeleteCryptoAssetPayload = {
-  __typename?: 'DeleteCryptoAssetPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `CryptoAsset` that was deleted by this mutation. */
-  cryptoAsset?: Maybe<CryptoAsset>;
-  /** An edge for our `CryptoAsset`. May be used by Relay 1. */
-  cryptoAssetEdge?: Maybe<CryptoAssetEdge>;
-  deletedCryptoAssetId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `CryptoAsset` mutation. */
-export type DeleteCryptoAssetPayloadCryptoAssetEdgeArgs = {
-  orderBy?: Array<CryptoAssetOrderBy>;
-};
-
-/** All input for the `deleteCryptoLotById` mutation. */
-export type DeleteCryptoLotByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `CryptoLot` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteCryptoLot` mutation. */
-export type DeleteCryptoLotInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `CryptoLot` mutation. */
-export type DeleteCryptoLotPayload = {
-  __typename?: 'DeleteCryptoLotPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `CryptoLot` that was deleted by this mutation. */
-  cryptoLot?: Maybe<CryptoLot>;
-  /** An edge for our `CryptoLot`. May be used by Relay 1. */
-  cryptoLotEdge?: Maybe<CryptoLotEdge>;
-  deletedCryptoLotId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `CryptoLot` mutation. */
-export type DeleteCryptoLotPayloadCryptoLotEdgeArgs = {
-  orderBy?: Array<CryptoLotOrderBy>;
-};
-
-/** All input for the `deleteDrizzleMigrationById` mutation. */
-export type DeleteDrizzleMigrationByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `_DrizzleMigration` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteDrizzleMigration` mutation. */
-export type DeleteDrizzleMigrationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['Int']['input'];
-};
-
-/** The output of our delete `_DrizzleMigration` mutation. */
-export type DeleteDrizzleMigrationPayload = {
-  __typename?: 'DeleteDrizzleMigrationPayload';
-  /** The `_DrizzleMigration` that was deleted by this mutation. */
-  _drizzleMigration?: Maybe<_DrizzleMigration>;
-  /** An edge for our `_DrizzleMigration`. May be used by Relay 1. */
-  _drizzleMigrationEdge?: Maybe<_DrizzleMigrationEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedDrizzleMigrationId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `_DrizzleMigration` mutation. */
-export type DeleteDrizzleMigrationPayload_DrizzleMigrationEdgeArgs = {
-  orderBy?: Array<_DrizzleMigrationOrderBy>;
-};
-
-/** All input for the `deleteFixedAssetById` mutation. */
-export type DeleteFixedAssetByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `FixedAsset` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteFixedAsset` mutation. */
-export type DeleteFixedAssetInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `FixedAsset` mutation. */
-export type DeleteFixedAssetPayload = {
-  __typename?: 'DeleteFixedAssetPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedFixedAssetId?: Maybe<Scalars['ID']['output']>;
-  /** The `FixedAsset` that was deleted by this mutation. */
-  fixedAsset?: Maybe<FixedAsset>;
-  /** An edge for our `FixedAsset`. May be used by Relay 1. */
-  fixedAssetEdge?: Maybe<FixedAssetEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `FixedAsset` mutation. */
-export type DeleteFixedAssetPayloadFixedAssetEdgeArgs = {
-  orderBy?: Array<FixedAssetOrderBy>;
-};
-
-/** All input for the `deleteImportProfileById` mutation. */
-export type DeleteImportProfileByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `ImportProfile` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteImportProfile` mutation. */
-export type DeleteImportProfileInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `ImportProfile` mutation. */
-export type DeleteImportProfilePayload = {
-  __typename?: 'DeleteImportProfilePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedImportProfileId?: Maybe<Scalars['ID']['output']>;
-  /** The `ImportProfile` that was deleted by this mutation. */
-  importProfile?: Maybe<ImportProfile>;
-  /** An edge for our `ImportProfile`. May be used by Relay 1. */
-  importProfileEdge?: Maybe<ImportProfileEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `ImportProfile` mutation. */
-export type DeleteImportProfilePayloadImportProfileEdgeArgs = {
-  orderBy?: Array<ImportProfileOrderBy>;
-};
-
-/** All input for the `deleteJournalEntryById` mutation. */
-export type DeleteJournalEntryByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `JournalEntry` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteJournalEntry` mutation. */
-export type DeleteJournalEntryInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `JournalEntry` mutation. */
-export type DeleteJournalEntryPayload = {
-  __typename?: 'DeleteJournalEntryPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedJournalEntryId?: Maybe<Scalars['ID']['output']>;
-  /** The `JournalEntry` that was deleted by this mutation. */
-  journalEntry?: Maybe<JournalEntry>;
-  /** An edge for our `JournalEntry`. May be used by Relay 1. */
-  journalEntryEdge?: Maybe<JournalEntryEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `JournalEntry` mutation. */
-export type DeleteJournalEntryPayloadJournalEntryEdgeArgs = {
-  orderBy?: Array<JournalEntryOrderBy>;
-};
-
-/** All input for the `deleteJournalLineById` mutation. */
-export type DeleteJournalLineByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `JournalLine` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteJournalLine` mutation. */
-export type DeleteJournalLineInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `JournalLine` mutation. */
-export type DeleteJournalLinePayload = {
-  __typename?: 'DeleteJournalLinePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedJournalLineId?: Maybe<Scalars['ID']['output']>;
-  /** The `JournalLine` that was deleted by this mutation. */
-  journalLine?: Maybe<JournalLine>;
-  /** An edge for our `JournalLine`. May be used by Relay 1. */
-  journalLineEdge?: Maybe<JournalLineEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `JournalLine` mutation. */
-export type DeleteJournalLinePayloadJournalLineEdgeArgs = {
-  orderBy?: Array<JournalLineOrderBy>;
-};
-
-/** All input for the `deleteJournalLineTagById` mutation. */
-export type DeleteJournalLineTagByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `JournalLineTag` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteJournalLineTag` mutation. */
-export type DeleteJournalLineTagInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `JournalLineTag` mutation. */
-export type DeleteJournalLineTagPayload = {
-  __typename?: 'DeleteJournalLineTagPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedJournalLineTagId?: Maybe<Scalars['ID']['output']>;
-  /** The `JournalLineTag` that was deleted by this mutation. */
-  journalLineTag?: Maybe<JournalLineTag>;
-  /** An edge for our `JournalLineTag`. May be used by Relay 1. */
-  journalLineTagEdge?: Maybe<JournalLineTagEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `JournalLineTag` mutation. */
-export type DeleteJournalLineTagPayloadJournalLineTagEdgeArgs = {
-  orderBy?: Array<JournalLineTagOrderBy>;
-};
-
-/** All input for the `deleteMileageLogById` mutation. */
-export type DeleteMileageLogByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `MileageLog` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteMileageLog` mutation. */
-export type DeleteMileageLogInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `MileageLog` mutation. */
-export type DeleteMileageLogPayload = {
-  __typename?: 'DeleteMileageLogPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedMileageLogId?: Maybe<Scalars['ID']['output']>;
-  /** The `MileageLog` that was deleted by this mutation. */
-  mileageLog?: Maybe<MileageLog>;
-  /** An edge for our `MileageLog`. May be used by Relay 1. */
-  mileageLogEdge?: Maybe<MileageLogEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `MileageLog` mutation. */
-export type DeleteMileageLogPayloadMileageLogEdgeArgs = {
-  orderBy?: Array<MileageLogOrderBy>;
-};
-
-/** All input for the `deleteNetWorthSnapshotById` mutation. */
-export type DeleteNetWorthSnapshotByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `NetWorthSnapshot` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteNetWorthSnapshot` mutation. */
-export type DeleteNetWorthSnapshotInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `NetWorthSnapshot` mutation. */
-export type DeleteNetWorthSnapshotPayload = {
-  __typename?: 'DeleteNetWorthSnapshotPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedNetWorthSnapshotId?: Maybe<Scalars['ID']['output']>;
-  /** The `NetWorthSnapshot` that was deleted by this mutation. */
-  netWorthSnapshot?: Maybe<NetWorthSnapshot>;
-  /** An edge for our `NetWorthSnapshot`. May be used by Relay 1. */
-  netWorthSnapshotEdge?: Maybe<NetWorthSnapshotEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `NetWorthSnapshot` mutation. */
-export type DeleteNetWorthSnapshotPayloadNetWorthSnapshotEdgeArgs = {
-  orderBy?: Array<NetWorthSnapshotOrderBy>;
-};
-
-/** All input for the `deletePayrollConnectionById` mutation. */
-export type DeletePayrollConnectionByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `PayrollConnection` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deletePayrollConnection` mutation. */
-export type DeletePayrollConnectionInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `PayrollConnection` mutation. */
-export type DeletePayrollConnectionPayload = {
-  __typename?: 'DeletePayrollConnectionPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedPayrollConnectionId?: Maybe<Scalars['ID']['output']>;
-  /** The `PayrollConnection` that was deleted by this mutation. */
-  payrollConnection?: Maybe<PayrollConnection>;
-  /** An edge for our `PayrollConnection`. May be used by Relay 1. */
-  payrollConnectionEdge?: Maybe<PayrollConnectionEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `PayrollConnection` mutation. */
-export type DeletePayrollConnectionPayloadPayrollConnectionEdgeArgs = {
-  orderBy?: Array<PayrollConnectionOrderBy>;
-};
-
-/** All input for the `deleteReconciliationQueueById` mutation. */
-export type DeleteReconciliationQueueByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `ReconciliationQueue` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteReconciliationQueue` mutation. */
-export type DeleteReconciliationQueueInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `ReconciliationQueue` mutation. */
-export type DeleteReconciliationQueuePayload = {
-  __typename?: 'DeleteReconciliationQueuePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedReconciliationQueueId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `ReconciliationQueue` that was deleted by this mutation. */
-  reconciliationQueue?: Maybe<ReconciliationQueue>;
-  /** An edge for our `ReconciliationQueue`. May be used by Relay 1. */
-  reconciliationQueueEdge?: Maybe<ReconciliationQueueEdge>;
-};
-
-
-/** The output of our delete `ReconciliationQueue` mutation. */
-export type DeleteReconciliationQueuePayloadReconciliationQueueEdgeArgs = {
-  orderBy?: Array<ReconciliationQueueOrderBy>;
-};
-
-/** All input for the `deleteReconciliationStatementById` mutation. */
-export type DeleteReconciliationStatementByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `ReconciliationStatement` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteReconciliationStatement` mutation. */
-export type DeleteReconciliationStatementInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `ReconciliationStatement` mutation. */
-export type DeleteReconciliationStatementPayload = {
-  __typename?: 'DeleteReconciliationStatementPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedReconciliationStatementId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `ReconciliationStatement` that was deleted by this mutation. */
-  reconciliationStatement?: Maybe<ReconciliationStatement>;
-  /** An edge for our `ReconciliationStatement`. May be used by Relay 1. */
-  reconciliationStatementEdge?: Maybe<ReconciliationStatementEdge>;
-};
-
-
-/** The output of our delete `ReconciliationStatement` mutation. */
-export type DeleteReconciliationStatementPayloadReconciliationStatementEdgeArgs = {
-  orderBy?: Array<ReconciliationStatementOrderBy>;
-};
-
-/** All input for the `deleteRecurringTransactionById` mutation. */
-export type DeleteRecurringTransactionByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `RecurringTransaction` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteRecurringTransaction` mutation. */
-export type DeleteRecurringTransactionInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `RecurringTransaction` mutation. */
-export type DeleteRecurringTransactionPayload = {
-  __typename?: 'DeleteRecurringTransactionPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedRecurringTransactionId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `RecurringTransaction` that was deleted by this mutation. */
-  recurringTransaction?: Maybe<RecurringTransaction>;
-  /** An edge for our `RecurringTransaction`. May be used by Relay 1. */
-  recurringTransactionEdge?: Maybe<RecurringTransactionEdge>;
-};
-
-
-/** The output of our delete `RecurringTransaction` mutation. */
-export type DeleteRecurringTransactionPayloadRecurringTransactionEdgeArgs = {
-  orderBy?: Array<RecurringTransactionOrderBy>;
-};
-
-/** All input for the `deleteSavingsGoalById` mutation. */
-export type DeleteSavingsGoalByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `SavingsGoal` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteSavingsGoal` mutation. */
-export type DeleteSavingsGoalInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `SavingsGoal` mutation. */
-export type DeleteSavingsGoalPayload = {
-  __typename?: 'DeleteSavingsGoalPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedSavingsGoalId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `SavingsGoal` that was deleted by this mutation. */
-  savingsGoal?: Maybe<SavingsGoal>;
-  /** An edge for our `SavingsGoal`. May be used by Relay 1. */
-  savingsGoalEdge?: Maybe<SavingsGoalEdge>;
-};
-
-
-/** The output of our delete `SavingsGoal` mutation. */
-export type DeleteSavingsGoalPayloadSavingsGoalEdgeArgs = {
-  orderBy?: Array<SavingsGoalOrderBy>;
-};
-
-/** All input for the `deleteTagById` mutation. */
-export type DeleteTagByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Tag` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteTagGroupById` mutation. */
-export type DeleteTagGroupByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `TagGroup` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteTagGroup` mutation. */
-export type DeleteTagGroupInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `TagGroup` mutation. */
-export type DeleteTagGroupPayload = {
-  __typename?: 'DeleteTagGroupPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedTagGroupId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `TagGroup` that was deleted by this mutation. */
-  tagGroup?: Maybe<TagGroup>;
-  /** An edge for our `TagGroup`. May be used by Relay 1. */
-  tagGroupEdge?: Maybe<TagGroupEdge>;
-};
-
-
-/** The output of our delete `TagGroup` mutation. */
-export type DeleteTagGroupPayloadTagGroupEdgeArgs = {
-  orderBy?: Array<TagGroupOrderBy>;
-};
-
-/** All input for the `deleteTag` mutation. */
-export type DeleteTagInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `Tag` mutation. */
-export type DeleteTagPayload = {
-  __typename?: 'DeleteTagPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedTagId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `Tag` that was deleted by this mutation. */
-  tag?: Maybe<Tag>;
-  /** An edge for our `Tag`. May be used by Relay 1. */
-  tagEdge?: Maybe<TagEdge>;
-};
-
-
-/** The output of our delete `Tag` mutation. */
-export type DeleteTagPayloadTagEdgeArgs = {
-  orderBy?: Array<TagOrderBy>;
-};
-
-/** All input for the `deleteTaxJurisdictionById` mutation. */
-export type DeleteTaxJurisdictionByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `TaxJurisdiction` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteTaxJurisdiction` mutation. */
-export type DeleteTaxJurisdictionInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `TaxJurisdiction` mutation. */
-export type DeleteTaxJurisdictionPayload = {
-  __typename?: 'DeleteTaxJurisdictionPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedTaxJurisdictionId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `TaxJurisdiction` that was deleted by this mutation. */
-  taxJurisdiction?: Maybe<TaxJurisdiction>;
-  /** An edge for our `TaxJurisdiction`. May be used by Relay 1. */
-  taxJurisdictionEdge?: Maybe<TaxJurisdictionEdge>;
-};
-
-
-/** The output of our delete `TaxJurisdiction` mutation. */
-export type DeleteTaxJurisdictionPayloadTaxJurisdictionEdgeArgs = {
-  orderBy?: Array<TaxJurisdictionOrderBy>;
-};
-
-/** All input for the `deleteVehicleById` mutation. */
-export type DeleteVehicleByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Vehicle` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteVehicle` mutation. */
-export type DeleteVehicleInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `Vehicle` mutation. */
-export type DeleteVehiclePayload = {
-  __typename?: 'DeleteVehiclePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedVehicleId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `Vehicle` that was deleted by this mutation. */
-  vehicle?: Maybe<Vehicle>;
-  /** An edge for our `Vehicle`. May be used by Relay 1. */
-  vehicleEdge?: Maybe<VehicleEdge>;
-};
-
-
-/** The output of our delete `Vehicle` mutation. */
-export type DeleteVehiclePayloadVehicleEdgeArgs = {
-  orderBy?: Array<VehicleOrderBy>;
-};
-
-/** All input for the `deleteVendorById` mutation. */
-export type DeleteVendorByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Vendor` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteVendor` mutation. */
-export type DeleteVendorInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `Vendor` mutation. */
-export type DeleteVendorPayload = {
-  __typename?: 'DeleteVendorPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedVendorId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `Vendor` that was deleted by this mutation. */
+  bookId: Scalars['UUID']['output'];
+  category: Scalars['String']['output'];
+  contentType: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  createdBy: Scalars['String']['output'];
+  filename: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  rowId: Scalars['UUID']['output'];
+  sizeBytes: Scalars['Int']['output'];
+  storageKey: Scalars['String']['output'];
+  /** Reads a single `Vendor` that is related to this `Document`. */
   vendor?: Maybe<Vendor>;
-  /** An edge for our `Vendor`. May be used by Relay 1. */
-  vendorEdge?: Maybe<VendorEdge>;
+  vendorId?: Maybe<Scalars['UUID']['output']>;
+  year?: Maybe<Scalars['Int']['output']>;
+};
+
+/**
+ * A condition to be used against `Document` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type DocumentCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `category` field. */
+  category?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `vendorId` field. */
+  vendorId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `Document` values. */
+export type DocumentConnection = {
+  __typename?: 'DocumentConnection';
+  /** A list of edges which contains the `Document` and cursor to aid in pagination. */
+  edges: Array<Maybe<DocumentEdge>>;
+  /** A list of `Document` objects. */
+  nodes: Array<Maybe<Document>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Document` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Document` edge in the connection. */
+export type DocumentEdge = {
+  __typename?: 'DocumentEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `Document` at the end of the edge. */
+  node?: Maybe<Document>;
+};
+
+/** A filter to be used against `Document` object types. All fields are combined with a logical ‘and.’ */
+export type DocumentFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<DocumentFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `category` field. */
+  category?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<DocumentFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<DocumentFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `vendor` relation. */
+  vendor?: InputMaybe<VendorFilter>;
+  /** A related `vendor` exists. */
+  vendorExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `vendorId` field. */
+  vendorId?: InputMaybe<UuidFilter>;
+};
+
+/** Methods to use when ordering `Document`. */
+export enum DocumentOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  CategoryAsc = 'CATEGORY_ASC',
+  CategoryDesc = 'CATEGORY_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  VendorIdAsc = 'VENDOR_ID_ASC',
+  VendorIdDesc = 'VENDOR_ID_DESC'
+}
+
+export type Estimate = Node & {
+  __typename?: 'Estimate';
+  /** Reads a single `Book` that is related to this `Estimate`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  /** Reads a single `Invoice` that is related to this `Estimate`. */
+  convertedInvoice?: Maybe<Invoice>;
+  convertedInvoiceId?: Maybe<Scalars['UUID']['output']>;
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads a single `Customer` that is related to this `Estimate`. */
+  customer?: Maybe<Customer>;
+  customerId: Scalars['UUID']['output'];
+  estimateDate: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `EstimateLine`. */
+  estimateLines: EstimateLineConnection;
+  expiryDate?: Maybe<Scalars['String']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  memo?: Maybe<Scalars['String']['output']>;
+  number: Scalars['String']['output'];
+  rowId: Scalars['UUID']['output'];
+  status: Scalars['String']['output'];
+  subtotal: Scalars['BigFloat']['output'];
+  terms?: Maybe<Scalars['String']['output']>;
+  total: Scalars['BigFloat']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
 };
 
 
-/** The output of our delete `Vendor` mutation. */
-export type DeleteVendorPayloadVendorEdgeArgs = {
-  orderBy?: Array<VendorOrderBy>;
+export type EstimateEstimateLinesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<EstimateLineCondition>;
+  filter?: InputMaybe<EstimateLineFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EstimateLineOrderBy>>;
+};
+
+/**
+ * A condition to be used against `Estimate` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type EstimateCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `customerId` field. */
+  customerId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `number` field. */
+  number?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A connection to a list of `Estimate` values. */
+export type EstimateConnection = {
+  __typename?: 'EstimateConnection';
+  /** A list of edges which contains the `Estimate` and cursor to aid in pagination. */
+  edges: Array<Maybe<EstimateEdge>>;
+  /** A list of `Estimate` objects. */
+  nodes: Array<Maybe<Estimate>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Estimate` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Estimate` edge in the connection. */
+export type EstimateEdge = {
+  __typename?: 'EstimateEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `Estimate` at the end of the edge. */
+  node?: Maybe<Estimate>;
+};
+
+/** A filter to be used against `Estimate` object types. All fields are combined with a logical ‘and.’ */
+export type EstimateFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<EstimateFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `convertedInvoice` relation. */
+  convertedInvoice?: InputMaybe<InvoiceFilter>;
+  /** A related `convertedInvoice` exists. */
+  convertedInvoiceExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `customer` relation. */
+  customer?: InputMaybe<CustomerFilter>;
+  /** Filter by the object’s `customerId` field. */
+  customerId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `estimateLines` relation. */
+  estimateLines?: InputMaybe<EstimateToManyEstimateLineFilter>;
+  /** Some related `estimateLines` exist. */
+  estimateLinesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Negates the expression. */
+  not?: InputMaybe<EstimateFilter>;
+  /** Filter by the object’s `number` field. */
+  number?: InputMaybe<StringFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<EstimateFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: InputMaybe<StringFilter>;
+};
+
+export type EstimateLine = Node & {
+  __typename?: 'EstimateLine';
+  amount: Scalars['BigFloat']['output'];
+  billedAmount: Scalars['BigFloat']['output'];
+  description: Scalars['String']['output'];
+  /** Reads a single `Estimate` that is related to this `EstimateLine`. */
+  estimate?: Maybe<Estimate>;
+  estimateId: Scalars['UUID']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `Account` that is related to this `EstimateLine`. */
+  incomeAccount?: Maybe<Account>;
+  incomeAccountId: Scalars['UUID']['output'];
+  quantity: Scalars['BigFloat']['output'];
+  rowId: Scalars['UUID']['output'];
+  sortOrder: Scalars['Int']['output'];
+  /** Reads a single `TaxJurisdiction` that is related to this `EstimateLine`. */
+  taxJurisdiction?: Maybe<TaxJurisdiction>;
+  taxJurisdictionId?: Maybe<Scalars['UUID']['output']>;
+  unitPrice: Scalars['BigFloat']['output'];
+};
+
+/**
+ * A condition to be used against `EstimateLine` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type EstimateLineCondition = {
+  /** Checks for equality with the object’s `estimateId` field. */
+  estimateId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `EstimateLine` values. */
+export type EstimateLineConnection = {
+  __typename?: 'EstimateLineConnection';
+  /** A list of edges which contains the `EstimateLine` and cursor to aid in pagination. */
+  edges: Array<Maybe<EstimateLineEdge>>;
+  /** A list of `EstimateLine` objects. */
+  nodes: Array<Maybe<EstimateLine>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `EstimateLine` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `EstimateLine` edge in the connection. */
+export type EstimateLineEdge = {
+  __typename?: 'EstimateLineEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `EstimateLine` at the end of the edge. */
+  node?: Maybe<EstimateLine>;
+};
+
+/** A filter to be used against `EstimateLine` object types. All fields are combined with a logical ‘and.’ */
+export type EstimateLineFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<EstimateLineFilter>>;
+  /** Filter by the object’s `estimate` relation. */
+  estimate?: InputMaybe<EstimateFilter>;
+  /** Filter by the object’s `estimateId` field. */
+  estimateId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `incomeAccount` relation. */
+  incomeAccount?: InputMaybe<AccountFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<EstimateLineFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<EstimateLineFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `taxJurisdiction` relation. */
+  taxJurisdiction?: InputMaybe<TaxJurisdictionFilter>;
+  /** A related `taxJurisdiction` exists. */
+  taxJurisdictionExists?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Methods to use when ordering `EstimateLine`. */
+export enum EstimateLineOrderBy {
+  EstimateIdAsc = 'ESTIMATE_ID_ASC',
+  EstimateIdDesc = 'ESTIMATE_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+/** Methods to use when ordering `Estimate`. */
+export enum EstimateOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  CustomerIdAsc = 'CUSTOMER_ID_ASC',
+  CustomerIdDesc = 'CUSTOMER_ID_DESC',
+  Natural = 'NATURAL',
+  NumberAsc = 'NUMBER_ASC',
+  NumberDesc = 'NUMBER_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC'
+}
+
+/** A filter to be used against many `EstimateLine` object types. All fields are combined with a logical ‘and.’ */
+export type EstimateToManyEstimateLineFilter = {
+  /** Every related `EstimateLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EstimateLineFilter>;
+  /** No related `EstimateLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EstimateLineFilter>;
+  /** Some related `EstimateLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EstimateLineFilter>;
 };
 
 export type FixedAsset = Node & {
@@ -4270,26 +4548,6 @@ export type FixedAssetFilter = {
   rowId?: InputMaybe<UuidFilter>;
 };
 
-/** An input for mutations affecting `FixedAsset` */
-export type FixedAssetInput = {
-  accumulatedDepreciationAccountId: Scalars['UUID']['input'];
-  acquisitionCost: Scalars['BigFloat']['input'];
-  acquisitionDate: Scalars['String']['input'];
-  assetAccountId: Scalars['UUID']['input'];
-  bookId: Scalars['UUID']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  depreciationExpenseAccountId: Scalars['UUID']['input'];
-  depreciationMethod: Scalars['String']['input'];
-  description?: InputMaybe<Scalars['String']['input']>;
-  disposalProceeds?: InputMaybe<Scalars['BigFloat']['input']>;
-  disposedAt?: InputMaybe<Scalars['String']['input']>;
-  macrsClass?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  salvageValue?: InputMaybe<Scalars['BigFloat']['input']>;
-  usefulLifeMonths: Scalars['Int']['input'];
-};
-
 /** Methods to use when ordering `FixedAsset`. */
 export enum FixedAssetOrderBy {
   BookIdAsc = 'BOOK_ID_ASC',
@@ -4303,25 +4561,90 @@ export enum FixedAssetOrderBy {
   RowIdDesc = 'ROW_ID_DESC'
 }
 
-/** Represents an update to a `FixedAsset`. Fields that are set will be updated. */
-export type FixedAssetPatch = {
-  accumulatedDepreciationAccountId?: InputMaybe<Scalars['UUID']['input']>;
-  acquisitionCost?: InputMaybe<Scalars['BigFloat']['input']>;
-  acquisitionDate?: InputMaybe<Scalars['String']['input']>;
-  assetAccountId?: InputMaybe<Scalars['UUID']['input']>;
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  depreciationExpenseAccountId?: InputMaybe<Scalars['UUID']['input']>;
-  depreciationMethod?: InputMaybe<Scalars['String']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  disposalProceeds?: InputMaybe<Scalars['BigFloat']['input']>;
-  disposedAt?: InputMaybe<Scalars['String']['input']>;
-  macrsClass?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  salvageValue?: InputMaybe<Scalars['BigFloat']['input']>;
-  usefulLifeMonths?: InputMaybe<Scalars['Int']['input']>;
+export type FormTemplate = Node & {
+  __typename?: 'FormTemplate';
+  accentColor: Scalars['String']['output'];
+  /** Reads a single `Book` that is related to this `FormTemplate`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  documentType: Scalars['String']['output'];
+  footerText?: Maybe<Scalars['String']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  isDefault: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  rowId: Scalars['UUID']['output'];
+  showLogo: Scalars['Boolean']['output'];
+  terms?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
 };
+
+/**
+ * A condition to be used against `FormTemplate` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type FormTemplateCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `documentType` field. */
+  documentType?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `FormTemplate` values. */
+export type FormTemplateConnection = {
+  __typename?: 'FormTemplateConnection';
+  /** A list of edges which contains the `FormTemplate` and cursor to aid in pagination. */
+  edges: Array<Maybe<FormTemplateEdge>>;
+  /** A list of `FormTemplate` objects. */
+  nodes: Array<Maybe<FormTemplate>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `FormTemplate` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `FormTemplate` edge in the connection. */
+export type FormTemplateEdge = {
+  __typename?: 'FormTemplateEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `FormTemplate` at the end of the edge. */
+  node?: Maybe<FormTemplate>;
+};
+
+/** A filter to be used against `FormTemplate` object types. All fields are combined with a logical ‘and.’ */
+export type FormTemplateFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<FormTemplateFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `documentType` field. */
+  documentType?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<FormTemplateFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<FormTemplateFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+};
+
+/** Methods to use when ordering `FormTemplate`. */
+export enum FormTemplateOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  DocumentTypeAsc = 'DOCUMENT_TYPE_ASC',
+  DocumentTypeDesc = 'DOCUMENT_TYPE_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
 
 export type ImportProfile = Node & {
   __typename?: 'ImportProfile';
@@ -4383,17 +4706,6 @@ export type ImportProfileFilter = {
   rowId?: InputMaybe<UuidFilter>;
 };
 
-/** An input for mutations affecting `ImportProfile` */
-export type ImportProfileInput = {
-  bookId: Scalars['UUID']['input'];
-  columnMap: Scalars['JSON']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  headerRows?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
 /** Methods to use when ordering `ImportProfile`. */
 export enum ImportProfileOrderBy {
   Natural = 'NATURAL',
@@ -4402,17 +4714,6 @@ export enum ImportProfileOrderBy {
   RowIdAsc = 'ROW_ID_ASC',
   RowIdDesc = 'ROW_ID_DESC'
 }
-
-/** Represents an update to a `ImportProfile`. Fields that are set will be updated. */
-export type ImportProfilePatch = {
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  columnMap?: InputMaybe<Scalars['JSON']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  headerRows?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
 
 /** A filter to be used against Int fields. All fields are combined with a logical ‘and.’ */
 export type IntFilter = {
@@ -4440,8 +4741,738 @@ export type IntFilter = {
   notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
+export type InventoryItem = Node & {
+  __typename?: 'InventoryItem';
+  /** Reads a single `Account` that is related to this `InventoryItem`. */
+  assetAccount?: Maybe<Account>;
+  assetAccountId?: Maybe<Scalars['UUID']['output']>;
+  averageCost: Scalars['BigFloat']['output'];
+  /** Reads a single `Book` that is related to this `InventoryItem`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  /** Reads a single `Account` that is related to this `InventoryItem`. */
+  cogsAccount?: Maybe<Account>;
+  cogsAccountId?: Maybe<Scalars['UUID']['output']>;
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `Account` that is related to this `InventoryItem`. */
+  incomeAccount?: Maybe<Account>;
+  incomeAccountId: Scalars['UUID']['output'];
+  /** Reads and enables pagination through a set of `InventoryTransaction`. */
+  inventoryTransactionsByItemId: InventoryTransactionConnection;
+  isActive: Scalars['Boolean']['output'];
+  itemType: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  quantityOnHand: Scalars['BigFloat']['output'];
+  reorderPoint?: Maybe<Scalars['BigFloat']['output']>;
+  rowId: Scalars['UUID']['output'];
+  salePrice: Scalars['BigFloat']['output'];
+  sku?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+};
+
+
+export type InventoryItemInventoryTransactionsByItemIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<InventoryTransactionCondition>;
+  filter?: InputMaybe<InventoryTransactionFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<InventoryTransactionOrderBy>>;
+};
+
+/**
+ * A condition to be used against `InventoryItem` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type InventoryItemCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `InventoryItem` values. */
+export type InventoryItemConnection = {
+  __typename?: 'InventoryItemConnection';
+  /** A list of edges which contains the `InventoryItem` and cursor to aid in pagination. */
+  edges: Array<Maybe<InventoryItemEdge>>;
+  /** A list of `InventoryItem` objects. */
+  nodes: Array<Maybe<InventoryItem>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `InventoryItem` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `InventoryItem` edge in the connection. */
+export type InventoryItemEdge = {
+  __typename?: 'InventoryItemEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `InventoryItem` at the end of the edge. */
+  node?: Maybe<InventoryItem>;
+};
+
+/** A filter to be used against `InventoryItem` object types. All fields are combined with a logical ‘and.’ */
+export type InventoryItemFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<InventoryItemFilter>>;
+  /** Filter by the object’s `assetAccount` relation. */
+  assetAccount?: InputMaybe<AccountFilter>;
+  /** A related `assetAccount` exists. */
+  assetAccountExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `cogsAccount` relation. */
+  cogsAccount?: InputMaybe<AccountFilter>;
+  /** A related `cogsAccount` exists. */
+  cogsAccountExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `incomeAccount` relation. */
+  incomeAccount?: InputMaybe<AccountFilter>;
+  /** Filter by the object’s `inventoryTransactionsByItemId` relation. */
+  inventoryTransactionsByItemId?: InputMaybe<InventoryItemToManyInventoryTransactionFilter>;
+  /** Some related `inventoryTransactionsByItemId` exist. */
+  inventoryTransactionsByItemIdExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Negates the expression. */
+  not?: InputMaybe<InventoryItemFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<InventoryItemFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+};
+
+/** Methods to use when ordering `InventoryItem`. */
+export enum InventoryItemOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+/** A filter to be used against many `InventoryTransaction` object types. All fields are combined with a logical ‘and.’ */
+export type InventoryItemToManyInventoryTransactionFilter = {
+  /** Every related `InventoryTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<InventoryTransactionFilter>;
+  /** No related `InventoryTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<InventoryTransactionFilter>;
+  /** Some related `InventoryTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<InventoryTransactionFilter>;
+};
+
+export type InventoryTransaction = Node & {
+  __typename?: 'InventoryTransaction';
+  /** Reads a single `Book` that is related to this `InventoryTransaction`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  date: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `InventoryItem` that is related to this `InventoryTransaction`. */
+  item?: Maybe<InventoryItem>;
+  itemId: Scalars['UUID']['output'];
+  /** Reads a single `JournalEntry` that is related to this `InventoryTransaction`. */
+  journalEntry?: Maybe<JournalEntry>;
+  journalEntryId?: Maybe<Scalars['UUID']['output']>;
+  note?: Maybe<Scalars['String']['output']>;
+  quantity: Scalars['BigFloat']['output'];
+  rowId: Scalars['UUID']['output'];
+  type: Scalars['String']['output'];
+  unitCost: Scalars['BigFloat']['output'];
+};
+
+/**
+ * A condition to be used against `InventoryTransaction` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type InventoryTransactionCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `itemId` field. */
+  itemId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `InventoryTransaction` values. */
+export type InventoryTransactionConnection = {
+  __typename?: 'InventoryTransactionConnection';
+  /** A list of edges which contains the `InventoryTransaction` and cursor to aid in pagination. */
+  edges: Array<Maybe<InventoryTransactionEdge>>;
+  /** A list of `InventoryTransaction` objects. */
+  nodes: Array<Maybe<InventoryTransaction>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `InventoryTransaction` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `InventoryTransaction` edge in the connection. */
+export type InventoryTransactionEdge = {
+  __typename?: 'InventoryTransactionEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `InventoryTransaction` at the end of the edge. */
+  node?: Maybe<InventoryTransaction>;
+};
+
+/** A filter to be used against `InventoryTransaction` object types. All fields are combined with a logical ‘and.’ */
+export type InventoryTransactionFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<InventoryTransactionFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `item` relation. */
+  item?: InputMaybe<InventoryItemFilter>;
+  /** Filter by the object’s `itemId` field. */
+  itemId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `journalEntry` relation. */
+  journalEntry?: InputMaybe<JournalEntryFilter>;
+  /** A related `journalEntry` exists. */
+  journalEntryExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Negates the expression. */
+  not?: InputMaybe<InventoryTransactionFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<InventoryTransactionFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+};
+
+/** Methods to use when ordering `InventoryTransaction`. */
+export enum InventoryTransactionOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  ItemIdAsc = 'ITEM_ID_ASC',
+  ItemIdDesc = 'ITEM_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+export type Invoice = Node & {
+  __typename?: 'Invoice';
+  amountPaid: Scalars['BigFloat']['output'];
+  /** Reads a single `Book` that is related to this `Invoice`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads and enables pagination through a set of `CreditMemoApplication`. */
+  creditMemoApplications: CreditMemoApplicationConnection;
+  currency: Scalars['String']['output'];
+  /** Reads a single `Customer` that is related to this `Invoice`. */
+  customer?: Maybe<Customer>;
+  customerId: Scalars['UUID']['output'];
+  dueDate: Scalars['String']['output'];
+  exchangeRate: Scalars['BigFloat']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads and enables pagination through a set of `InvoiceLine`. */
+  invoiceLines: InvoiceLineConnection;
+  /** Reads and enables pagination through a set of `InvoicePayment`. */
+  invoicePayments: InvoicePaymentConnection;
+  issueDate: Scalars['String']['output'];
+  /** Reads a single `JournalEntry` that is related to this `Invoice`. */
+  journalEntry?: Maybe<JournalEntry>;
+  journalEntryId?: Maybe<Scalars['UUID']['output']>;
+  memo?: Maybe<Scalars['String']['output']>;
+  number: Scalars['String']['output'];
+  rowId: Scalars['UUID']['output'];
+  status: Scalars['String']['output'];
+  subtotal: Scalars['BigFloat']['output'];
+  taxAmount: Scalars['BigFloat']['output'];
+  terms?: Maybe<Scalars['String']['output']>;
+  total: Scalars['BigFloat']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+};
+
+
+export type InvoiceCreditMemoApplicationsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CreditMemoApplicationCondition>;
+  filter?: InputMaybe<CreditMemoApplicationFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CreditMemoApplicationOrderBy>>;
+};
+
+
+export type InvoiceInvoiceLinesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<InvoiceLineCondition>;
+  filter?: InputMaybe<InvoiceLineFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<InvoiceLineOrderBy>>;
+};
+
+
+export type InvoiceInvoicePaymentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<InvoicePaymentCondition>;
+  filter?: InputMaybe<InvoicePaymentFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<InvoicePaymentOrderBy>>;
+};
+
+/** A condition to be used against `Invoice` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type InvoiceCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `customerId` field. */
+  customerId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `number` field. */
+  number?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A connection to a list of `Invoice` values. */
+export type InvoiceConnection = {
+  __typename?: 'InvoiceConnection';
+  /** A list of edges which contains the `Invoice` and cursor to aid in pagination. */
+  edges: Array<Maybe<InvoiceEdge>>;
+  /** A list of `Invoice` objects. */
+  nodes: Array<Maybe<Invoice>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Invoice` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Invoice` edge in the connection. */
+export type InvoiceEdge = {
+  __typename?: 'InvoiceEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `Invoice` at the end of the edge. */
+  node?: Maybe<Invoice>;
+};
+
+/** A filter to be used against `Invoice` object types. All fields are combined with a logical ‘and.’ */
+export type InvoiceFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<InvoiceFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `creditMemoApplications` relation. */
+  creditMemoApplications?: InputMaybe<InvoiceToManyCreditMemoApplicationFilter>;
+  /** Some related `creditMemoApplications` exist. */
+  creditMemoApplicationsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `customer` relation. */
+  customer?: InputMaybe<CustomerFilter>;
+  /** Filter by the object’s `customerId` field. */
+  customerId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `invoiceLines` relation. */
+  invoiceLines?: InputMaybe<InvoiceToManyInvoiceLineFilter>;
+  /** Some related `invoiceLines` exist. */
+  invoiceLinesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `invoicePayments` relation. */
+  invoicePayments?: InputMaybe<InvoiceToManyInvoicePaymentFilter>;
+  /** Some related `invoicePayments` exist. */
+  invoicePaymentsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `journalEntry` relation. */
+  journalEntry?: InputMaybe<JournalEntryFilter>;
+  /** A related `journalEntry` exists. */
+  journalEntryExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Negates the expression. */
+  not?: InputMaybe<InvoiceFilter>;
+  /** Filter by the object’s `number` field. */
+  number?: InputMaybe<StringFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<InvoiceFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: InputMaybe<StringFilter>;
+};
+
+export type InvoiceLine = Node & {
+  __typename?: 'InvoiceLine';
+  amount: Scalars['BigFloat']['output'];
+  description: Scalars['String']['output'];
+  discountPercent?: Maybe<Scalars['BigFloat']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `Account` that is related to this `InvoiceLine`. */
+  incomeAccount?: Maybe<Account>;
+  incomeAccountId: Scalars['UUID']['output'];
+  /** Reads a single `InventoryItem` that is related to this `InvoiceLine`. */
+  inventoryItem?: Maybe<InventoryItem>;
+  inventoryItemId?: Maybe<Scalars['UUID']['output']>;
+  /** Reads a single `Invoice` that is related to this `InvoiceLine`. */
+  invoice?: Maybe<Invoice>;
+  invoiceId: Scalars['UUID']['output'];
+  quantity: Scalars['BigFloat']['output'];
+  rowId: Scalars['UUID']['output'];
+  /** Reads a single `TaxJurisdiction` that is related to this `InvoiceLine`. */
+  secondaryTaxJurisdiction?: Maybe<TaxJurisdiction>;
+  secondaryTaxJurisdictionId?: Maybe<Scalars['UUID']['output']>;
+  sortOrder: Scalars['Int']['output'];
+  /** Reads a single `TaxJurisdiction` that is related to this `InvoiceLine`. */
+  taxJurisdiction?: Maybe<TaxJurisdiction>;
+  taxJurisdictionId?: Maybe<Scalars['UUID']['output']>;
+  unitPrice: Scalars['BigFloat']['output'];
+};
+
+/**
+ * A condition to be used against `InvoiceLine` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type InvoiceLineCondition = {
+  /** Checks for equality with the object’s `invoiceId` field. */
+  invoiceId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `InvoiceLine` values. */
+export type InvoiceLineConnection = {
+  __typename?: 'InvoiceLineConnection';
+  /** A list of edges which contains the `InvoiceLine` and cursor to aid in pagination. */
+  edges: Array<Maybe<InvoiceLineEdge>>;
+  /** A list of `InvoiceLine` objects. */
+  nodes: Array<Maybe<InvoiceLine>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `InvoiceLine` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `InvoiceLine` edge in the connection. */
+export type InvoiceLineEdge = {
+  __typename?: 'InvoiceLineEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `InvoiceLine` at the end of the edge. */
+  node?: Maybe<InvoiceLine>;
+};
+
+/** A filter to be used against `InvoiceLine` object types. All fields are combined with a logical ‘and.’ */
+export type InvoiceLineFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<InvoiceLineFilter>>;
+  /** Filter by the object’s `incomeAccount` relation. */
+  incomeAccount?: InputMaybe<AccountFilter>;
+  /** Filter by the object’s `inventoryItem` relation. */
+  inventoryItem?: InputMaybe<InventoryItemFilter>;
+  /** A related `inventoryItem` exists. */
+  inventoryItemExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `invoice` relation. */
+  invoice?: InputMaybe<InvoiceFilter>;
+  /** Filter by the object’s `invoiceId` field. */
+  invoiceId?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<InvoiceLineFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<InvoiceLineFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `secondaryTaxJurisdiction` relation. */
+  secondaryTaxJurisdiction?: InputMaybe<TaxJurisdictionFilter>;
+  /** A related `secondaryTaxJurisdiction` exists. */
+  secondaryTaxJurisdictionExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `taxJurisdiction` relation. */
+  taxJurisdiction?: InputMaybe<TaxJurisdictionFilter>;
+  /** A related `taxJurisdiction` exists. */
+  taxJurisdictionExists?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Methods to use when ordering `InvoiceLine`. */
+export enum InvoiceLineOrderBy {
+  InvoiceIdAsc = 'INVOICE_ID_ASC',
+  InvoiceIdDesc = 'INVOICE_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+/** Methods to use when ordering `Invoice`. */
+export enum InvoiceOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  CustomerIdAsc = 'CUSTOMER_ID_ASC',
+  CustomerIdDesc = 'CUSTOMER_ID_DESC',
+  Natural = 'NATURAL',
+  NumberAsc = 'NUMBER_ASC',
+  NumberDesc = 'NUMBER_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC'
+}
+
+export type InvoicePayment = Node & {
+  __typename?: 'InvoicePayment';
+  amount: Scalars['BigFloat']['output'];
+  /** Reads a single `BankDeposit` that is related to this `InvoicePayment`. */
+  bankDeposit?: Maybe<BankDeposit>;
+  bankDepositId?: Maybe<Scalars['UUID']['output']>;
+  /** Reads a single `Book` that is related to this `InvoicePayment`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  date: Scalars['String']['output'];
+  /** Reads a single `Account` that is related to this `InvoicePayment`. */
+  depositAccount?: Maybe<Account>;
+  depositAccountId: Scalars['UUID']['output'];
+  exchangeRate: Scalars['BigFloat']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `Invoice` that is related to this `InvoicePayment`. */
+  invoice?: Maybe<Invoice>;
+  invoiceId: Scalars['UUID']['output'];
+  /** Reads a single `JournalEntry` that is related to this `InvoicePayment`. */
+  journalEntry?: Maybe<JournalEntry>;
+  journalEntryId?: Maybe<Scalars['UUID']['output']>;
+  method?: Maybe<Scalars['String']['output']>;
+  reference?: Maybe<Scalars['String']['output']>;
+  rowId: Scalars['UUID']['output'];
+};
+
+/**
+ * A condition to be used against `InvoicePayment` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type InvoicePaymentCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `invoiceId` field. */
+  invoiceId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `InvoicePayment` values. */
+export type InvoicePaymentConnection = {
+  __typename?: 'InvoicePaymentConnection';
+  /** A list of edges which contains the `InvoicePayment` and cursor to aid in pagination. */
+  edges: Array<Maybe<InvoicePaymentEdge>>;
+  /** A list of `InvoicePayment` objects. */
+  nodes: Array<Maybe<InvoicePayment>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `InvoicePayment` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `InvoicePayment` edge in the connection. */
+export type InvoicePaymentEdge = {
+  __typename?: 'InvoicePaymentEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `InvoicePayment` at the end of the edge. */
+  node?: Maybe<InvoicePayment>;
+};
+
+/** A filter to be used against `InvoicePayment` object types. All fields are combined with a logical ‘and.’ */
+export type InvoicePaymentFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<InvoicePaymentFilter>>;
+  /** Filter by the object’s `bankDeposit` relation. */
+  bankDeposit?: InputMaybe<BankDepositFilter>;
+  /** A related `bankDeposit` exists. */
+  bankDepositExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `depositAccount` relation. */
+  depositAccount?: InputMaybe<AccountFilter>;
+  /** Filter by the object’s `invoice` relation. */
+  invoice?: InputMaybe<InvoiceFilter>;
+  /** Filter by the object’s `invoiceId` field. */
+  invoiceId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `journalEntry` relation. */
+  journalEntry?: InputMaybe<JournalEntryFilter>;
+  /** A related `journalEntry` exists. */
+  journalEntryExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Negates the expression. */
+  not?: InputMaybe<InvoicePaymentFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<InvoicePaymentFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+};
+
+/** Methods to use when ordering `InvoicePayment`. */
+export enum InvoicePaymentOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  InvoiceIdAsc = 'INVOICE_ID_ASC',
+  InvoiceIdDesc = 'INVOICE_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+/** A filter to be used against many `CreditMemoApplication` object types. All fields are combined with a logical ‘and.’ */
+export type InvoiceToManyCreditMemoApplicationFilter = {
+  /** Every related `CreditMemoApplication` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CreditMemoApplicationFilter>;
+  /** No related `CreditMemoApplication` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CreditMemoApplicationFilter>;
+  /** Some related `CreditMemoApplication` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CreditMemoApplicationFilter>;
+};
+
+/** A filter to be used against many `InvoiceLine` object types. All fields are combined with a logical ‘and.’ */
+export type InvoiceToManyInvoiceLineFilter = {
+  /** Every related `InvoiceLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<InvoiceLineFilter>;
+  /** No related `InvoiceLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<InvoiceLineFilter>;
+  /** Some related `InvoiceLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<InvoiceLineFilter>;
+};
+
+/** A filter to be used against many `InvoicePayment` object types. All fields are combined with a logical ‘and.’ */
+export type InvoiceToManyInvoicePaymentFilter = {
+  /** Every related `InvoicePayment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<InvoicePaymentFilter>;
+  /** No related `InvoicePayment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<InvoicePaymentFilter>;
+  /** Some related `InvoicePayment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<InvoicePaymentFilter>;
+};
+
+export type ItemBundle = Node & {
+  __typename?: 'ItemBundle';
+  /** Reads a single `Book` that is related to this `ItemBundle`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  /** Reads and enables pagination through a set of `BundleComponent`. */
+  bundleComponentsByBundleId: BundleComponentConnection;
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  isActive: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  rowId: Scalars['UUID']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+};
+
+
+export type ItemBundleBundleComponentsByBundleIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<BundleComponentCondition>;
+  filter?: InputMaybe<BundleComponentFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<BundleComponentOrderBy>>;
+};
+
+/**
+ * A condition to be used against `ItemBundle` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type ItemBundleCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `ItemBundle` values. */
+export type ItemBundleConnection = {
+  __typename?: 'ItemBundleConnection';
+  /** A list of edges which contains the `ItemBundle` and cursor to aid in pagination. */
+  edges: Array<Maybe<ItemBundleEdge>>;
+  /** A list of `ItemBundle` objects. */
+  nodes: Array<Maybe<ItemBundle>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ItemBundle` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `ItemBundle` edge in the connection. */
+export type ItemBundleEdge = {
+  __typename?: 'ItemBundleEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `ItemBundle` at the end of the edge. */
+  node?: Maybe<ItemBundle>;
+};
+
+/** A filter to be used against `ItemBundle` object types. All fields are combined with a logical ‘and.’ */
+export type ItemBundleFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<ItemBundleFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `bundleComponentsByBundleId` relation. */
+  bundleComponentsByBundleId?: InputMaybe<ItemBundleToManyBundleComponentFilter>;
+  /** Some related `bundleComponentsByBundleId` exist. */
+  bundleComponentsByBundleIdExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Negates the expression. */
+  not?: InputMaybe<ItemBundleFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<ItemBundleFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+};
+
+/** Methods to use when ordering `ItemBundle`. */
+export enum ItemBundleOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+/** A filter to be used against many `BundleComponent` object types. All fields are combined with a logical ‘and.’ */
+export type ItemBundleToManyBundleComponentFilter = {
+  /** Every related `BundleComponent` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<BundleComponentFilter>;
+  /** No related `BundleComponent` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<BundleComponentFilter>;
+  /** Some related `BundleComponent` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<BundleComponentFilter>;
+};
+
 export type JournalEntry = Node & {
   __typename?: 'JournalEntry';
+  /** Reads and enables pagination through a set of `Attachment`. */
+  attachments: AttachmentConnection;
   /** Reads a single `Book` that is related to this `JournalEntry`. */
   book?: Maybe<Book>;
   bookId: Scalars['UUID']['output'];
@@ -4461,6 +5492,18 @@ export type JournalEntry = Node & {
   /** Reads a single `Vendor` that is related to this `JournalEntry`. */
   vendor?: Maybe<Vendor>;
   vendorId?: Maybe<Scalars['UUID']['output']>;
+};
+
+
+export type JournalEntryAttachmentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AttachmentCondition>;
+  filter?: InputMaybe<AttachmentFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AttachmentOrderBy>>;
 };
 
 
@@ -4518,6 +5561,10 @@ export type JournalEntryEdge = {
 export type JournalEntryFilter = {
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<JournalEntryFilter>>;
+  /** Filter by the object’s `attachments` relation. */
+  attachments?: InputMaybe<JournalEntryToManyAttachmentFilter>;
+  /** Some related `attachments` exist. */
+  attachmentsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `book` relation. */
   book?: InputMaybe<BookFilter>;
   /** Filter by the object’s `bookId` field. */
@@ -4544,21 +5591,6 @@ export type JournalEntryFilter = {
   vendorExists?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/** An input for mutations affecting `JournalEntry` */
-export type JournalEntryInput = {
-  bookId: Scalars['UUID']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  date: Scalars['Datetime']['input'];
-  isReconciled?: InputMaybe<Scalars['Boolean']['input']>;
-  isReviewed?: InputMaybe<Scalars['Boolean']['input']>;
-  memo?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  source?: InputMaybe<Scalars['String']['input']>;
-  sourceReferenceId?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  vendorId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
 /** Methods to use when ordering `JournalEntry`. */
 export enum JournalEntryOrderBy {
   BookIdAsc = 'BOOK_ID_ASC',
@@ -4576,19 +5608,14 @@ export enum JournalEntryOrderBy {
   SourceReferenceIdDesc = 'SOURCE_REFERENCE_ID_DESC'
 }
 
-/** Represents an update to a `JournalEntry`. Fields that are set will be updated. */
-export type JournalEntryPatch = {
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  date?: InputMaybe<Scalars['Datetime']['input']>;
-  isReconciled?: InputMaybe<Scalars['Boolean']['input']>;
-  isReviewed?: InputMaybe<Scalars['Boolean']['input']>;
-  memo?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  source?: InputMaybe<Scalars['String']['input']>;
-  sourceReferenceId?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  vendorId?: InputMaybe<Scalars['UUID']['input']>;
+/** A filter to be used against many `Attachment` object types. All fields are combined with a logical ‘and.’ */
+export type JournalEntryToManyAttachmentFilter = {
+  /** Every related `Attachment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<AttachmentFilter>;
+  /** No related `Attachment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<AttachmentFilter>;
+  /** Some related `Attachment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<AttachmentFilter>;
 };
 
 /** A filter to be used against many `JournalLine` object types. All fields are combined with a logical ‘and.’ */
@@ -4614,10 +5641,29 @@ export type JournalLine = Node & {
   /** Reads a single `JournalEntry` that is related to this `JournalLine`. */
   journalEntry?: Maybe<JournalEntry>;
   journalEntryId: Scalars['UUID']['output'];
+  /** Reads and enables pagination through a set of `JournalLineProject`. */
+  journalLineProjects: JournalLineProjectConnection;
   /** Reads and enables pagination through a set of `JournalLineTag`. */
   journalLineTags: JournalLineTagConnection;
+  /** Reads and enables pagination through a set of `JournalLineTrackingCategory`. */
+  journalLineTrackingCategories: JournalLineTrackingCategoryConnection;
   memo?: Maybe<Scalars['String']['output']>;
   rowId: Scalars['UUID']['output'];
+  /** Reads a single `TaxJurisdiction` that is related to this `JournalLine`. */
+  taxJurisdiction?: Maybe<TaxJurisdiction>;
+  taxJurisdictionId?: Maybe<Scalars['UUID']['output']>;
+};
+
+
+export type JournalLineJournalLineProjectsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<JournalLineProjectCondition>;
+  filter?: InputMaybe<JournalLineProjectFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<JournalLineProjectOrderBy>>;
 };
 
 
@@ -4632,6 +5678,18 @@ export type JournalLineJournalLineTagsArgs = {
   orderBy?: InputMaybe<Array<JournalLineTagOrderBy>>;
 };
 
+
+export type JournalLineJournalLineTrackingCategoriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<JournalLineTrackingCategoryCondition>;
+  filter?: InputMaybe<JournalLineTrackingCategoryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<JournalLineTrackingCategoryOrderBy>>;
+};
+
 /**
  * A condition to be used against `JournalLine` object types. All fields are tested
  * for equality and combined with a logical ‘and.’
@@ -4643,6 +5701,8 @@ export type JournalLineCondition = {
   journalEntryId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `taxJurisdictionId` field. */
+  taxJurisdictionId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** A connection to a list of `JournalLine` values. */
@@ -4679,27 +5739,30 @@ export type JournalLineFilter = {
   journalEntry?: InputMaybe<JournalEntryFilter>;
   /** Filter by the object’s `journalEntryId` field. */
   journalEntryId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `journalLineProjects` relation. */
+  journalLineProjects?: InputMaybe<JournalLineToManyJournalLineProjectFilter>;
+  /** Some related `journalLineProjects` exist. */
+  journalLineProjectsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `journalLineTags` relation. */
   journalLineTags?: InputMaybe<JournalLineToManyJournalLineTagFilter>;
   /** Some related `journalLineTags` exist. */
   journalLineTagsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `journalLineTrackingCategories` relation. */
+  journalLineTrackingCategories?: InputMaybe<JournalLineToManyJournalLineTrackingCategoryFilter>;
+  /** Some related `journalLineTrackingCategories` exist. */
+  journalLineTrackingCategoriesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Negates the expression. */
   not?: InputMaybe<JournalLineFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<JournalLineFilter>>;
   /** Filter by the object’s `rowId` field. */
   rowId?: InputMaybe<UuidFilter>;
-};
-
-/** An input for mutations affecting `JournalLine` */
-export type JournalLineInput = {
-  accountId: Scalars['UUID']['input'];
-  cleared?: InputMaybe<Scalars['Boolean']['input']>;
-  credit?: InputMaybe<Scalars['BigFloat']['input']>;
-  debit?: InputMaybe<Scalars['BigFloat']['input']>;
-  journalEntryId: Scalars['UUID']['input'];
-  memo?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Filter by the object’s `taxJurisdiction` relation. */
+  taxJurisdiction?: InputMaybe<TaxJurisdictionFilter>;
+  /** A related `taxJurisdiction` exists. */
+  taxJurisdictionExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `taxJurisdictionId` field. */
+  taxJurisdictionId?: InputMaybe<UuidFilter>;
 };
 
 /** Methods to use when ordering `JournalLine`. */
@@ -4712,19 +5775,91 @@ export enum JournalLineOrderBy {
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RowIdAsc = 'ROW_ID_ASC',
-  RowIdDesc = 'ROW_ID_DESC'
+  RowIdDesc = 'ROW_ID_DESC',
+  TaxJurisdictionIdAsc = 'TAX_JURISDICTION_ID_ASC',
+  TaxJurisdictionIdDesc = 'TAX_JURISDICTION_ID_DESC'
 }
 
-/** Represents an update to a `JournalLine`. Fields that are set will be updated. */
-export type JournalLinePatch = {
-  accountId?: InputMaybe<Scalars['UUID']['input']>;
-  cleared?: InputMaybe<Scalars['Boolean']['input']>;
-  credit?: InputMaybe<Scalars['BigFloat']['input']>;
-  debit?: InputMaybe<Scalars['BigFloat']['input']>;
-  journalEntryId?: InputMaybe<Scalars['UUID']['input']>;
-  memo?: InputMaybe<Scalars['String']['input']>;
+export type JournalLineProject = Node & {
+  __typename?: 'JournalLineProject';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `JournalLine` that is related to this `JournalLineProject`. */
+  journalLine?: Maybe<JournalLine>;
+  journalLineId: Scalars['UUID']['output'];
+  /** Reads a single `Project` that is related to this `JournalLineProject`. */
+  project?: Maybe<Project>;
+  projectId: Scalars['UUID']['output'];
+  rowId: Scalars['UUID']['output'];
+};
+
+/**
+ * A condition to be used against `JournalLineProject` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type JournalLineProjectCondition = {
+  /** Checks for equality with the object’s `journalLineId` field. */
+  journalLineId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `projectId` field. */
+  projectId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['UUID']['input']>;
 };
+
+/** A connection to a list of `JournalLineProject` values. */
+export type JournalLineProjectConnection = {
+  __typename?: 'JournalLineProjectConnection';
+  /** A list of edges which contains the `JournalLineProject` and cursor to aid in pagination. */
+  edges: Array<Maybe<JournalLineProjectEdge>>;
+  /** A list of `JournalLineProject` objects. */
+  nodes: Array<Maybe<JournalLineProject>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `JournalLineProject` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `JournalLineProject` edge in the connection. */
+export type JournalLineProjectEdge = {
+  __typename?: 'JournalLineProjectEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `JournalLineProject` at the end of the edge. */
+  node?: Maybe<JournalLineProject>;
+};
+
+/** A filter to be used against `JournalLineProject` object types. All fields are combined with a logical ‘and.’ */
+export type JournalLineProjectFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<JournalLineProjectFilter>>;
+  /** Filter by the object’s `journalLine` relation. */
+  journalLine?: InputMaybe<JournalLineFilter>;
+  /** Filter by the object’s `journalLineId` field. */
+  journalLineId?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<JournalLineProjectFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<JournalLineProjectFilter>>;
+  /** Filter by the object’s `project` relation. */
+  project?: InputMaybe<ProjectFilter>;
+  /** Filter by the object’s `projectId` field. */
+  projectId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+};
+
+/** Methods to use when ordering `JournalLineProject`. */
+export enum JournalLineProjectOrderBy {
+  JournalLineIdAsc = 'JOURNAL_LINE_ID_ASC',
+  JournalLineIdDesc = 'JOURNAL_LINE_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  ProjectIdAsc = 'PROJECT_ID_ASC',
+  ProjectIdDesc = 'PROJECT_ID_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
 
 export type JournalLineTag = Node & {
   __typename?: 'JournalLineTag';
@@ -4794,13 +5929,6 @@ export type JournalLineTagFilter = {
   tagId?: InputMaybe<UuidFilter>;
 };
 
-/** An input for mutations affecting `JournalLineTag` */
-export type JournalLineTagInput = {
-  journalLineId: Scalars['UUID']['input'];
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  tagId: Scalars['UUID']['input'];
-};
-
 /** Methods to use when ordering `JournalLineTag`. */
 export enum JournalLineTagOrderBy {
   JournalLineIdAsc = 'JOURNAL_LINE_ID_ASC',
@@ -4814,11 +5942,14 @@ export enum JournalLineTagOrderBy {
   TagIdDesc = 'TAG_ID_DESC'
 }
 
-/** Represents an update to a `JournalLineTag`. Fields that are set will be updated. */
-export type JournalLineTagPatch = {
-  journalLineId?: InputMaybe<Scalars['UUID']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  tagId?: InputMaybe<Scalars['UUID']['input']>;
+/** A filter to be used against many `JournalLineProject` object types. All fields are combined with a logical ‘and.’ */
+export type JournalLineToManyJournalLineProjectFilter = {
+  /** Every related `JournalLineProject` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<JournalLineProjectFilter>;
+  /** No related `JournalLineProject` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<JournalLineProjectFilter>;
+  /** Some related `JournalLineProject` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<JournalLineProjectFilter>;
 };
 
 /** A filter to be used against many `JournalLineTag` object types. All fields are combined with a logical ‘and.’ */
@@ -4829,6 +5960,225 @@ export type JournalLineToManyJournalLineTagFilter = {
   none?: InputMaybe<JournalLineTagFilter>;
   /** Some related `JournalLineTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<JournalLineTagFilter>;
+};
+
+/** A filter to be used against many `JournalLineTrackingCategory` object types. All fields are combined with a logical ‘and.’ */
+export type JournalLineToManyJournalLineTrackingCategoryFilter = {
+  /** Every related `JournalLineTrackingCategory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<JournalLineTrackingCategoryFilter>;
+  /** No related `JournalLineTrackingCategory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<JournalLineTrackingCategoryFilter>;
+  /** Some related `JournalLineTrackingCategory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<JournalLineTrackingCategoryFilter>;
+};
+
+export type JournalLineTrackingCategory = Node & {
+  __typename?: 'JournalLineTrackingCategory';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `JournalLine` that is related to this `JournalLineTrackingCategory`. */
+  journalLine?: Maybe<JournalLine>;
+  journalLineId: Scalars['UUID']['output'];
+  rowId: Scalars['UUID']['output'];
+  /** Reads a single `TrackingCategory` that is related to this `JournalLineTrackingCategory`. */
+  trackingCategory?: Maybe<TrackingCategory>;
+  trackingCategoryId: Scalars['UUID']['output'];
+};
+
+/**
+ * A condition to be used against `JournalLineTrackingCategory` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
+ */
+export type JournalLineTrackingCategoryCondition = {
+  /** Checks for equality with the object’s `journalLineId` field. */
+  journalLineId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `trackingCategoryId` field. */
+  trackingCategoryId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `JournalLineTrackingCategory` values. */
+export type JournalLineTrackingCategoryConnection = {
+  __typename?: 'JournalLineTrackingCategoryConnection';
+  /** A list of edges which contains the `JournalLineTrackingCategory` and cursor to aid in pagination. */
+  edges: Array<Maybe<JournalLineTrackingCategoryEdge>>;
+  /** A list of `JournalLineTrackingCategory` objects. */
+  nodes: Array<Maybe<JournalLineTrackingCategory>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `JournalLineTrackingCategory` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `JournalLineTrackingCategory` edge in the connection. */
+export type JournalLineTrackingCategoryEdge = {
+  __typename?: 'JournalLineTrackingCategoryEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `JournalLineTrackingCategory` at the end of the edge. */
+  node?: Maybe<JournalLineTrackingCategory>;
+};
+
+/** A filter to be used against `JournalLineTrackingCategory` object types. All fields are combined with a logical ‘and.’ */
+export type JournalLineTrackingCategoryFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<JournalLineTrackingCategoryFilter>>;
+  /** Filter by the object’s `journalLine` relation. */
+  journalLine?: InputMaybe<JournalLineFilter>;
+  /** Filter by the object’s `journalLineId` field. */
+  journalLineId?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<JournalLineTrackingCategoryFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<JournalLineTrackingCategoryFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `trackingCategory` relation. */
+  trackingCategory?: InputMaybe<TrackingCategoryFilter>;
+  /** Filter by the object’s `trackingCategoryId` field. */
+  trackingCategoryId?: InputMaybe<UuidFilter>;
+};
+
+/** Methods to use when ordering `JournalLineTrackingCategory`. */
+export enum JournalLineTrackingCategoryOrderBy {
+  JournalLineIdAsc = 'JOURNAL_LINE_ID_ASC',
+  JournalLineIdDesc = 'JOURNAL_LINE_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  TrackingCategoryIdAsc = 'TRACKING_CATEGORY_ID_ASC',
+  TrackingCategoryIdDesc = 'TRACKING_CATEGORY_ID_DESC'
+}
+
+export type Loan = Node & {
+  __typename?: 'Loan';
+  /** Reads and enables pagination through a set of `AmortizationEntry`. */
+  amortizationEntries: AmortizationEntryConnection;
+  annualRate: Scalars['BigFloat']['output'];
+  /** Reads a single `Book` that is related to this `Loan`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  extraPrincipal: Scalars['BigFloat']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `Account` that is related to this `Loan`. */
+  interestAccount?: Maybe<Account>;
+  interestAccountId: Scalars['UUID']['output'];
+  /** Reads a single `Account` that is related to this `Loan`. */
+  liabilityAccount?: Maybe<Account>;
+  liabilityAccountId: Scalars['UUID']['output'];
+  name: Scalars['String']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  originalPrincipal: Scalars['BigFloat']['output'];
+  /** Reads a single `Account` that is related to this `Loan`. */
+  paymentAccount?: Maybe<Account>;
+  paymentAccountId: Scalars['UUID']['output'];
+  paymentAmount?: Maybe<Scalars['BigFloat']['output']>;
+  paymentDay: Scalars['Int']['output'];
+  rowId: Scalars['UUID']['output'];
+  startDate: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+  termMonths: Scalars['Int']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+};
+
+
+export type LoanAmortizationEntriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AmortizationEntryCondition>;
+  filter?: InputMaybe<AmortizationEntryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AmortizationEntryOrderBy>>;
+};
+
+/** A condition to be used against `Loan` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type LoanCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A connection to a list of `Loan` values. */
+export type LoanConnection = {
+  __typename?: 'LoanConnection';
+  /** A list of edges which contains the `Loan` and cursor to aid in pagination. */
+  edges: Array<Maybe<LoanEdge>>;
+  /** A list of `Loan` objects. */
+  nodes: Array<Maybe<Loan>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Loan` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Loan` edge in the connection. */
+export type LoanEdge = {
+  __typename?: 'LoanEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `Loan` at the end of the edge. */
+  node?: Maybe<Loan>;
+};
+
+/** A filter to be used against `Loan` object types. All fields are combined with a logical ‘and.’ */
+export type LoanFilter = {
+  /** Filter by the object’s `amortizationEntries` relation. */
+  amortizationEntries?: InputMaybe<LoanToManyAmortizationEntryFilter>;
+  /** Some related `amortizationEntries` exist. */
+  amortizationEntriesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<LoanFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `interestAccount` relation. */
+  interestAccount?: InputMaybe<AccountFilter>;
+  /** Filter by the object’s `liabilityAccount` relation. */
+  liabilityAccount?: InputMaybe<AccountFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<LoanFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<LoanFilter>>;
+  /** Filter by the object’s `paymentAccount` relation. */
+  paymentAccount?: InputMaybe<AccountFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: InputMaybe<StringFilter>;
+};
+
+/** Methods to use when ordering `Loan`. */
+export enum LoanOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC'
+}
+
+/** A filter to be used against many `AmortizationEntry` object types. All fields are combined with a logical ‘and.’ */
+export type LoanToManyAmortizationEntryFilter = {
+  /** Every related `AmortizationEntry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<AmortizationEntryFilter>;
+  /** No related `AmortizationEntry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<AmortizationEntryFilter>;
+  /** Some related `AmortizationEntry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<AmortizationEntryFilter>;
 };
 
 export type MileageLog = Node & {
@@ -4913,23 +6263,6 @@ export type MileageLogFilter = {
   vehicleId?: InputMaybe<UuidFilter>;
 };
 
-/** An input for mutations affecting `MileageLog` */
-export type MileageLogInput = {
-  bookId: Scalars['UUID']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  date: Scalars['String']['input'];
-  description?: InputMaybe<Scalars['String']['input']>;
-  destination?: InputMaybe<Scalars['String']['input']>;
-  distance: Scalars['BigFloat']['input'];
-  isRoundTrip?: InputMaybe<Scalars['Boolean']['input']>;
-  odometerEnd?: InputMaybe<Scalars['BigFloat']['input']>;
-  odometerStart?: InputMaybe<Scalars['BigFloat']['input']>;
-  origin?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  vehicleId: Scalars['UUID']['input'];
-};
-
 /** Methods to use when ordering `MileageLog`. */
 export enum MileageLogOrderBy {
   BookIdAsc = 'BOOK_ID_ASC',
@@ -4944,1148 +6277,6 @@ export enum MileageLogOrderBy {
   VehicleIdAsc = 'VEHICLE_ID_ASC',
   VehicleIdDesc = 'VEHICLE_ID_DESC'
 }
-
-/** Represents an update to a `MileageLog`. Fields that are set will be updated. */
-export type MileageLogPatch = {
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  date?: InputMaybe<Scalars['String']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  destination?: InputMaybe<Scalars['String']['input']>;
-  distance?: InputMaybe<Scalars['BigFloat']['input']>;
-  isRoundTrip?: InputMaybe<Scalars['Boolean']['input']>;
-  odometerEnd?: InputMaybe<Scalars['BigFloat']['input']>;
-  odometerStart?: InputMaybe<Scalars['BigFloat']['input']>;
-  origin?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  vehicleId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type Mutation = {
-  __typename?: 'Mutation';
-  /** Creates a single `Account`. */
-  createAccount?: Maybe<CreateAccountPayload>;
-  /** Creates a single `AccountMapping`. */
-  createAccountMapping?: Maybe<CreateAccountMappingPayload>;
-  /** Creates a single `AccountingPeriod`. */
-  createAccountingPeriod?: Maybe<CreateAccountingPeriodPayload>;
-  /** Creates a single `Book`. */
-  createBook?: Maybe<CreateBookPayload>;
-  /** Creates a single `BookAccess`. */
-  createBookAccess?: Maybe<CreateBookAccessPayload>;
-  /** Creates a single `Budget`. */
-  createBudget?: Maybe<CreateBudgetPayload>;
-  /** Creates a single `CategorizationRule`. */
-  createCategorizationRule?: Maybe<CreateCategorizationRulePayload>;
-  /** Creates a single `ConnectedAccount`. */
-  createConnectedAccount?: Maybe<CreateConnectedAccountPayload>;
-  /** Creates a single `CryptoAsset`. */
-  createCryptoAsset?: Maybe<CreateCryptoAssetPayload>;
-  /** Creates a single `CryptoLot`. */
-  createCryptoLot?: Maybe<CreateCryptoLotPayload>;
-  /** Creates a single `_DrizzleMigration`. */
-  createDrizzleMigration?: Maybe<CreateDrizzleMigrationPayload>;
-  /** Creates a single `FixedAsset`. */
-  createFixedAsset?: Maybe<CreateFixedAssetPayload>;
-  /** Creates a single `ImportProfile`. */
-  createImportProfile?: Maybe<CreateImportProfilePayload>;
-  /** Creates a single `JournalEntry`. */
-  createJournalEntry?: Maybe<CreateJournalEntryPayload>;
-  /** Creates a single `JournalLine`. */
-  createJournalLine?: Maybe<CreateJournalLinePayload>;
-  /** Creates a single `JournalLineTag`. */
-  createJournalLineTag?: Maybe<CreateJournalLineTagPayload>;
-  /** Creates a single `MileageLog`. */
-  createMileageLog?: Maybe<CreateMileageLogPayload>;
-  /** Creates a single `NetWorthSnapshot`. */
-  createNetWorthSnapshot?: Maybe<CreateNetWorthSnapshotPayload>;
-  /** Creates a single `PayrollConnection`. */
-  createPayrollConnection?: Maybe<CreatePayrollConnectionPayload>;
-  /** Creates a single `ReconciliationQueue`. */
-  createReconciliationQueue?: Maybe<CreateReconciliationQueuePayload>;
-  /** Creates a single `ReconciliationStatement`. */
-  createReconciliationStatement?: Maybe<CreateReconciliationStatementPayload>;
-  /** Creates a single `RecurringTransaction`. */
-  createRecurringTransaction?: Maybe<CreateRecurringTransactionPayload>;
-  /** Creates a single `SavingsGoal`. */
-  createSavingsGoal?: Maybe<CreateSavingsGoalPayload>;
-  /** Creates a single `Tag`. */
-  createTag?: Maybe<CreateTagPayload>;
-  /** Creates a single `TagGroup`. */
-  createTagGroup?: Maybe<CreateTagGroupPayload>;
-  /** Creates a single `TaxJurisdiction`. */
-  createTaxJurisdiction?: Maybe<CreateTaxJurisdictionPayload>;
-  /** Creates a single `Vehicle`. */
-  createVehicle?: Maybe<CreateVehiclePayload>;
-  /** Creates a single `Vendor`. */
-  createVendor?: Maybe<CreateVendorPayload>;
-  /** Deletes a single `Account` using a unique key. */
-  deleteAccount?: Maybe<DeleteAccountPayload>;
-  /** Deletes a single `Account` using its globally unique id. */
-  deleteAccountById?: Maybe<DeleteAccountPayload>;
-  /** Deletes a single `AccountMapping` using a unique key. */
-  deleteAccountMapping?: Maybe<DeleteAccountMappingPayload>;
-  /** Deletes a single `AccountMapping` using its globally unique id. */
-  deleteAccountMappingById?: Maybe<DeleteAccountMappingPayload>;
-  /** Deletes a single `AccountingPeriod` using a unique key. */
-  deleteAccountingPeriod?: Maybe<DeleteAccountingPeriodPayload>;
-  /** Deletes a single `AccountingPeriod` using its globally unique id. */
-  deleteAccountingPeriodById?: Maybe<DeleteAccountingPeriodPayload>;
-  /** Deletes a single `Book` using a unique key. */
-  deleteBook?: Maybe<DeleteBookPayload>;
-  /** Deletes a single `BookAccess` using a unique key. */
-  deleteBookAccess?: Maybe<DeleteBookAccessPayload>;
-  /** Deletes a single `BookAccess` using its globally unique id. */
-  deleteBookAccessById?: Maybe<DeleteBookAccessPayload>;
-  /** Deletes a single `Book` using its globally unique id. */
-  deleteBookById?: Maybe<DeleteBookPayload>;
-  /** Deletes a single `Budget` using a unique key. */
-  deleteBudget?: Maybe<DeleteBudgetPayload>;
-  /** Deletes a single `Budget` using its globally unique id. */
-  deleteBudgetById?: Maybe<DeleteBudgetPayload>;
-  /** Deletes a single `CategorizationRule` using a unique key. */
-  deleteCategorizationRule?: Maybe<DeleteCategorizationRulePayload>;
-  /** Deletes a single `CategorizationRule` using its globally unique id. */
-  deleteCategorizationRuleById?: Maybe<DeleteCategorizationRulePayload>;
-  /** Deletes a single `ConnectedAccount` using a unique key. */
-  deleteConnectedAccount?: Maybe<DeleteConnectedAccountPayload>;
-  /** Deletes a single `ConnectedAccount` using its globally unique id. */
-  deleteConnectedAccountById?: Maybe<DeleteConnectedAccountPayload>;
-  /** Deletes a single `CryptoAsset` using a unique key. */
-  deleteCryptoAsset?: Maybe<DeleteCryptoAssetPayload>;
-  /** Deletes a single `CryptoAsset` using its globally unique id. */
-  deleteCryptoAssetById?: Maybe<DeleteCryptoAssetPayload>;
-  /** Deletes a single `CryptoLot` using a unique key. */
-  deleteCryptoLot?: Maybe<DeleteCryptoLotPayload>;
-  /** Deletes a single `CryptoLot` using its globally unique id. */
-  deleteCryptoLotById?: Maybe<DeleteCryptoLotPayload>;
-  /** Deletes a single `_DrizzleMigration` using a unique key. */
-  deleteDrizzleMigration?: Maybe<DeleteDrizzleMigrationPayload>;
-  /** Deletes a single `_DrizzleMigration` using its globally unique id. */
-  deleteDrizzleMigrationById?: Maybe<DeleteDrizzleMigrationPayload>;
-  /** Deletes a single `FixedAsset` using a unique key. */
-  deleteFixedAsset?: Maybe<DeleteFixedAssetPayload>;
-  /** Deletes a single `FixedAsset` using its globally unique id. */
-  deleteFixedAssetById?: Maybe<DeleteFixedAssetPayload>;
-  /** Deletes a single `ImportProfile` using a unique key. */
-  deleteImportProfile?: Maybe<DeleteImportProfilePayload>;
-  /** Deletes a single `ImportProfile` using its globally unique id. */
-  deleteImportProfileById?: Maybe<DeleteImportProfilePayload>;
-  /** Deletes a single `JournalEntry` using a unique key. */
-  deleteJournalEntry?: Maybe<DeleteJournalEntryPayload>;
-  /** Deletes a single `JournalEntry` using its globally unique id. */
-  deleteJournalEntryById?: Maybe<DeleteJournalEntryPayload>;
-  /** Deletes a single `JournalLine` using a unique key. */
-  deleteJournalLine?: Maybe<DeleteJournalLinePayload>;
-  /** Deletes a single `JournalLine` using its globally unique id. */
-  deleteJournalLineById?: Maybe<DeleteJournalLinePayload>;
-  /** Deletes a single `JournalLineTag` using a unique key. */
-  deleteJournalLineTag?: Maybe<DeleteJournalLineTagPayload>;
-  /** Deletes a single `JournalLineTag` using its globally unique id. */
-  deleteJournalLineTagById?: Maybe<DeleteJournalLineTagPayload>;
-  /** Deletes a single `MileageLog` using a unique key. */
-  deleteMileageLog?: Maybe<DeleteMileageLogPayload>;
-  /** Deletes a single `MileageLog` using its globally unique id. */
-  deleteMileageLogById?: Maybe<DeleteMileageLogPayload>;
-  /** Deletes a single `NetWorthSnapshot` using a unique key. */
-  deleteNetWorthSnapshot?: Maybe<DeleteNetWorthSnapshotPayload>;
-  /** Deletes a single `NetWorthSnapshot` using its globally unique id. */
-  deleteNetWorthSnapshotById?: Maybe<DeleteNetWorthSnapshotPayload>;
-  /** Deletes a single `PayrollConnection` using a unique key. */
-  deletePayrollConnection?: Maybe<DeletePayrollConnectionPayload>;
-  /** Deletes a single `PayrollConnection` using its globally unique id. */
-  deletePayrollConnectionById?: Maybe<DeletePayrollConnectionPayload>;
-  /** Deletes a single `ReconciliationQueue` using a unique key. */
-  deleteReconciliationQueue?: Maybe<DeleteReconciliationQueuePayload>;
-  /** Deletes a single `ReconciliationQueue` using its globally unique id. */
-  deleteReconciliationQueueById?: Maybe<DeleteReconciliationQueuePayload>;
-  /** Deletes a single `ReconciliationStatement` using a unique key. */
-  deleteReconciliationStatement?: Maybe<DeleteReconciliationStatementPayload>;
-  /** Deletes a single `ReconciliationStatement` using its globally unique id. */
-  deleteReconciliationStatementById?: Maybe<DeleteReconciliationStatementPayload>;
-  /** Deletes a single `RecurringTransaction` using a unique key. */
-  deleteRecurringTransaction?: Maybe<DeleteRecurringTransactionPayload>;
-  /** Deletes a single `RecurringTransaction` using its globally unique id. */
-  deleteRecurringTransactionById?: Maybe<DeleteRecurringTransactionPayload>;
-  /** Deletes a single `SavingsGoal` using a unique key. */
-  deleteSavingsGoal?: Maybe<DeleteSavingsGoalPayload>;
-  /** Deletes a single `SavingsGoal` using its globally unique id. */
-  deleteSavingsGoalById?: Maybe<DeleteSavingsGoalPayload>;
-  /** Deletes a single `Tag` using a unique key. */
-  deleteTag?: Maybe<DeleteTagPayload>;
-  /** Deletes a single `Tag` using its globally unique id. */
-  deleteTagById?: Maybe<DeleteTagPayload>;
-  /** Deletes a single `TagGroup` using a unique key. */
-  deleteTagGroup?: Maybe<DeleteTagGroupPayload>;
-  /** Deletes a single `TagGroup` using its globally unique id. */
-  deleteTagGroupById?: Maybe<DeleteTagGroupPayload>;
-  /** Deletes a single `TaxJurisdiction` using a unique key. */
-  deleteTaxJurisdiction?: Maybe<DeleteTaxJurisdictionPayload>;
-  /** Deletes a single `TaxJurisdiction` using its globally unique id. */
-  deleteTaxJurisdictionById?: Maybe<DeleteTaxJurisdictionPayload>;
-  /** Deletes a single `Vehicle` using a unique key. */
-  deleteVehicle?: Maybe<DeleteVehiclePayload>;
-  /** Deletes a single `Vehicle` using its globally unique id. */
-  deleteVehicleById?: Maybe<DeleteVehiclePayload>;
-  /** Deletes a single `Vendor` using a unique key. */
-  deleteVendor?: Maybe<DeleteVendorPayload>;
-  /** Deletes a single `Vendor` using its globally unique id. */
-  deleteVendorById?: Maybe<DeleteVendorPayload>;
-  /** Updates a single `Account` using a unique key and a patch. */
-  updateAccount?: Maybe<UpdateAccountPayload>;
-  /** Updates a single `Account` using its globally unique id and a patch. */
-  updateAccountById?: Maybe<UpdateAccountPayload>;
-  /** Updates a single `AccountMapping` using a unique key and a patch. */
-  updateAccountMapping?: Maybe<UpdateAccountMappingPayload>;
-  /** Updates a single `AccountMapping` using its globally unique id and a patch. */
-  updateAccountMappingById?: Maybe<UpdateAccountMappingPayload>;
-  /** Updates a single `AccountingPeriod` using a unique key and a patch. */
-  updateAccountingPeriod?: Maybe<UpdateAccountingPeriodPayload>;
-  /** Updates a single `AccountingPeriod` using its globally unique id and a patch. */
-  updateAccountingPeriodById?: Maybe<UpdateAccountingPeriodPayload>;
-  /** Updates a single `Book` using a unique key and a patch. */
-  updateBook?: Maybe<UpdateBookPayload>;
-  /** Updates a single `BookAccess` using a unique key and a patch. */
-  updateBookAccess?: Maybe<UpdateBookAccessPayload>;
-  /** Updates a single `BookAccess` using its globally unique id and a patch. */
-  updateBookAccessById?: Maybe<UpdateBookAccessPayload>;
-  /** Updates a single `Book` using its globally unique id and a patch. */
-  updateBookById?: Maybe<UpdateBookPayload>;
-  /** Updates a single `Budget` using a unique key and a patch. */
-  updateBudget?: Maybe<UpdateBudgetPayload>;
-  /** Updates a single `Budget` using its globally unique id and a patch. */
-  updateBudgetById?: Maybe<UpdateBudgetPayload>;
-  /** Updates a single `CategorizationRule` using a unique key and a patch. */
-  updateCategorizationRule?: Maybe<UpdateCategorizationRulePayload>;
-  /** Updates a single `CategorizationRule` using its globally unique id and a patch. */
-  updateCategorizationRuleById?: Maybe<UpdateCategorizationRulePayload>;
-  /** Updates a single `ConnectedAccount` using a unique key and a patch. */
-  updateConnectedAccount?: Maybe<UpdateConnectedAccountPayload>;
-  /** Updates a single `ConnectedAccount` using its globally unique id and a patch. */
-  updateConnectedAccountById?: Maybe<UpdateConnectedAccountPayload>;
-  /** Updates a single `CryptoAsset` using a unique key and a patch. */
-  updateCryptoAsset?: Maybe<UpdateCryptoAssetPayload>;
-  /** Updates a single `CryptoAsset` using its globally unique id and a patch. */
-  updateCryptoAssetById?: Maybe<UpdateCryptoAssetPayload>;
-  /** Updates a single `CryptoLot` using a unique key and a patch. */
-  updateCryptoLot?: Maybe<UpdateCryptoLotPayload>;
-  /** Updates a single `CryptoLot` using its globally unique id and a patch. */
-  updateCryptoLotById?: Maybe<UpdateCryptoLotPayload>;
-  /** Updates a single `_DrizzleMigration` using a unique key and a patch. */
-  updateDrizzleMigration?: Maybe<UpdateDrizzleMigrationPayload>;
-  /** Updates a single `_DrizzleMigration` using its globally unique id and a patch. */
-  updateDrizzleMigrationById?: Maybe<UpdateDrizzleMigrationPayload>;
-  /** Updates a single `FixedAsset` using a unique key and a patch. */
-  updateFixedAsset?: Maybe<UpdateFixedAssetPayload>;
-  /** Updates a single `FixedAsset` using its globally unique id and a patch. */
-  updateFixedAssetById?: Maybe<UpdateFixedAssetPayload>;
-  /** Updates a single `ImportProfile` using a unique key and a patch. */
-  updateImportProfile?: Maybe<UpdateImportProfilePayload>;
-  /** Updates a single `ImportProfile` using its globally unique id and a patch. */
-  updateImportProfileById?: Maybe<UpdateImportProfilePayload>;
-  /** Updates a single `JournalEntry` using a unique key and a patch. */
-  updateJournalEntry?: Maybe<UpdateJournalEntryPayload>;
-  /** Updates a single `JournalEntry` using its globally unique id and a patch. */
-  updateJournalEntryById?: Maybe<UpdateJournalEntryPayload>;
-  /** Updates a single `JournalLine` using a unique key and a patch. */
-  updateJournalLine?: Maybe<UpdateJournalLinePayload>;
-  /** Updates a single `JournalLine` using its globally unique id and a patch. */
-  updateJournalLineById?: Maybe<UpdateJournalLinePayload>;
-  /** Updates a single `JournalLineTag` using a unique key and a patch. */
-  updateJournalLineTag?: Maybe<UpdateJournalLineTagPayload>;
-  /** Updates a single `JournalLineTag` using its globally unique id and a patch. */
-  updateJournalLineTagById?: Maybe<UpdateJournalLineTagPayload>;
-  /** Updates a single `MileageLog` using a unique key and a patch. */
-  updateMileageLog?: Maybe<UpdateMileageLogPayload>;
-  /** Updates a single `MileageLog` using its globally unique id and a patch. */
-  updateMileageLogById?: Maybe<UpdateMileageLogPayload>;
-  /** Updates a single `NetWorthSnapshot` using a unique key and a patch. */
-  updateNetWorthSnapshot?: Maybe<UpdateNetWorthSnapshotPayload>;
-  /** Updates a single `NetWorthSnapshot` using its globally unique id and a patch. */
-  updateNetWorthSnapshotById?: Maybe<UpdateNetWorthSnapshotPayload>;
-  /** Updates a single `PayrollConnection` using a unique key and a patch. */
-  updatePayrollConnection?: Maybe<UpdatePayrollConnectionPayload>;
-  /** Updates a single `PayrollConnection` using its globally unique id and a patch. */
-  updatePayrollConnectionById?: Maybe<UpdatePayrollConnectionPayload>;
-  /** Updates a single `ReconciliationQueue` using a unique key and a patch. */
-  updateReconciliationQueue?: Maybe<UpdateReconciliationQueuePayload>;
-  /** Updates a single `ReconciliationQueue` using its globally unique id and a patch. */
-  updateReconciliationQueueById?: Maybe<UpdateReconciliationQueuePayload>;
-  /** Updates a single `ReconciliationStatement` using a unique key and a patch. */
-  updateReconciliationStatement?: Maybe<UpdateReconciliationStatementPayload>;
-  /** Updates a single `ReconciliationStatement` using its globally unique id and a patch. */
-  updateReconciliationStatementById?: Maybe<UpdateReconciliationStatementPayload>;
-  /** Updates a single `RecurringTransaction` using a unique key and a patch. */
-  updateRecurringTransaction?: Maybe<UpdateRecurringTransactionPayload>;
-  /** Updates a single `RecurringTransaction` using its globally unique id and a patch. */
-  updateRecurringTransactionById?: Maybe<UpdateRecurringTransactionPayload>;
-  /** Updates a single `SavingsGoal` using a unique key and a patch. */
-  updateSavingsGoal?: Maybe<UpdateSavingsGoalPayload>;
-  /** Updates a single `SavingsGoal` using its globally unique id and a patch. */
-  updateSavingsGoalById?: Maybe<UpdateSavingsGoalPayload>;
-  /** Updates a single `Tag` using a unique key and a patch. */
-  updateTag?: Maybe<UpdateTagPayload>;
-  /** Updates a single `Tag` using its globally unique id and a patch. */
-  updateTagById?: Maybe<UpdateTagPayload>;
-  /** Updates a single `TagGroup` using a unique key and a patch. */
-  updateTagGroup?: Maybe<UpdateTagGroupPayload>;
-  /** Updates a single `TagGroup` using its globally unique id and a patch. */
-  updateTagGroupById?: Maybe<UpdateTagGroupPayload>;
-  /** Updates a single `TaxJurisdiction` using a unique key and a patch. */
-  updateTaxJurisdiction?: Maybe<UpdateTaxJurisdictionPayload>;
-  /** Updates a single `TaxJurisdiction` using its globally unique id and a patch. */
-  updateTaxJurisdictionById?: Maybe<UpdateTaxJurisdictionPayload>;
-  /** Updates a single `Vehicle` using a unique key and a patch. */
-  updateVehicle?: Maybe<UpdateVehiclePayload>;
-  /** Updates a single `Vehicle` using its globally unique id and a patch. */
-  updateVehicleById?: Maybe<UpdateVehiclePayload>;
-  /** Updates a single `Vendor` using a unique key and a patch. */
-  updateVendor?: Maybe<UpdateVendorPayload>;
-  /** Updates a single `Vendor` using its globally unique id and a patch. */
-  updateVendorById?: Maybe<UpdateVendorPayload>;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateAccountArgs = {
-  input: CreateAccountInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateAccountMappingArgs = {
-  input: CreateAccountMappingInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateAccountingPeriodArgs = {
-  input: CreateAccountingPeriodInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateBookArgs = {
-  input: CreateBookInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateBookAccessArgs = {
-  input: CreateBookAccessInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateBudgetArgs = {
-  input: CreateBudgetInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateCategorizationRuleArgs = {
-  input: CreateCategorizationRuleInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateConnectedAccountArgs = {
-  input: CreateConnectedAccountInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateCryptoAssetArgs = {
-  input: CreateCryptoAssetInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateCryptoLotArgs = {
-  input: CreateCryptoLotInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateDrizzleMigrationArgs = {
-  input: CreateDrizzleMigrationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateFixedAssetArgs = {
-  input: CreateFixedAssetInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateImportProfileArgs = {
-  input: CreateImportProfileInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateJournalEntryArgs = {
-  input: CreateJournalEntryInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateJournalLineArgs = {
-  input: CreateJournalLineInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateJournalLineTagArgs = {
-  input: CreateJournalLineTagInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateMileageLogArgs = {
-  input: CreateMileageLogInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateNetWorthSnapshotArgs = {
-  input: CreateNetWorthSnapshotInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreatePayrollConnectionArgs = {
-  input: CreatePayrollConnectionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateReconciliationQueueArgs = {
-  input: CreateReconciliationQueueInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateReconciliationStatementArgs = {
-  input: CreateReconciliationStatementInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateRecurringTransactionArgs = {
-  input: CreateRecurringTransactionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateSavingsGoalArgs = {
-  input: CreateSavingsGoalInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateTagArgs = {
-  input: CreateTagInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateTagGroupArgs = {
-  input: CreateTagGroupInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateTaxJurisdictionArgs = {
-  input: CreateTaxJurisdictionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateVehicleArgs = {
-  input: CreateVehicleInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateVendorArgs = {
-  input: CreateVendorInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteAccountArgs = {
-  input: DeleteAccountInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteAccountByIdArgs = {
-  input: DeleteAccountByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteAccountMappingArgs = {
-  input: DeleteAccountMappingInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteAccountMappingByIdArgs = {
-  input: DeleteAccountMappingByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteAccountingPeriodArgs = {
-  input: DeleteAccountingPeriodInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteAccountingPeriodByIdArgs = {
-  input: DeleteAccountingPeriodByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteBookArgs = {
-  input: DeleteBookInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteBookAccessArgs = {
-  input: DeleteBookAccessInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteBookAccessByIdArgs = {
-  input: DeleteBookAccessByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteBookByIdArgs = {
-  input: DeleteBookByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteBudgetArgs = {
-  input: DeleteBudgetInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteBudgetByIdArgs = {
-  input: DeleteBudgetByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteCategorizationRuleArgs = {
-  input: DeleteCategorizationRuleInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteCategorizationRuleByIdArgs = {
-  input: DeleteCategorizationRuleByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteConnectedAccountArgs = {
-  input: DeleteConnectedAccountInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteConnectedAccountByIdArgs = {
-  input: DeleteConnectedAccountByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteCryptoAssetArgs = {
-  input: DeleteCryptoAssetInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteCryptoAssetByIdArgs = {
-  input: DeleteCryptoAssetByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteCryptoLotArgs = {
-  input: DeleteCryptoLotInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteCryptoLotByIdArgs = {
-  input: DeleteCryptoLotByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDrizzleMigrationArgs = {
-  input: DeleteDrizzleMigrationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDrizzleMigrationByIdArgs = {
-  input: DeleteDrizzleMigrationByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteFixedAssetArgs = {
-  input: DeleteFixedAssetInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteFixedAssetByIdArgs = {
-  input: DeleteFixedAssetByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteImportProfileArgs = {
-  input: DeleteImportProfileInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteImportProfileByIdArgs = {
-  input: DeleteImportProfileByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteJournalEntryArgs = {
-  input: DeleteJournalEntryInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteJournalEntryByIdArgs = {
-  input: DeleteJournalEntryByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteJournalLineArgs = {
-  input: DeleteJournalLineInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteJournalLineByIdArgs = {
-  input: DeleteJournalLineByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteJournalLineTagArgs = {
-  input: DeleteJournalLineTagInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteJournalLineTagByIdArgs = {
-  input: DeleteJournalLineTagByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteMileageLogArgs = {
-  input: DeleteMileageLogInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteMileageLogByIdArgs = {
-  input: DeleteMileageLogByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteNetWorthSnapshotArgs = {
-  input: DeleteNetWorthSnapshotInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteNetWorthSnapshotByIdArgs = {
-  input: DeleteNetWorthSnapshotByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeletePayrollConnectionArgs = {
-  input: DeletePayrollConnectionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeletePayrollConnectionByIdArgs = {
-  input: DeletePayrollConnectionByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteReconciliationQueueArgs = {
-  input: DeleteReconciliationQueueInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteReconciliationQueueByIdArgs = {
-  input: DeleteReconciliationQueueByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteReconciliationStatementArgs = {
-  input: DeleteReconciliationStatementInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteReconciliationStatementByIdArgs = {
-  input: DeleteReconciliationStatementByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteRecurringTransactionArgs = {
-  input: DeleteRecurringTransactionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteRecurringTransactionByIdArgs = {
-  input: DeleteRecurringTransactionByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteSavingsGoalArgs = {
-  input: DeleteSavingsGoalInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteSavingsGoalByIdArgs = {
-  input: DeleteSavingsGoalByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteTagArgs = {
-  input: DeleteTagInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteTagByIdArgs = {
-  input: DeleteTagByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteTagGroupArgs = {
-  input: DeleteTagGroupInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteTagGroupByIdArgs = {
-  input: DeleteTagGroupByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteTaxJurisdictionArgs = {
-  input: DeleteTaxJurisdictionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteTaxJurisdictionByIdArgs = {
-  input: DeleteTaxJurisdictionByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteVehicleArgs = {
-  input: DeleteVehicleInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteVehicleByIdArgs = {
-  input: DeleteVehicleByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteVendorArgs = {
-  input: DeleteVendorInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteVendorByIdArgs = {
-  input: DeleteVendorByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateAccountArgs = {
-  input: UpdateAccountInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateAccountByIdArgs = {
-  input: UpdateAccountByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateAccountMappingArgs = {
-  input: UpdateAccountMappingInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateAccountMappingByIdArgs = {
-  input: UpdateAccountMappingByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateAccountingPeriodArgs = {
-  input: UpdateAccountingPeriodInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateAccountingPeriodByIdArgs = {
-  input: UpdateAccountingPeriodByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateBookArgs = {
-  input: UpdateBookInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateBookAccessArgs = {
-  input: UpdateBookAccessInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateBookAccessByIdArgs = {
-  input: UpdateBookAccessByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateBookByIdArgs = {
-  input: UpdateBookByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateBudgetArgs = {
-  input: UpdateBudgetInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateBudgetByIdArgs = {
-  input: UpdateBudgetByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateCategorizationRuleArgs = {
-  input: UpdateCategorizationRuleInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateCategorizationRuleByIdArgs = {
-  input: UpdateCategorizationRuleByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateConnectedAccountArgs = {
-  input: UpdateConnectedAccountInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateConnectedAccountByIdArgs = {
-  input: UpdateConnectedAccountByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateCryptoAssetArgs = {
-  input: UpdateCryptoAssetInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateCryptoAssetByIdArgs = {
-  input: UpdateCryptoAssetByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateCryptoLotArgs = {
-  input: UpdateCryptoLotInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateCryptoLotByIdArgs = {
-  input: UpdateCryptoLotByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDrizzleMigrationArgs = {
-  input: UpdateDrizzleMigrationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDrizzleMigrationByIdArgs = {
-  input: UpdateDrizzleMigrationByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateFixedAssetArgs = {
-  input: UpdateFixedAssetInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateFixedAssetByIdArgs = {
-  input: UpdateFixedAssetByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateImportProfileArgs = {
-  input: UpdateImportProfileInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateImportProfileByIdArgs = {
-  input: UpdateImportProfileByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateJournalEntryArgs = {
-  input: UpdateJournalEntryInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateJournalEntryByIdArgs = {
-  input: UpdateJournalEntryByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateJournalLineArgs = {
-  input: UpdateJournalLineInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateJournalLineByIdArgs = {
-  input: UpdateJournalLineByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateJournalLineTagArgs = {
-  input: UpdateJournalLineTagInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateJournalLineTagByIdArgs = {
-  input: UpdateJournalLineTagByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateMileageLogArgs = {
-  input: UpdateMileageLogInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateMileageLogByIdArgs = {
-  input: UpdateMileageLogByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateNetWorthSnapshotArgs = {
-  input: UpdateNetWorthSnapshotInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateNetWorthSnapshotByIdArgs = {
-  input: UpdateNetWorthSnapshotByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdatePayrollConnectionArgs = {
-  input: UpdatePayrollConnectionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdatePayrollConnectionByIdArgs = {
-  input: UpdatePayrollConnectionByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateReconciliationQueueArgs = {
-  input: UpdateReconciliationQueueInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateReconciliationQueueByIdArgs = {
-  input: UpdateReconciliationQueueByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateReconciliationStatementArgs = {
-  input: UpdateReconciliationStatementInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateReconciliationStatementByIdArgs = {
-  input: UpdateReconciliationStatementByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateRecurringTransactionArgs = {
-  input: UpdateRecurringTransactionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateRecurringTransactionByIdArgs = {
-  input: UpdateRecurringTransactionByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateSavingsGoalArgs = {
-  input: UpdateSavingsGoalInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateSavingsGoalByIdArgs = {
-  input: UpdateSavingsGoalByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateTagArgs = {
-  input: UpdateTagInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateTagByIdArgs = {
-  input: UpdateTagByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateTagGroupArgs = {
-  input: UpdateTagGroupInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateTagGroupByIdArgs = {
-  input: UpdateTagGroupByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateTaxJurisdictionArgs = {
-  input: UpdateTaxJurisdictionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateTaxJurisdictionByIdArgs = {
-  input: UpdateTaxJurisdictionByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateVehicleArgs = {
-  input: UpdateVehicleInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateVehicleByIdArgs = {
-  input: UpdateVehicleByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateVendorArgs = {
-  input: UpdateVendorInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateVendorByIdArgs = {
-  input: UpdateVendorByIdInput;
-};
 
 export type NetWorthSnapshot = Node & {
   __typename?: 'NetWorthSnapshot';
@@ -6156,18 +6347,6 @@ export type NetWorthSnapshotFilter = {
   rowId?: InputMaybe<UuidFilter>;
 };
 
-/** An input for mutations affecting `NetWorthSnapshot` */
-export type NetWorthSnapshotInput = {
-  bookId: Scalars['UUID']['input'];
-  breakdown?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  date: Scalars['Datetime']['input'];
-  netWorth: Scalars['BigFloat']['input'];
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  totalAssets: Scalars['BigFloat']['input'];
-  totalLiabilities: Scalars['BigFloat']['input'];
-};
-
 /** Methods to use when ordering `NetWorthSnapshot`. */
 export enum NetWorthSnapshotOrderBy {
   BookIdAsc = 'BOOK_ID_ASC',
@@ -6180,18 +6359,6 @@ export enum NetWorthSnapshotOrderBy {
   RowIdAsc = 'ROW_ID_ASC',
   RowIdDesc = 'ROW_ID_DESC'
 }
-
-/** Represents an update to a `NetWorthSnapshot`. Fields that are set will be updated. */
-export type NetWorthSnapshotPatch = {
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  breakdown?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  date?: InputMaybe<Scalars['Datetime']['input']>;
-  netWorth?: InputMaybe<Scalars['BigFloat']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  totalAssets?: InputMaybe<Scalars['BigFloat']['input']>;
-  totalLiabilities?: InputMaybe<Scalars['BigFloat']['input']>;
-};
 
 /** An object with a globally unique `ID`. */
 export type Node = {
@@ -6283,20 +6450,6 @@ export type PayrollConnectionFilter = {
   status?: InputMaybe<StringFilter>;
 };
 
-/** An input for mutations affecting `PayrollConnection` */
-export type PayrollConnectionInput = {
-  accessToken?: InputMaybe<Scalars['String']['input']>;
-  bookId: Scalars['UUID']['input'];
-  companyId?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  lastSyncedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  provider: Scalars['String']['input'];
-  refreshToken?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-  syncCursor?: InputMaybe<Scalars['String']['input']>;
-};
-
 /** Methods to use when ordering `PayrollConnection`. */
 export enum PayrollConnectionOrderBy {
   BookIdAsc = 'BOOK_ID_ASC',
@@ -6310,18 +6463,440 @@ export enum PayrollConnectionOrderBy {
   StatusDesc = 'STATUS_DESC'
 }
 
-/** Represents an update to a `PayrollConnection`. Fields that are set will be updated. */
-export type PayrollConnectionPatch = {
-  accessToken?: InputMaybe<Scalars['String']['input']>;
+export type PriceLevel = Node & {
+  __typename?: 'PriceLevel';
+  adjustmentPercent: Scalars['BigFloat']['output'];
+  /** Reads a single `Book` that is related to this `PriceLevel`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  isActive: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  rowId: Scalars['UUID']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+};
+
+/**
+ * A condition to be used against `PriceLevel` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type PriceLevelCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
   bookId?: InputMaybe<Scalars['UUID']['input']>;
-  companyId?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  lastSyncedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  provider?: InputMaybe<Scalars['String']['input']>;
-  refreshToken?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `PriceLevel` values. */
+export type PriceLevelConnection = {
+  __typename?: 'PriceLevelConnection';
+  /** A list of edges which contains the `PriceLevel` and cursor to aid in pagination. */
+  edges: Array<Maybe<PriceLevelEdge>>;
+  /** A list of `PriceLevel` objects. */
+  nodes: Array<Maybe<PriceLevel>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PriceLevel` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `PriceLevel` edge in the connection. */
+export type PriceLevelEdge = {
+  __typename?: 'PriceLevelEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `PriceLevel` at the end of the edge. */
+  node?: Maybe<PriceLevel>;
+};
+
+/** A filter to be used against `PriceLevel` object types. All fields are combined with a logical ‘and.’ */
+export type PriceLevelFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<PriceLevelFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<PriceLevelFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<PriceLevelFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+};
+
+/** Methods to use when ordering `PriceLevel`. */
+export enum PriceLevelOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+export type Project = Node & {
+  __typename?: 'Project';
+  /** Reads a single `Book` that is related to this `Project`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  budgetAmount?: Maybe<Scalars['BigFloat']['output']>;
+  code?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  endDate?: Maybe<Scalars['Datetime']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads and enables pagination through a set of `JournalLineProject`. */
+  journalLineProjects: JournalLineProjectConnection;
+  name: Scalars['String']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `RdExpense`. */
+  rdExpenses: RdExpenseConnection;
+  rowId: Scalars['UUID']['output'];
+  startDate?: Maybe<Scalars['Datetime']['output']>;
+  status: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+};
+
+
+export type ProjectJournalLineProjectsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<JournalLineProjectCondition>;
+  filter?: InputMaybe<JournalLineProjectFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<JournalLineProjectOrderBy>>;
+};
+
+
+export type ProjectRdExpensesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<RdExpenseCondition>;
+  filter?: InputMaybe<RdExpenseFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RdExpenseOrderBy>>;
+};
+
+/** A condition to be used against `Project` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ProjectCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `status` field. */
   status?: InputMaybe<Scalars['String']['input']>;
-  syncCursor?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A connection to a list of `Project` values. */
+export type ProjectConnection = {
+  __typename?: 'ProjectConnection';
+  /** A list of edges which contains the `Project` and cursor to aid in pagination. */
+  edges: Array<Maybe<ProjectEdge>>;
+  /** A list of `Project` objects. */
+  nodes: Array<Maybe<Project>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Project` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Project` edge in the connection. */
+export type ProjectEdge = {
+  __typename?: 'ProjectEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `Project` at the end of the edge. */
+  node?: Maybe<Project>;
+};
+
+/** A filter to be used against `Project` object types. All fields are combined with a logical ‘and.’ */
+export type ProjectFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<ProjectFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `journalLineProjects` relation. */
+  journalLineProjects?: InputMaybe<ProjectToManyJournalLineProjectFilter>;
+  /** Some related `journalLineProjects` exist. */
+  journalLineProjectsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Negates the expression. */
+  not?: InputMaybe<ProjectFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<ProjectFilter>>;
+  /** Filter by the object’s `rdExpenses` relation. */
+  rdExpenses?: InputMaybe<ProjectToManyRdExpenseFilter>;
+  /** Some related `rdExpenses` exist. */
+  rdExpensesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: InputMaybe<StringFilter>;
+};
+
+/** Methods to use when ordering `Project`. */
+export enum ProjectOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC'
+}
+
+/** A filter to be used against many `JournalLineProject` object types. All fields are combined with a logical ‘and.’ */
+export type ProjectToManyJournalLineProjectFilter = {
+  /** Every related `JournalLineProject` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<JournalLineProjectFilter>;
+  /** No related `JournalLineProject` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<JournalLineProjectFilter>;
+  /** Some related `JournalLineProject` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<JournalLineProjectFilter>;
+};
+
+/** A filter to be used against many `RdExpense` object types. All fields are combined with a logical ‘and.’ */
+export type ProjectToManyRdExpenseFilter = {
+  /** Every related `RdExpense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<RdExpenseFilter>;
+  /** No related `RdExpense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<RdExpenseFilter>;
+  /** Some related `RdExpense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<RdExpenseFilter>;
+};
+
+export type PurchaseOrder = Node & {
+  __typename?: 'PurchaseOrder';
+  /** Reads a single `Book` that is related to this `PurchaseOrder`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  /** Reads a single `Bill` that is related to this `PurchaseOrder`. */
+  convertedBill?: Maybe<Bill>;
+  convertedBillId?: Maybe<Scalars['UUID']['output']>;
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  date: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  memo?: Maybe<Scalars['String']['output']>;
+  number: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `PurchaseOrderLine`. */
+  purchaseOrderLines: PurchaseOrderLineConnection;
+  rowId: Scalars['UUID']['output'];
+  status: Scalars['String']['output'];
+  subtotal: Scalars['BigFloat']['output'];
+  total: Scalars['BigFloat']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads a single `Vendor` that is related to this `PurchaseOrder`. */
+  vendor?: Maybe<Vendor>;
+  vendorId: Scalars['UUID']['output'];
+};
+
+
+export type PurchaseOrderPurchaseOrderLinesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PurchaseOrderLineCondition>;
+  filter?: InputMaybe<PurchaseOrderLineFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PurchaseOrderLineOrderBy>>;
+};
+
+/**
+ * A condition to be used against `PurchaseOrder` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type PurchaseOrderCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `number` field. */
+  number?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `vendorId` field. */
+  vendorId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `PurchaseOrder` values. */
+export type PurchaseOrderConnection = {
+  __typename?: 'PurchaseOrderConnection';
+  /** A list of edges which contains the `PurchaseOrder` and cursor to aid in pagination. */
+  edges: Array<Maybe<PurchaseOrderEdge>>;
+  /** A list of `PurchaseOrder` objects. */
+  nodes: Array<Maybe<PurchaseOrder>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PurchaseOrder` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `PurchaseOrder` edge in the connection. */
+export type PurchaseOrderEdge = {
+  __typename?: 'PurchaseOrderEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `PurchaseOrder` at the end of the edge. */
+  node?: Maybe<PurchaseOrder>;
+};
+
+/** A filter to be used against `PurchaseOrder` object types. All fields are combined with a logical ‘and.’ */
+export type PurchaseOrderFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<PurchaseOrderFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `convertedBill` relation. */
+  convertedBill?: InputMaybe<BillFilter>;
+  /** A related `convertedBill` exists. */
+  convertedBillExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Negates the expression. */
+  not?: InputMaybe<PurchaseOrderFilter>;
+  /** Filter by the object’s `number` field. */
+  number?: InputMaybe<StringFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<PurchaseOrderFilter>>;
+  /** Filter by the object’s `purchaseOrderLines` relation. */
+  purchaseOrderLines?: InputMaybe<PurchaseOrderToManyPurchaseOrderLineFilter>;
+  /** Some related `purchaseOrderLines` exist. */
+  purchaseOrderLinesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `vendor` relation. */
+  vendor?: InputMaybe<VendorFilter>;
+  /** Filter by the object’s `vendorId` field. */
+  vendorId?: InputMaybe<UuidFilter>;
+};
+
+export type PurchaseOrderLine = Node & {
+  __typename?: 'PurchaseOrderLine';
+  amount: Scalars['BigFloat']['output'];
+  description: Scalars['String']['output'];
+  /** Reads a single `Account` that is related to this `PurchaseOrderLine`. */
+  expenseAccount?: Maybe<Account>;
+  expenseAccountId: Scalars['UUID']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `PurchaseOrder` that is related to this `PurchaseOrderLine`. */
+  purchaseOrder?: Maybe<PurchaseOrder>;
+  purchaseOrderId: Scalars['UUID']['output'];
+  quantity: Scalars['BigFloat']['output'];
+  rowId: Scalars['UUID']['output'];
+  sortOrder: Scalars['Int']['output'];
+  /** Reads a single `TaxJurisdiction` that is related to this `PurchaseOrderLine`. */
+  taxJurisdiction?: Maybe<TaxJurisdiction>;
+  taxJurisdictionId?: Maybe<Scalars['UUID']['output']>;
+  unitPrice: Scalars['BigFloat']['output'];
+};
+
+/**
+ * A condition to be used against `PurchaseOrderLine` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type PurchaseOrderLineCondition = {
+  /** Checks for equality with the object’s `purchaseOrderId` field. */
+  purchaseOrderId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `PurchaseOrderLine` values. */
+export type PurchaseOrderLineConnection = {
+  __typename?: 'PurchaseOrderLineConnection';
+  /** A list of edges which contains the `PurchaseOrderLine` and cursor to aid in pagination. */
+  edges: Array<Maybe<PurchaseOrderLineEdge>>;
+  /** A list of `PurchaseOrderLine` objects. */
+  nodes: Array<Maybe<PurchaseOrderLine>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PurchaseOrderLine` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `PurchaseOrderLine` edge in the connection. */
+export type PurchaseOrderLineEdge = {
+  __typename?: 'PurchaseOrderLineEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `PurchaseOrderLine` at the end of the edge. */
+  node?: Maybe<PurchaseOrderLine>;
+};
+
+/** A filter to be used against `PurchaseOrderLine` object types. All fields are combined with a logical ‘and.’ */
+export type PurchaseOrderLineFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<PurchaseOrderLineFilter>>;
+  /** Filter by the object’s `expenseAccount` relation. */
+  expenseAccount?: InputMaybe<AccountFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<PurchaseOrderLineFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<PurchaseOrderLineFilter>>;
+  /** Filter by the object’s `purchaseOrder` relation. */
+  purchaseOrder?: InputMaybe<PurchaseOrderFilter>;
+  /** Filter by the object’s `purchaseOrderId` field. */
+  purchaseOrderId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `taxJurisdiction` relation. */
+  taxJurisdiction?: InputMaybe<TaxJurisdictionFilter>;
+  /** A related `taxJurisdiction` exists. */
+  taxJurisdictionExists?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Methods to use when ordering `PurchaseOrderLine`. */
+export enum PurchaseOrderLineOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  PurchaseOrderIdAsc = 'PURCHASE_ORDER_ID_ASC',
+  PurchaseOrderIdDesc = 'PURCHASE_ORDER_ID_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+/** Methods to use when ordering `PurchaseOrder`. */
+export enum PurchaseOrderOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  Natural = 'NATURAL',
+  NumberAsc = 'NUMBER_ASC',
+  NumberDesc = 'NUMBER_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  VendorIdAsc = 'VENDOR_ID_ASC',
+  VendorIdDesc = 'VENDOR_ID_DESC'
+}
+
+/** A filter to be used against many `PurchaseOrderLine` object types. All fields are combined with a logical ‘and.’ */
+export type PurchaseOrderToManyPurchaseOrderLineFilter = {
+  /** Every related `PurchaseOrderLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<PurchaseOrderLineFilter>;
+  /** No related `PurchaseOrderLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<PurchaseOrderLineFilter>;
+  /** Some related `PurchaseOrderLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<PurchaseOrderLineFilter>;
 };
 
 /** The root query type which gives access points into the data universe. */
@@ -6351,6 +6926,42 @@ export type Query = Node & {
   accountingPeriods?: Maybe<AccountingPeriodConnection>;
   /** Reads and enables pagination through a set of `Account`. */
   accounts?: Maybe<AccountConnection>;
+  /** Reads and enables pagination through a set of `AmortizationEntry`. */
+  amortizationEntries?: Maybe<AmortizationEntryConnection>;
+  /** Get a single `AmortizationEntry`. */
+  amortizationEntry?: Maybe<AmortizationEntry>;
+  /** Reads a single `AmortizationEntry` using its globally unique `ID`. */
+  amortizationEntryById?: Maybe<AmortizationEntry>;
+  /** Get a single `Attachment`. */
+  attachment?: Maybe<Attachment>;
+  /** Reads a single `Attachment` using its globally unique `ID`. */
+  attachmentById?: Maybe<Attachment>;
+  /** Reads and enables pagination through a set of `Attachment`. */
+  attachments?: Maybe<AttachmentConnection>;
+  /** Get a single `BankDeposit`. */
+  bankDeposit?: Maybe<BankDeposit>;
+  /** Reads a single `BankDeposit` using its globally unique `ID`. */
+  bankDepositById?: Maybe<BankDeposit>;
+  /** Reads and enables pagination through a set of `BankDeposit`. */
+  bankDeposits?: Maybe<BankDepositConnection>;
+  /** Get a single `Bill`. */
+  bill?: Maybe<Bill>;
+  /** Reads a single `Bill` using its globally unique `ID`. */
+  billById?: Maybe<Bill>;
+  /** Get a single `BillLine`. */
+  billLine?: Maybe<BillLine>;
+  /** Reads a single `BillLine` using its globally unique `ID`. */
+  billLineById?: Maybe<BillLine>;
+  /** Reads and enables pagination through a set of `BillLine`. */
+  billLines?: Maybe<BillLineConnection>;
+  /** Get a single `BillPayment`. */
+  billPayment?: Maybe<BillPayment>;
+  /** Reads a single `BillPayment` using its globally unique `ID`. */
+  billPaymentById?: Maybe<BillPayment>;
+  /** Reads and enables pagination through a set of `BillPayment`. */
+  billPayments?: Maybe<BillPaymentConnection>;
+  /** Reads and enables pagination through a set of `Bill`. */
+  bills?: Maybe<BillConnection>;
   /** Get a single `Book`. */
   book?: Maybe<Book>;
   /** Get a single `BookAccess`. */
@@ -6369,10 +6980,22 @@ export type Query = Node & {
   budgetById?: Maybe<Budget>;
   /** Reads and enables pagination through a set of `Budget`. */
   budgets?: Maybe<BudgetConnection>;
+  /** Get a single `BundleComponent`. */
+  bundleComponent?: Maybe<BundleComponent>;
+  /** Reads a single `BundleComponent` using its globally unique `ID`. */
+  bundleComponentById?: Maybe<BundleComponent>;
+  /** Reads and enables pagination through a set of `BundleComponent`. */
+  bundleComponents?: Maybe<BundleComponentConnection>;
   /** Get a single `CategorizationRule`. */
   categorizationRule?: Maybe<CategorizationRule>;
   /** Reads a single `CategorizationRule` using its globally unique `ID`. */
   categorizationRuleById?: Maybe<CategorizationRule>;
+  /** Get a single `CategorizationRuleSplit`. */
+  categorizationRuleSplit?: Maybe<CategorizationRuleSplit>;
+  /** Reads a single `CategorizationRuleSplit` using its globally unique `ID`. */
+  categorizationRuleSplitById?: Maybe<CategorizationRuleSplit>;
+  /** Reads and enables pagination through a set of `CategorizationRuleSplit`. */
+  categorizationRuleSplits?: Maybe<CategorizationRuleSplitConnection>;
   /** Reads and enables pagination through a set of `CategorizationRule`. */
   categorizationRules?: Maybe<CategorizationRuleConnection>;
   /** Get a single `ConnectedAccount`. */
@@ -6381,6 +7004,24 @@ export type Query = Node & {
   connectedAccountById?: Maybe<ConnectedAccount>;
   /** Reads and enables pagination through a set of `ConnectedAccount`. */
   connectedAccounts?: Maybe<ConnectedAccountConnection>;
+  /** Get a single `CreditMemo`. */
+  creditMemo?: Maybe<CreditMemo>;
+  /** Get a single `CreditMemoApplication`. */
+  creditMemoApplication?: Maybe<CreditMemoApplication>;
+  /** Reads a single `CreditMemoApplication` using its globally unique `ID`. */
+  creditMemoApplicationById?: Maybe<CreditMemoApplication>;
+  /** Reads and enables pagination through a set of `CreditMemoApplication`. */
+  creditMemoApplications?: Maybe<CreditMemoApplicationConnection>;
+  /** Reads a single `CreditMemo` using its globally unique `ID`. */
+  creditMemoById?: Maybe<CreditMemo>;
+  /** Get a single `CreditMemoLine`. */
+  creditMemoLine?: Maybe<CreditMemoLine>;
+  /** Reads a single `CreditMemoLine` using its globally unique `ID`. */
+  creditMemoLineById?: Maybe<CreditMemoLine>;
+  /** Reads and enables pagination through a set of `CreditMemoLine`. */
+  creditMemoLines?: Maybe<CreditMemoLineConnection>;
+  /** Reads and enables pagination through a set of `CreditMemo`. */
+  creditMemos?: Maybe<CreditMemoConnection>;
   /** Get a single `CryptoAsset`. */
   cryptoAsset?: Maybe<CryptoAsset>;
   /** Reads a single `CryptoAsset` using its globally unique `ID`. */
@@ -6393,12 +7034,54 @@ export type Query = Node & {
   cryptoLotById?: Maybe<CryptoLot>;
   /** Reads and enables pagination through a set of `CryptoLot`. */
   cryptoLots?: Maybe<CryptoLotConnection>;
+  /** Get a single `CustomFieldDefinition`. */
+  customFieldDefinition?: Maybe<CustomFieldDefinition>;
+  /** Reads a single `CustomFieldDefinition` using its globally unique `ID`. */
+  customFieldDefinitionById?: Maybe<CustomFieldDefinition>;
+  /** Reads and enables pagination through a set of `CustomFieldDefinition`. */
+  customFieldDefinitions?: Maybe<CustomFieldDefinitionConnection>;
+  /** Get a single `CustomFieldValue`. */
+  customFieldValue?: Maybe<CustomFieldValue>;
+  /** Reads a single `CustomFieldValue` using its globally unique `ID`. */
+  customFieldValueById?: Maybe<CustomFieldValue>;
+  /** Reads and enables pagination through a set of `CustomFieldValue`. */
+  customFieldValues?: Maybe<CustomFieldValueConnection>;
+  /** Get a single `Customer`. */
+  customer?: Maybe<Customer>;
+  /** Reads a single `Customer` using its globally unique `ID`. */
+  customerById?: Maybe<Customer>;
+  /** Reads and enables pagination through a set of `Customer`. */
+  customers?: Maybe<CustomerConnection>;
+  /** Get a single `Document`. */
+  document?: Maybe<Document>;
+  /** Reads a single `Document` using its globally unique `ID`. */
+  documentById?: Maybe<Document>;
+  /** Reads and enables pagination through a set of `Document`. */
+  documents?: Maybe<DocumentConnection>;
+  /** Get a single `Estimate`. */
+  estimate?: Maybe<Estimate>;
+  /** Reads a single `Estimate` using its globally unique `ID`. */
+  estimateById?: Maybe<Estimate>;
+  /** Get a single `EstimateLine`. */
+  estimateLine?: Maybe<EstimateLine>;
+  /** Reads a single `EstimateLine` using its globally unique `ID`. */
+  estimateLineById?: Maybe<EstimateLine>;
+  /** Reads and enables pagination through a set of `EstimateLine`. */
+  estimateLines?: Maybe<EstimateLineConnection>;
+  /** Reads and enables pagination through a set of `Estimate`. */
+  estimates?: Maybe<EstimateConnection>;
   /** Get a single `FixedAsset`. */
   fixedAsset?: Maybe<FixedAsset>;
   /** Reads a single `FixedAsset` using its globally unique `ID`. */
   fixedAssetById?: Maybe<FixedAsset>;
   /** Reads and enables pagination through a set of `FixedAsset`. */
   fixedAssets?: Maybe<FixedAssetConnection>;
+  /** Get a single `FormTemplate`. */
+  formTemplate?: Maybe<FormTemplate>;
+  /** Reads a single `FormTemplate` using its globally unique `ID`. */
+  formTemplateById?: Maybe<FormTemplate>;
+  /** Reads and enables pagination through a set of `FormTemplate`. */
+  formTemplates?: Maybe<FormTemplateConnection>;
   /** The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`. */
   id: Scalars['ID']['output'];
   /** Get a single `ImportProfile`. */
@@ -6407,6 +7090,42 @@ export type Query = Node & {
   importProfileById?: Maybe<ImportProfile>;
   /** Reads and enables pagination through a set of `ImportProfile`. */
   importProfiles?: Maybe<ImportProfileConnection>;
+  /** Get a single `InventoryItem`. */
+  inventoryItem?: Maybe<InventoryItem>;
+  /** Reads a single `InventoryItem` using its globally unique `ID`. */
+  inventoryItemById?: Maybe<InventoryItem>;
+  /** Reads and enables pagination through a set of `InventoryItem`. */
+  inventoryItems?: Maybe<InventoryItemConnection>;
+  /** Get a single `InventoryTransaction`. */
+  inventoryTransaction?: Maybe<InventoryTransaction>;
+  /** Reads a single `InventoryTransaction` using its globally unique `ID`. */
+  inventoryTransactionById?: Maybe<InventoryTransaction>;
+  /** Reads and enables pagination through a set of `InventoryTransaction`. */
+  inventoryTransactions?: Maybe<InventoryTransactionConnection>;
+  /** Get a single `Invoice`. */
+  invoice?: Maybe<Invoice>;
+  /** Reads a single `Invoice` using its globally unique `ID`. */
+  invoiceById?: Maybe<Invoice>;
+  /** Get a single `InvoiceLine`. */
+  invoiceLine?: Maybe<InvoiceLine>;
+  /** Reads a single `InvoiceLine` using its globally unique `ID`. */
+  invoiceLineById?: Maybe<InvoiceLine>;
+  /** Reads and enables pagination through a set of `InvoiceLine`. */
+  invoiceLines?: Maybe<InvoiceLineConnection>;
+  /** Get a single `InvoicePayment`. */
+  invoicePayment?: Maybe<InvoicePayment>;
+  /** Reads a single `InvoicePayment` using its globally unique `ID`. */
+  invoicePaymentById?: Maybe<InvoicePayment>;
+  /** Reads and enables pagination through a set of `InvoicePayment`. */
+  invoicePayments?: Maybe<InvoicePaymentConnection>;
+  /** Reads and enables pagination through a set of `Invoice`. */
+  invoices?: Maybe<InvoiceConnection>;
+  /** Get a single `ItemBundle`. */
+  itemBundle?: Maybe<ItemBundle>;
+  /** Reads a single `ItemBundle` using its globally unique `ID`. */
+  itemBundleById?: Maybe<ItemBundle>;
+  /** Reads and enables pagination through a set of `ItemBundle`. */
+  itemBundles?: Maybe<ItemBundleConnection>;
   /** Reads and enables pagination through a set of `JournalEntry`. */
   journalEntries?: Maybe<JournalEntryConnection>;
   /** Get a single `JournalEntry`. */
@@ -6417,14 +7136,32 @@ export type Query = Node & {
   journalLine?: Maybe<JournalLine>;
   /** Reads a single `JournalLine` using its globally unique `ID`. */
   journalLineById?: Maybe<JournalLine>;
+  /** Get a single `JournalLineProject`. */
+  journalLineProject?: Maybe<JournalLineProject>;
+  /** Reads a single `JournalLineProject` using its globally unique `ID`. */
+  journalLineProjectById?: Maybe<JournalLineProject>;
+  /** Reads and enables pagination through a set of `JournalLineProject`. */
+  journalLineProjects?: Maybe<JournalLineProjectConnection>;
   /** Get a single `JournalLineTag`. */
   journalLineTag?: Maybe<JournalLineTag>;
   /** Reads a single `JournalLineTag` using its globally unique `ID`. */
   journalLineTagById?: Maybe<JournalLineTag>;
   /** Reads and enables pagination through a set of `JournalLineTag`. */
   journalLineTags?: Maybe<JournalLineTagConnection>;
+  /** Reads and enables pagination through a set of `JournalLineTrackingCategory`. */
+  journalLineTrackingCategories?: Maybe<JournalLineTrackingCategoryConnection>;
+  /** Get a single `JournalLineTrackingCategory`. */
+  journalLineTrackingCategory?: Maybe<JournalLineTrackingCategory>;
+  /** Reads a single `JournalLineTrackingCategory` using its globally unique `ID`. */
+  journalLineTrackingCategoryById?: Maybe<JournalLineTrackingCategory>;
   /** Reads and enables pagination through a set of `JournalLine`. */
   journalLines?: Maybe<JournalLineConnection>;
+  /** Get a single `Loan`. */
+  loan?: Maybe<Loan>;
+  /** Reads a single `Loan` using its globally unique `ID`. */
+  loanById?: Maybe<Loan>;
+  /** Reads and enables pagination through a set of `Loan`. */
+  loans?: Maybe<LoanConnection>;
   /** Get a single `MileageLog`. */
   mileageLog?: Maybe<MileageLog>;
   /** Reads a single `MileageLog` using its globally unique `ID`. */
@@ -6445,11 +7182,41 @@ export type Query = Node & {
   payrollConnectionById?: Maybe<PayrollConnection>;
   /** Reads and enables pagination through a set of `PayrollConnection`. */
   payrollConnections?: Maybe<PayrollConnectionConnection>;
+  /** Get a single `PriceLevel`. */
+  priceLevel?: Maybe<PriceLevel>;
+  /** Reads a single `PriceLevel` using its globally unique `ID`. */
+  priceLevelById?: Maybe<PriceLevel>;
+  /** Reads and enables pagination through a set of `PriceLevel`. */
+  priceLevels?: Maybe<PriceLevelConnection>;
+  /** Get a single `Project`. */
+  project?: Maybe<Project>;
+  /** Reads a single `Project` using its globally unique `ID`. */
+  projectById?: Maybe<Project>;
+  /** Reads and enables pagination through a set of `Project`. */
+  projects?: Maybe<ProjectConnection>;
+  /** Get a single `PurchaseOrder`. */
+  purchaseOrder?: Maybe<PurchaseOrder>;
+  /** Reads a single `PurchaseOrder` using its globally unique `ID`. */
+  purchaseOrderById?: Maybe<PurchaseOrder>;
+  /** Get a single `PurchaseOrderLine`. */
+  purchaseOrderLine?: Maybe<PurchaseOrderLine>;
+  /** Reads a single `PurchaseOrderLine` using its globally unique `ID`. */
+  purchaseOrderLineById?: Maybe<PurchaseOrderLine>;
+  /** Reads and enables pagination through a set of `PurchaseOrderLine`. */
+  purchaseOrderLines?: Maybe<PurchaseOrderLineConnection>;
+  /** Reads and enables pagination through a set of `PurchaseOrder`. */
+  purchaseOrders?: Maybe<PurchaseOrderConnection>;
   /**
    * Exposes the root query type nested one level down. This is helpful for Relay 1
    * which can only query top level fields if they are in a particular form.
    */
   query: Query;
+  /** Get a single `RdExpense`. */
+  rdExpense?: Maybe<RdExpense>;
+  /** Reads a single `RdExpense` using its globally unique `ID`. */
+  rdExpenseById?: Maybe<RdExpense>;
+  /** Reads and enables pagination through a set of `RdExpense`. */
+  rdExpenses?: Maybe<RdExpenseConnection>;
   /** Get a single `ReconciliationQueue`. */
   reconciliationQueue?: Maybe<ReconciliationQueue>;
   /** Reads a single `ReconciliationQueue` using its globally unique `ID`. */
@@ -6462,12 +7229,30 @@ export type Query = Node & {
   reconciliationStatementById?: Maybe<ReconciliationStatement>;
   /** Reads and enables pagination through a set of `ReconciliationStatement`. */
   reconciliationStatements?: Maybe<ReconciliationStatementConnection>;
+  /** Get a single `RecurringInvoice`. */
+  recurringInvoice?: Maybe<RecurringInvoice>;
+  /** Reads a single `RecurringInvoice` using its globally unique `ID`. */
+  recurringInvoiceById?: Maybe<RecurringInvoice>;
+  /** Get a single `RecurringInvoiceLine`. */
+  recurringInvoiceLine?: Maybe<RecurringInvoiceLine>;
+  /** Reads a single `RecurringInvoiceLine` using its globally unique `ID`. */
+  recurringInvoiceLineById?: Maybe<RecurringInvoiceLine>;
+  /** Reads and enables pagination through a set of `RecurringInvoiceLine`. */
+  recurringInvoiceLines?: Maybe<RecurringInvoiceLineConnection>;
+  /** Reads and enables pagination through a set of `RecurringInvoice`. */
+  recurringInvoices?: Maybe<RecurringInvoiceConnection>;
   /** Get a single `RecurringTransaction`. */
   recurringTransaction?: Maybe<RecurringTransaction>;
   /** Reads a single `RecurringTransaction` using its globally unique `ID`. */
   recurringTransactionById?: Maybe<RecurringTransaction>;
   /** Reads and enables pagination through a set of `RecurringTransaction`. */
   recurringTransactions?: Maybe<RecurringTransactionConnection>;
+  /** Get a single `SavedReport`. */
+  savedReport?: Maybe<SavedReport>;
+  /** Reads a single `SavedReport` using its globally unique `ID`. */
+  savedReportById?: Maybe<SavedReport>;
+  /** Reads and enables pagination through a set of `SavedReport`. */
+  savedReports?: Maybe<SavedReportConnection>;
   /** Get a single `SavingsGoal`. */
   savingsGoal?: Maybe<SavingsGoal>;
   /** Reads a single `SavingsGoal` using its globally unique `ID`. */
@@ -6492,6 +7277,18 @@ export type Query = Node & {
   taxJurisdictionById?: Maybe<TaxJurisdiction>;
   /** Reads and enables pagination through a set of `TaxJurisdiction`. */
   taxJurisdictions?: Maybe<TaxJurisdictionConnection>;
+  /** Reads and enables pagination through a set of `TimeEntry`. */
+  timeEntries?: Maybe<TimeEntryConnection>;
+  /** Get a single `TimeEntry`. */
+  timeEntry?: Maybe<TimeEntry>;
+  /** Reads a single `TimeEntry` using its globally unique `ID`. */
+  timeEntryById?: Maybe<TimeEntry>;
+  /** Reads and enables pagination through a set of `TrackingCategory`. */
+  trackingCategories?: Maybe<TrackingCategoryConnection>;
+  /** Get a single `TrackingCategory`. */
+  trackingCategory?: Maybe<TrackingCategory>;
+  /** Reads a single `TrackingCategory` using its globally unique `ID`. */
+  trackingCategoryById?: Maybe<TrackingCategory>;
   /** Get a single `Vehicle`. */
   vehicle?: Maybe<Vehicle>;
   /** Reads a single `Vehicle` using its globally unique `ID`. */
@@ -6502,6 +7299,24 @@ export type Query = Node & {
   vendor?: Maybe<Vendor>;
   /** Reads a single `Vendor` using its globally unique `ID`. */
   vendorById?: Maybe<Vendor>;
+  /** Get a single `VendorCredit`. */
+  vendorCredit?: Maybe<VendorCredit>;
+  /** Get a single `VendorCreditApplication`. */
+  vendorCreditApplication?: Maybe<VendorCreditApplication>;
+  /** Reads a single `VendorCreditApplication` using its globally unique `ID`. */
+  vendorCreditApplicationById?: Maybe<VendorCreditApplication>;
+  /** Reads and enables pagination through a set of `VendorCreditApplication`. */
+  vendorCreditApplications?: Maybe<VendorCreditApplicationConnection>;
+  /** Reads a single `VendorCredit` using its globally unique `ID`. */
+  vendorCreditById?: Maybe<VendorCredit>;
+  /** Get a single `VendorCreditLine`. */
+  vendorCreditLine?: Maybe<VendorCreditLine>;
+  /** Reads a single `VendorCreditLine` using its globally unique `ID`. */
+  vendorCreditLineById?: Maybe<VendorCreditLine>;
+  /** Reads and enables pagination through a set of `VendorCreditLine`. */
+  vendorCreditLines?: Maybe<VendorCreditLineConnection>;
+  /** Reads and enables pagination through a set of `VendorCredit`. */
+  vendorCredits?: Maybe<VendorCreditConnection>;
   /** Reads and enables pagination through a set of `Vendor`. */
   vendors?: Maybe<VendorConnection>;
 };
@@ -6608,6 +7423,156 @@ export type QueryAccountsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryAmortizationEntriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AmortizationEntryCondition>;
+  filter?: InputMaybe<AmortizationEntryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AmortizationEntryOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAmortizationEntryArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAmortizationEntryByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAttachmentArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAttachmentByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAttachmentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AttachmentCondition>;
+  filter?: InputMaybe<AttachmentFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AttachmentOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBankDepositArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBankDepositByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBankDepositsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<BankDepositCondition>;
+  filter?: InputMaybe<BankDepositFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<BankDepositOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBillArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBillByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBillLineArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBillLineByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBillLinesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<BillLineCondition>;
+  filter?: InputMaybe<BillLineFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<BillLineOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBillPaymentArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBillPaymentByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBillPaymentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<BillPaymentCondition>;
+  filter?: InputMaybe<BillPaymentFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<BillPaymentOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBillsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<BillCondition>;
+  filter?: InputMaybe<BillFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<BillOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryBookArgs = {
   rowId: Scalars['UUID']['input'];
 };
@@ -6683,6 +7648,31 @@ export type QueryBudgetsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryBundleComponentArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBundleComponentByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBundleComponentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<BundleComponentCondition>;
+  filter?: InputMaybe<BundleComponentFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<BundleComponentOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryCategorizationRuleArgs = {
   rowId: Scalars['UUID']['input'];
 };
@@ -6691,6 +7681,31 @@ export type QueryCategorizationRuleArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryCategorizationRuleByIdArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCategorizationRuleSplitArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCategorizationRuleSplitByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCategorizationRuleSplitsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CategorizationRuleSplitCondition>;
+  filter?: InputMaybe<CategorizationRuleSplitFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CategorizationRuleSplitOrderBy>>;
 };
 
 
@@ -6729,6 +7744,81 @@ export type QueryConnectedAccountsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ConnectedAccountOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCreditMemoArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCreditMemoApplicationArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCreditMemoApplicationByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCreditMemoApplicationsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CreditMemoApplicationCondition>;
+  filter?: InputMaybe<CreditMemoApplicationFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CreditMemoApplicationOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCreditMemoByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCreditMemoLineArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCreditMemoLineByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCreditMemoLinesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CreditMemoLineCondition>;
+  filter?: InputMaybe<CreditMemoLineFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CreditMemoLineOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCreditMemosArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CreditMemoCondition>;
+  filter?: InputMaybe<CreditMemoFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CreditMemoOrderBy>>;
 };
 
 
@@ -6783,6 +7873,156 @@ export type QueryCryptoLotsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryCustomFieldDefinitionArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCustomFieldDefinitionByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCustomFieldDefinitionsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CustomFieldDefinitionCondition>;
+  filter?: InputMaybe<CustomFieldDefinitionFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CustomFieldDefinitionOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCustomFieldValueArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCustomFieldValueByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCustomFieldValuesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CustomFieldValueCondition>;
+  filter?: InputMaybe<CustomFieldValueFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CustomFieldValueOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCustomerArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCustomerByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCustomersArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CustomerCondition>;
+  filter?: InputMaybe<CustomerFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CustomerOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDocumentArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDocumentByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDocumentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DocumentCondition>;
+  filter?: InputMaybe<DocumentFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DocumentOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEstimateArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEstimateByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEstimateLineArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEstimateLineByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEstimateLinesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<EstimateLineCondition>;
+  filter?: InputMaybe<EstimateLineFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EstimateLineOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEstimatesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<EstimateCondition>;
+  filter?: InputMaybe<EstimateFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EstimateOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryFixedAssetArgs = {
   rowId: Scalars['UUID']['input'];
 };
@@ -6808,6 +8048,31 @@ export type QueryFixedAssetsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryFormTemplateArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryFormTemplateByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryFormTemplatesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<FormTemplateCondition>;
+  filter?: InputMaybe<FormTemplateFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<FormTemplateOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryImportProfileArgs = {
   rowId: Scalars['UUID']['input'];
 };
@@ -6829,6 +8094,156 @@ export type QueryImportProfilesArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ImportProfileOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInventoryItemArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInventoryItemByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInventoryItemsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<InventoryItemCondition>;
+  filter?: InputMaybe<InventoryItemFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<InventoryItemOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInventoryTransactionArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInventoryTransactionByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInventoryTransactionsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<InventoryTransactionCondition>;
+  filter?: InputMaybe<InventoryTransactionFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<InventoryTransactionOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInvoiceArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInvoiceByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInvoiceLineArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInvoiceLineByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInvoiceLinesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<InvoiceLineCondition>;
+  filter?: InputMaybe<InvoiceLineFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<InvoiceLineOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInvoicePaymentArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInvoicePaymentByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInvoicePaymentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<InvoicePaymentCondition>;
+  filter?: InputMaybe<InvoicePaymentFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<InvoicePaymentOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInvoicesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<InvoiceCondition>;
+  filter?: InputMaybe<InvoiceFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<InvoiceOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryItemBundleArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryItemBundleByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryItemBundlesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<ItemBundleCondition>;
+  filter?: InputMaybe<ItemBundleFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ItemBundleOrderBy>>;
 };
 
 
@@ -6870,6 +8285,31 @@ export type QueryJournalLineByIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryJournalLineProjectArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryJournalLineProjectByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryJournalLineProjectsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<JournalLineProjectCondition>;
+  filter?: InputMaybe<JournalLineProjectFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<JournalLineProjectOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryJournalLineTagArgs = {
   rowId: Scalars['UUID']['input'];
 };
@@ -6895,6 +8335,31 @@ export type QueryJournalLineTagsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryJournalLineTrackingCategoriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<JournalLineTrackingCategoryCondition>;
+  filter?: InputMaybe<JournalLineTrackingCategoryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<JournalLineTrackingCategoryOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryJournalLineTrackingCategoryArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryJournalLineTrackingCategoryByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryJournalLinesArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -6904,6 +8369,31 @@ export type QueryJournalLinesArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<JournalLineOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLoanArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLoanByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLoansArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<LoanCondition>;
+  filter?: InputMaybe<LoanFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<LoanOrderBy>>;
 };
 
 
@@ -6989,6 +8479,131 @@ export type QueryPayrollConnectionsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryPriceLevelArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPriceLevelByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPriceLevelsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PriceLevelCondition>;
+  filter?: InputMaybe<PriceLevelFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PriceLevelOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryProjectArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryProjectByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryProjectsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<ProjectCondition>;
+  filter?: InputMaybe<ProjectFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ProjectOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPurchaseOrderArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPurchaseOrderByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPurchaseOrderLineArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPurchaseOrderLineByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPurchaseOrderLinesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PurchaseOrderLineCondition>;
+  filter?: InputMaybe<PurchaseOrderLineFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PurchaseOrderLineOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPurchaseOrdersArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PurchaseOrderCondition>;
+  filter?: InputMaybe<PurchaseOrderFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PurchaseOrderOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryRdExpenseArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryRdExpenseByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryRdExpensesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<RdExpenseCondition>;
+  filter?: InputMaybe<RdExpenseFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RdExpenseOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryReconciliationQueueArgs = {
   rowId: Scalars['UUID']['input'];
 };
@@ -7039,6 +8654,56 @@ export type QueryReconciliationStatementsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryRecurringInvoiceArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryRecurringInvoiceByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryRecurringInvoiceLineArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryRecurringInvoiceLineByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryRecurringInvoiceLinesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<RecurringInvoiceLineCondition>;
+  filter?: InputMaybe<RecurringInvoiceLineFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RecurringInvoiceLineOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryRecurringInvoicesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<RecurringInvoiceCondition>;
+  filter?: InputMaybe<RecurringInvoiceFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RecurringInvoiceOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryRecurringTransactionArgs = {
   rowId: Scalars['UUID']['input'];
 };
@@ -7060,6 +8725,31 @@ export type QueryRecurringTransactionsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<RecurringTransactionOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySavedReportArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySavedReportByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySavedReportsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<SavedReportCondition>;
+  filter?: InputMaybe<SavedReportFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SavedReportOrderBy>>;
 };
 
 
@@ -7164,6 +8854,56 @@ export type QueryTaxJurisdictionsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryTimeEntriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<TimeEntryCondition>;
+  filter?: InputMaybe<TimeEntryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TimeEntryOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTimeEntryArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTimeEntryByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTrackingCategoriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<TrackingCategoryCondition>;
+  filter?: InputMaybe<TrackingCategoryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TrackingCategoryOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTrackingCategoryArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTrackingCategoryByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryVehicleArgs = {
   rowId: Scalars['UUID']['input'];
 };
@@ -7201,6 +8941,81 @@ export type QueryVendorByIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryVendorCreditArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVendorCreditApplicationArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVendorCreditApplicationByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVendorCreditApplicationsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<VendorCreditApplicationCondition>;
+  filter?: InputMaybe<VendorCreditApplicationFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<VendorCreditApplicationOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVendorCreditByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVendorCreditLineArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVendorCreditLineByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVendorCreditLinesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<VendorCreditLineCondition>;
+  filter?: InputMaybe<VendorCreditLineFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<VendorCreditLineOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVendorCreditsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<VendorCreditCondition>;
+  filter?: InputMaybe<VendorCreditFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<VendorCreditOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryVendorsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -7211,6 +9026,103 @@ export type QueryVendorsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<VendorOrderBy>>;
 };
+
+export type RdExpense = Node & {
+  __typename?: 'RdExpense';
+  amount: Scalars['BigFloat']['output'];
+  /** Reads a single `Book` that is related to this `RdExpense`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  category: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  description: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  isForeign: Scalars['Boolean']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Project` that is related to this `RdExpense`. */
+  project?: Maybe<Project>;
+  projectId?: Maybe<Scalars['UUID']['output']>;
+  rowId: Scalars['UUID']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+  year: Scalars['Int']['output'];
+};
+
+/**
+ * A condition to be used against `RdExpense` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type RdExpenseCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `projectId` field. */
+  projectId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `year` field. */
+  year?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** A connection to a list of `RdExpense` values. */
+export type RdExpenseConnection = {
+  __typename?: 'RdExpenseConnection';
+  /** A list of edges which contains the `RdExpense` and cursor to aid in pagination. */
+  edges: Array<Maybe<RdExpenseEdge>>;
+  /** A list of `RdExpense` objects. */
+  nodes: Array<Maybe<RdExpense>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `RdExpense` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `RdExpense` edge in the connection. */
+export type RdExpenseEdge = {
+  __typename?: 'RdExpenseEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `RdExpense` at the end of the edge. */
+  node?: Maybe<RdExpense>;
+};
+
+/** A filter to be used against `RdExpense` object types. All fields are combined with a logical ‘and.’ */
+export type RdExpenseFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<RdExpenseFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<RdExpenseFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<RdExpenseFilter>>;
+  /** Filter by the object’s `project` relation. */
+  project?: InputMaybe<ProjectFilter>;
+  /** A related `project` exists. */
+  projectExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `projectId` field. */
+  projectId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `year` field. */
+  year?: InputMaybe<IntFilter>;
+};
+
+/** Methods to use when ordering `RdExpense`. */
+export enum RdExpenseOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  ProjectIdAsc = 'PROJECT_ID_ASC',
+  ProjectIdDesc = 'PROJECT_ID_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  YearAsc = 'YEAR_ASC',
+  YearDesc = 'YEAR_DESC'
+}
 
 export type ReconciliationQueue = Node & {
   __typename?: 'ReconciliationQueue';
@@ -7303,24 +9215,6 @@ export type ReconciliationQueueFilter = {
   suggestedDebitAccountExists?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/** An input for mutations affecting `ReconciliationQueue` */
-export type ReconciliationQueueInput = {
-  bookId: Scalars['UUID']['input'];
-  categorizationSource?: InputMaybe<Scalars['String']['input']>;
-  confidence?: InputMaybe<Scalars['BigFloat']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  journalEntryId: Scalars['UUID']['input'];
-  periodMonth?: InputMaybe<Scalars['Int']['input']>;
-  periodYear?: InputMaybe<Scalars['Int']['input']>;
-  priority?: InputMaybe<Scalars['Int']['input']>;
-  reviewedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  reviewedBy?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-  suggestedCreditAccountId?: InputMaybe<Scalars['UUID']['input']>;
-  suggestedDebitAccountId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
 /** Methods to use when ordering `ReconciliationQueue`. */
 export enum ReconciliationQueueOrderBy {
   BookIdAsc = 'BOOK_ID_ASC',
@@ -7333,24 +9227,6 @@ export enum ReconciliationQueueOrderBy {
   StatusAsc = 'STATUS_ASC',
   StatusDesc = 'STATUS_DESC'
 }
-
-/** Represents an update to a `ReconciliationQueue`. Fields that are set will be updated. */
-export type ReconciliationQueuePatch = {
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  categorizationSource?: InputMaybe<Scalars['String']['input']>;
-  confidence?: InputMaybe<Scalars['BigFloat']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  journalEntryId?: InputMaybe<Scalars['UUID']['input']>;
-  periodMonth?: InputMaybe<Scalars['Int']['input']>;
-  periodYear?: InputMaybe<Scalars['Int']['input']>;
-  priority?: InputMaybe<Scalars['Int']['input']>;
-  reviewedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  reviewedBy?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-  suggestedCreditAccountId?: InputMaybe<Scalars['UUID']['input']>;
-  suggestedDebitAccountId?: InputMaybe<Scalars['UUID']['input']>;
-};
 
 export type ReconciliationStatement = Node & {
   __typename?: 'ReconciliationStatement';
@@ -7427,20 +9303,6 @@ export type ReconciliationStatementFilter = {
   rowId?: InputMaybe<UuidFilter>;
 };
 
-/** An input for mutations affecting `ReconciliationStatement` */
-export type ReconciliationStatementInput = {
-  accountId: Scalars['UUID']['input'];
-  beginningBalance: Scalars['BigFloat']['input'];
-  bookId: Scalars['UUID']['input'];
-  completedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  discrepancy?: InputMaybe<Scalars['BigFloat']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  statementBalance: Scalars['BigFloat']['input'];
-  statementDate: Scalars['String']['input'];
-  status?: InputMaybe<Scalars['String']['input']>;
-};
-
 /** Methods to use when ordering `ReconciliationStatement`. */
 export enum ReconciliationStatementOrderBy {
   AccountIdAsc = 'ACCOUNT_ID_ASC',
@@ -7454,20 +9316,6 @@ export enum ReconciliationStatementOrderBy {
   RowIdDesc = 'ROW_ID_DESC'
 }
 
-/** Represents an update to a `ReconciliationStatement`. Fields that are set will be updated. */
-export type ReconciliationStatementPatch = {
-  accountId?: InputMaybe<Scalars['UUID']['input']>;
-  beginningBalance?: InputMaybe<Scalars['BigFloat']['input']>;
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  completedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  discrepancy?: InputMaybe<Scalars['BigFloat']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  statementBalance?: InputMaybe<Scalars['BigFloat']['input']>;
-  statementDate?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-};
-
 export enum RecurringFrequency {
   Biweekly = 'biweekly',
   Monthly = 'monthly',
@@ -7475,6 +9323,211 @@ export enum RecurringFrequency {
   Weekly = 'weekly',
   Yearly = 'yearly'
 }
+
+export type RecurringInvoice = Node & {
+  __typename?: 'RecurringInvoice';
+  /** Reads a single `Book` that is related to this `RecurringInvoice`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  currency: Scalars['String']['output'];
+  /** Reads a single `Customer` that is related to this `RecurringInvoice`. */
+  customer?: Maybe<Customer>;
+  customerId: Scalars['UUID']['output'];
+  dueInDays: Scalars['Int']['output'];
+  frequency: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  isActive: Scalars['Boolean']['output'];
+  memo?: Maybe<Scalars['String']['output']>;
+  nextRunDate: Scalars['String']['output'];
+  numberPrefix: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `RecurringInvoiceLine`. */
+  recurringInvoiceLines: RecurringInvoiceLineConnection;
+  rowId: Scalars['UUID']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+};
+
+
+export type RecurringInvoiceRecurringInvoiceLinesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<RecurringInvoiceLineCondition>;
+  filter?: InputMaybe<RecurringInvoiceLineFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RecurringInvoiceLineOrderBy>>;
+};
+
+/**
+ * A condition to be used against `RecurringInvoice` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type RecurringInvoiceCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `customerId` field. */
+  customerId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `RecurringInvoice` values. */
+export type RecurringInvoiceConnection = {
+  __typename?: 'RecurringInvoiceConnection';
+  /** A list of edges which contains the `RecurringInvoice` and cursor to aid in pagination. */
+  edges: Array<Maybe<RecurringInvoiceEdge>>;
+  /** A list of `RecurringInvoice` objects. */
+  nodes: Array<Maybe<RecurringInvoice>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `RecurringInvoice` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `RecurringInvoice` edge in the connection. */
+export type RecurringInvoiceEdge = {
+  __typename?: 'RecurringInvoiceEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `RecurringInvoice` at the end of the edge. */
+  node?: Maybe<RecurringInvoice>;
+};
+
+/** A filter to be used against `RecurringInvoice` object types. All fields are combined with a logical ‘and.’ */
+export type RecurringInvoiceFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<RecurringInvoiceFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `customer` relation. */
+  customer?: InputMaybe<CustomerFilter>;
+  /** Filter by the object’s `customerId` field. */
+  customerId?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<RecurringInvoiceFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<RecurringInvoiceFilter>>;
+  /** Filter by the object’s `recurringInvoiceLines` relation. */
+  recurringInvoiceLines?: InputMaybe<RecurringInvoiceToManyRecurringInvoiceLineFilter>;
+  /** Some related `recurringInvoiceLines` exist. */
+  recurringInvoiceLinesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+};
+
+export type RecurringInvoiceLine = Node & {
+  __typename?: 'RecurringInvoiceLine';
+  description: Scalars['String']['output'];
+  discountPercent?: Maybe<Scalars['BigFloat']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `Account` that is related to this `RecurringInvoiceLine`. */
+  incomeAccount?: Maybe<Account>;
+  incomeAccountId: Scalars['UUID']['output'];
+  quantity: Scalars['BigFloat']['output'];
+  /** Reads a single `RecurringInvoice` that is related to this `RecurringInvoiceLine`. */
+  recurringInvoice?: Maybe<RecurringInvoice>;
+  recurringInvoiceId: Scalars['UUID']['output'];
+  rowId: Scalars['UUID']['output'];
+  sortOrder: Scalars['Int']['output'];
+  /** Reads a single `TaxJurisdiction` that is related to this `RecurringInvoiceLine`. */
+  taxJurisdiction?: Maybe<TaxJurisdiction>;
+  taxJurisdictionId?: Maybe<Scalars['UUID']['output']>;
+  unitPrice: Scalars['BigFloat']['output'];
+};
+
+/**
+ * A condition to be used against `RecurringInvoiceLine` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type RecurringInvoiceLineCondition = {
+  /** Checks for equality with the object’s `recurringInvoiceId` field. */
+  recurringInvoiceId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `RecurringInvoiceLine` values. */
+export type RecurringInvoiceLineConnection = {
+  __typename?: 'RecurringInvoiceLineConnection';
+  /** A list of edges which contains the `RecurringInvoiceLine` and cursor to aid in pagination. */
+  edges: Array<Maybe<RecurringInvoiceLineEdge>>;
+  /** A list of `RecurringInvoiceLine` objects. */
+  nodes: Array<Maybe<RecurringInvoiceLine>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `RecurringInvoiceLine` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `RecurringInvoiceLine` edge in the connection. */
+export type RecurringInvoiceLineEdge = {
+  __typename?: 'RecurringInvoiceLineEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `RecurringInvoiceLine` at the end of the edge. */
+  node?: Maybe<RecurringInvoiceLine>;
+};
+
+/** A filter to be used against `RecurringInvoiceLine` object types. All fields are combined with a logical ‘and.’ */
+export type RecurringInvoiceLineFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<RecurringInvoiceLineFilter>>;
+  /** Filter by the object’s `incomeAccount` relation. */
+  incomeAccount?: InputMaybe<AccountFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<RecurringInvoiceLineFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<RecurringInvoiceLineFilter>>;
+  /** Filter by the object’s `recurringInvoice` relation. */
+  recurringInvoice?: InputMaybe<RecurringInvoiceFilter>;
+  /** Filter by the object’s `recurringInvoiceId` field. */
+  recurringInvoiceId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `taxJurisdiction` relation. */
+  taxJurisdiction?: InputMaybe<TaxJurisdictionFilter>;
+  /** A related `taxJurisdiction` exists. */
+  taxJurisdictionExists?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Methods to use when ordering `RecurringInvoiceLine`. */
+export enum RecurringInvoiceLineOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RecurringInvoiceIdAsc = 'RECURRING_INVOICE_ID_ASC',
+  RecurringInvoiceIdDesc = 'RECURRING_INVOICE_ID_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+/** Methods to use when ordering `RecurringInvoice`. */
+export enum RecurringInvoiceOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  CustomerIdAsc = 'CUSTOMER_ID_ASC',
+  CustomerIdDesc = 'CUSTOMER_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+/** A filter to be used against many `RecurringInvoiceLine` object types. All fields are combined with a logical ‘and.’ */
+export type RecurringInvoiceToManyRecurringInvoiceLineFilter = {
+  /** Every related `RecurringInvoiceLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<RecurringInvoiceLineFilter>;
+  /** No related `RecurringInvoiceLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<RecurringInvoiceLineFilter>;
+  /** Some related `RecurringInvoiceLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<RecurringInvoiceLineFilter>;
+};
 
 export type RecurringTransaction = Node & {
   __typename?: 'RecurringTransaction';
@@ -7555,22 +9608,6 @@ export type RecurringTransactionFilter = {
   rowId?: InputMaybe<UuidFilter>;
 };
 
-/** An input for mutations affecting `RecurringTransaction` */
-export type RecurringTransactionInput = {
-  accountId: Scalars['UUID']['input'];
-  amount: Scalars['BigFloat']['input'];
-  bookId: Scalars['UUID']['input'];
-  counterAccountId?: InputMaybe<Scalars['UUID']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  frequency: RecurringFrequency;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  isAutoDetected?: InputMaybe<Scalars['Boolean']['input']>;
-  name: Scalars['String']['input'];
-  nextExpectedDate?: InputMaybe<Scalars['Datetime']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
 /** Methods to use when ordering `RecurringTransaction`. */
 export enum RecurringTransactionOrderBy {
   BookIdAsc = 'BOOK_ID_ASC',
@@ -7582,21 +9619,80 @@ export enum RecurringTransactionOrderBy {
   RowIdDesc = 'ROW_ID_DESC'
 }
 
-/** Represents an update to a `RecurringTransaction`. Fields that are set will be updated. */
-export type RecurringTransactionPatch = {
-  accountId?: InputMaybe<Scalars['UUID']['input']>;
-  amount?: InputMaybe<Scalars['BigFloat']['input']>;
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  counterAccountId?: InputMaybe<Scalars['UUID']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  frequency?: InputMaybe<RecurringFrequency>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  isAutoDetected?: InputMaybe<Scalars['Boolean']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  nextExpectedDate?: InputMaybe<Scalars['Datetime']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+export type SavedReport = Node & {
+  __typename?: 'SavedReport';
+  /** Reads a single `Book` that is related to this `SavedReport`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  params: Scalars['JSON']['output'];
+  reportType: Scalars['String']['output'];
+  rowId: Scalars['UUID']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
 };
+
+/**
+ * A condition to be used against `SavedReport` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type SavedReportCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `SavedReport` values. */
+export type SavedReportConnection = {
+  __typename?: 'SavedReportConnection';
+  /** A list of edges which contains the `SavedReport` and cursor to aid in pagination. */
+  edges: Array<Maybe<SavedReportEdge>>;
+  /** A list of `SavedReport` objects. */
+  nodes: Array<Maybe<SavedReport>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `SavedReport` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `SavedReport` edge in the connection. */
+export type SavedReportEdge = {
+  __typename?: 'SavedReportEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `SavedReport` at the end of the edge. */
+  node?: Maybe<SavedReport>;
+};
+
+/** A filter to be used against `SavedReport` object types. All fields are combined with a logical ‘and.’ */
+export type SavedReportFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<SavedReportFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<SavedReportFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<SavedReportFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+};
+
+/** Methods to use when ordering `SavedReport`. */
+export enum SavedReportOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
 
 export type SavingsGoal = Node & {
   __typename?: 'SavingsGoal';
@@ -7667,18 +9763,6 @@ export type SavingsGoalFilter = {
   rowId?: InputMaybe<UuidFilter>;
 };
 
-/** An input for mutations affecting `SavingsGoal` */
-export type SavingsGoalInput = {
-  accountId: Scalars['UUID']['input'];
-  bookId: Scalars['UUID']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  name: Scalars['String']['input'];
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  targetAmount: Scalars['BigFloat']['input'];
-  targetDate?: InputMaybe<Scalars['Datetime']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
 /** Methods to use when ordering `SavingsGoal`. */
 export enum SavingsGoalOrderBy {
   BookIdAsc = 'BOOK_ID_ASC',
@@ -7689,18 +9773,6 @@ export enum SavingsGoalOrderBy {
   RowIdAsc = 'ROW_ID_ASC',
   RowIdDesc = 'ROW_ID_DESC'
 }
-
-/** Represents an update to a `SavingsGoal`. Fields that are set will be updated. */
-export type SavingsGoalPatch = {
-  accountId?: InputMaybe<Scalars['UUID']['input']>;
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  targetAmount?: InputMaybe<Scalars['BigFloat']['input']>;
-  targetDate?: InputMaybe<Scalars['Datetime']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
 
 /** A filter to be used against String fields. All fields are combined with a logical ‘and.’ */
 export type StringFilter = {
@@ -7937,14 +10009,6 @@ export type TagGroupFilter = {
   tagsExist?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/** An input for mutations affecting `TagGroup` */
-export type TagGroupInput = {
-  bookId: Scalars['UUID']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  name: Scalars['String']['input'];
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
 /** Methods to use when ordering `TagGroup`. */
 export enum TagGroupOrderBy {
   BookIdAsc = 'BOOK_ID_ASC',
@@ -7956,14 +10020,6 @@ export enum TagGroupOrderBy {
   RowIdDesc = 'ROW_ID_DESC'
 }
 
-/** Represents an update to a `TagGroup`. Fields that are set will be updated. */
-export type TagGroupPatch = {
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
 /** A filter to be used against many `Tag` object types. All fields are combined with a logical ‘and.’ */
 export type TagGroupToManyTagFilter = {
   /** Every related `Tag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -7972,16 +10028,6 @@ export type TagGroupToManyTagFilter = {
   none?: InputMaybe<TagFilter>;
   /** Some related `Tag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<TagFilter>;
-};
-
-/** An input for mutations affecting `Tag` */
-export type TagInput = {
-  code?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  name: Scalars['String']['input'];
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  tagGroupId: Scalars['UUID']['input'];
 };
 
 /** Methods to use when ordering `Tag`. */
@@ -7994,16 +10040,6 @@ export enum TagOrderBy {
   TagGroupIdAsc = 'TAG_GROUP_ID_ASC',
   TagGroupIdDesc = 'TAG_GROUP_ID_DESC'
 }
-
-/** Represents an update to a `Tag`. Fields that are set will be updated. */
-export type TagPatch = {
-  code?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  tagGroupId?: InputMaybe<Scalars['UUID']['input']>;
-};
 
 /** A filter to be used against many `JournalLineTag` object types. All fields are combined with a logical ‘and.’ */
 export type TagToManyJournalLineTagFilter = {
@@ -8021,15 +10057,31 @@ export type TaxJurisdiction = Node & {
   book?: Maybe<Book>;
   bookId: Scalars['UUID']['output'];
   code?: Maybe<Scalars['String']['output']>;
+  compound: Scalars['Boolean']['output'];
   createdAt?: Maybe<Scalars['Datetime']['output']>;
   filingFrequency: Scalars['String']['output'];
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   id: Scalars['ID']['output'];
+  /** Reads and enables pagination through a set of `JournalLine`. */
+  journalLines: JournalLineConnection;
   name: Scalars['String']['output'];
+  rate?: Maybe<Scalars['BigFloat']['output']>;
   rowId: Scalars['UUID']['output'];
   /** Reads a single `Account` that is related to this `TaxJurisdiction`. */
   taxPayableAccount?: Maybe<Account>;
   taxPayableAccountId: Scalars['UUID']['output'];
+};
+
+
+export type TaxJurisdictionJournalLinesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<JournalLineCondition>;
+  filter?: InputMaybe<JournalLineFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<JournalLineOrderBy>>;
 };
 
 /**
@@ -8073,6 +10125,10 @@ export type TaxJurisdictionFilter = {
   book?: InputMaybe<BookFilter>;
   /** Filter by the object’s `bookId` field. */
   bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `journalLines` relation. */
+  journalLines?: InputMaybe<TaxJurisdictionToManyJournalLineFilter>;
+  /** Some related `journalLines` exist. */
+  journalLinesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Negates the expression. */
   not?: InputMaybe<TaxJurisdictionFilter>;
   /** Checks for any expressions in this list. */
@@ -8081,17 +10137,6 @@ export type TaxJurisdictionFilter = {
   rowId?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `taxPayableAccount` relation. */
   taxPayableAccount?: InputMaybe<AccountFilter>;
-};
-
-/** An input for mutations affecting `TaxJurisdiction` */
-export type TaxJurisdictionInput = {
-  bookId: Scalars['UUID']['input'];
-  code?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  filingFrequency: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  taxPayableAccountId: Scalars['UUID']['input'];
 };
 
 /** Methods to use when ordering `TaxJurisdiction`. */
@@ -8105,15 +10150,228 @@ export enum TaxJurisdictionOrderBy {
   RowIdDesc = 'ROW_ID_DESC'
 }
 
-/** Represents an update to a `TaxJurisdiction`. Fields that are set will be updated. */
-export type TaxJurisdictionPatch = {
+/** A filter to be used against many `JournalLine` object types. All fields are combined with a logical ‘and.’ */
+export type TaxJurisdictionToManyJournalLineFilter = {
+  /** Every related `JournalLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<JournalLineFilter>;
+  /** No related `JournalLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<JournalLineFilter>;
+  /** Some related `JournalLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<JournalLineFilter>;
+};
+
+export type TimeEntry = Node & {
+  __typename?: 'TimeEntry';
+  billable: Scalars['Boolean']['output'];
+  /** Reads a single `Book` that is related to this `TimeEntry`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads a single `Customer` that is related to this `TimeEntry`. */
+  customer?: Maybe<Customer>;
+  customerId?: Maybe<Scalars['UUID']['output']>;
+  date: Scalars['String']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  hours: Scalars['BigFloat']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `Invoice` that is related to this `TimeEntry`. */
+  invoice?: Maybe<Invoice>;
+  invoiceId?: Maybe<Scalars['UUID']['output']>;
+  rate: Scalars['BigFloat']['output'];
+  rowId: Scalars['UUID']['output'];
+  /** Reads a single `InventoryItem` that is related to this `TimeEntry`. */
+  serviceItem?: Maybe<InventoryItem>;
+  serviceItemId?: Maybe<Scalars['UUID']['output']>;
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+};
+
+/**
+ * A condition to be used against `TimeEntry` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type TimeEntryCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
   bookId?: InputMaybe<Scalars['UUID']['input']>;
-  code?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  filingFrequency?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `customerId` field. */
+  customerId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['UUID']['input']>;
-  taxPayableAccountId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `TimeEntry` values. */
+export type TimeEntryConnection = {
+  __typename?: 'TimeEntryConnection';
+  /** A list of edges which contains the `TimeEntry` and cursor to aid in pagination. */
+  edges: Array<Maybe<TimeEntryEdge>>;
+  /** A list of `TimeEntry` objects. */
+  nodes: Array<Maybe<TimeEntry>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `TimeEntry` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `TimeEntry` edge in the connection. */
+export type TimeEntryEdge = {
+  __typename?: 'TimeEntryEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `TimeEntry` at the end of the edge. */
+  node?: Maybe<TimeEntry>;
+};
+
+/** A filter to be used against `TimeEntry` object types. All fields are combined with a logical ‘and.’ */
+export type TimeEntryFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<TimeEntryFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `customer` relation. */
+  customer?: InputMaybe<CustomerFilter>;
+  /** A related `customer` exists. */
+  customerExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `customerId` field. */
+  customerId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `invoice` relation. */
+  invoice?: InputMaybe<InvoiceFilter>;
+  /** A related `invoice` exists. */
+  invoiceExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Negates the expression. */
+  not?: InputMaybe<TimeEntryFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<TimeEntryFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `serviceItem` relation. */
+  serviceItem?: InputMaybe<InventoryItemFilter>;
+  /** A related `serviceItem` exists. */
+  serviceItemExists?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Methods to use when ordering `TimeEntry`. */
+export enum TimeEntryOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  CustomerIdAsc = 'CUSTOMER_ID_ASC',
+  CustomerIdDesc = 'CUSTOMER_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+export type TrackingCategory = Node & {
+  __typename?: 'TrackingCategory';
+  /** Reads a single `Book` that is related to this `TrackingCategory`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  code?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  isActive: Scalars['Boolean']['output'];
+  /** Reads and enables pagination through a set of `JournalLineTrackingCategory`. */
+  journalLineTrackingCategories: JournalLineTrackingCategoryConnection;
+  kind: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  rowId: Scalars['UUID']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+};
+
+
+export type TrackingCategoryJournalLineTrackingCategoriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<JournalLineTrackingCategoryCondition>;
+  filter?: InputMaybe<JournalLineTrackingCategoryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<JournalLineTrackingCategoryOrderBy>>;
+};
+
+/**
+ * A condition to be used against `TrackingCategory` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type TrackingCategoryCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `kind` field. */
+  kind?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `TrackingCategory` values. */
+export type TrackingCategoryConnection = {
+  __typename?: 'TrackingCategoryConnection';
+  /** A list of edges which contains the `TrackingCategory` and cursor to aid in pagination. */
+  edges: Array<Maybe<TrackingCategoryEdge>>;
+  /** A list of `TrackingCategory` objects. */
+  nodes: Array<Maybe<TrackingCategory>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `TrackingCategory` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `TrackingCategory` edge in the connection. */
+export type TrackingCategoryEdge = {
+  __typename?: 'TrackingCategoryEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `TrackingCategory` at the end of the edge. */
+  node?: Maybe<TrackingCategory>;
+};
+
+/** A filter to be used against `TrackingCategory` object types. All fields are combined with a logical ‘and.’ */
+export type TrackingCategoryFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<TrackingCategoryFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `journalLineTrackingCategories` relation. */
+  journalLineTrackingCategories?: InputMaybe<TrackingCategoryToManyJournalLineTrackingCategoryFilter>;
+  /** Some related `journalLineTrackingCategories` exist. */
+  journalLineTrackingCategoriesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `kind` field. */
+  kind?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<TrackingCategoryFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<TrackingCategoryFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+};
+
+/** Methods to use when ordering `TrackingCategory`. */
+export enum TrackingCategoryOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  KindAsc = 'KIND_ASC',
+  KindDesc = 'KIND_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+/** A filter to be used against many `JournalLineTrackingCategory` object types. All fields are combined with a logical ‘and.’ */
+export type TrackingCategoryToManyJournalLineTrackingCategoryFilter = {
+  /** Every related `JournalLineTrackingCategory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<JournalLineTrackingCategoryFilter>;
+  /** No related `JournalLineTrackingCategory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<JournalLineTrackingCategoryFilter>;
+  /** Some related `JournalLineTrackingCategory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<JournalLineTrackingCategoryFilter>;
 };
 
 /** A filter to be used against UUID fields. All fields are combined with a logical ‘and.’ */
@@ -8140,1322 +10398,6 @@ export type UuidFilter = {
   notEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<Scalars['UUID']['input']>>;
-};
-
-/** All input for the `updateAccountById` mutation. */
-export type UpdateAccountByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Account` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `Account` being updated. */
-  patch: AccountPatch;
-};
-
-/** All input for the `updateAccount` mutation. */
-export type UpdateAccountInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `Account` being updated. */
-  patch: AccountPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** All input for the `updateAccountMappingById` mutation. */
-export type UpdateAccountMappingByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `AccountMapping` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `AccountMapping` being updated. */
-  patch: AccountMappingPatch;
-};
-
-/** All input for the `updateAccountMapping` mutation. */
-export type UpdateAccountMappingInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `AccountMapping` being updated. */
-  patch: AccountMappingPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `AccountMapping` mutation. */
-export type UpdateAccountMappingPayload = {
-  __typename?: 'UpdateAccountMappingPayload';
-  /** The `AccountMapping` that was updated by this mutation. */
-  accountMapping?: Maybe<AccountMapping>;
-  /** An edge for our `AccountMapping`. May be used by Relay 1. */
-  accountMappingEdge?: Maybe<AccountMappingEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `AccountMapping` mutation. */
-export type UpdateAccountMappingPayloadAccountMappingEdgeArgs = {
-  orderBy?: Array<AccountMappingOrderBy>;
-};
-
-/** The output of our update `Account` mutation. */
-export type UpdateAccountPayload = {
-  __typename?: 'UpdateAccountPayload';
-  /** The `Account` that was updated by this mutation. */
-  account?: Maybe<Account>;
-  /** An edge for our `Account`. May be used by Relay 1. */
-  accountEdge?: Maybe<AccountEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `Account` mutation. */
-export type UpdateAccountPayloadAccountEdgeArgs = {
-  orderBy?: Array<AccountOrderBy>;
-};
-
-/** All input for the `updateAccountingPeriodById` mutation. */
-export type UpdateAccountingPeriodByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `AccountingPeriod` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `AccountingPeriod` being updated. */
-  patch: AccountingPeriodPatch;
-};
-
-/** All input for the `updateAccountingPeriod` mutation. */
-export type UpdateAccountingPeriodInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `AccountingPeriod` being updated. */
-  patch: AccountingPeriodPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `AccountingPeriod` mutation. */
-export type UpdateAccountingPeriodPayload = {
-  __typename?: 'UpdateAccountingPeriodPayload';
-  /** The `AccountingPeriod` that was updated by this mutation. */
-  accountingPeriod?: Maybe<AccountingPeriod>;
-  /** An edge for our `AccountingPeriod`. May be used by Relay 1. */
-  accountingPeriodEdge?: Maybe<AccountingPeriodEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `AccountingPeriod` mutation. */
-export type UpdateAccountingPeriodPayloadAccountingPeriodEdgeArgs = {
-  orderBy?: Array<AccountingPeriodOrderBy>;
-};
-
-/** All input for the `updateBookAccessById` mutation. */
-export type UpdateBookAccessByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `BookAccess` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `BookAccess` being updated. */
-  patch: BookAccessPatch;
-};
-
-/** All input for the `updateBookAccess` mutation. */
-export type UpdateBookAccessInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `BookAccess` being updated. */
-  patch: BookAccessPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `BookAccess` mutation. */
-export type UpdateBookAccessPayload = {
-  __typename?: 'UpdateBookAccessPayload';
-  /** The `BookAccess` that was updated by this mutation. */
-  bookAccess?: Maybe<BookAccess>;
-  /** An edge for our `BookAccess`. May be used by Relay 1. */
-  bookAccessEdge?: Maybe<BookAccessEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `BookAccess` mutation. */
-export type UpdateBookAccessPayloadBookAccessEdgeArgs = {
-  orderBy?: Array<BookAccessOrderBy>;
-};
-
-/** All input for the `updateBookById` mutation. */
-export type UpdateBookByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Book` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `Book` being updated. */
-  patch: BookPatch;
-};
-
-/** All input for the `updateBook` mutation. */
-export type UpdateBookInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `Book` being updated. */
-  patch: BookPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `Book` mutation. */
-export type UpdateBookPayload = {
-  __typename?: 'UpdateBookPayload';
-  /** The `Book` that was updated by this mutation. */
-  book?: Maybe<Book>;
-  /** An edge for our `Book`. May be used by Relay 1. */
-  bookEdge?: Maybe<BookEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `Book` mutation. */
-export type UpdateBookPayloadBookEdgeArgs = {
-  orderBy?: Array<BookOrderBy>;
-};
-
-/** All input for the `updateBudgetById` mutation. */
-export type UpdateBudgetByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Budget` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `Budget` being updated. */
-  patch: BudgetPatch;
-};
-
-/** All input for the `updateBudget` mutation. */
-export type UpdateBudgetInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `Budget` being updated. */
-  patch: BudgetPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `Budget` mutation. */
-export type UpdateBudgetPayload = {
-  __typename?: 'UpdateBudgetPayload';
-  /** The `Budget` that was updated by this mutation. */
-  budget?: Maybe<Budget>;
-  /** An edge for our `Budget`. May be used by Relay 1. */
-  budgetEdge?: Maybe<BudgetEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `Budget` mutation. */
-export type UpdateBudgetPayloadBudgetEdgeArgs = {
-  orderBy?: Array<BudgetOrderBy>;
-};
-
-/** All input for the `updateCategorizationRuleById` mutation. */
-export type UpdateCategorizationRuleByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `CategorizationRule` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `CategorizationRule` being updated. */
-  patch: CategorizationRulePatch;
-};
-
-/** All input for the `updateCategorizationRule` mutation. */
-export type UpdateCategorizationRuleInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `CategorizationRule` being updated. */
-  patch: CategorizationRulePatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `CategorizationRule` mutation. */
-export type UpdateCategorizationRulePayload = {
-  __typename?: 'UpdateCategorizationRulePayload';
-  /** The `CategorizationRule` that was updated by this mutation. */
-  categorizationRule?: Maybe<CategorizationRule>;
-  /** An edge for our `CategorizationRule`. May be used by Relay 1. */
-  categorizationRuleEdge?: Maybe<CategorizationRuleEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `CategorizationRule` mutation. */
-export type UpdateCategorizationRulePayloadCategorizationRuleEdgeArgs = {
-  orderBy?: Array<CategorizationRuleOrderBy>;
-};
-
-/** All input for the `updateConnectedAccountById` mutation. */
-export type UpdateConnectedAccountByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `ConnectedAccount` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `ConnectedAccount` being updated. */
-  patch: ConnectedAccountPatch;
-};
-
-/** All input for the `updateConnectedAccount` mutation. */
-export type UpdateConnectedAccountInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `ConnectedAccount` being updated. */
-  patch: ConnectedAccountPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `ConnectedAccount` mutation. */
-export type UpdateConnectedAccountPayload = {
-  __typename?: 'UpdateConnectedAccountPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `ConnectedAccount` that was updated by this mutation. */
-  connectedAccount?: Maybe<ConnectedAccount>;
-  /** An edge for our `ConnectedAccount`. May be used by Relay 1. */
-  connectedAccountEdge?: Maybe<ConnectedAccountEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `ConnectedAccount` mutation. */
-export type UpdateConnectedAccountPayloadConnectedAccountEdgeArgs = {
-  orderBy?: Array<ConnectedAccountOrderBy>;
-};
-
-/** All input for the `updateCryptoAssetById` mutation. */
-export type UpdateCryptoAssetByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `CryptoAsset` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `CryptoAsset` being updated. */
-  patch: CryptoAssetPatch;
-};
-
-/** All input for the `updateCryptoAsset` mutation. */
-export type UpdateCryptoAssetInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `CryptoAsset` being updated. */
-  patch: CryptoAssetPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `CryptoAsset` mutation. */
-export type UpdateCryptoAssetPayload = {
-  __typename?: 'UpdateCryptoAssetPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `CryptoAsset` that was updated by this mutation. */
-  cryptoAsset?: Maybe<CryptoAsset>;
-  /** An edge for our `CryptoAsset`. May be used by Relay 1. */
-  cryptoAssetEdge?: Maybe<CryptoAssetEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `CryptoAsset` mutation. */
-export type UpdateCryptoAssetPayloadCryptoAssetEdgeArgs = {
-  orderBy?: Array<CryptoAssetOrderBy>;
-};
-
-/** All input for the `updateCryptoLotById` mutation. */
-export type UpdateCryptoLotByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `CryptoLot` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `CryptoLot` being updated. */
-  patch: CryptoLotPatch;
-};
-
-/** All input for the `updateCryptoLot` mutation. */
-export type UpdateCryptoLotInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `CryptoLot` being updated. */
-  patch: CryptoLotPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `CryptoLot` mutation. */
-export type UpdateCryptoLotPayload = {
-  __typename?: 'UpdateCryptoLotPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `CryptoLot` that was updated by this mutation. */
-  cryptoLot?: Maybe<CryptoLot>;
-  /** An edge for our `CryptoLot`. May be used by Relay 1. */
-  cryptoLotEdge?: Maybe<CryptoLotEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `CryptoLot` mutation. */
-export type UpdateCryptoLotPayloadCryptoLotEdgeArgs = {
-  orderBy?: Array<CryptoLotOrderBy>;
-};
-
-/** All input for the `updateDrizzleMigrationById` mutation. */
-export type UpdateDrizzleMigrationByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `_DrizzleMigration` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `_DrizzleMigration` being updated. */
-  patch: _DrizzleMigrationPatch;
-};
-
-/** All input for the `updateDrizzleMigration` mutation. */
-export type UpdateDrizzleMigrationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `_DrizzleMigration` being updated. */
-  patch: _DrizzleMigrationPatch;
-  rowId: Scalars['Int']['input'];
-};
-
-/** The output of our update `_DrizzleMigration` mutation. */
-export type UpdateDrizzleMigrationPayload = {
-  __typename?: 'UpdateDrizzleMigrationPayload';
-  /** The `_DrizzleMigration` that was updated by this mutation. */
-  _drizzleMigration?: Maybe<_DrizzleMigration>;
-  /** An edge for our `_DrizzleMigration`. May be used by Relay 1. */
-  _drizzleMigrationEdge?: Maybe<_DrizzleMigrationEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `_DrizzleMigration` mutation. */
-export type UpdateDrizzleMigrationPayload_DrizzleMigrationEdgeArgs = {
-  orderBy?: Array<_DrizzleMigrationOrderBy>;
-};
-
-/** All input for the `updateFixedAssetById` mutation. */
-export type UpdateFixedAssetByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `FixedAsset` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `FixedAsset` being updated. */
-  patch: FixedAssetPatch;
-};
-
-/** All input for the `updateFixedAsset` mutation. */
-export type UpdateFixedAssetInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `FixedAsset` being updated. */
-  patch: FixedAssetPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `FixedAsset` mutation. */
-export type UpdateFixedAssetPayload = {
-  __typename?: 'UpdateFixedAssetPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `FixedAsset` that was updated by this mutation. */
-  fixedAsset?: Maybe<FixedAsset>;
-  /** An edge for our `FixedAsset`. May be used by Relay 1. */
-  fixedAssetEdge?: Maybe<FixedAssetEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `FixedAsset` mutation. */
-export type UpdateFixedAssetPayloadFixedAssetEdgeArgs = {
-  orderBy?: Array<FixedAssetOrderBy>;
-};
-
-/** All input for the `updateImportProfileById` mutation. */
-export type UpdateImportProfileByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `ImportProfile` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `ImportProfile` being updated. */
-  patch: ImportProfilePatch;
-};
-
-/** All input for the `updateImportProfile` mutation. */
-export type UpdateImportProfileInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `ImportProfile` being updated. */
-  patch: ImportProfilePatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `ImportProfile` mutation. */
-export type UpdateImportProfilePayload = {
-  __typename?: 'UpdateImportProfilePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `ImportProfile` that was updated by this mutation. */
-  importProfile?: Maybe<ImportProfile>;
-  /** An edge for our `ImportProfile`. May be used by Relay 1. */
-  importProfileEdge?: Maybe<ImportProfileEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `ImportProfile` mutation. */
-export type UpdateImportProfilePayloadImportProfileEdgeArgs = {
-  orderBy?: Array<ImportProfileOrderBy>;
-};
-
-/** All input for the `updateJournalEntryById` mutation. */
-export type UpdateJournalEntryByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `JournalEntry` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `JournalEntry` being updated. */
-  patch: JournalEntryPatch;
-};
-
-/** All input for the `updateJournalEntry` mutation. */
-export type UpdateJournalEntryInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `JournalEntry` being updated. */
-  patch: JournalEntryPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `JournalEntry` mutation. */
-export type UpdateJournalEntryPayload = {
-  __typename?: 'UpdateJournalEntryPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `JournalEntry` that was updated by this mutation. */
-  journalEntry?: Maybe<JournalEntry>;
-  /** An edge for our `JournalEntry`. May be used by Relay 1. */
-  journalEntryEdge?: Maybe<JournalEntryEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `JournalEntry` mutation. */
-export type UpdateJournalEntryPayloadJournalEntryEdgeArgs = {
-  orderBy?: Array<JournalEntryOrderBy>;
-};
-
-/** All input for the `updateJournalLineById` mutation. */
-export type UpdateJournalLineByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `JournalLine` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `JournalLine` being updated. */
-  patch: JournalLinePatch;
-};
-
-/** All input for the `updateJournalLine` mutation. */
-export type UpdateJournalLineInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `JournalLine` being updated. */
-  patch: JournalLinePatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `JournalLine` mutation. */
-export type UpdateJournalLinePayload = {
-  __typename?: 'UpdateJournalLinePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `JournalLine` that was updated by this mutation. */
-  journalLine?: Maybe<JournalLine>;
-  /** An edge for our `JournalLine`. May be used by Relay 1. */
-  journalLineEdge?: Maybe<JournalLineEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `JournalLine` mutation. */
-export type UpdateJournalLinePayloadJournalLineEdgeArgs = {
-  orderBy?: Array<JournalLineOrderBy>;
-};
-
-/** All input for the `updateJournalLineTagById` mutation. */
-export type UpdateJournalLineTagByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `JournalLineTag` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `JournalLineTag` being updated. */
-  patch: JournalLineTagPatch;
-};
-
-/** All input for the `updateJournalLineTag` mutation. */
-export type UpdateJournalLineTagInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `JournalLineTag` being updated. */
-  patch: JournalLineTagPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `JournalLineTag` mutation. */
-export type UpdateJournalLineTagPayload = {
-  __typename?: 'UpdateJournalLineTagPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `JournalLineTag` that was updated by this mutation. */
-  journalLineTag?: Maybe<JournalLineTag>;
-  /** An edge for our `JournalLineTag`. May be used by Relay 1. */
-  journalLineTagEdge?: Maybe<JournalLineTagEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `JournalLineTag` mutation. */
-export type UpdateJournalLineTagPayloadJournalLineTagEdgeArgs = {
-  orderBy?: Array<JournalLineTagOrderBy>;
-};
-
-/** All input for the `updateMileageLogById` mutation. */
-export type UpdateMileageLogByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `MileageLog` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `MileageLog` being updated. */
-  patch: MileageLogPatch;
-};
-
-/** All input for the `updateMileageLog` mutation. */
-export type UpdateMileageLogInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `MileageLog` being updated. */
-  patch: MileageLogPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `MileageLog` mutation. */
-export type UpdateMileageLogPayload = {
-  __typename?: 'UpdateMileageLogPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `MileageLog` that was updated by this mutation. */
-  mileageLog?: Maybe<MileageLog>;
-  /** An edge for our `MileageLog`. May be used by Relay 1. */
-  mileageLogEdge?: Maybe<MileageLogEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `MileageLog` mutation. */
-export type UpdateMileageLogPayloadMileageLogEdgeArgs = {
-  orderBy?: Array<MileageLogOrderBy>;
-};
-
-/** All input for the `updateNetWorthSnapshotById` mutation. */
-export type UpdateNetWorthSnapshotByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `NetWorthSnapshot` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `NetWorthSnapshot` being updated. */
-  patch: NetWorthSnapshotPatch;
-};
-
-/** All input for the `updateNetWorthSnapshot` mutation. */
-export type UpdateNetWorthSnapshotInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `NetWorthSnapshot` being updated. */
-  patch: NetWorthSnapshotPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `NetWorthSnapshot` mutation. */
-export type UpdateNetWorthSnapshotPayload = {
-  __typename?: 'UpdateNetWorthSnapshotPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `NetWorthSnapshot` that was updated by this mutation. */
-  netWorthSnapshot?: Maybe<NetWorthSnapshot>;
-  /** An edge for our `NetWorthSnapshot`. May be used by Relay 1. */
-  netWorthSnapshotEdge?: Maybe<NetWorthSnapshotEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `NetWorthSnapshot` mutation. */
-export type UpdateNetWorthSnapshotPayloadNetWorthSnapshotEdgeArgs = {
-  orderBy?: Array<NetWorthSnapshotOrderBy>;
-};
-
-/** All input for the `updatePayrollConnectionById` mutation. */
-export type UpdatePayrollConnectionByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `PayrollConnection` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `PayrollConnection` being updated. */
-  patch: PayrollConnectionPatch;
-};
-
-/** All input for the `updatePayrollConnection` mutation. */
-export type UpdatePayrollConnectionInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `PayrollConnection` being updated. */
-  patch: PayrollConnectionPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `PayrollConnection` mutation. */
-export type UpdatePayrollConnectionPayload = {
-  __typename?: 'UpdatePayrollConnectionPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `PayrollConnection` that was updated by this mutation. */
-  payrollConnection?: Maybe<PayrollConnection>;
-  /** An edge for our `PayrollConnection`. May be used by Relay 1. */
-  payrollConnectionEdge?: Maybe<PayrollConnectionEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `PayrollConnection` mutation. */
-export type UpdatePayrollConnectionPayloadPayrollConnectionEdgeArgs = {
-  orderBy?: Array<PayrollConnectionOrderBy>;
-};
-
-/** All input for the `updateReconciliationQueueById` mutation. */
-export type UpdateReconciliationQueueByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `ReconciliationQueue` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `ReconciliationQueue` being updated. */
-  patch: ReconciliationQueuePatch;
-};
-
-/** All input for the `updateReconciliationQueue` mutation. */
-export type UpdateReconciliationQueueInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `ReconciliationQueue` being updated. */
-  patch: ReconciliationQueuePatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `ReconciliationQueue` mutation. */
-export type UpdateReconciliationQueuePayload = {
-  __typename?: 'UpdateReconciliationQueuePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `ReconciliationQueue` that was updated by this mutation. */
-  reconciliationQueue?: Maybe<ReconciliationQueue>;
-  /** An edge for our `ReconciliationQueue`. May be used by Relay 1. */
-  reconciliationQueueEdge?: Maybe<ReconciliationQueueEdge>;
-};
-
-
-/** The output of our update `ReconciliationQueue` mutation. */
-export type UpdateReconciliationQueuePayloadReconciliationQueueEdgeArgs = {
-  orderBy?: Array<ReconciliationQueueOrderBy>;
-};
-
-/** All input for the `updateReconciliationStatementById` mutation. */
-export type UpdateReconciliationStatementByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `ReconciliationStatement` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `ReconciliationStatement` being updated. */
-  patch: ReconciliationStatementPatch;
-};
-
-/** All input for the `updateReconciliationStatement` mutation. */
-export type UpdateReconciliationStatementInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `ReconciliationStatement` being updated. */
-  patch: ReconciliationStatementPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `ReconciliationStatement` mutation. */
-export type UpdateReconciliationStatementPayload = {
-  __typename?: 'UpdateReconciliationStatementPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `ReconciliationStatement` that was updated by this mutation. */
-  reconciliationStatement?: Maybe<ReconciliationStatement>;
-  /** An edge for our `ReconciliationStatement`. May be used by Relay 1. */
-  reconciliationStatementEdge?: Maybe<ReconciliationStatementEdge>;
-};
-
-
-/** The output of our update `ReconciliationStatement` mutation. */
-export type UpdateReconciliationStatementPayloadReconciliationStatementEdgeArgs = {
-  orderBy?: Array<ReconciliationStatementOrderBy>;
-};
-
-/** All input for the `updateRecurringTransactionById` mutation. */
-export type UpdateRecurringTransactionByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `RecurringTransaction` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `RecurringTransaction` being updated. */
-  patch: RecurringTransactionPatch;
-};
-
-/** All input for the `updateRecurringTransaction` mutation. */
-export type UpdateRecurringTransactionInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `RecurringTransaction` being updated. */
-  patch: RecurringTransactionPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `RecurringTransaction` mutation. */
-export type UpdateRecurringTransactionPayload = {
-  __typename?: 'UpdateRecurringTransactionPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `RecurringTransaction` that was updated by this mutation. */
-  recurringTransaction?: Maybe<RecurringTransaction>;
-  /** An edge for our `RecurringTransaction`. May be used by Relay 1. */
-  recurringTransactionEdge?: Maybe<RecurringTransactionEdge>;
-};
-
-
-/** The output of our update `RecurringTransaction` mutation. */
-export type UpdateRecurringTransactionPayloadRecurringTransactionEdgeArgs = {
-  orderBy?: Array<RecurringTransactionOrderBy>;
-};
-
-/** All input for the `updateSavingsGoalById` mutation. */
-export type UpdateSavingsGoalByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `SavingsGoal` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `SavingsGoal` being updated. */
-  patch: SavingsGoalPatch;
-};
-
-/** All input for the `updateSavingsGoal` mutation. */
-export type UpdateSavingsGoalInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `SavingsGoal` being updated. */
-  patch: SavingsGoalPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `SavingsGoal` mutation. */
-export type UpdateSavingsGoalPayload = {
-  __typename?: 'UpdateSavingsGoalPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `SavingsGoal` that was updated by this mutation. */
-  savingsGoal?: Maybe<SavingsGoal>;
-  /** An edge for our `SavingsGoal`. May be used by Relay 1. */
-  savingsGoalEdge?: Maybe<SavingsGoalEdge>;
-};
-
-
-/** The output of our update `SavingsGoal` mutation. */
-export type UpdateSavingsGoalPayloadSavingsGoalEdgeArgs = {
-  orderBy?: Array<SavingsGoalOrderBy>;
-};
-
-/** All input for the `updateTagById` mutation. */
-export type UpdateTagByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Tag` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `Tag` being updated. */
-  patch: TagPatch;
-};
-
-/** All input for the `updateTagGroupById` mutation. */
-export type UpdateTagGroupByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `TagGroup` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `TagGroup` being updated. */
-  patch: TagGroupPatch;
-};
-
-/** All input for the `updateTagGroup` mutation. */
-export type UpdateTagGroupInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `TagGroup` being updated. */
-  patch: TagGroupPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `TagGroup` mutation. */
-export type UpdateTagGroupPayload = {
-  __typename?: 'UpdateTagGroupPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `TagGroup` that was updated by this mutation. */
-  tagGroup?: Maybe<TagGroup>;
-  /** An edge for our `TagGroup`. May be used by Relay 1. */
-  tagGroupEdge?: Maybe<TagGroupEdge>;
-};
-
-
-/** The output of our update `TagGroup` mutation. */
-export type UpdateTagGroupPayloadTagGroupEdgeArgs = {
-  orderBy?: Array<TagGroupOrderBy>;
-};
-
-/** All input for the `updateTag` mutation. */
-export type UpdateTagInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `Tag` being updated. */
-  patch: TagPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `Tag` mutation. */
-export type UpdateTagPayload = {
-  __typename?: 'UpdateTagPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `Tag` that was updated by this mutation. */
-  tag?: Maybe<Tag>;
-  /** An edge for our `Tag`. May be used by Relay 1. */
-  tagEdge?: Maybe<TagEdge>;
-};
-
-
-/** The output of our update `Tag` mutation. */
-export type UpdateTagPayloadTagEdgeArgs = {
-  orderBy?: Array<TagOrderBy>;
-};
-
-/** All input for the `updateTaxJurisdictionById` mutation. */
-export type UpdateTaxJurisdictionByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `TaxJurisdiction` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `TaxJurisdiction` being updated. */
-  patch: TaxJurisdictionPatch;
-};
-
-/** All input for the `updateTaxJurisdiction` mutation. */
-export type UpdateTaxJurisdictionInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `TaxJurisdiction` being updated. */
-  patch: TaxJurisdictionPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `TaxJurisdiction` mutation. */
-export type UpdateTaxJurisdictionPayload = {
-  __typename?: 'UpdateTaxJurisdictionPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `TaxJurisdiction` that was updated by this mutation. */
-  taxJurisdiction?: Maybe<TaxJurisdiction>;
-  /** An edge for our `TaxJurisdiction`. May be used by Relay 1. */
-  taxJurisdictionEdge?: Maybe<TaxJurisdictionEdge>;
-};
-
-
-/** The output of our update `TaxJurisdiction` mutation. */
-export type UpdateTaxJurisdictionPayloadTaxJurisdictionEdgeArgs = {
-  orderBy?: Array<TaxJurisdictionOrderBy>;
-};
-
-/** All input for the `updateVehicleById` mutation. */
-export type UpdateVehicleByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Vehicle` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `Vehicle` being updated. */
-  patch: VehiclePatch;
-};
-
-/** All input for the `updateVehicle` mutation. */
-export type UpdateVehicleInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `Vehicle` being updated. */
-  patch: VehiclePatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `Vehicle` mutation. */
-export type UpdateVehiclePayload = {
-  __typename?: 'UpdateVehiclePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `Vehicle` that was updated by this mutation. */
-  vehicle?: Maybe<Vehicle>;
-  /** An edge for our `Vehicle`. May be used by Relay 1. */
-  vehicleEdge?: Maybe<VehicleEdge>;
-};
-
-
-/** The output of our update `Vehicle` mutation. */
-export type UpdateVehiclePayloadVehicleEdgeArgs = {
-  orderBy?: Array<VehicleOrderBy>;
-};
-
-/** All input for the `updateVendorById` mutation. */
-export type UpdateVendorByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Vendor` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `Vendor` being updated. */
-  patch: VendorPatch;
-};
-
-/** All input for the `updateVendor` mutation. */
-export type UpdateVendorInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `Vendor` being updated. */
-  patch: VendorPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `Vendor` mutation. */
-export type UpdateVendorPayload = {
-  __typename?: 'UpdateVendorPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `Vendor` that was updated by this mutation. */
-  vendor?: Maybe<Vendor>;
-  /** An edge for our `Vendor`. May be used by Relay 1. */
-  vendorEdge?: Maybe<VendorEdge>;
-};
-
-
-/** The output of our update `Vendor` mutation. */
-export type UpdateVendorPayloadVendorEdgeArgs = {
-  orderBy?: Array<VendorOrderBy>;
 };
 
 export type Vehicle = Node & {
@@ -9538,18 +10480,6 @@ export type VehicleFilter = {
   rowId?: InputMaybe<UuidFilter>;
 };
 
-/** An input for mutations affecting `Vehicle` */
-export type VehicleInput = {
-  bookId: Scalars['UUID']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  dateInService?: InputMaybe<Scalars['String']['input']>;
-  make?: InputMaybe<Scalars['String']['input']>;
-  model?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  year?: InputMaybe<Scalars['Int']['input']>;
-};
-
 /** Methods to use when ordering `Vehicle`. */
 export enum VehicleOrderBy {
   BookIdAsc = 'BOOK_ID_ASC',
@@ -9560,18 +10490,6 @@ export enum VehicleOrderBy {
   RowIdAsc = 'ROW_ID_ASC',
   RowIdDesc = 'ROW_ID_DESC'
 }
-
-/** Represents an update to a `Vehicle`. Fields that are set will be updated. */
-export type VehiclePatch = {
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  dateInService?: InputMaybe<Scalars['String']['input']>;
-  make?: InputMaybe<Scalars['String']['input']>;
-  model?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  year?: InputMaybe<Scalars['Int']['input']>;
-};
 
 /** A filter to be used against many `MileageLog` object types. All fields are combined with a logical ‘and.’ */
 export type VehicleToManyMileageLogFilter = {
@@ -9586,23 +10504,79 @@ export type VehicleToManyMileageLogFilter = {
 export type Vendor = Node & {
   __typename?: 'Vendor';
   address?: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `Bill`. */
+  bills: BillConnection;
   /** Reads a single `Book` that is related to this `Vendor`. */
   book?: Maybe<Book>;
   bookId: Scalars['UUID']['output'];
   businessName?: Maybe<Scalars['String']['output']>;
   city?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads and enables pagination through a set of `Document`. */
+  documents: DocumentConnection;
   email?: Maybe<Scalars['String']['output']>;
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   id: Scalars['ID']['output'];
   is1099Eligible: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `PurchaseOrder`. */
+  purchaseOrders: PurchaseOrderConnection;
   rowId: Scalars['UUID']['output'];
   state?: Maybe<Scalars['String']['output']>;
   taxId?: Maybe<Scalars['String']['output']>;
   taxIdType?: Maybe<Scalars['String']['output']>;
   threshold?: Maybe<Scalars['BigFloat']['output']>;
+  /** Reads and enables pagination through a set of `VendorCredit`. */
+  vendorCredits: VendorCreditConnection;
   zip?: Maybe<Scalars['String']['output']>;
+};
+
+
+export type VendorBillsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<BillCondition>;
+  filter?: InputMaybe<BillFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<BillOrderBy>>;
+};
+
+
+export type VendorDocumentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DocumentCondition>;
+  filter?: InputMaybe<DocumentFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DocumentOrderBy>>;
+};
+
+
+export type VendorPurchaseOrdersArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PurchaseOrderCondition>;
+  filter?: InputMaybe<PurchaseOrderFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PurchaseOrderOrderBy>>;
+};
+
+
+export type VendorVendorCreditsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<VendorCreditCondition>;
+  filter?: InputMaybe<VendorCreditFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<VendorCreditOrderBy>>;
 };
 
 /** A condition to be used against `Vendor` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -9626,6 +10600,351 @@ export type VendorConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type VendorCredit = Node & {
+  __typename?: 'VendorCredit';
+  amountApplied: Scalars['BigFloat']['output'];
+  /** Reads a single `Book` that is related to this `VendorCredit`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  currency: Scalars['String']['output'];
+  date: Scalars['String']['output'];
+  exchangeRate: Scalars['BigFloat']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `JournalEntry` that is related to this `VendorCredit`. */
+  journalEntry?: Maybe<JournalEntry>;
+  journalEntryId?: Maybe<Scalars['UUID']['output']>;
+  memo?: Maybe<Scalars['String']['output']>;
+  number: Scalars['String']['output'];
+  rowId: Scalars['UUID']['output'];
+  status: Scalars['String']['output'];
+  subtotal: Scalars['BigFloat']['output'];
+  taxAmount: Scalars['BigFloat']['output'];
+  total: Scalars['BigFloat']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads a single `Vendor` that is related to this `VendorCredit`. */
+  vendor?: Maybe<Vendor>;
+  /** Reads and enables pagination through a set of `VendorCreditApplication`. */
+  vendorCreditApplications: VendorCreditApplicationConnection;
+  /** Reads and enables pagination through a set of `VendorCreditLine`. */
+  vendorCreditLines: VendorCreditLineConnection;
+  vendorId: Scalars['UUID']['output'];
+};
+
+
+export type VendorCreditVendorCreditApplicationsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<VendorCreditApplicationCondition>;
+  filter?: InputMaybe<VendorCreditApplicationFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<VendorCreditApplicationOrderBy>>;
+};
+
+
+export type VendorCreditVendorCreditLinesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<VendorCreditLineCondition>;
+  filter?: InputMaybe<VendorCreditLineFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<VendorCreditLineOrderBy>>;
+};
+
+export type VendorCreditApplication = Node & {
+  __typename?: 'VendorCreditApplication';
+  amount: Scalars['BigFloat']['output'];
+  /** Reads a single `Bill` that is related to this `VendorCreditApplication`. */
+  bill?: Maybe<Bill>;
+  billId: Scalars['UUID']['output'];
+  /** Reads a single `Book` that is related to this `VendorCreditApplication`. */
+  book?: Maybe<Book>;
+  bookId: Scalars['UUID']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  date: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  rowId: Scalars['UUID']['output'];
+  /** Reads a single `VendorCredit` that is related to this `VendorCreditApplication`. */
+  vendorCredit?: Maybe<VendorCredit>;
+  vendorCreditId: Scalars['UUID']['output'];
+};
+
+/**
+ * A condition to be used against `VendorCreditApplication` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
+ */
+export type VendorCreditApplicationCondition = {
+  /** Checks for equality with the object’s `billId` field. */
+  billId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `vendorCreditId` field. */
+  vendorCreditId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `VendorCreditApplication` values. */
+export type VendorCreditApplicationConnection = {
+  __typename?: 'VendorCreditApplicationConnection';
+  /** A list of edges which contains the `VendorCreditApplication` and cursor to aid in pagination. */
+  edges: Array<Maybe<VendorCreditApplicationEdge>>;
+  /** A list of `VendorCreditApplication` objects. */
+  nodes: Array<Maybe<VendorCreditApplication>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `VendorCreditApplication` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `VendorCreditApplication` edge in the connection. */
+export type VendorCreditApplicationEdge = {
+  __typename?: 'VendorCreditApplicationEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `VendorCreditApplication` at the end of the edge. */
+  node?: Maybe<VendorCreditApplication>;
+};
+
+/** A filter to be used against `VendorCreditApplication` object types. All fields are combined with a logical ‘and.’ */
+export type VendorCreditApplicationFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<VendorCreditApplicationFilter>>;
+  /** Filter by the object’s `bill` relation. */
+  bill?: InputMaybe<BillFilter>;
+  /** Filter by the object’s `billId` field. */
+  billId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<VendorCreditApplicationFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<VendorCreditApplicationFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `vendorCredit` relation. */
+  vendorCredit?: InputMaybe<VendorCreditFilter>;
+  /** Filter by the object’s `vendorCreditId` field. */
+  vendorCreditId?: InputMaybe<UuidFilter>;
+};
+
+/** Methods to use when ordering `VendorCreditApplication`. */
+export enum VendorCreditApplicationOrderBy {
+  BillIdAsc = 'BILL_ID_ASC',
+  BillIdDesc = 'BILL_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  VendorCreditIdAsc = 'VENDOR_CREDIT_ID_ASC',
+  VendorCreditIdDesc = 'VENDOR_CREDIT_ID_DESC'
+}
+
+/**
+ * A condition to be used against `VendorCredit` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type VendorCreditCondition = {
+  /** Checks for equality with the object’s `bookId` field. */
+  bookId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `number` field. */
+  number?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `vendorId` field. */
+  vendorId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `VendorCredit` values. */
+export type VendorCreditConnection = {
+  __typename?: 'VendorCreditConnection';
+  /** A list of edges which contains the `VendorCredit` and cursor to aid in pagination. */
+  edges: Array<Maybe<VendorCreditEdge>>;
+  /** A list of `VendorCredit` objects. */
+  nodes: Array<Maybe<VendorCredit>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `VendorCredit` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `VendorCredit` edge in the connection. */
+export type VendorCreditEdge = {
+  __typename?: 'VendorCreditEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `VendorCredit` at the end of the edge. */
+  node?: Maybe<VendorCredit>;
+};
+
+/** A filter to be used against `VendorCredit` object types. All fields are combined with a logical ‘and.’ */
+export type VendorCreditFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<VendorCreditFilter>>;
+  /** Filter by the object’s `book` relation. */
+  book?: InputMaybe<BookFilter>;
+  /** Filter by the object’s `bookId` field. */
+  bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `journalEntry` relation. */
+  journalEntry?: InputMaybe<JournalEntryFilter>;
+  /** A related `journalEntry` exists. */
+  journalEntryExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Negates the expression. */
+  not?: InputMaybe<VendorCreditFilter>;
+  /** Filter by the object’s `number` field. */
+  number?: InputMaybe<StringFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<VendorCreditFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `vendor` relation. */
+  vendor?: InputMaybe<VendorFilter>;
+  /** Filter by the object’s `vendorCreditApplications` relation. */
+  vendorCreditApplications?: InputMaybe<VendorCreditToManyVendorCreditApplicationFilter>;
+  /** Some related `vendorCreditApplications` exist. */
+  vendorCreditApplicationsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `vendorCreditLines` relation. */
+  vendorCreditLines?: InputMaybe<VendorCreditToManyVendorCreditLineFilter>;
+  /** Some related `vendorCreditLines` exist. */
+  vendorCreditLinesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `vendorId` field. */
+  vendorId?: InputMaybe<UuidFilter>;
+};
+
+export type VendorCreditLine = Node & {
+  __typename?: 'VendorCreditLine';
+  amount: Scalars['BigFloat']['output'];
+  description: Scalars['String']['output'];
+  discountPercent?: Maybe<Scalars['BigFloat']['output']>;
+  /** Reads a single `Account` that is related to this `VendorCreditLine`. */
+  expenseAccount?: Maybe<Account>;
+  expenseAccountId: Scalars['UUID']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  quantity: Scalars['BigFloat']['output'];
+  rowId: Scalars['UUID']['output'];
+  sortOrder: Scalars['Int']['output'];
+  /** Reads a single `TaxJurisdiction` that is related to this `VendorCreditLine`. */
+  taxJurisdiction?: Maybe<TaxJurisdiction>;
+  taxJurisdictionId?: Maybe<Scalars['UUID']['output']>;
+  unitPrice: Scalars['BigFloat']['output'];
+  /** Reads a single `VendorCredit` that is related to this `VendorCreditLine`. */
+  vendorCredit?: Maybe<VendorCredit>;
+  vendorCreditId: Scalars['UUID']['output'];
+};
+
+/**
+ * A condition to be used against `VendorCreditLine` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type VendorCreditLineCondition = {
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `vendorCreditId` field. */
+  vendorCreditId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `VendorCreditLine` values. */
+export type VendorCreditLineConnection = {
+  __typename?: 'VendorCreditLineConnection';
+  /** A list of edges which contains the `VendorCreditLine` and cursor to aid in pagination. */
+  edges: Array<Maybe<VendorCreditLineEdge>>;
+  /** A list of `VendorCreditLine` objects. */
+  nodes: Array<Maybe<VendorCreditLine>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `VendorCreditLine` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `VendorCreditLine` edge in the connection. */
+export type VendorCreditLineEdge = {
+  __typename?: 'VendorCreditLineEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `VendorCreditLine` at the end of the edge. */
+  node?: Maybe<VendorCreditLine>;
+};
+
+/** A filter to be used against `VendorCreditLine` object types. All fields are combined with a logical ‘and.’ */
+export type VendorCreditLineFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<VendorCreditLineFilter>>;
+  /** Filter by the object’s `expenseAccount` relation. */
+  expenseAccount?: InputMaybe<AccountFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<VendorCreditLineFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<VendorCreditLineFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `taxJurisdiction` relation. */
+  taxJurisdiction?: InputMaybe<TaxJurisdictionFilter>;
+  /** A related `taxJurisdiction` exists. */
+  taxJurisdictionExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `vendorCredit` relation. */
+  vendorCredit?: InputMaybe<VendorCreditFilter>;
+  /** Filter by the object’s `vendorCreditId` field. */
+  vendorCreditId?: InputMaybe<UuidFilter>;
+};
+
+/** Methods to use when ordering `VendorCreditLine`. */
+export enum VendorCreditLineOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  VendorCreditIdAsc = 'VENDOR_CREDIT_ID_ASC',
+  VendorCreditIdDesc = 'VENDOR_CREDIT_ID_DESC'
+}
+
+/** Methods to use when ordering `VendorCredit`. */
+export enum VendorCreditOrderBy {
+  BookIdAsc = 'BOOK_ID_ASC',
+  BookIdDesc = 'BOOK_ID_DESC',
+  Natural = 'NATURAL',
+  NumberAsc = 'NUMBER_ASC',
+  NumberDesc = 'NUMBER_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  VendorIdAsc = 'VENDOR_ID_ASC',
+  VendorIdDesc = 'VENDOR_ID_DESC'
+}
+
+/** A filter to be used against many `VendorCreditApplication` object types. All fields are combined with a logical ‘and.’ */
+export type VendorCreditToManyVendorCreditApplicationFilter = {
+  /** Every related `VendorCreditApplication` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<VendorCreditApplicationFilter>;
+  /** No related `VendorCreditApplication` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<VendorCreditApplicationFilter>;
+  /** Some related `VendorCreditApplication` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<VendorCreditApplicationFilter>;
+};
+
+/** A filter to be used against many `VendorCreditLine` object types. All fields are combined with a logical ‘and.’ */
+export type VendorCreditToManyVendorCreditLineFilter = {
+  /** Every related `VendorCreditLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<VendorCreditLineFilter>;
+  /** No related `VendorCreditLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<VendorCreditLineFilter>;
+  /** Some related `VendorCreditLine` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<VendorCreditLineFilter>;
+};
+
 /** A `Vendor` edge in the connection. */
 export type VendorEdge = {
   __typename?: 'VendorEdge';
@@ -9639,34 +10958,32 @@ export type VendorEdge = {
 export type VendorFilter = {
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<VendorFilter>>;
+  /** Filter by the object’s `bills` relation. */
+  bills?: InputMaybe<VendorToManyBillFilter>;
+  /** Some related `bills` exist. */
+  billsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `book` relation. */
   book?: InputMaybe<BookFilter>;
   /** Filter by the object’s `bookId` field. */
   bookId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `documents` relation. */
+  documents?: InputMaybe<VendorToManyDocumentFilter>;
+  /** Some related `documents` exist. */
+  documentsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Negates the expression. */
   not?: InputMaybe<VendorFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<VendorFilter>>;
+  /** Filter by the object’s `purchaseOrders` relation. */
+  purchaseOrders?: InputMaybe<VendorToManyPurchaseOrderFilter>;
+  /** Some related `purchaseOrders` exist. */
+  purchaseOrdersExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `rowId` field. */
   rowId?: InputMaybe<UuidFilter>;
-};
-
-/** An input for mutations affecting `Vendor` */
-export type VendorInput = {
-  address?: InputMaybe<Scalars['String']['input']>;
-  bookId: Scalars['UUID']['input'];
-  businessName?: InputMaybe<Scalars['String']['input']>;
-  city?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  email?: InputMaybe<Scalars['String']['input']>;
-  is1099Eligible?: InputMaybe<Scalars['Boolean']['input']>;
-  name: Scalars['String']['input'];
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  state?: InputMaybe<Scalars['String']['input']>;
-  taxId?: InputMaybe<Scalars['String']['input']>;
-  taxIdType?: InputMaybe<Scalars['String']['input']>;
-  threshold?: InputMaybe<Scalars['BigFloat']['input']>;
-  zip?: InputMaybe<Scalars['String']['input']>;
+  /** Filter by the object’s `vendorCredits` relation. */
+  vendorCredits?: InputMaybe<VendorToManyVendorCreditFilter>;
+  /** Some related `vendorCredits` exist. */
+  vendorCreditsExist?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** Methods to use when ordering `Vendor`. */
@@ -9680,22 +10997,44 @@ export enum VendorOrderBy {
   RowIdDesc = 'ROW_ID_DESC'
 }
 
-/** Represents an update to a `Vendor`. Fields that are set will be updated. */
-export type VendorPatch = {
-  address?: InputMaybe<Scalars['String']['input']>;
-  bookId?: InputMaybe<Scalars['UUID']['input']>;
-  businessName?: InputMaybe<Scalars['String']['input']>;
-  city?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  email?: InputMaybe<Scalars['String']['input']>;
-  is1099Eligible?: InputMaybe<Scalars['Boolean']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  state?: InputMaybe<Scalars['String']['input']>;
-  taxId?: InputMaybe<Scalars['String']['input']>;
-  taxIdType?: InputMaybe<Scalars['String']['input']>;
-  threshold?: InputMaybe<Scalars['BigFloat']['input']>;
-  zip?: InputMaybe<Scalars['String']['input']>;
+/** A filter to be used against many `Bill` object types. All fields are combined with a logical ‘and.’ */
+export type VendorToManyBillFilter = {
+  /** Every related `Bill` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<BillFilter>;
+  /** No related `Bill` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<BillFilter>;
+  /** Some related `Bill` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<BillFilter>;
+};
+
+/** A filter to be used against many `Document` object types. All fields are combined with a logical ‘and.’ */
+export type VendorToManyDocumentFilter = {
+  /** Every related `Document` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<DocumentFilter>;
+  /** No related `Document` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<DocumentFilter>;
+  /** Some related `Document` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<DocumentFilter>;
+};
+
+/** A filter to be used against many `PurchaseOrder` object types. All fields are combined with a logical ‘and.’ */
+export type VendorToManyPurchaseOrderFilter = {
+  /** Every related `PurchaseOrder` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<PurchaseOrderFilter>;
+  /** No related `PurchaseOrder` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<PurchaseOrderFilter>;
+  /** Some related `PurchaseOrder` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<PurchaseOrderFilter>;
+};
+
+/** A filter to be used against many `VendorCredit` object types. All fields are combined with a logical ‘and.’ */
+export type VendorToManyVendorCreditFilter = {
+  /** Every related `VendorCredit` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<VendorCreditFilter>;
+  /** No related `VendorCredit` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<VendorCreditFilter>;
+  /** Some related `VendorCredit` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<VendorCreditFilter>;
 };
 
 export type _DrizzleMigration = Node & {
@@ -9750,13 +11089,6 @@ export type _DrizzleMigrationFilter = {
   rowId?: InputMaybe<IntFilter>;
 };
 
-/** An input for mutations affecting `_DrizzleMigration` */
-export type _DrizzleMigrationInput = {
-  createdAt?: InputMaybe<Scalars['BigInt']['input']>;
-  hash: Scalars['String']['input'];
-  rowId?: InputMaybe<Scalars['Int']['input']>;
-};
-
 /** Methods to use when ordering `_DrizzleMigration`. */
 export enum _DrizzleMigrationOrderBy {
   Natural = 'NATURAL',
@@ -9765,54 +11097,6 @@ export enum _DrizzleMigrationOrderBy {
   RowIdAsc = 'ROW_ID_ASC',
   RowIdDesc = 'ROW_ID_DESC'
 }
-
-/** Represents an update to a `_DrizzleMigration`. Fields that are set will be updated. */
-export type _DrizzleMigrationPatch = {
-  createdAt?: InputMaybe<Scalars['BigInt']['input']>;
-  hash?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['Int']['input']>;
-};
-
-/** An input for mutations affecting `Account` */
-export type AccountInput = {
-  bookId: string;
-  code?: string | null | undefined;
-  createdAt?: Date | null | undefined;
-  isActive?: boolean | null | undefined;
-  isPlaceholder?: boolean | null | undefined;
-  name: string;
-  parentId?: string | null | undefined;
-  rowId?: string | null | undefined;
-  subType?: AccountSubType | null | undefined;
-  type: AccountType;
-  updatedAt?: Date | null | undefined;
-};
-
-/** An input for mutations affecting `AccountMapping` */
-export type AccountMappingInput = {
-  bookId: string;
-  createdAt?: Date | null | undefined;
-  creditAccountId: string;
-  debitAccountId: string;
-  eventType: string;
-  rowId?: string | null | undefined;
-  updatedAt?: Date | null | undefined;
-};
-
-/** Represents an update to a `Account`. Fields that are set will be updated. */
-export type AccountPatch = {
-  bookId?: string | null | undefined;
-  code?: string | null | undefined;
-  createdAt?: Date | null | undefined;
-  isActive?: boolean | null | undefined;
-  isPlaceholder?: boolean | null | undefined;
-  name?: string | null | undefined;
-  parentId?: string | null | undefined;
-  rowId?: string | null | undefined;
-  subType?: AccountSubType | null | undefined;
-  type?: AccountType | null | undefined;
-  updatedAt?: Date | null | undefined;
-};
 
 export type AccountSubType =
   | 'accounts_payable'
@@ -9824,7 +11108,9 @@ export type AccountSubType =
   | 'crypto_gains'
   | 'crypto_losses'
   | 'crypto_wallet'
+  | 'customer_credit'
   | 'fixed_asset'
+  | 'fx_gain_loss'
   | 'interest_income'
   | 'inventory'
   | 'investment'
@@ -9841,7 +11127,8 @@ export type AccountSubType =
   | 'retained_earnings'
   | 'sales'
   | 'service_revenue'
-  | 'tax_expense';
+  | 'tax_expense'
+  | 'undeposited_funds';
 
 export type AccountType =
   | 'asset'
@@ -9850,289 +11137,10 @@ export type AccountType =
   | 'liability'
   | 'revenue';
 
-/** An input for mutations affecting `Book` */
-export type BookInput = {
-  createdAt?: Date | null | undefined;
-  currency?: string | null | undefined;
-  fiscalYearStartMonth?: number | null | undefined;
-  name: string;
-  organizationId: string;
-  rowId?: string | null | undefined;
-  type: string;
-  updatedAt?: Date | null | undefined;
-};
-
-/** Represents an update to a `Book`. Fields that are set will be updated. */
-export type BookPatch = {
-  createdAt?: Date | null | undefined;
-  currency?: string | null | undefined;
-  fiscalYearStartMonth?: number | null | undefined;
-  name?: string | null | undefined;
-  organizationId?: string | null | undefined;
-  rowId?: string | null | undefined;
-  type?: string | null | undefined;
-  updatedAt?: Date | null | undefined;
-};
-
-/** An input for mutations affecting `Budget` */
-export type BudgetInput = {
-  accountId: string;
-  amount: string;
-  bookId: string;
-  createdAt?: Date | null | undefined;
-  period?: BudgetPeriod | null | undefined;
-  rollover?: boolean | null | undefined;
-  rowId?: string | null | undefined;
-  updatedAt?: Date | null | undefined;
-};
-
-/** Represents an update to a `Budget`. Fields that are set will be updated. */
-export type BudgetPatch = {
-  accountId?: string | null | undefined;
-  amount?: string | null | undefined;
-  bookId?: string | null | undefined;
-  createdAt?: Date | null | undefined;
-  period?: BudgetPeriod | null | undefined;
-  rollover?: boolean | null | undefined;
-  rowId?: string | null | undefined;
-  updatedAt?: Date | null | undefined;
-};
-
 export type BudgetPeriod =
   | 'monthly'
   | 'quarterly'
   | 'yearly';
-
-/** All input for the create `Account` mutation. */
-export type CreateAccountInput = {
-  /** The `Account` to be created by this mutation. */
-  account: AccountInput;
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: string | null | undefined;
-};
-
-/** All input for the create `AccountMapping` mutation. */
-export type CreateAccountMappingInput = {
-  /** The `AccountMapping` to be created by this mutation. */
-  accountMapping: AccountMappingInput;
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: string | null | undefined;
-};
-
-/** All input for the create `Book` mutation. */
-export type CreateBookInput = {
-  /** The `Book` to be created by this mutation. */
-  book: BookInput;
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: string | null | undefined;
-};
-
-/** All input for the create `Budget` mutation. */
-export type CreateBudgetInput = {
-  /** The `Budget` to be created by this mutation. */
-  budget: BudgetInput;
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: string | null | undefined;
-};
-
-/** All input for the create `JournalEntry` mutation. */
-export type CreateJournalEntryInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: string | null | undefined;
-  /** The `JournalEntry` to be created by this mutation. */
-  journalEntry: JournalEntryInput;
-};
-
-/** All input for the create `JournalLine` mutation. */
-export type CreateJournalLineInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: string | null | undefined;
-  /** The `JournalLine` to be created by this mutation. */
-  journalLine: JournalLineInput;
-};
-
-/** All input for the create `SavingsGoal` mutation. */
-export type CreateSavingsGoalInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: string | null | undefined;
-  /** The `SavingsGoal` to be created by this mutation. */
-  savingsGoal: SavingsGoalInput;
-};
-
-/** All input for the `deleteAccount` mutation. */
-export type DeleteAccountInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: string | null | undefined;
-  rowId: string;
-};
-
-/** All input for the `deleteBook` mutation. */
-export type DeleteBookInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: string | null | undefined;
-  rowId: string;
-};
-
-/** All input for the `deleteBudget` mutation. */
-export type DeleteBudgetInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: string | null | undefined;
-  rowId: string;
-};
-
-/** All input for the `deleteJournalEntry` mutation. */
-export type DeleteJournalEntryInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: string | null | undefined;
-  rowId: string;
-};
-
-/** All input for the `deleteSavingsGoal` mutation. */
-export type DeleteSavingsGoalInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: string | null | undefined;
-  rowId: string;
-};
-
-/** An input for mutations affecting `JournalEntry` */
-export type JournalEntryInput = {
-  bookId: string;
-  createdAt?: Date | null | undefined;
-  date: Date;
-  isReconciled?: boolean | null | undefined;
-  isReviewed?: boolean | null | undefined;
-  memo?: string | null | undefined;
-  rowId?: string | null | undefined;
-  source?: string | null | undefined;
-  sourceReferenceId?: string | null | undefined;
-  updatedAt?: Date | null | undefined;
-  vendorId?: string | null | undefined;
-};
-
-/** An input for mutations affecting `JournalLine` */
-export type JournalLineInput = {
-  accountId: string;
-  cleared?: boolean | null | undefined;
-  credit?: string | null | undefined;
-  debit?: string | null | undefined;
-  journalEntryId: string;
-  memo?: string | null | undefined;
-  rowId?: string | null | undefined;
-};
-
-/** Represents an update to a `ReconciliationQueue`. Fields that are set will be updated. */
-export type ReconciliationQueuePatch = {
-  bookId?: string | null | undefined;
-  categorizationSource?: string | null | undefined;
-  confidence?: string | null | undefined;
-  createdAt?: Date | null | undefined;
-  journalEntryId?: string | null | undefined;
-  periodMonth?: number | null | undefined;
-  periodYear?: number | null | undefined;
-  priority?: number | null | undefined;
-  reviewedAt?: Date | null | undefined;
-  reviewedBy?: string | null | undefined;
-  rowId?: string | null | undefined;
-  status?: string | null | undefined;
-  suggestedCreditAccountId?: string | null | undefined;
-  suggestedDebitAccountId?: string | null | undefined;
-};
-
-/** An input for mutations affecting `SavingsGoal` */
-export type SavingsGoalInput = {
-  accountId: string;
-  bookId: string;
-  createdAt?: Date | null | undefined;
-  name: string;
-  rowId?: string | null | undefined;
-  targetAmount: string;
-  targetDate?: Date | null | undefined;
-  updatedAt?: Date | null | undefined;
-};
-
-/** All input for the `updateAccount` mutation. */
-export type UpdateAccountInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: string | null | undefined;
-  /** An object where the defined keys will be set on the `Account` being updated. */
-  patch: AccountPatch;
-  rowId: string;
-};
-
-/** All input for the `updateBook` mutation. */
-export type UpdateBookInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: string | null | undefined;
-  /** An object where the defined keys will be set on the `Book` being updated. */
-  patch: BookPatch;
-  rowId: string;
-};
-
-/** All input for the `updateBudget` mutation. */
-export type UpdateBudgetInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: string | null | undefined;
-  /** An object where the defined keys will be set on the `Budget` being updated. */
-  patch: BudgetPatch;
-  rowId: string;
-};
-
-/** All input for the `updateReconciliationQueue` mutation. */
-export type UpdateReconciliationQueueInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: string | null | undefined;
-  /** An object where the defined keys will be set on the `ReconciliationQueue` being updated. */
-  patch: ReconciliationQueuePatch;
-  rowId: string;
-};
 
 export type AccountMappingsQueryVariables = Exact<{
   bookId: string;
@@ -10141,40 +11149,12 @@ export type AccountMappingsQueryVariables = Exact<{
 
 export type AccountMappingsQuery = { accountMappings: { nodes: Array<{ rowId: string, bookId: string, eventType: string, debitAccountId: string, creditAccountId: string, debitAccount: { rowId: string, name: string, code: string | null } | null, creditAccount: { rowId: string, name: string, code: string | null } | null } | null> } | null };
 
-export type UpsertAccountMappingMutationVariables = Exact<{
-  input: CreateAccountMappingInput;
-}>;
-
-
-export type UpsertAccountMappingMutation = { createAccountMapping: { accountMapping: { rowId: string, eventType: string } | null } | null };
-
 export type AllAccountsQueryVariables = Exact<{
   bookId: string;
 }>;
 
 
 export type AllAccountsQuery = { accounts: { nodes: Array<{ rowId: string, bookId: string, parentId: string | null, name: string, code: string | null, type: AccountType, subType: AccountSubType | null, isPlaceholder: boolean, isActive: boolean, createdAt: string | null, updatedAt: string | null, parent: { rowId: string, name: string, code: string | null } | null, children: { nodes: Array<{ rowId: string, name: string, code: string | null, type: AccountType } | null> } } | null> } | null };
-
-export type CreateAccountMutationVariables = Exact<{
-  input: CreateAccountInput;
-}>;
-
-
-export type CreateAccountMutation = { createAccount: { account: { rowId: string, name: string, code: string | null, type: AccountType } | null } | null };
-
-export type UpdateAccountMutationVariables = Exact<{
-  input: UpdateAccountInput;
-}>;
-
-
-export type UpdateAccountMutation = { updateAccount: { account: { rowId: string, name: string, code: string | null, type: AccountType } | null } | null };
-
-export type DeleteAccountMutationVariables = Exact<{
-  input: DeleteAccountInput;
-}>;
-
-
-export type DeleteAccountMutation = { deleteAccount: { deletedAccountNodeId: string | null } | null };
 
 export type AllBooksQueryVariables = Exact<{
   organizationId: string;
@@ -10183,54 +11163,12 @@ export type AllBooksQueryVariables = Exact<{
 
 export type AllBooksQuery = { books: { nodes: Array<{ rowId: string, organizationId: string, name: string, type: string, currency: string, fiscalYearStartMonth: number, createdAt: string | null, updatedAt: string | null } | null> } | null };
 
-export type CreateBookMutationVariables = Exact<{
-  input: CreateBookInput;
-}>;
-
-
-export type CreateBookMutation = { createBook: { book: { rowId: string, name: string, type: string } | null } | null };
-
-export type UpdateBookMutationVariables = Exact<{
-  input: UpdateBookInput;
-}>;
-
-
-export type UpdateBookMutation = { updateBook: { book: { rowId: string, name: string, type: string } | null } | null };
-
-export type DeleteBookMutationVariables = Exact<{
-  input: DeleteBookInput;
-}>;
-
-
-export type DeleteBookMutation = { deleteBook: { deletedBookNodeId: string | null } | null };
-
 export type AllBudgetsQueryVariables = Exact<{
   bookId: string;
 }>;
 
 
 export type AllBudgetsQuery = { budgets: { nodes: Array<{ rowId: string, bookId: string, accountId: string, amount: string, period: BudgetPeriod, rollover: boolean, createdAt: string | null, updatedAt: string | null, account: { rowId: string, name: string, code: string | null } | null } | null> } | null };
-
-export type CreateBudgetMutationVariables = Exact<{
-  input: CreateBudgetInput;
-}>;
-
-
-export type CreateBudgetMutation = { createBudget: { budget: { rowId: string } | null } | null };
-
-export type UpdateBudgetMutationVariables = Exact<{
-  input: UpdateBudgetInput;
-}>;
-
-
-export type UpdateBudgetMutation = { updateBudget: { budget: { rowId: string } | null } | null };
-
-export type DeleteBudgetMutationVariables = Exact<{
-  input: DeleteBudgetInput;
-}>;
-
-
-export type DeleteBudgetMutation = { deleteBudget: { deletedBudgetNodeId: string | null } | null };
 
 export type AllJournalEntriesQueryVariables = Exact<{
   bookId: string;
@@ -10241,27 +11179,6 @@ export type AllJournalEntriesQueryVariables = Exact<{
 
 export type AllJournalEntriesQuery = { journalEntries: { totalCount: number, nodes: Array<{ rowId: string, bookId: string, date: string, memo: string | null, source: string, sourceReferenceId: string | null, isReviewed: boolean, isReconciled: boolean, createdAt: string | null, updatedAt: string | null, journalLines: { nodes: Array<{ rowId: string, accountId: string, debit: string, credit: string, memo: string | null, account: { rowId: string, name: string, code: string | null, type: AccountType } | null } | null> } } | null>, pageInfo: { hasNextPage: boolean, endCursor: string | null } } | null };
 
-export type CreateJournalEntryMutationVariables = Exact<{
-  input: CreateJournalEntryInput;
-}>;
-
-
-export type CreateJournalEntryMutation = { createJournalEntry: { journalEntry: { rowId: string, date: string, memo: string | null } | null } | null };
-
-export type CreateJournalLineMutationVariables = Exact<{
-  input: CreateJournalLineInput;
-}>;
-
-
-export type CreateJournalLineMutation = { createJournalLine: { journalLine: { rowId: string, accountId: string, debit: string, credit: string } | null } | null };
-
-export type DeleteJournalEntryMutationVariables = Exact<{
-  input: DeleteJournalEntryInput;
-}>;
-
-
-export type DeleteJournalEntryMutation = { deleteJournalEntry: { deletedJournalEntryNodeId: string | null } | null };
-
 export type PendingReconciliationQueryVariables = Exact<{
   bookId: string;
   status?: string | null | undefined;
@@ -10270,40 +11187,12 @@ export type PendingReconciliationQueryVariables = Exact<{
 
 export type PendingReconciliationQuery = { reconciliationQueues: { totalCount: number, nodes: Array<{ rowId: string, bookId: string, journalEntryId: string, suggestedDebitAccountId: string | null, suggestedCreditAccountId: string | null, status: string, reviewedAt: string | null, reviewedBy: string | null, createdAt: string | null, source: string | null, journalEntry: { rowId: string, date: string, memo: string | null, source: string, isReviewed: boolean } | null } | null> } | null };
 
-export type ApproveReconciliationMutationVariables = Exact<{
-  input: UpdateReconciliationQueueInput;
-}>;
-
-
-export type ApproveReconciliationMutation = { updateReconciliationQueue: { reconciliationQueue: { rowId: string, status: string, reviewedAt: string | null } | null } | null };
-
-export type RejectReconciliationMutationVariables = Exact<{
-  input: UpdateReconciliationQueueInput;
-}>;
-
-
-export type RejectReconciliationMutation = { updateReconciliationQueue: { reconciliationQueue: { rowId: string, status: string } | null } | null };
-
 export type AllSavingsGoalsQueryVariables = Exact<{
   bookId: string;
 }>;
 
 
 export type AllSavingsGoalsQuery = { savingsGoals: { nodes: Array<{ rowId: string, bookId: string, accountId: string, name: string, targetAmount: string, targetDate: string | null, createdAt: string | null, updatedAt: string | null, account: { rowId: string, name: string, code: string | null } | null } | null> } | null };
-
-export type CreateSavingsGoalMutationVariables = Exact<{
-  input: CreateSavingsGoalInput;
-}>;
-
-
-export type CreateSavingsGoalMutation = { createSavingsGoal: { savingsGoal: { rowId: string } | null } | null };
-
-export type DeleteSavingsGoalMutationVariables = Exact<{
-  input: DeleteSavingsGoalInput;
-}>;
-
-
-export type DeleteSavingsGoalMutation = { deleteSavingsGoal: { deletedSavingsGoalNodeId: string | null } | null };
 
 
 export class TypedDocumentString<TResult, TVariables>
@@ -10430,35 +11319,6 @@ useSuspenseInfiniteAccountMappingsQuery.getKey = (variables: AccountMappingsQuer
 
 useAccountMappingsQuery.fetcher = (variables: AccountMappingsQueryVariables, options?: RequestInit['headers']) => graphqlFetch<AccountMappingsQuery, AccountMappingsQueryVariables>(AccountMappingsDocument, variables, options);
 
-export const UpsertAccountMappingDocument = new TypedDocumentString(`
-    mutation UpsertAccountMapping($input: CreateAccountMappingInput!) {
-  createAccountMapping(input: $input) {
-    accountMapping {
-      rowId
-      eventType
-    }
-  }
-}
-    `);
-
-export const useUpsertAccountMappingMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<UpsertAccountMappingMutation, TError, UpsertAccountMappingMutationVariables, TContext>) => {
-    
-    return useMutation<UpsertAccountMappingMutation, TError, UpsertAccountMappingMutationVariables, TContext>(
-      {
-    mutationKey: ['UpsertAccountMapping'],
-    mutationFn: (variables?: UpsertAccountMappingMutationVariables) => graphqlFetch<UpsertAccountMappingMutation, UpsertAccountMappingMutationVariables>(UpsertAccountMappingDocument, variables)(),
-    ...options
-  }
-    )};
-
-useUpsertAccountMappingMutation.getKey = () => ['UpsertAccountMapping'];
-
-
-useUpsertAccountMappingMutation.fetcher = (variables: UpsertAccountMappingMutationVariables, options?: RequestInit['headers']) => graphqlFetch<UpsertAccountMappingMutation, UpsertAccountMappingMutationVariables>(UpsertAccountMappingDocument, variables, options);
-
 export const AllAccountsDocument = new TypedDocumentString(`
     query AllAccounts($bookId: UUID!) {
   accounts(condition: {bookId: $bookId}) {
@@ -10573,94 +11433,6 @@ useSuspenseInfiniteAllAccountsQuery.getKey = (variables: AllAccountsQueryVariabl
 
 useAllAccountsQuery.fetcher = (variables: AllAccountsQueryVariables, options?: RequestInit['headers']) => graphqlFetch<AllAccountsQuery, AllAccountsQueryVariables>(AllAccountsDocument, variables, options);
 
-export const CreateAccountDocument = new TypedDocumentString(`
-    mutation CreateAccount($input: CreateAccountInput!) {
-  createAccount(input: $input) {
-    account {
-      rowId
-      name
-      code
-      type
-    }
-  }
-}
-    `);
-
-export const useCreateAccountMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<CreateAccountMutation, TError, CreateAccountMutationVariables, TContext>) => {
-    
-    return useMutation<CreateAccountMutation, TError, CreateAccountMutationVariables, TContext>(
-      {
-    mutationKey: ['CreateAccount'],
-    mutationFn: (variables?: CreateAccountMutationVariables) => graphqlFetch<CreateAccountMutation, CreateAccountMutationVariables>(CreateAccountDocument, variables)(),
-    ...options
-  }
-    )};
-
-useCreateAccountMutation.getKey = () => ['CreateAccount'];
-
-
-useCreateAccountMutation.fetcher = (variables: CreateAccountMutationVariables, options?: RequestInit['headers']) => graphqlFetch<CreateAccountMutation, CreateAccountMutationVariables>(CreateAccountDocument, variables, options);
-
-export const UpdateAccountDocument = new TypedDocumentString(`
-    mutation UpdateAccount($input: UpdateAccountInput!) {
-  updateAccount(input: $input) {
-    account {
-      rowId
-      name
-      code
-      type
-    }
-  }
-}
-    `);
-
-export const useUpdateAccountMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<UpdateAccountMutation, TError, UpdateAccountMutationVariables, TContext>) => {
-    
-    return useMutation<UpdateAccountMutation, TError, UpdateAccountMutationVariables, TContext>(
-      {
-    mutationKey: ['UpdateAccount'],
-    mutationFn: (variables?: UpdateAccountMutationVariables) => graphqlFetch<UpdateAccountMutation, UpdateAccountMutationVariables>(UpdateAccountDocument, variables)(),
-    ...options
-  }
-    )};
-
-useUpdateAccountMutation.getKey = () => ['UpdateAccount'];
-
-
-useUpdateAccountMutation.fetcher = (variables: UpdateAccountMutationVariables, options?: RequestInit['headers']) => graphqlFetch<UpdateAccountMutation, UpdateAccountMutationVariables>(UpdateAccountDocument, variables, options);
-
-export const DeleteAccountDocument = new TypedDocumentString(`
-    mutation DeleteAccount($input: DeleteAccountInput!) {
-  deleteAccount(input: $input) {
-    deletedAccountNodeId: deletedAccountId
-  }
-}
-    `);
-
-export const useDeleteAccountMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<DeleteAccountMutation, TError, DeleteAccountMutationVariables, TContext>) => {
-    
-    return useMutation<DeleteAccountMutation, TError, DeleteAccountMutationVariables, TContext>(
-      {
-    mutationKey: ['DeleteAccount'],
-    mutationFn: (variables?: DeleteAccountMutationVariables) => graphqlFetch<DeleteAccountMutation, DeleteAccountMutationVariables>(DeleteAccountDocument, variables)(),
-    ...options
-  }
-    )};
-
-useDeleteAccountMutation.getKey = () => ['DeleteAccount'];
-
-
-useDeleteAccountMutation.fetcher = (variables: DeleteAccountMutationVariables, options?: RequestInit['headers']) => graphqlFetch<DeleteAccountMutation, DeleteAccountMutationVariables>(DeleteAccountDocument, variables, options);
-
 export const AllBooksDocument = new TypedDocumentString(`
     query AllBooks($organizationId: String!) {
   books(condition: {organizationId: $organizationId}) {
@@ -10758,92 +11530,6 @@ useSuspenseInfiniteAllBooksQuery.getKey = (variables: AllBooksQueryVariables) =>
 
 
 useAllBooksQuery.fetcher = (variables: AllBooksQueryVariables, options?: RequestInit['headers']) => graphqlFetch<AllBooksQuery, AllBooksQueryVariables>(AllBooksDocument, variables, options);
-
-export const CreateBookDocument = new TypedDocumentString(`
-    mutation CreateBook($input: CreateBookInput!) {
-  createBook(input: $input) {
-    book {
-      rowId
-      name
-      type
-    }
-  }
-}
-    `);
-
-export const useCreateBookMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<CreateBookMutation, TError, CreateBookMutationVariables, TContext>) => {
-    
-    return useMutation<CreateBookMutation, TError, CreateBookMutationVariables, TContext>(
-      {
-    mutationKey: ['CreateBook'],
-    mutationFn: (variables?: CreateBookMutationVariables) => graphqlFetch<CreateBookMutation, CreateBookMutationVariables>(CreateBookDocument, variables)(),
-    ...options
-  }
-    )};
-
-useCreateBookMutation.getKey = () => ['CreateBook'];
-
-
-useCreateBookMutation.fetcher = (variables: CreateBookMutationVariables, options?: RequestInit['headers']) => graphqlFetch<CreateBookMutation, CreateBookMutationVariables>(CreateBookDocument, variables, options);
-
-export const UpdateBookDocument = new TypedDocumentString(`
-    mutation UpdateBook($input: UpdateBookInput!) {
-  updateBook(input: $input) {
-    book {
-      rowId
-      name
-      type
-    }
-  }
-}
-    `);
-
-export const useUpdateBookMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<UpdateBookMutation, TError, UpdateBookMutationVariables, TContext>) => {
-    
-    return useMutation<UpdateBookMutation, TError, UpdateBookMutationVariables, TContext>(
-      {
-    mutationKey: ['UpdateBook'],
-    mutationFn: (variables?: UpdateBookMutationVariables) => graphqlFetch<UpdateBookMutation, UpdateBookMutationVariables>(UpdateBookDocument, variables)(),
-    ...options
-  }
-    )};
-
-useUpdateBookMutation.getKey = () => ['UpdateBook'];
-
-
-useUpdateBookMutation.fetcher = (variables: UpdateBookMutationVariables, options?: RequestInit['headers']) => graphqlFetch<UpdateBookMutation, UpdateBookMutationVariables>(UpdateBookDocument, variables, options);
-
-export const DeleteBookDocument = new TypedDocumentString(`
-    mutation DeleteBook($input: DeleteBookInput!) {
-  deleteBook(input: $input) {
-    deletedBookNodeId: deletedBookId
-  }
-}
-    `);
-
-export const useDeleteBookMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<DeleteBookMutation, TError, DeleteBookMutationVariables, TContext>) => {
-    
-    return useMutation<DeleteBookMutation, TError, DeleteBookMutationVariables, TContext>(
-      {
-    mutationKey: ['DeleteBook'],
-    mutationFn: (variables?: DeleteBookMutationVariables) => graphqlFetch<DeleteBookMutation, DeleteBookMutationVariables>(DeleteBookDocument, variables)(),
-    ...options
-  }
-    )};
-
-useDeleteBookMutation.getKey = () => ['DeleteBook'];
-
-
-useDeleteBookMutation.fetcher = (variables: DeleteBookMutationVariables, options?: RequestInit['headers']) => graphqlFetch<DeleteBookMutation, DeleteBookMutationVariables>(DeleteBookDocument, variables, options);
 
 export const AllBudgetsDocument = new TypedDocumentString(`
     query AllBudgets($bookId: UUID!) {
@@ -10947,88 +11633,6 @@ useSuspenseInfiniteAllBudgetsQuery.getKey = (variables: AllBudgetsQueryVariables
 
 
 useAllBudgetsQuery.fetcher = (variables: AllBudgetsQueryVariables, options?: RequestInit['headers']) => graphqlFetch<AllBudgetsQuery, AllBudgetsQueryVariables>(AllBudgetsDocument, variables, options);
-
-export const CreateBudgetDocument = new TypedDocumentString(`
-    mutation CreateBudget($input: CreateBudgetInput!) {
-  createBudget(input: $input) {
-    budget {
-      rowId
-    }
-  }
-}
-    `);
-
-export const useCreateBudgetMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<CreateBudgetMutation, TError, CreateBudgetMutationVariables, TContext>) => {
-    
-    return useMutation<CreateBudgetMutation, TError, CreateBudgetMutationVariables, TContext>(
-      {
-    mutationKey: ['CreateBudget'],
-    mutationFn: (variables?: CreateBudgetMutationVariables) => graphqlFetch<CreateBudgetMutation, CreateBudgetMutationVariables>(CreateBudgetDocument, variables)(),
-    ...options
-  }
-    )};
-
-useCreateBudgetMutation.getKey = () => ['CreateBudget'];
-
-
-useCreateBudgetMutation.fetcher = (variables: CreateBudgetMutationVariables, options?: RequestInit['headers']) => graphqlFetch<CreateBudgetMutation, CreateBudgetMutationVariables>(CreateBudgetDocument, variables, options);
-
-export const UpdateBudgetDocument = new TypedDocumentString(`
-    mutation UpdateBudget($input: UpdateBudgetInput!) {
-  updateBudget(input: $input) {
-    budget {
-      rowId
-    }
-  }
-}
-    `);
-
-export const useUpdateBudgetMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<UpdateBudgetMutation, TError, UpdateBudgetMutationVariables, TContext>) => {
-    
-    return useMutation<UpdateBudgetMutation, TError, UpdateBudgetMutationVariables, TContext>(
-      {
-    mutationKey: ['UpdateBudget'],
-    mutationFn: (variables?: UpdateBudgetMutationVariables) => graphqlFetch<UpdateBudgetMutation, UpdateBudgetMutationVariables>(UpdateBudgetDocument, variables)(),
-    ...options
-  }
-    )};
-
-useUpdateBudgetMutation.getKey = () => ['UpdateBudget'];
-
-
-useUpdateBudgetMutation.fetcher = (variables: UpdateBudgetMutationVariables, options?: RequestInit['headers']) => graphqlFetch<UpdateBudgetMutation, UpdateBudgetMutationVariables>(UpdateBudgetDocument, variables, options);
-
-export const DeleteBudgetDocument = new TypedDocumentString(`
-    mutation DeleteBudget($input: DeleteBudgetInput!) {
-  deleteBudget(input: $input) {
-    deletedBudgetNodeId: deletedBudgetId
-  }
-}
-    `);
-
-export const useDeleteBudgetMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<DeleteBudgetMutation, TError, DeleteBudgetMutationVariables, TContext>) => {
-    
-    return useMutation<DeleteBudgetMutation, TError, DeleteBudgetMutationVariables, TContext>(
-      {
-    mutationKey: ['DeleteBudget'],
-    mutationFn: (variables?: DeleteBudgetMutationVariables) => graphqlFetch<DeleteBudgetMutation, DeleteBudgetMutationVariables>(DeleteBudgetDocument, variables)(),
-    ...options
-  }
-    )};
-
-useDeleteBudgetMutation.getKey = () => ['DeleteBudget'];
-
-
-useDeleteBudgetMutation.fetcher = (variables: DeleteBudgetMutationVariables, options?: RequestInit['headers']) => graphqlFetch<DeleteBudgetMutation, DeleteBudgetMutationVariables>(DeleteBudgetDocument, variables, options);
 
 export const AllJournalEntriesDocument = new TypedDocumentString(`
     query AllJournalEntries($bookId: UUID!, $first: Int, $after: Cursor) {
@@ -11155,93 +11759,6 @@ useSuspenseInfiniteAllJournalEntriesQuery.getKey = (variables: AllJournalEntries
 
 useAllJournalEntriesQuery.fetcher = (variables: AllJournalEntriesQueryVariables, options?: RequestInit['headers']) => graphqlFetch<AllJournalEntriesQuery, AllJournalEntriesQueryVariables>(AllJournalEntriesDocument, variables, options);
 
-export const CreateJournalEntryDocument = new TypedDocumentString(`
-    mutation CreateJournalEntry($input: CreateJournalEntryInput!) {
-  createJournalEntry(input: $input) {
-    journalEntry {
-      rowId
-      date
-      memo
-    }
-  }
-}
-    `);
-
-export const useCreateJournalEntryMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<CreateJournalEntryMutation, TError, CreateJournalEntryMutationVariables, TContext>) => {
-    
-    return useMutation<CreateJournalEntryMutation, TError, CreateJournalEntryMutationVariables, TContext>(
-      {
-    mutationKey: ['CreateJournalEntry'],
-    mutationFn: (variables?: CreateJournalEntryMutationVariables) => graphqlFetch<CreateJournalEntryMutation, CreateJournalEntryMutationVariables>(CreateJournalEntryDocument, variables)(),
-    ...options
-  }
-    )};
-
-useCreateJournalEntryMutation.getKey = () => ['CreateJournalEntry'];
-
-
-useCreateJournalEntryMutation.fetcher = (variables: CreateJournalEntryMutationVariables, options?: RequestInit['headers']) => graphqlFetch<CreateJournalEntryMutation, CreateJournalEntryMutationVariables>(CreateJournalEntryDocument, variables, options);
-
-export const CreateJournalLineDocument = new TypedDocumentString(`
-    mutation CreateJournalLine($input: CreateJournalLineInput!) {
-  createJournalLine(input: $input) {
-    journalLine {
-      rowId
-      accountId
-      debit
-      credit
-    }
-  }
-}
-    `);
-
-export const useCreateJournalLineMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<CreateJournalLineMutation, TError, CreateJournalLineMutationVariables, TContext>) => {
-    
-    return useMutation<CreateJournalLineMutation, TError, CreateJournalLineMutationVariables, TContext>(
-      {
-    mutationKey: ['CreateJournalLine'],
-    mutationFn: (variables?: CreateJournalLineMutationVariables) => graphqlFetch<CreateJournalLineMutation, CreateJournalLineMutationVariables>(CreateJournalLineDocument, variables)(),
-    ...options
-  }
-    )};
-
-useCreateJournalLineMutation.getKey = () => ['CreateJournalLine'];
-
-
-useCreateJournalLineMutation.fetcher = (variables: CreateJournalLineMutationVariables, options?: RequestInit['headers']) => graphqlFetch<CreateJournalLineMutation, CreateJournalLineMutationVariables>(CreateJournalLineDocument, variables, options);
-
-export const DeleteJournalEntryDocument = new TypedDocumentString(`
-    mutation DeleteJournalEntry($input: DeleteJournalEntryInput!) {
-  deleteJournalEntry(input: $input) {
-    deletedJournalEntryNodeId: deletedJournalEntryId
-  }
-}
-    `);
-
-export const useDeleteJournalEntryMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<DeleteJournalEntryMutation, TError, DeleteJournalEntryMutationVariables, TContext>) => {
-    
-    return useMutation<DeleteJournalEntryMutation, TError, DeleteJournalEntryMutationVariables, TContext>(
-      {
-    mutationKey: ['DeleteJournalEntry'],
-    mutationFn: (variables?: DeleteJournalEntryMutationVariables) => graphqlFetch<DeleteJournalEntryMutation, DeleteJournalEntryMutationVariables>(DeleteJournalEntryDocument, variables)(),
-    ...options
-  }
-    )};
-
-useDeleteJournalEntryMutation.getKey = () => ['DeleteJournalEntry'];
-
-
-useDeleteJournalEntryMutation.fetcher = (variables: DeleteJournalEntryMutationVariables, options?: RequestInit['headers']) => graphqlFetch<DeleteJournalEntryMutation, DeleteJournalEntryMutationVariables>(DeleteJournalEntryDocument, variables, options);
-
 export const PendingReconciliationDocument = new TypedDocumentString(`
     query PendingReconciliation($bookId: UUID!, $status: String) {
   reconciliationQueues(condition: {bookId: $bookId, status: $status}) {
@@ -11350,65 +11867,6 @@ useSuspenseInfinitePendingReconciliationQuery.getKey = (variables: PendingReconc
 
 usePendingReconciliationQuery.fetcher = (variables: PendingReconciliationQueryVariables, options?: RequestInit['headers']) => graphqlFetch<PendingReconciliationQuery, PendingReconciliationQueryVariables>(PendingReconciliationDocument, variables, options);
 
-export const ApproveReconciliationDocument = new TypedDocumentString(`
-    mutation ApproveReconciliation($input: UpdateReconciliationQueueInput!) {
-  updateReconciliationQueue(input: $input) {
-    reconciliationQueue {
-      rowId
-      status
-      reviewedAt
-    }
-  }
-}
-    `);
-
-export const useApproveReconciliationMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<ApproveReconciliationMutation, TError, ApproveReconciliationMutationVariables, TContext>) => {
-    
-    return useMutation<ApproveReconciliationMutation, TError, ApproveReconciliationMutationVariables, TContext>(
-      {
-    mutationKey: ['ApproveReconciliation'],
-    mutationFn: (variables?: ApproveReconciliationMutationVariables) => graphqlFetch<ApproveReconciliationMutation, ApproveReconciliationMutationVariables>(ApproveReconciliationDocument, variables)(),
-    ...options
-  }
-    )};
-
-useApproveReconciliationMutation.getKey = () => ['ApproveReconciliation'];
-
-
-useApproveReconciliationMutation.fetcher = (variables: ApproveReconciliationMutationVariables, options?: RequestInit['headers']) => graphqlFetch<ApproveReconciliationMutation, ApproveReconciliationMutationVariables>(ApproveReconciliationDocument, variables, options);
-
-export const RejectReconciliationDocument = new TypedDocumentString(`
-    mutation RejectReconciliation($input: UpdateReconciliationQueueInput!) {
-  updateReconciliationQueue(input: $input) {
-    reconciliationQueue {
-      rowId
-      status
-    }
-  }
-}
-    `);
-
-export const useRejectReconciliationMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<RejectReconciliationMutation, TError, RejectReconciliationMutationVariables, TContext>) => {
-    
-    return useMutation<RejectReconciliationMutation, TError, RejectReconciliationMutationVariables, TContext>(
-      {
-    mutationKey: ['RejectReconciliation'],
-    mutationFn: (variables?: RejectReconciliationMutationVariables) => graphqlFetch<RejectReconciliationMutation, RejectReconciliationMutationVariables>(RejectReconciliationDocument, variables)(),
-    ...options
-  }
-    )};
-
-useRejectReconciliationMutation.getKey = () => ['RejectReconciliation'];
-
-
-useRejectReconciliationMutation.fetcher = (variables: RejectReconciliationMutationVariables, options?: RequestInit['headers']) => graphqlFetch<RejectReconciliationMutation, RejectReconciliationMutationVariables>(RejectReconciliationDocument, variables, options);
-
 export const AllSavingsGoalsDocument = new TypedDocumentString(`
     query AllSavingsGoals($bookId: UUID!) {
   savingsGoals(condition: {bookId: $bookId}) {
@@ -11511,57 +11969,3 @@ useSuspenseInfiniteAllSavingsGoalsQuery.getKey = (variables: AllSavingsGoalsQuer
 
 
 useAllSavingsGoalsQuery.fetcher = (variables: AllSavingsGoalsQueryVariables, options?: RequestInit['headers']) => graphqlFetch<AllSavingsGoalsQuery, AllSavingsGoalsQueryVariables>(AllSavingsGoalsDocument, variables, options);
-
-export const CreateSavingsGoalDocument = new TypedDocumentString(`
-    mutation CreateSavingsGoal($input: CreateSavingsGoalInput!) {
-  createSavingsGoal(input: $input) {
-    savingsGoal {
-      rowId
-    }
-  }
-}
-    `);
-
-export const useCreateSavingsGoalMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<CreateSavingsGoalMutation, TError, CreateSavingsGoalMutationVariables, TContext>) => {
-    
-    return useMutation<CreateSavingsGoalMutation, TError, CreateSavingsGoalMutationVariables, TContext>(
-      {
-    mutationKey: ['CreateSavingsGoal'],
-    mutationFn: (variables?: CreateSavingsGoalMutationVariables) => graphqlFetch<CreateSavingsGoalMutation, CreateSavingsGoalMutationVariables>(CreateSavingsGoalDocument, variables)(),
-    ...options
-  }
-    )};
-
-useCreateSavingsGoalMutation.getKey = () => ['CreateSavingsGoal'];
-
-
-useCreateSavingsGoalMutation.fetcher = (variables: CreateSavingsGoalMutationVariables, options?: RequestInit['headers']) => graphqlFetch<CreateSavingsGoalMutation, CreateSavingsGoalMutationVariables>(CreateSavingsGoalDocument, variables, options);
-
-export const DeleteSavingsGoalDocument = new TypedDocumentString(`
-    mutation DeleteSavingsGoal($input: DeleteSavingsGoalInput!) {
-  deleteSavingsGoal(input: $input) {
-    deletedSavingsGoalNodeId: deletedSavingsGoalId
-  }
-}
-    `);
-
-export const useDeleteSavingsGoalMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<DeleteSavingsGoalMutation, TError, DeleteSavingsGoalMutationVariables, TContext>) => {
-    
-    return useMutation<DeleteSavingsGoalMutation, TError, DeleteSavingsGoalMutationVariables, TContext>(
-      {
-    mutationKey: ['DeleteSavingsGoal'],
-    mutationFn: (variables?: DeleteSavingsGoalMutationVariables) => graphqlFetch<DeleteSavingsGoalMutation, DeleteSavingsGoalMutationVariables>(DeleteSavingsGoalDocument, variables)(),
-    ...options
-  }
-    )};
-
-useDeleteSavingsGoalMutation.getKey = () => ['DeleteSavingsGoal'];
-
-
-useDeleteSavingsGoalMutation.fetcher = (variables: DeleteSavingsGoalMutationVariables, options?: RequestInit['headers']) => graphqlFetch<DeleteSavingsGoalMutation, DeleteSavingsGoalMutationVariables>(DeleteSavingsGoalDocument, variables, options);

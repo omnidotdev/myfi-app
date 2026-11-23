@@ -17,25 +17,3 @@ query AllBudgets($bookId: UUID!) {
     }
   }
 }
-
-mutation CreateBudget($input: CreateBudgetInput!) {
-  createBudget(input: $input) {
-    budget {
-      rowId
-    }
-  }
-}
-
-mutation UpdateBudget($input: UpdateBudgetInput!) {
-  updateBudget(input: $input) {
-    budget {
-      rowId
-    }
-  }
-}
-
-mutation DeleteBudget($input: DeleteBudgetInput!) {
-  deleteBudget(input: $input) {
-    deletedBudgetNodeId: deletedBudgetId
-  }
-}

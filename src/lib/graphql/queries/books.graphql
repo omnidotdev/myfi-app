@@ -12,29 +12,3 @@ query AllBooks($organizationId: String!) {
     }
   }
 }
-
-mutation CreateBook($input: CreateBookInput!) {
-  createBook(input: $input) {
-    book {
-      rowId
-      name
-      type
-    }
-  }
-}
-
-mutation UpdateBook($input: UpdateBookInput!) {
-  updateBook(input: $input) {
-    book {
-      rowId
-      name
-      type
-    }
-  }
-}
-
-mutation DeleteBook($input: DeleteBookInput!) {
-  deleteBook(input: $input) {
-    deletedBookNodeId: deletedBookId
-  }
-}
