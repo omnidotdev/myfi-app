@@ -22,22 +22,3 @@ query PendingReconciliation($bookId: UUID!, $status: String) {
     totalCount
   }
 }
-
-mutation ApproveReconciliation($input: UpdateReconciliationQueueInput!) {
-  updateReconciliationQueue(input: $input) {
-    reconciliationQueue {
-      rowId
-      status
-      reviewedAt
-    }
-  }
-}
-
-mutation RejectReconciliation($input: UpdateReconciliationQueueInput!) {
-  updateReconciliationQueue(input: $input) {
-    reconciliationQueue {
-      rowId
-      status
-    }
-  }
-}

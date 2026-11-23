@@ -39,30 +39,3 @@ query AllJournalEntries($bookId: UUID!, $first: Int, $after: Cursor) {
     totalCount
   }
 }
-
-mutation CreateJournalEntry($input: CreateJournalEntryInput!) {
-  createJournalEntry(input: $input) {
-    journalEntry {
-      rowId
-      date
-      memo
-    }
-  }
-}
-
-mutation CreateJournalLine($input: CreateJournalLineInput!) {
-  createJournalLine(input: $input) {
-    journalLine {
-      rowId
-      accountId
-      debit
-      credit
-    }
-  }
-}
-
-mutation DeleteJournalEntry($input: DeleteJournalEntryInput!) {
-  deleteJournalEntry(input: $input) {
-    deletedJournalEntryNodeId: deletedJournalEntryId
-  }
-}
