@@ -1,4 +1,3 @@
-import type { OrganizationClaim } from "@omnidotdev/providers";
 import { useSessionRefresh } from "@omnidotdev/providers/react";
 import type { QueryClient } from "@tanstack/react-query";
 import type { ErrorComponentProps } from "@tanstack/react-router";
@@ -10,32 +9,17 @@ import {
   useRouteContext,
 } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import type { Session } from "better-auth/types";
 import type { ReactNode } from "react";
 import CommandPalette from "@/components/CommandPalette";
 import DefaultCatchBoundary from "@/components/DefaultCatchBoundary";
 import NotFound from "@/components/NotFound";
+import type { ClientSession } from "@/lib/auth/clientSession";
 import app from "@/lib/config/app.config";
 import createMetaTags from "@/lib/util/createMetaTags";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { fetchSession } from "@/server/functions/auth";
 import { getTheme } from "@/server/functions/theme";
 import appStyles from "@/styles.css?url";
-
-interface ExtendedUser {
-  id: string;
-  email: string;
-  name?: string;
-  image?: string;
-  identityProviderId?: string;
-  username?: string;
-}
-
-interface ExtendedSession extends Omit<Session, "user"> {
-  user: ExtendedUser;
-  accessToken?: string;
-  organizations?: OrganizationClaim[];
-}
 
 const fetchSessionAndTheme = createServerFn({ method: "GET" }).handler(
   async () => {
@@ -48,7 +32,7 @@ const fetchSessionAndTheme = createServerFn({ method: "GET" }).handler(
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
-  session: ExtendedSession | null;
+  session: ClientSession | null;
   theme: string;
 }>()({
   beforeLoad: async () => {

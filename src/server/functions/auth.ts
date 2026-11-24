@@ -3,6 +3,7 @@ import { getRequest, setCookie } from "@tanstack/react-start/server";
 
 import auth from "@/lib/auth/auth";
 import { authCache } from "@/lib/auth/authCache";
+import { toClientSession } from "@/lib/auth/clientSession";
 import { getAuth } from "@/lib/auth/getAuth";
 import { isSessionDegraded } from "@/lib/auth/sessionState";
 import {
@@ -17,7 +18,7 @@ export const fetchSession = createServerFn().handler(async () => {
   const session = await getAuth(request);
 
   return {
-    session,
+    session: toClientSession(session),
     // A degraded session is authenticated (getAuth returned it) but carries no
     // access token: the refresh-token grant failed, so getAuth served the
     // session without a fresh token and userinfo org hydration was skipped,
