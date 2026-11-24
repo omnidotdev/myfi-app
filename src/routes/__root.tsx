@@ -78,17 +78,6 @@ export const Route = createRootRouteWithContext<{
       ...createMetaTags(),
     ],
     links: [
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      {
-        rel: "preconnect",
-        href: "https://fonts.gstatic.com",
-        crossOrigin: "anonymous",
-      },
-      // brand typefaces: Fraunces (display), Inter (text), IBM Plex Mono (figures)
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,340..460&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap",
-      },
       { rel: "stylesheet", href: appStyles },
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       {
