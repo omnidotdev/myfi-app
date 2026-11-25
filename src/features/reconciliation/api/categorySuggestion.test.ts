@@ -96,17 +96,39 @@ describe("parseSuggestResponse", () => {
   });
 });
 
+/** The query params of a hub link, order-independent */
+const paramsOf = (url: string) =>
+  Object.fromEntries(new URL(url).searchParams.entries());
+
 describe("aiUpgradeUrl", () => {
   test("points at the Pro plan for the workspace on the account hub", () => {
-    expect(aiUpgradeUrl("https://account.omni.dev/", "acme")).toBe(
-      "https://account.omni.dev/billing?product=myfi&plan=pro&interval=month&workspace=acme",
-    );
+    const url = aiUpgradeUrl("https://account.omni.dev/", "acme");
+
+    expect(url.startsWith("https://account.omni.dev/billing?")).toBe(true);
+    expect(paramsOf(url)).toEqual({
+      product: "myfi",
+      plan: "pro",
+      interval: "month",
+      workspace: "acme",
+    });
   });
 
   test("omits the workspace when it is not known", () => {
-    expect(aiUpgradeUrl("https://account.omni.dev")).toBe(
-      "https://account.omni.dev/billing?product=myfi&plan=pro&interval=month",
-    );
+    expect(paramsOf(aiUpgradeUrl("https://account.omni.dev"))).toEqual({
+      product: "myfi",
+      plan: "pro",
+      interval: "month",
+    });
+  });
+
+  test("opens the hub as the signed-in account when given its subject", () => {
+    expect(
+      paramsOf(aiUpgradeUrl("https://account.omni.dev", "acme", "sub_1"))
+        .login_hint,
+    ).toBe("sub_1");
+    expect(
+      paramsOf(aiUpgradeUrl("https://account.omni.dev", "acme")),
+    ).not.toHaveProperty("login_hint");
   });
 
   test("is empty when no account hub is configured", () => {
@@ -116,15 +138,31 @@ describe("aiUpgradeUrl", () => {
 
 describe("aiCreditsUrl", () => {
   test("points at buying AI credits for the workspace on the account hub", () => {
-    expect(aiCreditsUrl("https://account.omni.dev/", "acme")).toBe(
-      "https://account.omni.dev/billing?product=myfi&tab=ai&workspace=acme",
-    );
+    const url = aiCreditsUrl("https://account.omni.dev/", "acme");
+
+    expect(url.startsWith("https://account.omni.dev/billing?")).toBe(true);
+    expect(paramsOf(url)).toEqual({
+      product: "myfi",
+      workspace: "acme",
+      tab: "ai",
+    });
   });
 
   test("omits the workspace when it is not known", () => {
-    expect(aiCreditsUrl("https://account.omni.dev")).toBe(
-      "https://account.omni.dev/billing?product=myfi&tab=ai",
-    );
+    expect(paramsOf(aiCreditsUrl("https://account.omni.dev"))).toEqual({
+      product: "myfi",
+      tab: "ai",
+    });
+  });
+
+  test("opens the hub as the signed-in account when given its subject", () => {
+    expect(
+      paramsOf(aiCreditsUrl("https://account.omni.dev", "acme", "sub_1"))
+        .login_hint,
+    ).toBe("sub_1");
+    expect(
+      paramsOf(aiCreditsUrl("https://account.omni.dev", "acme")),
+    ).not.toHaveProperty("login_hint");
   });
 
   test("is empty when no account hub is configured", () => {

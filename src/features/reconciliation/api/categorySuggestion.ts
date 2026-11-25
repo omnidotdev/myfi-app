@@ -7,7 +7,7 @@
  * reuse this mapping.
  */
 
-import { accountUrl } from "@omnidotdev/providers/react";
+import { hubCreditsUrl, hubPlanUrl } from "@omnidotdev/providers/react";
 
 export type CategorySuggestion = {
   debitAccountId: string;
@@ -73,45 +73,40 @@ const PRODUCT_ID = "myfi";
 const UPGRADE_PLAN = "pro";
 
 /**
- * Billing link on the Omni account hub for myfi, scoped to the workspace when
- * it is known. Empty when no account hub is configured, so the prompt degrades
- * to plain copy rather than a dead link
- */
-const billingUrl = (
-  accountBaseUrl: string | undefined,
-  params: Record<string, string>,
-  workspaceSlug?: string,
-): string => {
-  const base = accountUrl(accountBaseUrl);
-  if (!base) return "";
-
-  const search = new URLSearchParams({ product: PRODUCT_ID, ...params });
-  if (workspaceSlug) search.set("workspace", workspaceSlug);
-
-  return `${base}/billing?${search.toString()}`;
-};
-
-/**
- * Where to upgrade to Pro for more AI categorization, on the Omni account hub
+ * Where to upgrade to Pro for more AI categorization, on the Omni account hub.
+ * Empty when no account hub is configured, so the prompt degrades to plain
+ * copy rather than a dead link
  * @param accountBaseUrl - Account hub base URL
  * @param workspaceSlug - Active workspace slug, when known
+ * @param loginHint - The signed-in account's subject, so the hub opens as it
  */
 export const aiUpgradeUrl = (
   accountBaseUrl: string | undefined,
   workspaceSlug?: string,
+  loginHint?: string | null,
 ): string =>
-  billingUrl(
-    accountBaseUrl,
-    { plan: UPGRADE_PLAN, interval: "month" },
-    workspaceSlug,
-  );
+  hubPlanUrl(accountBaseUrl, {
+    product: PRODUCT_ID,
+    plan: UPGRADE_PLAN,
+    interval: "month",
+    workspace: workspaceSlug,
+    loginHint,
+  });
 
 /**
- * Where to buy Omni AI credits for the workspace, on the Omni account hub
+ * Where to buy Omni AI credits for the workspace, on the Omni account hub.
+ * Empty when no account hub is configured
  * @param accountBaseUrl - Account hub base URL
  * @param workspaceSlug - Active workspace slug, when known
+ * @param loginHint - The signed-in account's subject, so the hub opens as it
  */
 export const aiCreditsUrl = (
   accountBaseUrl: string | undefined,
   workspaceSlug?: string,
-): string => billingUrl(accountBaseUrl, { tab: "ai" }, workspaceSlug);
+  loginHint?: string | null,
+): string =>
+  hubCreditsUrl(accountBaseUrl, {
+    product: PRODUCT_ID,
+    workspace: workspaceSlug,
+    loginHint,
+  });
