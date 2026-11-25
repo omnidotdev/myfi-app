@@ -12,9 +12,15 @@ import {
   MenuSeparator,
   MenuTrigger,
 } from "@omnidotdev/thornberry/menu";
-import { ChevronsUpDown, ExternalLink, LogOut } from "lucide-react";
+import {
+  ArrowLeftRight,
+  ChevronsUpDown,
+  ExternalLink,
+  LogOut,
+} from "lucide-react";
 
 import signOut from "@/lib/auth/signOut";
+import switchAccount from "@/lib/auth/switchAccount";
 import { ACCOUNT_URL } from "@/lib/config/env.config";
 
 interface Props {
@@ -30,7 +36,7 @@ interface Props {
 
 /**
  * Account control for the sidebar footer: the user's avatar and name, with
- * "Manage account" and "Sign out" nested in a dropdown rather than laid out
+ * "Manage account", "Switch account" and "Sign out" nested in a dropdown rather than laid out
  * flat. Mirrors the account menu pattern shared across Omni product sidebars
  */
 const AccountMenu = ({ user, onSelect }: Props) => {
@@ -40,6 +46,7 @@ const AccountMenu = ({ user, onSelect }: Props) => {
     <MenuRoot
       onSelect={(details) => {
         onSelect?.();
+        if (details.value === "switch-account") void switchAccount();
         if (details.value === "sign-out") signOut();
       }}
     >
@@ -77,6 +84,11 @@ const AccountMenu = ({ user, onSelect }: Props) => {
               <MenuSeparator />
             </>
           )}
+
+          <MenuItem value="switch-account" className="gap-2">
+            <ArrowLeftRight className="size-4 shrink-0 opacity-70" />
+            Switch account
+          </MenuItem>
 
           <MenuItem value="sign-out" className="gap-2 text-destructive">
             <LogOut className="size-4 shrink-0" />
