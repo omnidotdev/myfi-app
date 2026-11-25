@@ -2,6 +2,7 @@ import { workspacesUrl } from "@omnidotdev/providers/react";
 import { WorkspaceSwitcher as SharedWorkspaceSwitcher } from "@omnidotdev/thornberry/workspace-switcher";
 import { useNavigate } from "@tanstack/react-router";
 
+import useHubLoginHint from "@/lib/auth/useHubLoginHint";
 import { ACCOUNT_URL } from "@/lib/config/env.config";
 import { useWorkspace } from "@/providers/WorkspaceProvider";
 
@@ -19,6 +20,7 @@ import { useWorkspace } from "@/providers/WorkspaceProvider";
 const WorkspaceSwitcher = () => {
   const orgContext = useWorkspace();
   const navigate = useNavigate();
+  const loginHint = useHubLoginHint();
 
   const organizations = orgContext?.workspaces ?? [];
   const current = orgContext?.currentWorkspace;
@@ -51,7 +53,7 @@ const WorkspaceSwitcher = () => {
       currentWorkspaceId={current.id}
       onSelect={handleSelect}
       {...(ACCOUNT_URL && {
-        manageUrl: workspacesUrl(ACCOUNT_URL),
+        manageUrl: workspacesUrl(ACCOUNT_URL, { loginHint }),
       })}
     />
   );

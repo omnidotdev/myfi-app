@@ -11,13 +11,14 @@ import {
   aiUpgradeUrl,
 } from "@/features/reconciliation/api/categorySuggestion";
 import { suggestCategory } from "@/features/reconciliation/api/suggestCategory";
+import useHubLoginHint from "@/lib/auth/useHubLoginHint";
 import { ACCOUNT_URL } from "@/lib/config/env.config";
 
 const openInNewTab = (url: string) => window.open(url, "_blank", "noopener");
 
 /** Upsell shown once the workspace's included AI categorization is used */
-const showAllowanceUsed = (workspaceSlug?: string) => {
-  const upgradeUrl = aiUpgradeUrl(ACCOUNT_URL, workspaceSlug);
+const showAllowanceUsed = (workspaceSlug?: string, loginHint?: string) => {
+  const upgradeUrl = aiUpgradeUrl(ACCOUNT_URL, workspaceSlug, loginHint);
 
   toast.info("AI categorization used for this period", {
     description:
@@ -35,9 +36,9 @@ const showAllowanceUsed = (workspaceSlug?: string) => {
  * Paid-access prompt shown when the workspace is not paying for AI yet: buy
  * Omni credits or upgrade to Pro, each on the account hub
  */
-const showPaymentRequired = (workspaceSlug?: string) => {
-  const creditsUrl = aiCreditsUrl(ACCOUNT_URL, workspaceSlug);
-  const upgradeUrl = aiUpgradeUrl(ACCOUNT_URL, workspaceSlug);
+const showPaymentRequired = (workspaceSlug?: string, loginHint?: string) => {
+  const creditsUrl = aiCreditsUrl(ACCOUNT_URL, workspaceSlug, loginHint);
+  const upgradeUrl = aiUpgradeUrl(ACCOUNT_URL, workspaceSlug, loginHint);
 
   toast.info("AI categorization uses Omni credits", {
     description:
@@ -67,6 +68,7 @@ const showPaymentRequired = (workspaceSlug?: string) => {
 const useCategorySuggestion = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { workspaceSlug } = useParams({ strict: false });
+  const loginHint = useHubLoginHint();
 
   const suggest = async (
     input: SuggestCategoryInput,
@@ -80,10 +82,10 @@ const useCategorySuggestion = () => {
         case "ok":
           return result.suggestion;
         case "payment_required":
-          showPaymentRequired(workspaceSlug);
+          showPaymentRequired(workspaceSlug, loginHint);
           return null;
         case "allowance_used":
-          showAllowanceUsed(workspaceSlug);
+          showAllowanceUsed(workspaceSlug, loginHint);
           return null;
         case "disabled":
           toast.error("AI suggestions are unavailable right now");

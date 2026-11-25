@@ -3,6 +3,7 @@ import { ArrowRightIcon, Building2Icon, RefreshCwIcon } from "lucide-react";
 
 import signIn from "@/lib/auth/signIn";
 import signOut from "@/lib/auth/signOut";
+import useHubLoginHint from "@/lib/auth/useHubLoginHint";
 import { ACCOUNT_URL } from "@/lib/config/env.config";
 
 type Props = {
@@ -23,7 +24,8 @@ type Props = {
  * which reads as if they were signed out
  */
 function NoWorkspace({ degraded }: Props) {
-  const createWorkspaceUrl = workspacesUrl(ACCOUNT_URL);
+  const loginHint = useHubLoginHint();
+  const createWorkspaceUrl = workspacesUrl(ACCOUNT_URL, { loginHint });
 
   const handleReauth = async () => {
     try {
@@ -98,7 +100,7 @@ function NoWorkspace({ degraded }: Props) {
 
             <button
               type="button"
-              onClick={signOut}
+              onClick={() => void signOut()}
               className="inline-flex h-11 items-center justify-center rounded-lg border border-border px-6 font-medium transition-colors hover:border-primary/50 hover:text-primary"
             >
               Sign out
