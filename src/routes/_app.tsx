@@ -1,3 +1,4 @@
+import { useIdentitySync } from "@omnidotdev/providers/react";
 import { Badge } from "@omnidotdev/thornberry/badge";
 import { openCommandPalette } from "@omnidotdev/thornberry/command-palette";
 import { LogoLockup } from "@omnidotdev/thornberry/logo-lockup";
@@ -49,6 +50,7 @@ import AccountMenu from "@/components/layout/AccountMenu";
 import WorkspaceBookGuard from "@/components/layout/WorkspaceBookGuard";
 import WorkspaceSwitcher from "@/components/layout/WorkspaceSwitcher";
 import MyfiMark from "@/components/MyfiMark";
+import { followSignOut, followSwitch } from "@/lib/auth/followIdentity";
 import { isSessionDegraded } from "@/lib/auth/sessionState";
 import appConfig from "@/lib/config/app.config";
 import useActiveBook from "@/lib/hooks/useActiveBook";
@@ -296,7 +298,17 @@ function NavLinks({
 }
 
 function AuthLayout() {
-  const { session } = Route.useRouteContext();
+  const { session, authBaseUrl } = Route.useRouteContext();
+
+  // Stay signed in as the same account as Omni: follow a switch or sign-out
+  // made in another app
+  useIdentitySync({
+    authBaseUrl,
+    subject: session?.user?.identityProviderId,
+    onSignedOut: followSignOut,
+    onSwitched: followSwitch,
+  });
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
 
