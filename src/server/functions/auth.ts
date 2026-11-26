@@ -29,6 +29,9 @@ export const fetchSession = createServerFn().handler(async () => {
     // organization-less user (who has a valid access token), so callers can
     // prompt a re-login instead of a silent "No workspaces yet" empty state
     authDegraded: isSessionDegraded(session),
+    // Identity provider base URL, so the browser can check its Omni session
+    // (the client bundle carries no build-time auth config)
+    authBaseUrl: AUTH_BASE_URL as string | undefined,
   };
 });
 

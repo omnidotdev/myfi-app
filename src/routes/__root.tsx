@@ -23,10 +23,10 @@ import appStyles from "@/styles.css?url";
 
 const fetchSessionAndTheme = createServerFn({ method: "GET" }).handler(
   async () => {
-    const { session } = await fetchSession();
+    const { session, authBaseUrl } = await fetchSession();
     const theme = await getTheme();
 
-    return { session, theme };
+    return { session, authBaseUrl, theme };
   },
 );
 
@@ -36,9 +36,9 @@ export const Route = createRootRouteWithContext<{
   theme: string;
 }>()({
   beforeLoad: async () => {
-    const { session, theme } = await fetchSessionAndTheme();
+    const { session, authBaseUrl, theme } = await fetchSessionAndTheme();
 
-    return { session, theme };
+    return { session, authBaseUrl, theme };
   },
   head: () => ({
     meta: [
